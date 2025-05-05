@@ -53,7 +53,7 @@ gem "redis", ">= 4.0.1"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # For logger support
-gem 'logger', '~> 1.5.0'
+gem 'logger', '~> 1.7.0'
 
 group :development, :test do
   # Add a debugger
