@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .nav {
+    @apply bg-white shadow-sm sticky top-0 z-50;
+  }
+
+  .nav-container {
+    @apply max-w-7xl mx-auto px-4;
+  }
+
+  .nav-content {
+    @apply flex justify-between items-center h-16;
+  }
+
+  .logo {
+    @apply flex items-center text-blue-600 font-bold text-xl;
+  }
+
+  .logo svg {
+    @apply w-8 h-8 mr-2;
+  }
+
+  .main-menu {
+    @apply hidden md:flex md:ml-10 md:space-x-8;
+  }
+
+  .nav-link {
+    @apply text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium;
+  }
+
+  .user-menu {
+    @apply hidden md:flex md:items-center md:space-x-4;
+  }
+
+  .mobile-menu-button {
+    @apply md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-blue-50;
+  }
+
+  .mobile-menu {
+    @apply hidden md:hidden;
+  }
+
+  .mobile-menu.show {
+    @apply block;
+  }
+
+  .flash {
+    @apply max-w-7xl mx-auto px-4 mt-4;
+  }
+
+  .flash-notice {
+    @apply bg-green-50 p-4 rounded-md flex items-center;
+  }
+
+  .flash-alert {
+    @apply bg-red-50 p-4 rounded-md flex items-center;
+  }
+
+  .main-content {
+    @apply max-w-7xl mx-auto px-4 py-8;
+  }
+} 

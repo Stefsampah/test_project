@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video Swipe App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+  </head>
+
+  <body class="bg-gray-50">
+    <nav class="nav">
+      <div class="nav-container">
+        <div class="nav-content">
+          <!-- Logo -->
+          <%= link_to root_path, class: "logo" do %>
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 8V4m0 4h16M4 8l4-4h8l4 4M4 8v8c0 1.1.9 2 2 2h12a2 2 0 002-2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M10 12l4 2-4 2v-4z" fill="currentColor"/>
+            </svg>
+            <span>Video Swipe</span>
+          <% end %>
+
+          <!-- Menu principal -->
+          <div class="main-menu">
+            <%= link_to "Playlists", playlists_path, class: "nav-link" %>
+            <%= link_to "Scores", scores_path, class: "nav-link" %>
+            <%= link_to "Récompenses", rewards_path, class: "nav-link" %>
+          </div>
+
+          <!-- Menu utilisateur -->
+          <div class="user-menu">
+            <% if user_signed_in? %>
+              <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
+              <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link" %>
+            <% else %>
+              <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>
+            <% end %>
+          </div>
+
+          <!-- Bouton menu mobile -->
+          <button class="mobile-menu-button">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Menu mobile -->
+        <div class="mobile-menu" id="mobile-menu">
+          <%= link_to "Playlists", playlists_path, class: "nav-link" %>
+          <%= link_to "Scores", scores_path, class: "nav-link" %>
+          <%= link_to "Récompenses", rewards_path, class: "nav-link" %>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Messages flash -->
+    <% if notice %>
+      <div class="flash">
+        <div class="flash-notice">
+          <%= notice %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="flash">
+        <div class="flash-alert">
+          <%= alert %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="main-content">
+      <%= yield %>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenu = document.querySelector('#mobile-menu');
+
+        mobileMenuButton.addEventListener('click', function() {
+          mobileMenu.classList.toggle('show');
+        });
+      });
+    </script>
+  </body>
+</html>
