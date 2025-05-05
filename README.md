@@ -1,24 +1,22 @@
-# README
+# Test Project
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Un projet de test pour démontrer l'utilisation de badges et de récompenses dans une application Rails.
 
-Things you may want to cover:
+## Fonctionnalités
 
-* Ruby version
+- Affichage de badges avec images
+- Modal pour les détails des badges
+- Système pour réclamer des récompenses
 
-* System dependencies
+## Installation
 
-* Configuration
+```bash
+# Instructions d'installation
+git clone https://github.com/votre-nom/test_project.git
+cd test_project
+bundle install
+```
 
-* Database creation
+## Utilisation
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Lancez le serveur Rails et accédez à la page des récompenses pour voir les badges et interagir avec eux.
