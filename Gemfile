@@ -68,5 +68,5 @@ end
 group :test do
   # Use system testing
   gem "capybara"
-  gem "selenium-webdriver", "~> 4.1.0"  # Version compatible avec Ruby 2.6
+  gem "selenium-webdriver", "~> 4.33.0" # Version compatible avec Ruby 2.6
 end
