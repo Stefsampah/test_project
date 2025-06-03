@@ -63,7 +63,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     { title: 'Didi B - Good vibes', youtube_id: 'wLdtn45riSc' }
   ]
   
-  
+ Ç 
   hip_hop_videos_1.each do |video|
     hip_hop_playlist_1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
@@ -77,16 +77,16 @@ end
 
 # Vidéos pour la playlist Hip Hop 2
 hip_hop_videos_2 = [
-    { title: 'ENTRE NOUS DEUX · Didi B · Doupi Papillon', youtube_id: 'qMNl8T42krY' },
-    { title: 'Nothing Without God · POPCAAN', youtube_id: 'wFRyzB170sk' },
-    { title: 'HIMRA - NUMBER ONE (FT. MINZ)', youtube_id: 'b16_UBiP4G0' },
-    { title: 'Travis Scott - She Going Dumb', youtube_id: 'tN82cGi9kUc' },
-    { title: 'Quavo, Lil Baby - Legends', youtube_id: '4cCzuTQ49V8' },
-    { title: 'Skillibeng - New Gears', youtube_id: 'Yubuf7k1WZM' },
-    { title: 'TOUT VA BIEN · Didi B', youtube_id: 'WdwasPVKGQo' },
-    { title: 'Toosii - Party Girl Anthem', youtube_id: 'x4xDmrvHTY0' },
-    { title: 'YE - CIRCLES', youtube_id: 'SWPeFW7Bd74' },
-    { title: 'Didi B - Good vibes', youtube_id: 'wLdtn45riSc' }
+  { title: 'Didi B - Big Boss', youtube_id: 'xYZ123ABC' },
+  { title: 'POPCAAN - Firm and Strong', youtube_id: 'aBC456DEF' },
+  { title: 'HIMRA - Vibes', youtube_id: 'dEF789GHI' },
+  { title: 'Travis Scott - Stargazing', youtube_id: 'gHI012JKL' },
+  { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: 'jKL345MNO' },
+  { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'mNO678PQR' },
+  { title: 'Didi B - En Haut', youtube_id: 'pQR901STU' },
+  { title: 'Toosii - Favorite Song', youtube_id: 'sTU234VWX' },
+  { title: 'YE - Hurricane', youtube_id: 'vWX567YZA' },
+  { title: 'Didi B - Laissez Tomber', youtube_id: 'yZA890BCD' }
   ]
   
   
