@@ -1,148 +1,77 @@
-<div id="rewards-page" class="min-h-screen bg-gray-900 py-4 sm:py-8" data-user-id="<%= current_user&.id || 1 %>">
+<div id="rewards-page" class="min-h-screen bg-gray-900 py-4 sm:py-8">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-8">
       <div class="flex items-center justify-center mb-6">
         <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-yellow-400">
+          <div class="w-8 h-8 text-purple-400">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"/>
+              <path d="M5 8h2v8H5zm7 0H9v8h3zm5 8h2V8h-2zM8 5h8v2H8z"/>
             </svg>
           </div>
         </div>
-        <h1 class="text-4xl font-bold text-white ml-4">Récompenses et Badges</h1>
+        <h1 class="text-4xl font-bold text-white ml-4">Récompenses</h1>
+      </div>
+      
+      <!-- Lien vers les badges -->
+      <div class="mt-4">
+        <a href="<%= my_badges_path %>" class="inline-flex items-center px-6 py-3 text-sm font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none">
+          <span>Voir mes badges</span>
+          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
       </div>
     </div>
 
     <div id="notification" class="notification p-4 rounded mb-4 hidden"></div>
 
-    <!-- Formulaire de simulation de points (pour tester) -->
-    <div class="bg-blue-600 rounded-lg p-6 mb-8 transform hover:scale-105 transition-all duration-300">
-      <h2 class="text-2xl font-light text-white mb-4">Simuler des points</h2>
-      <p class="text-sm text-white/80 mb-4">Cet outil est temporaire et vous permet de tester le système de badges.</p>
-
-      <form id="simulation-form" class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <label class="block text-sm font-medium text-white mb-1">Points de Compétiteur</label>
-          <input type="number" id="competitor-points" class="w-full p-2 border rounded bg-white/10 text-white border-white/30" value="0" min="0">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-white mb-1">Points d'Engagement</label>
-          <input type="number" id="engager-points" class="w-full p-2 border rounded bg-white/10 text-white border-white/30" value="0" min="0">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-white mb-1">Points de Critique</label>
-          <input type="number" id="critic-points" class="w-full p-2 border rounded bg-white/10 text-white border-white/30" value="0" min="0">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-white mb-1">Points de Défi</label>
-          <input type="number" id="challenger-points" class="w-full p-2 border rounded bg-white/10 text-white border-white/30" value="0" min="0">
-        </div>
-        <div class="md:col-span-2 lg:col-span-4">
-          <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-6 rounded transform hover:scale-105 transition-all duration-300">
-            Vérifier les badges disponibles
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <!-- Badges de l'utilisateur -->
+    <!-- Récompenses disponibles -->
     <div class="mb-12">
-      <div class="bg-gradient-to-r from-amber-600 to-red-600 rounded-lg p-6 mb-8 transform hover:scale-105 transition-all duration-300">
-        <h2 class="text-2xl font-light text-white mb-6">Mes badges</h2>
-        <div id="user-badges-list" class="mt-4 badge-container">
-          <div class="p-4 bg-white/10 rounded-lg text-center">
-            <p class="text-white">Chargement de vos badges...</p>
-          </div>
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-light text-white mb-6">Récompenses disponibles</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <% if @rewards.any? %>
+            <% @rewards.each do |reward| %>
+              <div class="reward-card bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
+                <div class="reward-icon w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mb-4">
+                  <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2"><%= reward.name %></h3>
+                <div class="bg-purple-900 bg-opacity-50 rounded-lg p-2 w-full mb-4">
+                  <p class="text-sm text-center text-white"><%= reward.description %></p>
+                </div>
+                <div class="mt-auto">
+                  <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-300 bg-purple-900">
+                    Valeur: <%= reward.value %> points
+                  </span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="col-span-full text-center p-6 bg-gray-800 rounded-lg">
+              <p class="text-white">Aucune récompense disponible pour le moment.</p>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
 
-    <!-- Tous les badges disponibles -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Competitor Badges -->
-      <div class="bg-gradient-to-r from-amber-600 to-amber-800 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Competitor Badges</h2>
-        </div>
-        <div id="competitor-badges" class="badge-container">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Engager Badges -->
-      <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Engager Badges</h2>
-        </div>
-        <div id="engager-badges" class="badge-container">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Critic Badges -->
-      <div class="bg-gradient-to-r from-amber-600 to-amber-800 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Critic Badges</h2>
-        </div>
-        <div id="critic-badges" class="badge-container">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-
-      <!-- Challenger Badges -->
-      <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Challenger Badges</h2>
-        </div>
-        <div id="challenger-badges" class="badge-container">
-          <!-- Will be populated by JavaScript -->
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal pour afficher les détails de la récompense -->
-    <div id="reward-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-      <div class="bg-gray-800 rounded-lg max-w-md w-full p-6 transform transition-all">
-        <div class="flex justify-between items-center mb-4">
-          <h3 id="modal-title" class="text-xl font-bold text-white"></h3>
-          <button id="close-modal" class="text-white hover:text-gray-300">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    <!-- Comment obtenir des récompenses -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-6 mb-8">
+      <h2 class="text-2xl font-light text-white mb-4">Comment obtenir des récompenses ?</h2>
+      <div class="bg-black bg-opacity-20 rounded-lg p-4">
+        <p class="text-white mb-4">Les récompenses sont obtenues en gagnant des badges. Chaque badge débloque une récompense spécifique que vous pouvez réclamer.</p>
+        <div class="flex justify-center">
+          <a href="<%= all_badges_path %>" class="inline-flex items-center px-6 py-3 text-sm font-medium rounded-full text-white bg-white/20 hover:bg-white/30 transition-all focus:outline-none">
+            <span>Voir tous les badges disponibles</span>
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-          </button>
-        </div>
-        <div id="modal-content" class="text-white">
-          <div class="flex flex-col items-center mb-4">
-            <div id="modal-badge-icon" class="w-24 h-24 mb-4"></div>
-            <div id="modal-badge-level" class="text-sm font-semibold uppercase mb-2"></div>
-          </div>
-          <div class="border-t border-gray-700 pt-4">
-            <p id="modal-description" class="text-gray-300 mb-4"></p>
-            <div class="bg-gradient-to-r from-amber-600 to-red-600 rounded-lg p-4 mb-4">
-              <h4 class="text-lg font-semibold mb-2">Récompense</h4>
-              <p id="modal-reward" class="text-white"></p>
-            </div>
-            <div id="modal-reward-image" class="w-full rounded-lg overflow-hidden mb-4 h-48 bg-center bg-cover"></div>
-            <div class="text-center mt-6">
-              <button id="claim-reward" class="bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-white font-bold py-2 px-6 rounded-full transform hover:scale-105 transition-all duration-300">
-                Réclamer ma récompense
-              </button>
-              <p id="reward-claimed" class="text-green-400 font-semibold hidden">Récompense déjà réclamée !</p>
-            </div>
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -150,595 +79,30 @@
 </div>
 
 <style>
-  .badge-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-  }
-  
-  .badge-card {
-    border-radius: 0.75rem;
-    padding: 1rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-align: center;
-    background-position: center;
-    background-size: cover;
-    background-blend-mode: soft-light;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border: 3px solid transparent;
-  }
-  
-  .badge-card.gold {
-    background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
-    border-color: #ffd700;
-  }
-  
-  .badge-card.silver {
-    background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%);
-    box-shadow: 0 4px 12px rgba(192, 192, 192, 0.6);
-    border-color: #c0c0c0;
-  }
-  
-  .badge-card.bronze {
-    background: linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%);
-    box-shadow: 0 4px 12px rgba(205, 127, 50, 0.6);
-    border-color: #cd7f32;
-  }
-  
-  .badge-card.locked {
-    filter: grayscale(70%);
-    opacity: 0.8;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .badge-card.locked::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, 
-      rgba(255, 255, 255, 0.1), 
-      rgba(255, 255, 255, 0.2), 
-      rgba(255, 255, 255, 0.1)
-    );
-    z-index: 2;
-    pointer-events: none;
-    border-radius: 0.5rem;
-  }
-  
-  .badge-icon {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    padding: 10px;
-  }
-  
-  .badge-icon svg {
-    width: 100%;
-    height: 100%;
-    color: #333;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.3));
-  }
-  
-  .badge-name {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 0.25rem;
-    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
-  }
-  
-  .badge-level {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #555;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-    padding: 2px 8px;
-    display: inline-block;
-  }
-  
-  .badge-card:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  
-  /* Styles spécifiques par type */
-  .badge-card.competitor {
-    border-color: #ff9800;
-  }
-  
-  .badge-card.engager {
-    border-color: #2196f3;
-  }
-  
-  .badge-card.critic {
-    border-color: #f44336;
-  }
-  
-  .badge-card.challenger {
-    border-color: #9c27b0;
-  }
-  
-  /* Images de fond pour les badges avec overlay coloré */
-  .badge-card.competitor.bronze {
-    background-image: linear-gradient(rgba(205, 127, 50, 0.5), rgba(205, 127, 50, 0.5)), url('<%= asset_path("badges/dropmixpop.webp") %>');
-  }
-  
-  .badge-card.competitor.silver {
-    background-image: linear-gradient(rgba(192, 192, 192, 0.5), rgba(192, 192, 192, 0.5)), url('<%= asset_path("badges/pandora-playlist-collage.webp") %>');
-  }
-  
-  .badge-card.competitor.gold {
-    background-image: linear-gradient(rgba(255, 215, 0, 0.5), rgba(255, 215, 0, 0.5)), url('<%= asset_path("badges/VIP-gold.jpg") %>');
-  }
-  
-  .badge-card.engager.gold {
-    background-image: linear-gradient(rgba(33, 150, 243, 0.5), rgba(33, 150, 243, 0.5)), url('<%= asset_path("badges/artist-meeting.jpeg") %>');
-  }
-  
-  .badge-card.critic.gold {
-    background-image: linear-gradient(rgba(244, 67, 54, 0.5), rgba(244, 67, 54, 0.5)), url('<%= asset_path("badges/interview.jpg") %>');
-  }
-  
-  .badge-card.challenger.gold {
-    background-image: linear-gradient(rgba(156, 39, 176, 0.5), rgba(156, 39, 176, 0.5)), url('<%= asset_path("badges/concert.jpeg") %>');
-  }
-  
-  .empty-badges {
-    padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 0.5rem;
-    text-align: center;
-  }
-  
-  .empty-badges p {
-    color: rgba(255, 255, 255, 0.8);
-  }
-  
-  .notification {
-    padding: 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
-  }
-  
-  .notification-success {
-    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
-    color: white;
-    border: 1px solid #065F46;
-  }
-  
-  .notification-error {
-    background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%);
-    color: white;
-    border: 1px solid #991B1B;
-  }
-  
-  .notification-info {
-    background: linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%);
-    color: white;
-    border: 1px solid #1E3A8A;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  /* Style pour le modal */
-  #modal-reward-image {
-    height: 200px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
+  .reward-card {
+    border: 2px solid transparent;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
   }
   
-  #modal-reward-image:hover {
-    transform: scale(1.02);
+  .reward-card:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.1), 0 10px 10px -5px rgba(139, 92, 246, 0.04);
   }
   
-  #modal-badge-icon {
-    color: white;
-    width: 80px;
-    height: 80px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    padding: 15px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  .reward-icon {
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
   }
   
-  #reward-modal {
-    backdrop-filter: blur(5px);
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
-  
-  #reward-modal .bg-gray-800 {
-    background: linear-gradient(135deg, #2d3748, #1a202c);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-  }
-  
-  #modal-title {
-    background: linear-gradient(90deg, #f8e36f, #ffeb3b);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  #modal-badge-level {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  
-  #claim-reward {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  
-  #claim-reward:before {
-    content: "";
-    position: absolute;
-    top: -10%;
-    left: -210%;
-    width: 200%;
-    height: 200%;
-    opacity: 0;
-    transform: rotate(30deg);
-    background: linear-gradient(
-      to right, 
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.3) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-  }
-  
-  #claim-reward:hover:before {
-    opacity: 1;
-    left: 100%;
-    transition: left 0.7s ease;
-  }
-</style>
-
-<script src="<%= asset_path 'badge_service.js' %>"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    if (!window.badgeService) {
-      console.error("Service de badges non disponible");
-      return;
-    }
-    
-    // Initialiser le modal
-    const modal = document.getElementById('reward-modal');
-    const closeModal = document.getElementById('close-modal');
-    const claimRewardBtn = document.getElementById('claim-reward');
-    const rewardClaimed = document.getElementById('reward-claimed');
-    
-    console.log("Modal:", modal ? "trouvé" : "non trouvé");
-    
-    if (!modal) {
-      console.error("Le modal n'a pas été trouvé. Vérifiez l'HTML.");
-      // Créer le modal s'il n'existe pas
-      createModal();
-    }
-    
-    function createModal() {
-      const modalHTML = `
-        <div id="reward-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
-          <div class="bg-gray-800 rounded-lg max-w-md w-full p-6 transform transition-all">
-            <div class="flex justify-between items-center mb-4">
-              <h3 id="modal-title" class="text-xl font-bold text-white"></h3>
-              <button id="close-modal" class="text-white hover:text-gray-300">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
-            </div>
-            <div id="modal-content" class="text-white">
-              <div class="flex flex-col items-center mb-4">
-                <div id="modal-badge-icon" class="w-24 h-24 mb-4"></div>
-                <div id="modal-badge-level" class="text-sm font-semibold uppercase mb-2"></div>
-              </div>
-              <div class="border-t border-gray-700 pt-4">
-                <p id="modal-description" class="text-gray-300 mb-4"></p>
-                <div class="bg-gradient-to-r from-amber-600 to-red-600 rounded-lg p-4 mb-4">
-                  <h4 class="text-lg font-semibold mb-2">Récompense</h4>
-                  <p id="modal-reward" class="text-white"></p>
-                </div>
-                <div id="modal-reward-image" class="w-full rounded-lg overflow-hidden mb-4 h-48 bg-center bg-cover"></div>
-                <div class="text-center mt-6">
-                  <button id="claim-reward" class="bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-white font-bold py-2 px-6 rounded-full transform hover:scale-105 transition-all duration-300">
-                    Réclamer ma récompense
-                  </button>
-                  <p id="reward-claimed" class="text-green-400 font-semibold hidden">Récompense déjà réclamée !</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      document.body.insertAdjacentHTML('beforeend', modalHTML);
-      console.log("Modal créé dynamiquement");
-      
-      // Réinitialiser les références après création
-      modal = document.getElementById('reward-modal');
-      closeModal = document.getElementById('close-modal');
-      claimRewardBtn = document.getElementById('claim-reward');
-      rewardClaimed = document.getElementById('reward-claimed');
-      
-      // Ajouter les écouteurs d'événements
-      bindModalEvents();
-    }
-    
-    function bindModalEvents() {
-      // Fermer le modal quand on clique sur le bouton de fermeture
-      closeModal.addEventListener('click', function() {
-        modal.classList.add('hidden');
-      });
-      
-      // Fermer le modal quand on clique en dehors
-      window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-          modal.classList.add('hidden');
-        }
-      });
-      
-      // Gérer le clic sur le bouton de réclamation de récompense
-      claimRewardBtn.addEventListener('click', function() {
-        const badgeId = parseInt(this.dataset.badgeId);
-        const userId = parseInt(document.getElementById('rewards-page').dataset.userId) || 1;
-        
-        // Appeler l'API pour réclamer la récompense
-        window.badgeService.claimReward(userId, badgeId)
-          .then(result => {
-            if (result.success) {
-              claimRewardBtn.classList.add('hidden');
-              document.getElementById('reward-claimed').classList.remove('hidden');
-              
-              // Afficher une notification
-              const notification = document.getElementById('notification');
-              notification.textContent = "Récompense réclamée avec succès !";
-              notification.classList.remove('hidden', 'notification-error', 'notification-info');
-              notification.classList.add('notification-success');
-              
-              setTimeout(() => {
-                notification.classList.add('hidden');
-              }, 3000);
-            }
-          });
-      });
-    }
-    
-    // Si le modal existe, ajouter les écouteurs d'événements
-    if (modal) {
-      bindModalEvents();
-    }
-    
-    // Afficher les badges par catégorie
-    displayBadgesByType('competitor', '#competitor-badges');
-    displayBadgesByType('engager', '#engager-badges');
-    displayBadgesByType('critic', '#critic-badges');
-    displayBadgesByType('challenger', '#challenger-badges');
-    
-    // Afficher les badges de l'utilisateur
-    displayUserBadges();
-    
-    function displayUserBadges() {
-      const container = document.querySelector('#user-badges-list');
-      if (!container) return;
-      
-      const userId = parseInt(document.getElementById('rewards-page').dataset.userId) || 1;
-      const userBadges = window.badgeService.getUserBadges(userId);
-      
-      let html = '';
-      
-      if (userBadges.length === 0) {
-        html = '<div class="empty-badges"><p>Vous n\'avez pas encore gagné de badges. Continuez à participer !</p></div>';
-      } else {
-        userBadges.forEach(userBadge => {
-          const badge = userBadge.badge;
-          const badgeClass = `badge-card ${badge.type} ${badge.level}`;
-          const iconSymbol = getBadgeIcon(badge.type, badge.level);
-          
-          html += `
-            <div class="${badgeClass}" data-badge-id="${badge.id}" data-badge-type="${badge.type}" title="${badge.description}">
-              <div class="badge-icon">${iconSymbol}</div>
-              <div class="badge-name">${badge.name}</div>
-              <div class="badge-level">${badge.level}</div>
-            </div>`;
-        });
-      }
-      
-      container.innerHTML = html;
-      
-      // Ajouter les event listeners pour afficher les détails
-      const badgeCards = container.querySelectorAll('.badge-card');
-      badgeCards.forEach(card => {
-        card.addEventListener('click', function() {
-          const badgeId = parseInt(this.dataset.badgeId);
-          const badge = window.badgeService.getBadgeById(badgeId);
-          if (badge) {
-            showBadgeDetails(badge, true);
-          } else {
-            console.error("Badge non trouvé:", badgeId);
-          }
-        });
-      });
-    }
-    
-    function displayBadgesByType(type, containerId) {
-      const container = document.querySelector(containerId);
-      if (!container) return;
-      
-      const allBadges = window.badgeService.getBadgesByType(type);
-      const userId = parseInt(document.getElementById('rewards-page').dataset.userId) || 1;
-      const userBadges = window.badgeService.getUserBadges(userId);
-      
-      let html = '';
-      
-      if (allBadges.length === 0) {
-        html = '<div class="empty-badges"><p>Aucun badge disponible dans cette catégorie.</p></div>';
-      } else {
-        allBadges.forEach(badge => {
-          const userHasBadge = userBadges.some(ub => ub.badge.id === badge.id);
-          const badgeClass = `badge-card ${badge.type} ${badge.level} ${userHasBadge ? '' : 'locked'}`;
-          const iconSymbol = getBadgeIcon(badge.type, badge.level);
-          
-          html += `
-            <div class="${badgeClass}" data-badge-id="${badge.id}" data-badge-type="${badge.type}" title="${badge.description}">
-              <div class="badge-icon">${iconSymbol}</div>
-              <div class="badge-name">${badge.name}</div>
-              <div class="badge-level">${badge.level}</div>
-            </div>`;
-        });
-      }
-      
-      container.innerHTML = html;
-      
-      // Ajouter les event listeners pour afficher les détails
-      const badgeCards = container.querySelectorAll('.badge-card');
-      badgeCards.forEach(card => {
-        card.addEventListener('click', function() {
-          const badgeId = parseInt(this.dataset.badgeId);
-          const badge = window.badgeService.getBadgeById(badgeId);
-          if (badge) {
-            const isEarned = !this.classList.contains('locked');
-            showBadgeDetails(badge, isEarned);
-          } else {
-            console.error("Badge non trouvé:", badgeId);
-          }
-        });
-      });
-    }
-    
-    // Fonction pour afficher les détails d'un badge dans le modal
-    function showBadgeDetails(badge, isEarned) {
-      console.log("Affichage des détails du badge:", badge);
-      
-      const modalTitle = document.getElementById('modal-title');
-      const modalBadgeIcon = document.getElementById('modal-badge-icon');
-      const modalBadgeLevel = document.getElementById('modal-badge-level');
-      const modalDescription = document.getElementById('modal-description');
-      const modalReward = document.getElementById('modal-reward');
-      const modalRewardImage = document.getElementById('modal-reward-image');
-      const claimRewardBtn = document.getElementById('claim-reward');
-      const rewardClaimed = document.getElementById('reward-claimed');
-      
-      // Remplir les informations du badge
-      modalTitle.textContent = badge.name;
-      modalBadgeIcon.innerHTML = getBadgeIcon(badge.type, badge.level);
-      modalBadgeLevel.textContent = `Niveau ${badge.level}`;
-      modalDescription.textContent = badge.description || "Aucune description disponible";
-      modalReward.textContent = badge.reward_description || "Aucune récompense disponible";
-      
-      // Attribuer l'ID du badge au bouton pour la réclamation
-      claimRewardBtn.dataset.badgeId = badge.id;
-      
-      // Définir l'image de la récompense ou utiliser la couleur par défaut
-      if (badge.reward_image) {
-        console.log("Image de récompense:", badge.reward_image);
-        modalRewardImage.style.backgroundImage = `url('${badge.reward_image}')`;
-        modalRewardImage.style.backgroundSize = 'contain';
-        modalRewardImage.style.backgroundRepeat = 'no-repeat';
-        modalRewardImage.style.backgroundPosition = 'center';
-        modalRewardImage.innerHTML = '';
-        modalRewardImage.classList.remove('hidden');
-
-        // Vérifier que l'image est chargée
-        const img = new Image();
-        img.onerror = function() {
-          console.error("Erreur de chargement de l'image:", badge.reward_image);
-          // Fallback en cas d'erreur
-          let backgroundColor;
-          if (badge.level === 'gold') {
-            backgroundColor = 'linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)';
-          } else if (badge.level === 'silver') {
-            backgroundColor = 'linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%)';
-          } else {
-            backgroundColor = 'linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%)';
-          }
-          modalRewardImage.style.backgroundImage = 'none';
-          modalRewardImage.style.background = backgroundColor;
-        };
-        img.src = badge.reward_image;
-      } else {
-        console.log("Pas d'image de récompense, utilisation du dégradé par défaut");
-        let backgroundColor;
-        if (badge.level === 'gold') {
-          backgroundColor = 'linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)';
-        } else if (badge.level === 'silver') {
-          backgroundColor = 'linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%)';
-        } else {
-          backgroundColor = 'linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%)';
-        }
-        modalRewardImage.style.backgroundImage = 'none';
-        modalRewardImage.style.background = backgroundColor;
-        modalRewardImage.classList.remove('hidden');
-      }
-      
-      // Afficher ou masquer le bouton de réclamation selon si le badge est gagné
-      if (isEarned) {
-        claimRewardBtn.classList.remove('hidden');
-        rewardClaimed.classList.add('hidden');
-        
-        // Vérifier si la récompense a déjà été réclamée
-        const userId = parseInt(document.getElementById('rewards-page').dataset.userId) || 1;
-        const userBadge = window.badgeService.getUserBadgeByBadgeId(userId, badge.id);
-        
-        if (userBadge && userBadge.claimed_at) {
-          claimRewardBtn.classList.add('hidden');
-          rewardClaimed.classList.remove('hidden');
-        }
-      } else {
-        claimRewardBtn.classList.add('hidden');
-        rewardClaimed.classList.add('hidden');
-      }
-      
-      // Afficher le modal
-      modal.classList.remove('hidden');
-    }
-    
-    function getBadgeIcon(type, level) {
-      let symbol = '';
-      
-      if (type === 'competitor') {
-        symbol = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28z"/></svg>';
-      } else if (type === 'engager') {
-        symbol = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.84-8.88l-2.91 2.94-1.69-1.69-1.41 1.41 3.1 3.1 4.32-4.35-1.41-1.41z"/></svg>';
-      } else if (type === 'critic') {
-        symbol = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>';
-      } else {
-        symbol = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 10l-7-7-7 7v9h14v-9zm-7-4.6l3.6 3.6H8.4l3.6-3.6zM17 16h-4v-3h-2v3H7v-5h10v5z"/></svg>';
-      }
-      
-      return symbol;
-    }
-  });
-</script> 
+</style> 

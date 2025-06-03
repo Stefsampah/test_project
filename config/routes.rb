@@ -6,6 +6,12 @@ Rails.application.routes.draw do
   # Routes pour le profil
   resource :profile, only: [:edit, :update]
 
+  # Routes pour les badges
+  resources :badges, only: [:index, :show]
+  get 'my_badges', to: 'badges#my_badges'
+  get 'all_badges', to: 'badges#all_badges'
+  post 'claim_reward/:id', to: 'badges#claim_reward', as: :claim_reward
+
   resources :playlists, only: [:index, :show] do
     resources :games, only: [:new, :create, :show] do
       member do

@@ -2,12 +2,8 @@ class RewardsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    # Cette action est simplifiée car le système de badges est géré côté client
-    # Néanmoins, nous pourrions ajouter certaines données ici si besoin
-    
-    # Quand le backend sera fonctionnel, nous pourrons faire quelque chose comme:
-    # @user_badges = current_user&.user_badges&.includes(:badge) || []
-    # @available_badges = Badge.all
+    # Cette action est désormais dédiée uniquement aux récompenses, les badges sont gérés séparément
+    @rewards = Reward.all.order(value: :desc)
   end
 
   def claim
