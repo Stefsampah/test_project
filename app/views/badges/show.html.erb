@@ -66,12 +66,319 @@
             
             <div class="prose prose-invert max-w-none mb-6">
               <p class="text-gray-300"><%= @badge.description %></p>
+              
+              <% if @badge.name == "Wise Critic" || @badge.badge_type == "critic" %>
+                <div class="mt-4">
+                  <p class="text-gray-300">Ce badge récompense les joueurs qui analysent finement les playlists et les chansons, et dont les avis sont utiles aux autres.</p>
+                </div>
+              <% end %>
+              
+              <% if @badge.name == "The Competitor" || @badge.badge_type == "competitor" %>
+                <div class="mt-4">
+                  <p class="text-gray-300">Ce badge récompense les joueurs qui réussissent le mieux dans les playlists et ont un excellent ratio.</p>
+                  <p class="text-gray-300 mt-2">La meilleure approche est de prendre en compte :</p>
+                  <ul class="list-disc pl-6 mt-1 text-gray-300">
+                    <li class="mb-1">Le total des points gagnés sur les playlists 📊</li>
+                    <li class="mb-1">Le ratio de victoires (victoires / participations) 🏆</li>
+                    <li>Un bonus si le joueur est dans le top 3 régulièrement 🌟</li>
+                  </ul>
+                </div>
+              <% end %>
+              
+              <% if @badge.name == "The Engager" || @badge.badge_type == "engager" %>
+                <div class="mt-4">
+                  <p class="text-gray-300">Ce badge récompense les utilisateurs qui créent le plus d'engagement en votant et interagissant activement avec la plateforme.</p>
+                  <p class="text-gray-300 mt-2">L'objectif est de récompenser ceux qui interagissent le plus.</p>
+                </div>
+              <% end %>
             </div>
 
             <div class="bg-gray-800 rounded-lg p-4 mb-6">
               <h3 class="text-lg font-semibold text-white mb-2">Compétence requise</h3>
               <p class="text-gray-300"><%= @badge.points_required %> points de <%= @badge.badge_type.capitalize %></p>
             </div>
+            
+            <% if @badge.name == "The Engager" || @badge.badge_type == "engager" %>
+              <!-- Actions qui donnent des points pour le badge Engager -->
+              <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Actions qui donnent des points</h3>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-600">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Action</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Points attribués</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-500">
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🔥</span>
+                            <span class="text-white">Like une chanson</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+10 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">👎</span>
+                            <span class="text-white">Dislike une chanson</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+5 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">👍</span>
+                            <span class="text-white">Vote positif sur une playlist</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+15 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">💬</span>
+                            <span class="text-white">Vote négatif sur une playlist</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+10 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">📈</span>
+                            <span class="text-white">Interactions régulières pendant 7 jours consécutifs</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">Bonus +50 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🏆</span>
+                            <span class="text-white">Classement parmi les joueurs les plus engageants</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+100 pts</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Seuils pour obtenir le badge Engager -->
+              <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Seuils pour obtenir le badge</h3>
+                <p class="text-gray-300 mb-3">L'utilisateur doit cumuler suffisamment d'interactions avant d'obtenir le Engager Badge :</p>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-600">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Badge</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Seuil de points requis</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fréquence</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-500">
+                      <tr class="<%= @badge.level == 'bronze' ? 'bg-amber-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🏆</span>
+                            <span class="text-white font-semibold">Bronze Engager</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">500 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Hebdomadaire</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'silver' ? 'bg-gray-500 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥈</span>
+                            <span class="text-white font-semibold">Silver Engager</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">1500 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Mensuel</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'gold' ? 'bg-yellow-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥇</span>
+                            <span class="text-white font-semibold">Gold Engager</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">3000 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Trimestriel</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% end %>
+            
+            <% if @badge.name == "The Competitor" || @badge.badge_type == "competitor" %>
+              <!-- Seuils pour débloquer le badge Competitor -->
+              <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Seuils pour débloquer le badge</h3>
+                <p class="text-gray-300 mb-3">Pour qu'un joueur obtienne The Competitor Badge, il faut un minimum de points :</p>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-600">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Badge</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Seuil de points requis</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-500">
+                      <tr class="<%= @badge.level == 'bronze' ? 'bg-amber-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🏆</span>
+                            <span class="text-white font-semibold">Bronze Competitor</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">1000 pts</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'silver' ? 'bg-gray-500 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥈</span>
+                            <span class="text-white font-semibold">Silver Competitor</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">3000 pts</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'gold' ? 'bg-yellow-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥇</span>
+                            <span class="text-white font-semibold">Gold Competitor</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">5000 pts</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% end %>
+            
+            <% if @badge.name == "Wise Critic" || @badge.badge_type == "critic" %>
+              <!-- Seuils pour obtenir le badge Critic -->
+              <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Seuils pour obtenir le badge</h3>
+                <p class="text-gray-300 mb-3">Le badge est attribué uniquement aux meilleurs critiques :</p>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-600">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Badge</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Seuil de points requis</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fréquence</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-500">
+                      <tr class="<%= @badge.level == 'bronze' ? 'bg-amber-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🏆</span>
+                            <span class="text-white font-semibold">Bronze Critic</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">500 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Hebdomadaire</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'silver' ? 'bg-gray-500 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥈</span>
+                            <span class="text-white font-semibold">Silver Critic</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">2000 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Mensuel</td>
+                      </tr>
+                      <tr class="<%= @badge.level == 'gold' ? 'bg-yellow-900 bg-opacity-30' : '' %>">
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🥇</span>
+                            <span class="text-white font-semibold">Gold Critic</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">4000 pts</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white">Trimestriel</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Conditions et points attribués -->
+              <div class="bg-gray-800 rounded-lg p-4 mb-6">
+                <h3 class="text-lg font-semibold text-white mb-2">Conditions et points attribués</h3>
+                <div class="overflow-x-auto">
+                  <table class="min-w-full bg-gray-700 rounded-lg overflow-hidden">
+                    <thead class="bg-gray-600">
+                      <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Condition</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Points attribués</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-500">
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">👍</span>
+                            <span class="text-white">Émettre un vote positif sur un choix musical</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+15 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">👎</span>
+                            <span class="text-white">Émettre un vote négatif sur un choix musical</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+10 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🎯</span>
+                            <span class="text-white">Ratio élevé de décisions validées (likes / total choix)</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">Bonus +50 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🏆</span>
+                            <span class="text-white">Être parmi les top 3 critiques de la semaine</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+100 pts</td>
+                      </tr>
+                      <tr>
+                        <td class="px-4 py-3 whitespace-nowrap">
+                          <div class="flex items-center">
+                            <span class="text-white mr-2">🚀</span>
+                            <span class="text-white">Maintenir un excellent ratio pendant 3 semaines</span>
+                          </div>
+                        </td>
+                        <td class="px-4 py-3 whitespace-nowrap text-white font-bold">+200 pts</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            <% end %>
           </div>
         </div>
 
@@ -83,7 +390,13 @@
             <div class="flex flex-col md:flex-row items-center">
               <div class="flex-1">
                 <h3 class="text-xl font-semibold text-white mb-2">Valeur de la récompense</h3>
-                <p class="text-white mb-4"><%= @badge.reward_description %></p>
+                <p class="text-white mb-4">
+                  <% if @badge.name == "The Competitor" || @badge.badge_type == "competitor" %>
+                    Accès VIP à du contenu exclusif ou à une playlist privée.
+                  <% else %>
+                    <%= @badge.reward_description %>
+                  <% end %>
+                </p>
                 
                 <% if @user_badge.present? %>
                   <% if @user_badge.claimed_at %>
