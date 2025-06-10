@@ -9,6 +9,8 @@ class Badge < ApplicationRecord
   validates :points_required, presence: true, numericality: { greater_than: 0 }
   validates :reward_type, inclusion: { in: REWARD_TYPES }, allow_nil: true
   validates :badge_type, uniqueness: { scope: :level }
+  validates :reward_description, presence: true, if: -> { reward_type.present? }
+  # L'image est optionnelle mais recommandée
 
   has_many :user_badges
   has_many :users, through: :user_badges
@@ -43,5 +45,14 @@ class Badge < ApplicationRecord
     current_index = LEVELS.index(level)
     previous_level_name = LEVELS[current_index - 1]
     self.class.find_by(badge_type: badge_type, level: previous_level_name)
+  end
+
+  def image_path
+    if image.present?
+      "/assets/badges/#{image}"
+    else
+      # Image par défaut basée sur le type et le niveau
+      "/assets/badges/default-#{badge_type}-#{level}.png"
+    end
   end
 end 

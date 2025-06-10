@@ -7,9 +7,150 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+    <style>
+      /* Navigation Styles */
+      .nav {
+        background-color: #111827;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      
+      .nav-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 64px;
+      }
+      
+      .logo {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.25rem;
+        color: white;
+        text-decoration: none;
+      }
+      
+      .logo svg {
+        width: 32px;
+        height: 32px;
+        margin-right: 0.5rem;
+      }
+      
+      .main-menu {
+        display: flex;
+        gap: 1.5rem;
+      }
+      
+      .user-menu {
+        display: flex;
+        gap: 1rem;
+      }
+      
+      .nav-link {
+        color: #e5e7eb;
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.375rem;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+      
+      .mobile-menu-button {
+        display: none;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+      
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        padding: 1rem 0;
+        background-color: #1f2937;
+        border-radius: 0 0 0.5rem 0.5rem;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        max-height: 0;
+      }
+      
+      .mobile-menu.show {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 500px;
+      }
+      
+      .mobile-menu .nav-link {
+        padding: 0.75rem 1rem;
+        border-radius: 0;
+        font-size: 1rem;
+      }
+      
+      .mobile-menu .nav-link:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+      
+      /* Flash messages */
+      .flash {
+        max-width: 1200px;
+        margin: 1rem auto;
+        padding: 0 1rem;
+      }
+      
+      .flash-notice, .flash-alert {
+        padding: 0.75rem 1rem;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+      }
+      
+      .flash-notice {
+        background-color: #10b981;
+        color: white;
+      }
+      
+      .flash-alert {
+        background-color: #ef4444;
+        color: white;
+      }
+      
+      .main-content {
+        min-height: calc(100vh - 64px);
+      }
+      
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .main-menu, .user-menu {
+          display: none;
+        }
+        
+        .mobile-menu-button {
+          display: block;
+        }
+      }
+    </style>
   </head>
 
-  <body class="bg-gray-50">
+  <body class="bg-gray-900 text-white">
     <nav class="nav">
       <div class="nav-container">
         <div class="nav-content">
@@ -41,7 +182,7 @@
           </div>
 
           <!-- Bouton menu mobile -->
-          <button class="mobile-menu-button">
+          <button class="mobile-menu-button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -54,6 +195,15 @@
           <%= link_to "Scores", scores_path, class: "nav-link" %>
           <%= link_to "Badges", my_badges_path, class: "nav-link" %>
           <%= link_to "Récompenses", rewards_path, class: "nav-link" %>
+          
+          <% if user_signed_in? %>
+            <div class="border-t border-gray-700 my-2"></div>
+            <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
+            <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link text-left w-full" %>
+          <% else %>
+            <div class="border-t border-gray-700 my-2"></div>
+            <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>
+          <% end %>
         </div>
       </div>
     </nav>
@@ -82,10 +232,47 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const mobileMenu = document.querySelector('#mobile-menu');
-
-        mobileMenuButton.addEventListener('click', function() {
-          mobileMenu.classList.toggle('show');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let menuOpen = false;
+        
+        function toggleMenu() {
+          menuOpen = !menuOpen;
+          mobileMenu.classList.toggle('show', menuOpen);
+          mobileMenuButton.setAttribute('aria-expanded', menuOpen);
+          
+          // Changer l'icône du bouton selon l'état du menu
+          if (menuOpen) {
+            mobileMenuButton.innerHTML = `
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            `;
+          } else {
+            mobileMenuButton.innerHTML = `
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            `;
+          }
+        }
+        
+        mobileMenuButton.addEventListener('click', toggleMenu);
+        
+        // Fermer le menu mobile lorsqu'on clique ailleurs sur la page
+        document.addEventListener('click', function(event) {
+          if (menuOpen && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+            toggleMenu();
+          }
+        });
+        
+        // Fermer le menu mobile lorsqu'on clique sur un lien du menu
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a, button');
+        mobileMenuLinks.forEach(link => {
+          link.addEventListener('click', function() {
+            if (menuOpen) {
+              toggleMenu();
+            }
+          });
         });
       });
     </script>

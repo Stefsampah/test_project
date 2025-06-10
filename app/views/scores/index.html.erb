@@ -1,147 +1,193 @@
 <!-- Section des scores totaux -->
-<div class="min-h-screen bg-gray-900 py-4 sm:py-8">
+<div class="min-h-screen bg-gray-900 py-6 sm:py-10">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
-    <div class="text-center mb-8">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center">
+        <div class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center">
+          <div class="w-6 h-6 text-cyan-400">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5.14v14l11-7-11-7z"/>
             </svg>
           </div>
         </div>
-        <h1 class="text-4xl font-bold text-white ml-4">Leaderboard</h1>
+        <h1 class="text-3xl font-bold text-white ml-4">Classements</h1>
+      </div>
+      
+      <!-- Filtres -->
+      <div class="hidden sm:flex space-x-2">
+        <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Tous</button>
+        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="total">Top Players</button>
+        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="categories">Catégories</button>
+        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="playlists">Playlists</button>
+      </div>
+    </div>
+    
+    <!-- Filtres mobile -->
+    <div class="sm:hidden flex flex-wrap justify-center gap-2 mb-6">
+      <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Tous</button>
+      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="total">Top Players</button>
+      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="categories">Catégories</button>
+      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="playlists">Playlists</button>
+    </div>
+
+    <!-- Section scores totaux -->
+    <div id="total-section" class="score-section">
+      <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-6 mb-8 shadow-lg">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+          Top Players
+        </h2>
+        <div class="space-y-3">
+          <% @total_scores.each_with_index do |score, index| %>
+            <% user = User.find(score[:user_id]) %>
+            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4 transition-all hover:bg-opacity-70">
+              <div class="flex-shrink-0 flex items-center justify-center <%= index < 3 ? "w-10 h-10 rounded-full" : "w-8 h-8 rounded-full" %> <%= index == 0 ? "bg-yellow-500" : (index == 1 ? "bg-gray-300" : (index == 2 ? "bg-amber-700" : "bg-gray-700")) %> mr-4">
+                <span class="text-white font-bold"><%= index + 1 %></span>
+              </div>
+              
+              <div class="flex-shrink-0 mr-4">
+                <% if user.avatar.attached? %>
+                  <%= image_tag user.avatar, class: "h-10 w-10 rounded-full" %>
+                <% else %>
+                  <div class="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
+                    <span class="text-white text-lg"><%= user.email.first.upcase %></span>
+                  </div>
+                <% end %>
+              </div>
+              
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-white truncate"><%= user.email %></p>
+                <div class="flex flex-wrap mt-1">
+                  <% score[:badges].each do |badge| %>
+                    <span class="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-900 text-blue-200 mr-1 mb-1">
+                      <%= badge %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              
+              <div class="text-right">
+                <p class="text-sm text-gray-400">Score</p>
+                <p class="text-xl font-bold text-white"><%= score[:points] %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
 
-    <!-- Scores totaux -->
-    <div class="bg-blue-600 rounded-lg p-6 mb-8 transform hover:scale-105 transition-all duration-300">
-      <h2 class="text-2xl font-light text-white mb-6">Top Players</h2>
-      <div class="space-y-4">
-        <% @total_scores.each_with_index do |score, index| %>
-          <div class="flex items-center justify-between p-4 bg-white/10 rounded-lg">
-            <div class="flex items-center">
-              <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-4">
-                <%= index + 1 %>
-              </div>
-              <% user = User.find(score[:user_id]) %>
-              <% if user.avatar.attached? %>
-                <%= image_tag user.avatar, class: "h-12 w-12 rounded-full border-2 border-white/30" %>
-              <% else %>
-                <div class="h-12 w-12 rounded-full bg-gray-800 border-2 border-white/30 flex items-center justify-center">
-                  <span class="text-white text-xl"><%= user.email.first.upcase %></span>
+    <!-- Section catégories spéciales -->
+    <div id="categories-section" class="score-section">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <!-- Top Engager -->
+        <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-lg p-5 shadow-lg">
+          <div class="flex items-center mb-4">
+            <svg class="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
+            </svg>
+            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Engagements</h2>
+          </div>
+          <div class="space-y-2">
+            <% @top_engager_scores.each_with_index do |score, index| %>
+              <% if index < 5 # Limiter à 5 entrées %>
+                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
+                  <div class="flex items-center">
+                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                  </div>
+                  <span class="text-lg font-bold text-purple-300"><%= score[:points] %></span>
                 </div>
               <% end %>
-              <span class="ml-4 font-medium text-white"><%= user.email %></span>
-            </div>
-            <div class="flex items-center space-x-6">
-              <div class="text-right">
-                <p class="text-sm text-white/80">Total Score</p>
-                <p class="text-2xl font-bold text-white"><%= score[:points] %></p>
-              </div>
-              <div class="flex space-x-2">
-                <% score[:badges].each do |badge| %>
-                  <span class="px-3 py-1 text-sm font-medium rounded-full bg-white/20 text-white">
-                    <%= badge %>
-                  </span>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Best Ratio -->
+        <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-lg p-5 shadow-lg">
+          <div class="flex items-center mb-4">
+            <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 3a1 1 0 000 2h10a1 1 0 100-2H3zm0 4a1 1 0 000 2h6a1 1 0 100-2H3zm0 4a1 1 0 100 2h8a1 1 0 100-2H3zm10-4a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd"></path>
+            </svg>
+            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Ratios</h2>
+          </div>
+          <div class="space-y-2">
+            <% @best_ratio_scores.each_with_index do |score, index| %>
+              <% if index < 5 # Limiter à 5 entrées %>
+                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
+                  <div class="flex items-center">
+                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                  </div>
+                  <span class="text-lg font-bold text-blue-300"><%= score[:points] %>%</span>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Wise Critic -->
+        <div class="bg-gradient-to-r from-teal-900 to-teal-800 rounded-lg p-5 shadow-lg">
+          <div class="flex items-center mb-4">
+            <svg class="w-6 h-6 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
+            </svg>
+            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Critiques</h2>
+          </div>
+          <div class="space-y-2">
+            <% @wise_critic_scores.each_with_index do |score, index| %>
+              <% if index < 5 # Limiter à 5 entrées %>
+                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
+                  <div class="flex items-center">
+                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                  </div>
+                  <span class="text-lg font-bold text-teal-300"><%= score[:points] %></span>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section scores par playlist -->
+    <div id="playlists-section" class="score-section">
+      <% @scores_by_playlist.each_slice(3).each do |playlist_group| %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          <% playlist_group.each do |playlist, scores| %>
+            <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-5 shadow-lg">
+              <h3 class="text-xl font-semibold text-white mb-4 truncate"><%= playlist.title %></h3>
+              <div class="space-y-2">
+                <% scores.first(5).each_with_index do |score, index| %>
+                  <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
+                    <div class="flex items-center">
+                      <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
+                      <% if score.user.avatar.attached? %>
+                        <%= image_tag score.user.avatar, class: "h-6 w-6 rounded-full mr-2" %>
+                      <% else %>
+                        <div class="h-6 w-6 rounded-full bg-gray-700 flex items-center justify-center mr-2">
+                          <span class="text-white text-xs"><%= score.user.email.first.upcase %></span>
+                        </div>
+                      <% end %>
+                      <span class="text-white text-sm truncate max-w-[120px]"><%= score.user.email %></span>
+                    </div>
+                    <span class="text-lg font-bold text-green-300"><%= score.points %></span>
+                  </div>
+                <% end %>
+                
+                <% if scores.size > 5 %>
+                  <div class="text-center pt-2">
+                    <a href="<%= score_path(playlist) %>" class="text-xs text-gray-400 hover:text-white transition-colors">
+                      Voir tous les scores →
+                    </a>
+                  </div>
                 <% end %>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Catégories spéciales -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <!-- Top Engager -->
-      <div class="bg-purple-600 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Top Engager</h2>
-        </div>
-        <div class="space-y-3">
-          <% @top_engager_scores.each_with_index do |score, index| %>
-            <div class="flex items-center justify-between bg-white/10 rounded-lg p-3">
-              <div class="flex items-center">
-                <span class="text-white/80 mr-3">#<%= index + 1 %></span>
-                <span class="text-white"><%= User.find(score[:user_id]).email %></span>
-              </div>
-              <span class="text-xl font-bold text-white"><%= score[:points] %></span>
-            </div>
           <% end %>
-        </div>
-      </div>
-
-      <!-- Best Ratio -->
-      <div class="bg-blue-600 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Best Ratio</h2>
-        </div>
-        <div class="space-y-3">
-          <% @best_ratio_scores.each_with_index do |score, index| %>
-            <div class="flex items-center justify-between bg-white/10 rounded-lg p-3">
-              <div class="flex items-center">
-                <span class="text-white/80 mr-3">#<%= index + 1 %></span>
-                <span class="text-white"><%= User.find(score[:user_id]).email %></span>
-              </div>
-              <span class="text-xl font-bold text-white"><%= score[:points] %>%</span>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- Wise Critic -->
-      <div class="bg-cyan-500 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-          </svg>
-          <h2 class="text-2xl font-light text-white ml-2">Wise Critic</h2>
-        </div>
-        <div class="space-y-3">
-          <% @wise_critic_scores.each_with_index do |score, index| %>
-            <div class="flex items-center justify-between bg-white/10 rounded-lg p-3">
-              <div class="flex items-center">
-                <span class="text-white/80 mr-3">#<%= index + 1 %></span>
-                <span class="text-white"><%= User.find(score[:user_id]).email %></span>
-              </div>
-              <span class="text-xl font-bold text-white"><%= score[:points] %></span>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scores par playlist -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <% @scores_by_playlist.each do |playlist, scores| %>
-        <div class="bg-blue-600 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-          <h3 class="text-2xl font-light text-white mb-4"><%= playlist.title %></h3>
-          <div class="space-y-3">
-            <% scores.each_with_index do |score, index| %>
-              <div class="flex items-center justify-between bg-white/10 rounded-lg p-3">
-                <div class="flex items-center">
-                  <span class="text-white/80 mr-3">#<%= index + 1 %></span>
-                  <% if score.user.avatar.attached? %>
-                    <%= image_tag score.user.avatar, class: "h-8 w-8 rounded-full border-2 border-white/30 mr-2" %>
-                  <% else %>
-                    <div class="h-8 w-8 rounded-full bg-gray-800 border-2 border-white/30 flex items-center justify-center mr-2">
-                      <span class="text-white text-sm"><%= score.user.email.first.upcase %></span>
-                    </div>
-                  <% end %>
-                  <span class="text-white"><%= score.user.email %></span>
-                </div>
-                <span class="text-xl font-bold text-white"><%= score.points %></span>
-              </div>
-            <% end %>
-          </div>
         </div>
       <% end %>
     </div>
@@ -149,15 +195,80 @@
 </div>
 
 <style>
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+  .score-filter.active {
+    background-color: #4f46e5;
   }
-  50% {
-    background-position: 100% 50%;
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
-  100% {
-    background-position: 0% 50%;
+  
+  .score-section {
+    transition: all 0.3s ease;
   }
-}
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const scoreFilters = document.querySelectorAll('.score-filter');
+    const scoreSections = document.querySelectorAll('.score-section');
+    const totalSection = document.getElementById('total-section');
+    const categoriesSection = document.getElementById('categories-section');
+    const playlistsSection = document.getElementById('playlists-section');
+    
+    // Initialisation - montrer toutes les sections
+    function showAllSections() {
+      scoreSections.forEach(section => {
+        section.style.display = 'block';
+      });
+    }
+    
+    // Par défaut, montrer toutes les sections
+    showAllSections();
+    
+    // Gestion des filtres
+    scoreFilters.forEach(filter => {
+      filter.addEventListener('click', function() {
+        // Mettre à jour l'état actif
+        scoreFilters.forEach(f => f.classList.remove('active'));
+        this.classList.add('active');
+        
+        const target = this.getAttribute('data-target');
+        
+        // Afficher les sections appropriées
+        if (target === 'all') {
+          showAllSections();
+        } else if (target === 'total') {
+          scoreSections.forEach(section => {
+            section.style.display = 'none';
+          });
+          totalSection.style.display = 'block';
+        } else if (target === 'categories') {
+          scoreSections.forEach(section => {
+            section.style.display = 'none';
+          });
+          categoriesSection.style.display = 'block';
+        } else if (target === 'playlists') {
+          scoreSections.forEach(section => {
+            section.style.display = 'none';
+          });
+          playlistsSection.style.display = 'block';
+        }
+        
+        // Scroll en douceur vers le haut de la section
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    });
+  });
+</script>

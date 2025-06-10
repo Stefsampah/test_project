@@ -26,35 +26,127 @@
 
     <div id="notification" class="notification p-4 rounded mb-4 hidden"></div>
 
-    <!-- Récompenses disponibles -->
-    <div class="mb-12">
-      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-6 mb-8">
-        <h2 class="text-2xl font-light text-white mb-6">Récompenses disponibles</h2>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          <% if @rewards.any? %>
-            <% @rewards.each do |reward| %>
-              <div class="reward-card bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-4 flex flex-col items-center transform hover:scale-105 transition-all duration-300">
-                <div class="reward-icon w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mb-4">
-          <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M5 2a2 2 0 00-2 2v14l3.5-2 3.5 2 3.5-2 3.5 2V4a2 2 0 00-2-2H5zm4.707 3.707a1 1 0 00-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L8.414 9H10a3 3 0 013 3v1a1 1 0 102 0v-1a5 5 0 00-5-5H8.414l1.293-1.293z" clip-rule="evenodd"></path>
-          </svg>
-        </div>
-                <h3 class="text-lg font-semibold text-white mb-2"><%= reward.name %></h3>
-                <div class="bg-purple-900 bg-opacity-50 rounded-lg p-2 w-full mb-4">
-                  <p class="text-sm text-center text-white"><%= reward.description %></p>
-        </div>
-                <div class="mt-auto">
-                  <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-purple-300 bg-purple-900">
-                    Valeur: <%= reward.value %> points
-                  </span>
+    <!-- Filtres -->
+    <div class="mb-6">
+      <div class="flex flex-wrap justify-center gap-2">
+        <button id="all-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white filter-active">Toutes</button>
+        <button id="standard-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white">Standard</button>
+        <button id="premium-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white">Premium</button>
+      </div>
+    </div>
+
+    <!-- Mes récompenses -->
+    <% if user_signed_in? && current_user.user_badges.where.not(claimed_at: nil).exists? %>
+      <div class="mb-12">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 mb-8">
+          <h2 class="text-2xl font-light text-white mb-6">Mes récompenses</h2>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <% current_user.user_badges.where.not(claimed_at: nil).includes(:badge).each do |user_badge| %>
+              <% badge = user_badge.badge %>
+              <% if badge.reward_description.present? %>
+                <div class="reward-card bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-lg">
+                  <% if badge.image.present? %>
+                    <div class="h-48 overflow-hidden">
+                      <img src="<%= asset_path("badges/#{badge.image}") %>" alt="<%= badge.name %>" class="w-full h-full object-cover">
+                    </div>
+                  <% end %>
+                  
+                  <div class="p-4">
+                    <div class="flex items-center mb-3">
+                      <span class="bg-<%= badge.reward_type == 'premium' ? 'purple' : 'blue' %>-600 text-xs font-semibold px-2 py-1 rounded-full text-white mr-2">
+                        <%= badge.reward_type == 'premium' ? 'Premium' : 'Standard' %>
+                      </span>
+                      <span class="text-gray-400 text-xs">Réclamé le <%= user_badge.claimed_at.strftime("%d/%m/%Y") %></span>
+                    </div>
+                    
+                    <h3 class="text-lg font-semibold text-white mb-2"><%= badge.name %></h3>
+                    <p class="text-gray-300 text-sm mb-4"><%= badge.reward_description %></p>
+                    
+                    <div class="flex items-center text-xs text-gray-400">
+                      <span class="flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        Badge <%= badge.badge_type.capitalize %> <%= badge.level.capitalize %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
         </div>
       </div>
-            <% end %>
-          <% else %>
-            <div class="col-span-full text-center p-6 bg-gray-800 rounded-lg">
-              <p class="text-white">Aucune récompense disponible pour le moment.</p>
+    <% end %>
+
+    <!-- Récompenses standard -->
+    <div class="mb-12 reward-section" id="standard-section">
+      <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-light text-white mb-6">Récompenses Standard</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <% Badge.where(reward_type: 'standard').where.not(reward_description: [nil, ""]).order(points_required: :asc).each do |badge| %>
+            <div class="reward-card bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-lg">
+              <% if badge.image.present? %>
+                <div class="h-48 overflow-hidden">
+                  <img src="<%= asset_path("badges/#{badge.image}") %>" alt="<%= badge.name %>" class="w-full h-full object-cover">
+                </div>
+              <% end %>
+              
+              <div class="p-4">
+                <div class="flex items-center mb-3">
+                  <span class="bg-blue-600 text-xs font-semibold px-2 py-1 rounded-full text-white mr-2">Standard</span>
+                  <span class="bg-<%= badge.badge_type == 'competitor' ? 'amber' : (badge.badge_type == 'engager' ? 'blue' : (badge.badge_type == 'critic' ? 'red' : 'purple')) %>-500 text-xs font-semibold px-2 py-1 rounded-full text-white">
+                    <%= badge.badge_type.capitalize %>
+                  </span>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-white mb-2"><%= badge.name %></h3>
+                <p class="text-gray-300 text-sm mb-4"><%= badge.reward_description %></p>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-400">Niveau <%= badge.level.capitalize %></span>
+                  <a href="<%= badge_path(badge) %>" class="text-blue-400 hover:text-blue-300 text-xs font-semibold">Voir détails →</a>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
+      </div>
+    </div>
+
+    <!-- Récompenses premium -->
+    <div class="mb-12 reward-section" id="premium-section">
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-light text-white mb-6">Récompenses Premium</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <% Badge.where(reward_type: 'premium').where.not(reward_description: [nil, ""]).order(points_required: :asc).each do |badge| %>
+            <div class="reward-card bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg overflow-hidden shadow-lg">
+              <% if badge.image.present? %>
+                <div class="h-48 overflow-hidden">
+                  <img src="<%= asset_path("badges/#{badge.image}") %>" alt="<%= badge.name %>" class="w-full h-full object-cover">
+                </div>
+              <% end %>
+              
+              <div class="p-4">
+                <div class="flex items-center mb-3">
+                  <span class="bg-purple-600 text-xs font-semibold px-2 py-1 rounded-full text-white mr-2">Premium</span>
+                  <span class="bg-<%= badge.badge_type == 'competitor' ? 'amber' : (badge.badge_type == 'engager' ? 'blue' : (badge.badge_type == 'critic' ? 'red' : 'purple')) %>-500 text-xs font-semibold px-2 py-1 rounded-full text-white">
+                    <%= badge.badge_type.capitalize %>
+                  </span>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-white mb-2"><%= badge.name %></h3>
+                <p class="text-gray-300 text-sm mb-4"><%= badge.reward_description %></p>
+                
+                <div class="flex items-center justify-between">
+                  <span class="text-xs text-gray-400">Niveau <%= badge.level.capitalize %></span>
+                  <a href="<%= badge_path(badge) %>" class="text-purple-400 hover:text-purple-300 text-xs font-semibold">Voir détails →</a>
+                </div>
+              </div>
+            </div>
           <% end %>
         </div>
       </div>
@@ -88,10 +180,15 @@
   .reward-card:hover {
     border-color: #8b5cf6;
     box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.1), 0 10px 10px -5px rgba(139, 92, 246, 0.04);
+    transform: translateY(-5px);
   }
   
   .reward-icon {
     box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+  }
+  
+  .filter-active {
+    background-color: #6366f1;
   }
   
   @keyframes gradient {
@@ -105,4 +202,43 @@
       background-position: 0% 50%;
     }
   }
-</style> 
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filtres pour les récompenses
+    const allButton = document.getElementById('all-rewards');
+    const standardButton = document.getElementById('standard-rewards');
+    const premiumButton = document.getElementById('premium-rewards');
+    
+    const sections = document.querySelectorAll('.reward-section');
+    const standardSection = document.getElementById('standard-section');
+    const premiumSection = document.getElementById('premium-section');
+    
+    allButton.addEventListener('click', function() {
+      allButton.classList.add('filter-active');
+      standardButton.classList.remove('filter-active');
+      premiumButton.classList.remove('filter-active');
+      
+      sections.forEach(section => section.style.display = 'block');
+    });
+    
+    standardButton.addEventListener('click', function() {
+      allButton.classList.remove('filter-active');
+      standardButton.classList.add('filter-active');
+      premiumButton.classList.remove('filter-active');
+      
+      standardSection.style.display = 'block';
+      premiumSection.style.display = 'none';
+    });
+    
+    premiumButton.addEventListener('click', function() {
+      allButton.classList.remove('filter-active');
+      standardButton.classList.remove('filter-active');
+      premiumButton.classList.add('filter-active');
+      
+      standardSection.style.display = 'none';
+      premiumSection.style.display = 'block';
+    });
+  });
+</script> 
