@@ -82,22 +82,15 @@
       .mobile-menu {
         display: none;
         flex-direction: column;
-        padding: 1rem 0;
+        padding: 0;
         background-color: #1f2937;
         border-radius: 0 0 0.5rem 0.5rem;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        transform: translateY(-20px);
-        opacity: 0;
-        transition: all 0.3s ease;
-        overflow: hidden;
-        max-height: 0;
       }
       
       .mobile-menu.show {
         display: flex;
-        opacity: 1;
-        transform: translateY(0);
-        max-height: 500px;
+        padding: 1rem 0;
       }
       
       .mobile-menu .nav-link {
@@ -182,7 +175,7 @@
           </div>
 
           <!-- Bouton menu mobile -->
-          <button class="mobile-menu-button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+          <button class="mobile-menu-button" id="mobile-menu-button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -231,17 +224,21 @@
 
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        let menuOpen = false;
         
-        function toggleMenu() {
-          menuOpen = !menuOpen;
-          mobileMenu.classList.toggle('show', menuOpen);
-          mobileMenuButton.setAttribute('aria-expanded', menuOpen);
+        // Simple toggle function for le menu mobile
+        mobileMenuButton.addEventListener('click', function(event) {
+          event.stopPropagation(); // Empêcher la propagation du clic
+          
+          const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+          mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+          
+          // Basculer la classe show
+          mobileMenu.classList.toggle('show');
           
           // Changer l'icône du bouton selon l'état du menu
-          if (menuOpen) {
+          if (mobileMenu.classList.contains('show')) {
             mobileMenuButton.innerHTML = `
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -254,24 +251,42 @@
               </svg>
             `;
           }
-        }
+        });
         
-        mobileMenuButton.addEventListener('click', toggleMenu);
-        
-        // Fermer le menu mobile lorsqu'on clique ailleurs sur la page
+        // Fermer le menu si on clique ailleurs sur la page
         document.addEventListener('click', function(event) {
-          if (menuOpen && !mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
-            toggleMenu();
+          if (mobileMenu.classList.contains('show') && 
+              !mobileMenu.contains(event.target) && 
+              !mobileMenuButton.contains(event.target)) {
+            
+            mobileMenu.classList.remove('show');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            
+            mobileMenuButton.innerHTML = `
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            `;
           }
         });
         
-        // Fermer le menu mobile lorsqu'on clique sur un lien du menu
+        // Empêcher la fermeture du menu lorsqu'on clique dessus
+        mobileMenu.addEventListener('click', function(event) {
+          event.stopPropagation();
+        });
+        
+        // Fermer le menu lorsqu'on clique sur un lien
         const mobileMenuLinks = mobileMenu.querySelectorAll('a, button');
         mobileMenuLinks.forEach(link => {
           link.addEventListener('click', function() {
-            if (menuOpen) {
-              toggleMenu();
-            }
+            mobileMenu.classList.remove('show');
+            mobileMenuButton.setAttribute('aria-expanded', 'false');
+            
+            mobileMenuButton.innerHTML = `
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            `;
           });
         });
       });
