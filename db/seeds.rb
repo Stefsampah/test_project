@@ -19,9 +19,11 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     user.password = '234567'
   end
   
-  # Playlist 1: Musique Pop
-  pop_playlist = Playlist.find_or_create_by!(title: 'Top Pop Hits 2024') do |playlist|
+  # Playlist Standard: This is Pop
+  pop_playlist = Playlist.find_or_create_by!(title: 'This is Pop') do |playlist|
     playlist.description = 'Les meilleurs hits pop du moment'
+    playlist.genre = 'Pop'
+    playlist.premium = false
   end
   
   # Vidéos pour la playlist Pop
@@ -44,9 +46,38 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     end
   end
   
-  # Playlist 2: Hip Hop
-  hip_hop_playlist_1 = Playlist.find_or_create_by!(title: 'Best Hip Hop Music') do |playlist|
-    playlist.description = 'Les meilleurs morceaux de hip hop'
+  # Playlist Standard: Pop Play
+  pop_playlist_2 = Playlist.find_or_create_by!(title: 'Pop Play') do |playlist|
+    playlist.description = 'La playlist parfaite pour danser sur des tubes pop'
+    playlist.genre = 'Pop'
+    playlist.premium = false
+  end
+  
+  # Vidéos pour la playlist Pop Play
+  pop_videos_2 = [
+    { title: 'Bruno Mars - Uptown Funk', youtube_id: 'OPf0YbXqDm0' },
+    { title: 'Pharrell Williams - Happy', youtube_id: 'ZbZSe6N_BXs' },
+    { title: 'Mark Ronson - Nothing Breaks Like a Heart', youtube_id: 'p1zrweVN4l4' },
+    { title: 'Rihanna - Diamonds', youtube_id: 'lWA2pjMjpBs' },
+    { title: 'Beyoncé - Halo', youtube_id: 'bnVUHWCynig' },
+    { title: 'Lady Gaga - Shallow', youtube_id: 'bo_efYhYU2A' },
+    { title: 'Adele - Rolling in the Deep', youtube_id: 'rYEDA3JcQqw' },
+    { title: 'Justin Timberlake - Can\'t Stop the Feeling', youtube_id: 'ru0K8uYEZWw' },
+    { title: 'Ariana Grande - thank u, next', youtube_id: 'gl1aHhXnN1k' },
+    { title: 'Sam Smith - Stay With Me', youtube_id: 'pB-5XG-DbAA' }
+  ]
+  
+  pop_videos_2.each do |video|
+    pop_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Standard: This is Hip Hop
+  hip_hop_playlist_1 = Playlist.find_or_create_by!(title: 'This is Hip Hop') do |playlist|
+    playlist.description = 'Le meilleur du hip hop actuel'
+    playlist.genre = 'Hip Hop'
+    playlist.premium = false
   end
   
   # Vidéos pour la playlist Hip Hop
@@ -63,32 +94,32 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     { title: 'Didi B - Good vibes', youtube_id: 'wLdtn45riSc' }
   ]
   
- Ç 
   hip_hop_videos_1.each do |video|
     hip_hop_playlist_1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
     end
   end
   
-# Playlist 3: Hip Hop 2
-hip_hop_playlist_2 = Playlist.find_or_create_by!(title: 'Best Hip Hop Music Vol. 2') do |playlist|
-  playlist.description = 'Encore plus de hip hop !'
-end
-
-# Vidéos pour la playlist Hip Hop 2
-hip_hop_videos_2 = [
-  { title: 'Didi B - Big Boss', youtube_id: 'xYZ123ABC' },
-  { title: 'POPCAAN - Firm and Strong', youtube_id: 'aBC456DEF' },
-  { title: 'HIMRA - Vibes', youtube_id: 'dEF789GHI' },
-  { title: 'Travis Scott - Stargazing', youtube_id: 'gHI012JKL' },
-  { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: 'jKL345MNO' },
-  { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'mNO678PQR' },
-  { title: 'Didi B - En Haut', youtube_id: 'pQR901STU' },
-  { title: 'Toosii - Favorite Song', youtube_id: 'sTU234VWX' },
-  { title: 'YE - Hurricane', youtube_id: 'vWX567YZA' },
-  { title: 'Didi B - Laissez Tomber', youtube_id: 'yZA890BCD' }
-  ]
+  # Playlist Standard: Hot New Hip Hop
+  hip_hop_playlist_2 = Playlist.find_or_create_by!(title: 'Hot New Hip Hop') do |playlist|
+    playlist.description = 'Les dernières sorties hip hop à ne pas manquer'
+    playlist.genre = 'Hip Hop'
+    playlist.premium = false
+  end
   
+  # Vidéos pour la playlist Hot New Hip Hop
+  hip_hop_videos_2 = [
+    { title: 'Didi B - Big Boss', youtube_id: 'xYZ123ABC' },
+    { title: 'POPCAAN - Firm and Strong', youtube_id: 'aBC456DEF' },
+    { title: 'HIMRA - Vibes', youtube_id: 'dEF789GHI' },
+    { title: 'Travis Scott - Stargazing', youtube_id: 'gHI012JKL' },
+    { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: 'jKL345MNO' },
+    { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'mNO678PQR' },
+    { title: 'Didi B - En Haut', youtube_id: 'pQR901STU' },
+    { title: 'Toosii - Favorite Song', youtube_id: 'sTU234VWX' },
+    { title: 'YE - Hurricane', youtube_id: 'vWX567YZA' },
+    { title: 'Didi B - Laissez Tomber', youtube_id: 'yZA890BCD' }
+  ]
   
   hip_hop_videos_2.each do |video|
     hip_hop_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
@@ -96,10 +127,11 @@ hip_hop_videos_2 = [
     end
   end
 
-
-  # Playlist 3: Reggae
-  reggae_playlist = Playlist.find_or_create_by!(title: 'Best Reggae Hits') do |playlist|
-    playlist.description = 'Les meilleurs morceaux de reggae'
+  # Playlist Standard: Best of Reggae
+  reggae_playlist = Playlist.find_or_create_by!(title: 'Best of Reggae') do |playlist|
+    playlist.description = 'Les meilleurs morceaux de reggae de tous les temps'
+    playlist.genre = 'Reggae'
+    playlist.premium = false
   end
   
   # Vidéos pour la playlist Reggae
@@ -118,6 +150,168 @@ hip_hop_videos_2 = [
   
   reggae_videos.each do |video|
     reggae_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Standard: This is AfroPop
+  afropop_playlist = Playlist.find_or_create_by!(title: 'This is AfroPop') do |playlist|
+    playlist.description = 'Les meilleurs sons afropop du moment'
+    playlist.genre = 'Afro Pop'
+    playlist.premium = false
+  end
+  
+  # Vidéos pour la playlist AfroPop
+  afropop_videos = [
+    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'jkAKyDrUzZk' },
+    { title: 'Burna Boy - Last Last', youtube_id: 'tfiY6CegHH4' },
+    { title: 'Davido - Fall', youtube_id: 'HI1Xx5e6Qhs' },
+    { title: 'Rema - Calm Down', youtube_id: 'QgUEkKGOjK0' },
+    { title: 'Fireboy DML - Peru', youtube_id: 'GE8qYRyAz0U' },
+    { title: 'CKay - love nwantiti', youtube_id: 'QQJGoCqMbGI' },
+    { title: 'Ayra Starr - Rush', youtube_id: 'L6cxpbBENBs' },
+    { title: 'Tems - Free Mind', youtube_id: '0zDUXXp5aAo' },
+    { title: 'Asake - Sungba ft. Burna Boy', youtube_id: 'TW6F2EfZIoI' },
+    { title: 'Joeboy - Sip (Alcohol)', youtube_id: 'fgPJBZIOpfs' }
+  ]
+  
+  afropop_videos.each do |video|
+    afropop_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+  # Playlist Premium: Hip Hop Essentials
+  hip_hop_essentials = Playlist.find_or_create_by!(title: 'Hip Hop Essentials') do |playlist|
+    playlist.description = 'Les classiques indispensables du hip hop'
+    playlist.genre = 'Hip Hop'
+    playlist.premium = true
+  end
+  
+  # Vidéos pour la playlist Hip Hop Essentials
+  hip_hop_essentials_videos = [
+    { title: 'Dr. Dre - Still D.R.E. ft. Snoop Dogg', youtube_id: '_CL6n0FJZpk' },
+    { title: 'Eminem - Lose Yourself', youtube_id: '_Yhyp-_hX2s' },
+    { title: 'The Notorious B.I.G. - Juicy', youtube_id: '_JZom_gVfuw' },
+    { title: 'Tupac - California Love', youtube_id: '5wBTdfAkqGU' },
+    { title: 'Jay-Z - Empire State of Mind', youtube_id: 'QsZlY0Vz4-o' },
+    { title: 'Nas - N.Y. State of Mind', youtube_id: '3uGIEY7tdg8' },
+    { title: 'Wu-Tang Clan - C.R.E.A.M.', youtube_id: 'PBwAxmrE194' },
+    { title: 'Kendrick Lamar - Alright', youtube_id: 'Z-48u_uWMHY' },
+    { title: 'OutKast - Ms. Jackson', youtube_id: 'MYxAiK6VnXw' },
+    { title: 'Kanye West - Runaway', youtube_id: 'VhEoCOWUtcU' }
+  ]
+  
+  hip_hop_essentials_videos.each do |video|
+    hip_hop_essentials.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+  # Playlist Premium: Reggae Vibes
+  reggae_vibes = Playlist.find_or_create_by!(title: 'Reggae Vibes') do |playlist|
+    playlist.description = 'Les meilleures vibes reggae pour se détendre'
+    playlist.genre = 'Reggae'
+    playlist.premium = true
+  end
+  
+  # Vidéos pour la playlist Reggae Vibes
+  reggae_vibes_videos = [
+    { title: 'Steel Pulse - Steppin\' Out', youtube_id: '7mJ_oRHSA00' },
+    { title: 'Jimmy Cliff - Many Rivers to Cross', youtube_id: 'RO3g-39LHTg' },
+    { title: 'Peter Tosh - Legalize It', youtube_id: 'ABc8ciT5QLs' },
+    { title: 'Burning Spear - Columbus', youtube_id: 'GAqcmAm-H8o' },
+    { title: 'Dennis Brown - Revolution', youtube_id: 'JhY9GOhFwN4' },
+    { title: 'Gregory Isaacs - Night Nurse', youtube_id: 'K6oYyG0KcvQ' },
+    { title: 'Black Uhuru - Guess Who\'s Coming to Dinner', youtube_id: 'JkZbmzyDcEE' },
+    { title: 'Toots & The Maytals - Pressure Drop', youtube_id: 'CRSwjhYmAY4' },
+    { title: 'Third World - Now That We Found Love', youtube_id: 'WDw-Ina5y4E' },
+    { title: 'Buju Banton - Untold Stories', youtube_id: 'S9wy6KXnaxA' }
+  ]
+  
+  reggae_vibes_videos.each do |video|
+    reggae_vibes.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+  # Playlist Premium: Afro Pop Hits
+  afro_pop_hits = Playlist.find_or_create_by!(title: 'Afro Pop Hits') do |playlist|
+    playlist.description = 'Les meilleurs hits afro pop pour faire la fête'
+    playlist.genre = 'Afro Pop'
+    playlist.premium = true
+  end
+  
+  # Vidéos pour la playlist Afro Pop Hits
+  afro_pop_hits_videos = [
+    { title: 'Fally Ipupa - Eloko Oyo', youtube_id: 'hmNFl5z93MU' },
+    { title: 'Tiwa Savage - Koroba', youtube_id: 'M_K9c9QMt4g' },
+    { title: 'Diamond Platnumz - Waah! ft. Koffi Olomide', youtube_id: 'DgTF3KQNabc' },
+    { title: 'Sarkodie - Adonai ft. Castro', youtube_id: 'czQu1sLagIA' },
+    { title: 'Yemi Alade - Johnny', youtube_id: 'C_XkTKoDI18' },
+    { title: 'P-Square - Personally', youtube_id: 'P_m1J14Nj_A' },
+    { title: 'D\'Banj - Oliver Twist', youtube_id: 'KdoVgJ156U4' },
+    { title: 'Tekno - Pana', youtube_id: 'd8rL2fYqA7w' },
+    { title: 'Mr Eazi - Skin Tight ft. Efya', youtube_id: 'ACEuznZDtIU' },
+    { title: 'Sauti Sol - Suzanna', youtube_id: 'SJ0l_aGl-zg' }
+  ]
+  
+  afro_pop_hits_videos.each do |video|
+    afro_pop_hits.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+  # Playlist Premium: Latin Pop
+  latin_pop = Playlist.find_or_create_by!(title: 'Latin Pop') do |playlist|
+    playlist.description = 'Le meilleur de la pop latine pour danser'
+    playlist.genre = 'Latin'
+    playlist.premium = true
+  end
+  
+  # Vidéos pour la playlist Latin Pop
+  latin_pop_videos = [
+    { title: 'Shakira - Hips Don\'t Lie ft. Wyclef Jean', youtube_id: 'DUT5rEU6pqM' },
+    { title: 'Luis Fonsi - Despacito ft. Daddy Yankee', youtube_id: 'kJQP7kiw5Fk' },
+    { title: 'Enrique Iglesias - Bailando ft. Descemer Bueno, Gente De Zona', youtube_id: 'NUsoVlDFqZg' },
+    { title: 'Ricky Martin - Livin\' La Vida Loca', youtube_id: 'p47fEXGabaY' },
+    { title: 'J Balvin, Willy William - Mi Gente', youtube_id: 'wnJ6LuUFpMo' },
+    { title: 'Daddy Yankee - Gasolina', youtube_id: 'qGKrc3A6HHM' },
+    { title: 'Jennifer Lopez - On The Floor ft. Pitbull', youtube_id: 't4H_Zoh7G5A' },
+    { title: 'Ozuna - Dile Que Tu Me Quieres', youtube_id: 'r9Ey0xD9YO0' },
+    { title: 'Maluma - Felices los 4', youtube_id: 't_jHrUE5IOk' },
+    { title: 'Bad Bunny - Yo Perreo Sola', youtube_id: 'GtSRKwDCaZM' }
+  ]
+  
+  latin_pop_videos.each do |video|
+    latin_pop.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+  # Playlist Premium: Electronic Dance
+  electronic_dance = Playlist.find_or_create_by!(title: 'Electronic Dance') do |playlist|
+    playlist.description = 'Les meilleurs morceaux électroniques pour danser toute la nuit'
+    playlist.genre = 'Electronic'
+    playlist.premium = true
+  end
+  
+  # Vidéos pour la playlist Electronic Dance
+  electronic_dance_videos = [
+    { title: 'Avicii - Levels', youtube_id: '_ovdm2yX4MA' },
+    { title: 'David Guetta - Titanium ft. Sia', youtube_id: 'JRfuAukYTKg' },
+    { title: 'Calvin Harris - Summer', youtube_id: 'ebXbLfLACGM' },
+    { title: 'Swedish House Mafia - Don\'t You Worry Child', youtube_id: '1y6smkh6c-0' },
+    { title: 'Martin Garrix - Animals', youtube_id: 'gCYcHz2k5x0' },
+    { title: 'Zedd - Clarity ft. Foxes', youtube_id: 'IxxstCcJlsc' },
+    { title: 'Skrillex - Bangarang feat. Sirah', youtube_id: 'YJVmu6yttiw' },
+    { title: 'Daft Punk - Get Lucky ft. Pharrell Williams, Nile Rodgers', youtube_id: '5NV6Rdv1a3I' },
+    { title: 'The Chainsmokers - Don\'t Let Me Down ft. Daya', youtube_id: 'Io0fBr1XBUA' },
+    { title: 'Kygo - Firestone ft. Conrad Sewell', youtube_id: '9Sc-ir2UwGU' }
+  ]
+  
+  electronic_dance_videos.each do |video|
+    electronic_dance.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
     end
   end

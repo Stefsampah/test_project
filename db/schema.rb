@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_03_142843) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_11_145201) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -50,6 +50,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_03_142843) do
     t.text "reward_description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image"
     t.index ["badge_type", "level"], name: "index_badges_on_badge_type_and_level", unique: true
   end
 
@@ -67,6 +68,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_03_142843) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "premium"
+    t.string "genre"
+    t.integer "points_required"
   end
 
   create_table "rewards", force: :cascade do |t|

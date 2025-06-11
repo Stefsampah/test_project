@@ -32,6 +32,10 @@ class User < ApplicationRecord
     (competitor_score + engager_score + critic_score) / 3 || 0
   end
 
+  def total_points
+    competitor_score + engager_score + critic_score + challenger_score
+  end
+
   def earned_badges
     user_badges.includes(:badge).where.not(earned_at: nil)
   end
