@@ -2,9 +2,17 @@ class GamesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_playlist, only: [:new, :create, :show, :swipe, :results]
   before_action :set_game, only: [:show, :swipe, :results]
+  before_action :check_premium_access, only: [:new, :create]
 
   def new
-    @game = Game.new(playlist: @playlist, user: current_user)
+    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    existing_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    
+    if existing_game && !existing_game.completed?
+      redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+    else
+      @game = Game.new(playlist: @playlist, user: current_user)
+    end
   end
 
   def create
@@ -69,14 +77,15 @@ class GamesController < ApplicationController
       user: current_user,
       video: video,
       action: action,
-      liked: liked_value
+      liked: liked_value,
+      playlist: @playlist
     )
 
     # Calcul des points en fonction de l'action
     points = action == "like" ? 2 : 1
 
     # Mettre à jour ou créer le score
-    score = Score.find_or_initialize_by(user: current_user, playlist: @game.playlist)
+    score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
     score.points = (score.points || 0) + points
     score.save!
 
@@ -84,6 +93,11 @@ class GamesController < ApplicationController
 
     next_video = @game.next_video
     Rails.logger.info "Vidéo suivante : #{next_video&.title}"
+
+    # Marquer le jeu comme terminé s'il n'y a plus de vidéos
+    if !next_video && @game.completed?
+      @game.update(completed_at: Time.current)
+    end
 
     if next_video
       redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
@@ -111,5 +125,12 @@ class GamesController < ApplicationController
 
   def set_game
     @game = Game.find(params[:id])
+  end
+  
+  def check_premium_access
+    # Vérifier si la playlist est premium et si l'utilisateur a suffisamment de points
+    if @playlist.premium? && current_user.total_points < 500
+      redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
+    end
   end
 end

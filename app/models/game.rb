@@ -57,17 +57,12 @@ class Game < ApplicationRecord
     begin
       # Définir la valeur pour le champ 'liked' en fonction de la direction
       liked_value = direction == "like"
-      # Ajout du débogueur pour inspecter les valeurs
-      byebug
-      liked_value
-      direction
-      video.inspect
-      params.inspect
-
-       # Ajouter les logs ici pour inspecter les valeurs
-    Rails.logger.info "Valeur de liked_value : #{liked_value}"
-    Rails.logger.info "Direction : #{direction}"
-    Rails.logger.info "Vidéo actuelle : #{video&.title}"
+      
+      # Ajouter les logs ici pour inspecter les valeurs
+      Rails.logger.info "Valeur de liked_value : #{liked_value}"
+      Rails.logger.info "Direction : #{direction}"
+      Rails.logger.info "Vidéo actuelle : #{video&.title}"
+      
       # Créer le swipe avec toutes les données nécessaires
       new_swipe = swipes.create!(
         video: video,
@@ -77,7 +72,7 @@ class Game < ApplicationRecord
       )
   
       Rails.logger.info "Swipe créé avec succès : #{new_swipe.inspect}"
-      Rails.logger.info "Swipe créé : #{swipe.inspect}"
+      
       # Recharger les données pour s'assurer de la mise à jour des associations
       reload
   

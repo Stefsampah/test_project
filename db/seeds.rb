@@ -109,16 +109,16 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Hot New Hip Hop
   hip_hop_videos_2 = [
-    { title: 'Didi B - Big Boss', youtube_id: 'xYZ123ABC' },
-    { title: 'POPCAAN - Firm and Strong', youtube_id: 'aBC456DEF' },
-    { title: 'HIMRA - Vibes', youtube_id: 'dEF789GHI' },
-    { title: 'Travis Scott - Stargazing', youtube_id: 'gHI012JKL' },
-    { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: 'jKL345MNO' },
-    { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'mNO678PQR' },
-    { title: 'Didi B - En Haut', youtube_id: 'pQR901STU' },
-    { title: 'Toosii - Favorite Song', youtube_id: 'sTU234VWX' },
-    { title: 'YE - Hurricane', youtube_id: 'vWX567YZA' },
-    { title: 'Didi B - Laissez Tomber', youtube_id: 'yZA890BCD' }
+    { "title": "Didi B - Big Boss", "youtube_id": "-tsqAmn2jP0" },
+    { "title": "POPCAAN - Firm and Strong", "youtube_id": "b3DFH0PLxsY" },
+    { "title": "HIMRA - Vibes", "youtube_id": "nU1DNdulGbA" },
+    { "title": "Travis Scott - Stargazing", "youtube_id": "2a8PgqWrc_4" },
+    { "title": "Quavo, Lil Baby - Ice Cold", "youtube_id": "4cCzuTQ49V8" },
+    { "title": "Skillibeng - Crocodile Teeth", "youtube_id": "m7vsOSIz4ds" },
+    { "title": "Didi B - En Haut", "youtube_id": "e0K3OjNHTtA" },
+    { "title": "Toosii - Favorite Song", "youtube_id": "4D89Qr5vH6U" },
+    { "title": "YE - Hurricane", "youtube_id": "VRJiK-kdDb4" },
+    { "title": "Didi B - Laissez Tomber", "youtube_id": "pwcHqNbz_VU" }
   ]
   
   hip_hop_videos_2.each do |video|
