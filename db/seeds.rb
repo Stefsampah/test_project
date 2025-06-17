@@ -82,15 +82,15 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Hip Hop
   hip_hop_videos_1 = [
-    { title: 'ENTRE NOUS DEUX · Didi B · Doupi Papillon', youtube_id: 'qMNl8T42krY' },
+    { title: 'ENTRE NOUS DEUX · Didi B · Doupi Papillon', youtube_id: 'fkn7f3Nyq88' },
     { title: 'Nothing Without God · POPCAAN', youtube_id: 'wFRyzB170sk' },
     { title: 'HIMRA - NUMBER ONE (FT. MINZ)', youtube_id: 'b16_UBiP4G0' },
     { title: 'Travis Scott - She Going Dumb', youtube_id: 'tN82cGi9kUc' },
     { title: 'Quavo, Lil Baby - Legends', youtube_id: '4cCzuTQ49V8' },
     { title: 'Skillibeng - New Gears', youtube_id: 'Yubuf7k1WZM' },
-    { title: 'TOUT VA BIEN · Didi B', youtube_id: 'WdwasPVKGQo' },
+    { title: 'TOUT VA BIEN · Didi B', youtube_id: 'oQNkebtoIN4' },
     { title: 'Toosii - Party Girl Anthem', youtube_id: 'x4xDmrvHTY0' },
-    { title: 'YE - CIRCLES', youtube_id: 'SWPeFW7Bd74' },
+    { title: 'YE - CIRCLES', youtube_id: 'WMexy8iEF7E' },
     { title: 'Didi B - Good vibes', youtube_id: 'wLdtn45riSc' }
   ]
   
@@ -109,16 +109,16 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Hot New Hip Hop
   hip_hop_videos_2 = [
-    { "title": "Didi B - Big Boss", "youtube_id": "-tsqAmn2jP0" },
-    { "title": "POPCAAN - Firm and Strong", "youtube_id": "b3DFH0PLxsY" },
-    { "title": "HIMRA - Vibes", "youtube_id": "nU1DNdulGbA" },
+    { "title": "Didi B - Big Boss", "youtube_id": "_PKbI32lsN8" },
+    { "title": "POPCAAN - Firm and Strong", "youtube_id": "0rEBT_Ge3sc" },  
+    { "title": "HIMRA - Freestyle Drill Ivoire #5", "youtube_id": "GyIDTBHEOAQ" },
     { "title": "Travis Scott - Stargazing", "youtube_id": "2a8PgqWrc_4" },
     { "title": "Quavo, Lil Baby - Ice Cold", "youtube_id": "4cCzuTQ49V8" },
     { "title": "Skillibeng - Crocodile Teeth", "youtube_id": "m7vsOSIz4ds" },
     { "title": "Didi B - En Haut", "youtube_id": "e0K3OjNHTtA" },
     { "title": "Toosii - Favorite Song", "youtube_id": "4D89Qr5vH6U" },
     { "title": "YE - Hurricane", "youtube_id": "VRJiK-kdDb4" },
-    { "title": "Didi B - Laissez Tomber", "youtube_id": "pwcHqNbz_VU" }
+    { "title": "Didi B - Rockstxr", "youtube_id": "YeCRoOnr5vU" }
   ]
   
   hip_hop_videos_2.each do |video|
@@ -141,11 +141,11 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     { title: 'Bob Marley - Three Little Birds', youtube_id: 'HNBCVM4KbUM' },  
     { title: 'Damian Marley - Welcome To Jamrock', youtube_id: '_GZlJGERbvE' },
     { title: 'Bob Marley - Jamming', youtube_id: 'oqVy6eRXc7Q' },
-    { title: 'UB40 - Kingston Town', youtube_id: '4zL3Cf5xrOo' },
+    { title: 'UB40 - Kingston Town', youtube_id: '8Ikz-51w3mo' },
     { title: 'Bob Marley - One Love', youtube_id: 'IN0KkGeEURw' },
     { title: 'Inner Circle - Sweat', youtube_id: 'f7OXGANW9Ic' }, 
     { title: 'Bob Marley - Could You Be Loved', youtube_id: '1ti2YCFgCoI' },
-    { title: 'UB40 - Can\'t Help Falling In Love', youtube_id: 'jzgQh223MYk' }
+    { title: 'UB40 - Can\'t Help Falling In Love', youtube_id: 'MXVxP8WMc4s' }
   ]
   
   reggae_videos.each do |video|
@@ -163,16 +163,16 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist AfroPop
   afropop_videos = [
-    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'jkAKyDrUzZk' },
-    { title: 'Burna Boy - Last Last', youtube_id: 'tfiY6CegHH4' },
-    { title: 'Davido - Fall', youtube_id: 'HI1Xx5e6Qhs' },
-    { title: 'Rema - Calm Down', youtube_id: 'QgUEkKGOjK0' },
-    { title: 'Fireboy DML - Peru', youtube_id: 'GE8qYRyAz0U' },
-    { title: 'CKay - love nwantiti', youtube_id: 'QQJGoCqMbGI' },
-    { title: 'Ayra Starr - Rush', youtube_id: 'L6cxpbBENBs' },
-    { title: 'Tems - Free Mind', youtube_id: '0zDUXXp5aAo' },
-    { title: 'Asake - Sungba ft. Burna Boy', youtube_id: 'TW6F2EfZIoI' },
-    { title: 'Joeboy - Sip (Alcohol)', youtube_id: 'fgPJBZIOpfs' }
+    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'WPI5KR0eG5o' },
+    { title: 'Burna Boy - Last Last', youtube_id: '421w1j87fEM' },
+    { title: 'Davido - Fall', youtube_id: '3Iyuym-Gci0' },
+    { title: 'Rema - Calm Down', youtube_id: 'CQLsdm1ZYAw' },
+    { title: 'Fireboy DML - Peru', youtube_id: 'pekzpzNCNDQ' },
+    { title: 'CKay - Emiliana', youtube_id: 'Ypr5QN7Xn_M' },
+    { title: 'Ayra Starr - Rush', youtube_id: 'crtQSTYWtqE' },
+    { title: 'Tems - Me & U', youtube_id: '1JltlSJH5bY' },
+    { title: 'Asake - WHY LOVE', youtube_id: 'MCMyKcUNR8w' },
+    { title: 'Joeboy - Sip (Alcohol)', youtube_id: 'UEcAPvoSe_8' }
   ]
   
   afropop_videos.each do |video|
