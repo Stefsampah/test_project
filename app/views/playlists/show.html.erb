@@ -2,75 +2,151 @@
   <h1 class="mb-4"><%= @playlist.title %></h1>
   <p class="mb-4"><%= @playlist.description %></p>
 
-  <div class="video-container">
-    <% if @current_video %>
-      <div class="video-wrapper" 
-           data-controller="swipe"
-           data-swipe-video-id="<%= @current_video.id %>"
-           data-swipe-playlist-id="<%= @playlist.id %>"
-           data-swipe-game-id="<%= @game.id %>">
-        <div class="video-frame">
-          <iframe 
-            width="100%" 
-            height="500" 
-            src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-          </iframe>
+  <div class="shorts-bg">
+    <div class="shorts-vertical-container">
+      <% if @current_video %>
+        <div class="shorts-video-wrapper"
+             data-controller="swipe"
+             data-swipe-video-id="<%= @current_video.id %>"
+             data-swipe-playlist-id="<%= @playlist.id %>"
+             data-swipe-game-id="<%= @game.id %>">
+          <div class="shorts-video-frame">
+            <iframe
+              width="360"
+              height="640"
+              src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              class="shorts-iframe">
+            </iframe>
+          </div>
+          <div class="shorts-overlay-actions">
+            <button class="shorts-btn shorts-btn-dislike" data-action="click->swipe#dislike">
+              <i class="fas fa-times"></i>
+            </button>
+            <button class="shorts-btn shorts-btn-like" data-action="click->swipe#like">
+              <i class="fas fa-heart"></i>
+            </button>
+          </div>
+          <div class="shorts-title-bar">
+            <div class="shorts-title"><%= @current_video.title %></div>
+          </div>
         </div>
-        
-        <div class="swipe-actions mt-3">
-          <button class="btn btn-danger btn-lg me-3" data-action="click->swipe#dislike">
-            <i class="fas fa-times"></i> Dislike
-          </button>
-          <button class="btn btn-success btn-lg" data-action="click->swipe#like">
-            <i class="fas fa-heart"></i> Like
-          </button>
+      <% else %>
+        <div class="alert alert-info shorts-finished">
+          Vous avez terminé toutes les vidéos de cette playlist !
         </div>
-      </div>
-    <% else %>
-      <div class="alert alert-info">
-        Vous avez terminé toutes les vidéos de cette playlist !
-      </div>
-      <%= link_to "Retour aux playlists", playlists_path, class: "btn btn-primary" %>
-    <% end %>
+        <%= link_to "Retour aux playlists", playlists_path, class: "btn btn-primary" %>
+      <% end %>
+    </div>
   </div>
 </div>
 
 <style>
-.video-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.video-wrapper {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.video-frame {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-.swipe-actions {
+.shorts-bg {
+  min-height: 100vh;
+  background: #111;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 20px;
 }
-
-.btn-lg {
-  padding: 10px 30px;
+.shorts-vertical-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+}
+.shorts-video-wrapper {
+  position: relative;
+  width: 360px;
+  height: 640px;
+  aspect-ratio: 9/16;
+  background: #000;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 0 32px #000a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.shorts-video-frame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.shorts-iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  background: #000;
+}
+.shorts-overlay-actions {
+  position: absolute;
+  right: 18px;
+  bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  z-index: 2;
+}
+.shorts-btn {
+  background: rgba(30,30,30,0.85);
+  border: none;
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px #0006;
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.shorts-btn-like {
+  background: linear-gradient(135deg, #ff5f6d 0%, #ffc371 100%);
+  color: #fff;
+}
+.shorts-btn-dislike {
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  color: #fff;
+}
+.shorts-btn:hover {
+  transform: scale(1.12);
+}
+.shorts-title-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(0deg, rgba(0,0,0,0.85) 70%, rgba(0,0,0,0.0) 100%);
+  padding: 18px 20px 12px 20px;
+  z-index: 2;
+}
+.shorts-title {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-shadow: 0 2px 8px #000a;
+}
+.shorts-finished {
+  background: #222;
+  color: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
   font-size: 1.2rem;
 }
-
-.btn-danger, .btn-success {
-  transition: transform 0.2s;
-}
-
-.btn-danger:hover, .btn-success:hover {
-  transform: scale(1.1);
+@media (max-width: 400px) {
+  .shorts-video-wrapper {
+    width: 100vw;
+    height: 177vw; /* 9:16 ratio */
+    border-radius: 0;
+  }
 }
 </style>
