@@ -163,7 +163,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist AfroPop
   afropop_videos = [
-    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'WPI5KR0eG5o' },
+    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'm77FDcKg96Q' },
     { title: 'Burna Boy - Last Last', youtube_id: '421w1j87fEM' },
     { title: 'Davido - Fall', youtube_id: '3Iyuym-Gci0' },
     { title: 'Rema - Calm Down', youtube_id: 'CQLsdm1ZYAw' },
@@ -671,3 +671,32 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
       )
     end
   end
+
+# Update badge images
+{
+  'competitor' => {
+    'bronze' => 'dropmixpop.webp',
+    'silver' => 'NFT.jpg',
+    'gold' => 'VIP-gold.jpg'
+  },
+  'engager' => {
+    'bronze' => 'pandora-playlist-collage.webp',
+    'silver' => 'photos-dedicacees.jpeg',
+    'gold' => 'concert-virtuel.jpg'
+  },
+  'critic' => {
+    'bronze' => 'Best-Music.webp',
+    'silver' => 'artist_message.jpeg',
+    'gold' => 'backstage_virtuel.jpg'
+  },
+  'challenger' => {
+    'bronze' => 'Exclusive_content.jpeg',
+    'silver' => 'music_merch.jpeg',
+    'gold' => 'interview.jpg'
+  }
+}.each do |badge_type, levels|
+  levels.each do |level, image|
+    badge = Badge.find_by(badge_type: badge_type, level: level)
+    badge.update(image: image) if badge
+  end
+end
