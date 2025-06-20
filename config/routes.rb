@@ -47,4 +47,11 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   get 'debug_check', to: 'tests#check_user'
+
+  # Boutique
+  get  'store', to: 'store#index', as: :store
+  post 'store/buy_points', to: 'store#buy_points', as: :buy_points_store
+  post 'store/buy_subscription', to: 'store#buy_subscription', as: :buy_subscription_store
+  get  'store/buy_playlist/:playlist_id', to: 'store#buy_playlist', as: :buy_playlist_store
+  post 'store/confirm_playlist_purchase/:playlist_id', to: 'store#confirm_playlist_purchase', as: :confirm_playlist_purchase_store
 end

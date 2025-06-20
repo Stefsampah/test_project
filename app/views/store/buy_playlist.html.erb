@@ -1,0 +1,163 @@
+<div class="min-h-screen bg-gray-900 py-8">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Bouton retour -->
+    <div class="mb-8">
+      <%= link_to store_path, class: "inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Retour à la boutique
+      <% end %>
+    </div>
+
+    <!-- En-tête -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-white mb-4">🎵 Acheter une playlist</h1>
+      <p class="text-xl text-gray-300">Débloquez cette playlist premium et commencez à jouer</p>
+    </div>
+
+    <!-- Affichage du solde de points -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full">
+        <span class="text-2xl mr-2">💰</span>
+        <span class="text-white font-semibold text-lg">Votre solde : <%= @user_points %> points</span>
+      </div>
+    </div>
+
+    <!-- Détail de la playlist -->
+    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Visuel de la playlist -->
+        <div class="text-center">
+          <div class="w-full h-64 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+            <span class="text-8xl">🎵</span>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2"><%= @playlist.title %></h3>
+          <div class="flex items-center justify-center text-green-400 font-semibold text-lg">
+            <span class="text-2xl mr-2">💰</span>
+            <span><%= @playlist.points_required %> points</span>
+          </div>
+        </div>
+
+        <!-- Informations de la playlist -->
+        <div>
+          <h4 class="text-xl font-semibold text-white mb-4">Description</h4>
+          <p class="text-gray-300 mb-6 leading-relaxed"><%= @playlist.description %></p>
+          
+          <div class="space-y-3">
+            <div class="flex items-center text-gray-300">
+              <span class="text-purple-400 mr-3">🎯</span>
+              <span>Playlist premium exclusive</span>
+            </div>
+            <div class="flex items-center text-gray-300">
+              <span class="text-purple-400 mr-3">🎮</span>
+              <span>Accès illimité aux jeux</span>
+            </div>
+            <div class="flex items-center text-gray-300">
+              <span class="text-purple-400 mr-3">🏆</span>
+              <span>Débloque des badges spéciaux</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section d'achat -->
+    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
+      <div class="text-center">
+        <% if @can_afford %>
+          <!-- Message de confirmation -->
+          <div class="mb-6 p-4 bg-green-900 border border-green-600 rounded-lg">
+            <div class="flex items-center justify-center text-green-400">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="font-semibold">Vous avez suffisamment de points pour acheter cette playlist !</span>
+            </div>
+          </div>
+
+          <!-- Bouton d'achat -->
+          <%= button_to confirm_playlist_purchase_store_path(@playlist), 
+                      method: :post, 
+                      class: "w-full max-w-md mx-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105" do %>
+            <span class="flex items-center justify-center text-lg">
+              <span class="mr-3">🛒</span>
+              Acheter cette playlist
+            </span>
+          <% end %>
+
+          <!-- Résumé de l'achat -->
+          <div class="mt-4 text-gray-400">
+            <p>Coût : <span class="text-green-400 font-semibold"><%= @playlist.points_required %> points</span></p>
+            <p>Solde après achat : <span class="text-green-400 font-semibold"><%= @user_points - @playlist.points_required %> points</span></p>
+          </div>
+        <% else %>
+          <!-- Message d'insuffisance de points -->
+          <div class="mb-6 p-4 bg-red-900 border border-red-600 rounded-lg">
+            <div class="flex items-center justify-center text-red-400">
+              <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <span class="font-semibold">Points insuffisants pour acheter cette playlist</span>
+            </div>
+          </div>
+
+          <!-- Bouton d'achat désactivé -->
+          <button disabled class="w-full max-w-md mx-auto bg-gray-600 text-gray-400 font-bold py-4 px-8 rounded-lg cursor-not-allowed">
+            <span class="flex items-center justify-center text-lg">
+              <span class="mr-3">🔒</span>
+              Points insuffisants
+            </span>
+          </button>
+
+          <!-- Bouton pour acheter des points -->
+          <div class="mt-6">
+            <%= link_to store_path, class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105" do %>
+              <span class="mr-2">💰</span>
+              Acheter des points
+            </span>
+            <% end %>
+          </div>
+
+          <!-- Calcul des points manquants -->
+          <div class="mt-4 text-gray-400">
+            <p>Points nécessaires : <span class="text-red-400 font-semibold"><%= @playlist.points_required %> points</span></p>
+            <p>Points manquants : <span class="text-red-400 font-semibold"><%= @playlist.points_required - @user_points %> points</span></p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Animations */
+  .transform {
+    transition: all 0.3s ease;
+  }
+  
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Effet de brillance sur les boutons */
+  .bg-gradient-to-r {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .bg-gradient-to-r::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+  }
+  
+  .bg-gradient-to-r:hover::before {
+    left: 100%;
+  }
+</style> 
