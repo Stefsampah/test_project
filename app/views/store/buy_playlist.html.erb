@@ -25,12 +25,20 @@
     </div>
 
     <!-- Détail de la playlist -->
-    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8 overflow-hidden relative">
+      <!-- Fond gradient avec image -->
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-xl"></div>
+      <div class="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-xl opacity-10" 
+           style="background-image: url('<%= asset_path("store/lovepik.png") %>');"></div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
         <!-- Visuel de la playlist -->
         <div class="text-center">
-          <div class="w-full h-64 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4">
-            <span class="text-8xl">🎵</span>
+          <div class="w-full h-64 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
+            <!-- Image de fond pour le visuel -->
+            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20" 
+                 style="background-image: url('<%= asset_path("store/lovepik.png") %>');"></div>
+            <span class="text-8xl relative z-10">🎵</span>
           </div>
           <h3 class="text-2xl font-bold text-white mb-2"><%= @playlist.title %></h3>
           <div class="flex items-center justify-center text-green-400 font-semibold text-lg">
@@ -63,8 +71,11 @@
     </div>
 
     <!-- Section d'achat -->
-    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
-      <div class="text-center">
+    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 overflow-hidden relative">
+      <!-- Fond gradient subtil -->
+      <div class="absolute inset-0 bg-gradient-to-br from-gray-700/20 to-gray-800/20 rounded-xl"></div>
+      
+      <div class="text-center relative z-10">
         <% if @can_afford %>
           <!-- Message de confirmation -->
           <div class="mb-6 p-4 bg-green-900 border border-green-600 rounded-lg">
@@ -79,7 +90,7 @@
           <!-- Bouton d'achat -->
           <%= button_to confirm_playlist_purchase_store_path(@playlist), 
                       method: :post, 
-                      class: "w-full max-w-md mx-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105" do %>
+                      class: "w-full max-w-md mx-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 relative z-20" do %>
             <span class="flex items-center justify-center text-lg">
               <span class="mr-3">🛒</span>
               Acheter cette playlist
@@ -112,7 +123,7 @@
 
           <!-- Bouton pour acheter des points -->
           <div class="mt-6">
-            <%= link_to store_path, class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105" do %>
+            <%= link_to store_path, class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 relative z-20" do %>
               <span class="mr-2">💰</span>
               Acheter des points
             </span>
@@ -131,7 +142,7 @@
 </div>
 
 <style>
-  /* Animations */
+  /* Animations et effets visuels améliorés */
   .transform {
     transition: all 0.3s ease;
   }
@@ -159,5 +170,84 @@
   
   .bg-gradient-to-r:hover::before {
     left: 100%;
+  }
+  
+  /* Effet de brillance sur les cartes avec images */
+  .overflow-hidden {
+    position: relative;
+  }
+  
+  .overflow-hidden::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+    pointer-events: none;
+    z-index: 5;
+  }
+  
+  .overflow-hidden:hover::after {
+    left: 100%;
+  }
+  
+  /* Amélioration de l'opacité des images de fond */
+  .opacity-10 {
+    opacity: 0.1;
+  }
+  
+  .opacity-20 {
+    opacity: 0.2;
+  }
+  
+  /* Effet de rotation subtile sur les images de fond au hover */
+  .overflow-hidden:hover .bg-cover {
+    transform: scale(1.1) rotate(1deg);
+    transition: transform 0.3s ease;
+  }
+  
+  /* Amélioration des transitions */
+  .transition-all {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Effet de profondeur sur les cartes */
+  .bg-gray-800 {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .bg-gray-800:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* Animation de pulsation pour les messages de confirmation */
+  .bg-green-900 {
+    animation: pulse-success 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse-success {
+    from {
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+    }
+    to {
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+    }
+  }
+  
+  /* Animation de pulsation pour les messages d'erreur */
+  .bg-red-900 {
+    animation: pulse-error 2s ease-in-out infinite alternate;
+  }
+  
+  @keyframes pulse-error {
+    from {
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+    }
+    to {
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+    }
   }
 </style> 
