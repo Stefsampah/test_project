@@ -25,19 +25,18 @@
     </div>
 
     <!-- Détail de la playlist -->
-    <div class="bg-gray-800 rounded-xl p-8 border border-gray-700 mb-8 overflow-hidden relative">
-      <!-- Fond gradient avec image -->
-      <div class="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-xl"></div>
-      <div class="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-xl opacity-10" 
-           style="background-image: url('<%= asset_path("store/lovepik.png") %>');"></div>
+    <div class="rounded-xl p-8 border border-gray-700 mb-8 overflow-hidden relative"
+         style="background-image: url('/assets/store/lovepik.png'); background-size: cover; background-position: center;">
+      <!-- Overlay gradient -->
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-600/40 to-blue-600/40 rounded-xl"></div>
       
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
         <!-- Visuel de la playlist -->
         <div class="text-center">
-          <div class="w-full h-64 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden">
-            <!-- Image de fond pour le visuel -->
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20" 
-                 style="background-image: url('<%= asset_path("store/lovepik.png") %>');"></div>
+          <div class="w-full h-64 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center mb-4 relative overflow-hidden"
+               style="background-image: url('/assets/store/lovepik.png'); background-size: cover; background-position: center;">
+            <!-- Overlay gradient pour le visuel -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-blue-600/30 rounded-lg"></div>
             <span class="text-8xl relative z-10">🎵</span>
           </div>
           <h3 class="text-2xl font-bold text-white mb-2"><%= @playlist.title %></h3>

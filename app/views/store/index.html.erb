@@ -21,16 +21,15 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <% @point_packs.each_with_index do |pack, index| %>
-          <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative">
-            <!-- Fond gradient avec image -->
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-blue-600/30 rounded-xl"></div>
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-xl opacity-15" 
-                 style="background-image: url('<%= asset_path("store/#{pack[:points] <= 500 ? 'lovepik.png' : 'trove_of_coins.png'}") %>');"></div>
+          <div class="rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative" 
+               style="background-image: url('/assets/store/<%= pack[:points] <= 500 ? 'lovepik.png' : 'trove_of_coins.png' %>'); background-size: cover; background-position: center;">
+            <!-- Overlay gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/60 to-blue-600/60 rounded-xl"></div>
             
             <div class="relative z-10 text-center">
               <h3 class="text-xl font-semibold text-white mb-2"><%= pack[:name] %></h3>
               <div class="text-3xl font-bold text-purple-400 mb-2"><%= pack[:price] %> €</div>
-              <p class="text-gray-400 text-sm mb-4"><%= pack[:description] %></p>
+              <p class="text-gray-300 text-sm mb-4"><%= pack[:description] %></p>
               
               <%= button_to buy_points_store_path(pack_id: index), 
                           method: :post, 
@@ -55,11 +54,10 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @subscriptions.each do |subscription| %>
-          <div class="bg-gradient-to-br from-yellow-600 to-orange-600 rounded-xl p-8 border border-yellow-500 hover:border-yellow-400 transition-all duration-300 transform hover:scale-105 overflow-hidden relative">
-            <!-- Fond gradient avec image VIP -->
-            <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/40 to-orange-600/40 rounded-xl"></div>
-            <div class="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-xl opacity-20" 
-                 style="background-image: url('<%= asset_path("store/vip_recompense.png") %>');"></div>
+          <div class="rounded-xl p-8 border border-yellow-500 hover:border-yellow-400 transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
+               style="background-image: url('/assets/store/6070880.jpg'); background-size: cover; background-position: center;">
+            <!-- Overlay gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/50 to-orange-600/50 rounded-xl"></div>
             
             <div class="relative z-10 text-center">
               <h3 class="text-2xl font-bold text-white mb-2">Abonnement <%= subscription[:name] %></h3>
@@ -90,15 +88,23 @@
       <% if @premium_playlists.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <% @premium_playlists.each do |playlist| %>
-            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative">
-              <!-- Fond gradient avec image de playlist -->
-              <div class="absolute inset-0 bg-gradient-to-br from-green-600/30 to-emerald-600/30 rounded-xl"></div>
-              <div class="absolute inset-0 bg-cover bg-center bg-no-repeat rounded-xl opacity-15" 
-                   style="background-image: url('<%= asset_path("store/lovepik.png") %>');"></div>
+            <% # Recherche de l'image associée à la playlist comme sur playlists/index.html.erb %>
+            <% found_image = nil %>
+            <% Dir.glob(Rails.root.join('app/assets/images/playlists/*')).each do |img_path| %>
+              <% img_name = File.basename(img_path) %>
+              <% if img_name.downcase.include?(playlist.title.parameterize(separator: '_').downcase) %>
+                <% found_image = img_name %>
+                <% break %>
+              <% end %>
+            <% end %>
+            <div class="rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
+                 style="background-image: url('<%= found_image.present? ? asset_path("playlists/#{found_image}") : asset_path("playlists/This is Pop.jpg") %>'); background-size: cover; background-position: center;">
+              <!-- Overlay gradient -->
+              <div class="absolute inset-0 bg-gradient-to-br from-green-600/50 to-emerald-600/50 rounded-xl"></div>
               
               <div class="relative z-10 text-center">
                 <h3 class="text-xl font-semibold text-white mb-2"><%= playlist.title %></h3>
-                <p class="text-gray-400 text-sm mb-4"><%= truncate(playlist.description, length: 100) %></p>
+                <p class="text-gray-300 text-sm mb-4"><%= truncate(playlist.description, length: 100) %></p>
                 
                 <div class="flex items-center justify-center mb-4">
                   <span class="text-2xl mr-2">💰</span>
@@ -186,6 +192,30 @@
   
   .opacity-20 {
     opacity: 0.2;
+  }
+  
+  .opacity-30 {
+    opacity: 0.3;
+  }
+  
+  .opacity-35 {
+    opacity: 0.35;
+  }
+  
+  .opacity-40 {
+    opacity: 0.4;
+  }
+  
+  .opacity-50 {
+    opacity: 0.5;
+  }
+  
+  .opacity-60 {
+    opacity: 0.6;
+  }
+  
+  .opacity-70 {
+    opacity: 0.7;
   }
   
   /* Effet de pulsation pour les cartes VIP */
