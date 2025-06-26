@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_20_134552) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_24_145534) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -123,6 +123,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_20_134552) do
     t.index ["user_id"], name: "index_user_badges_on_user_id"
   end
 
+  create_table "user_playlist_unlocks", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "playlist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["playlist_id"], name: "index_user_playlist_unlocks_on_playlist_id"
+    t.index ["user_id"], name: "index_user_playlist_unlocks_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -163,5 +172,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_20_134552) do
   add_foreign_key "swipes", "videos"
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "user_playlist_unlocks", "playlists"
+  add_foreign_key "user_playlist_unlocks", "users"
   add_foreign_key "videos", "playlists"
 end

@@ -5,6 +5,13 @@ class PlaylistsController < ApplicationController
     # Récupérer toutes les playlists et les trier
     @standard_playlists = Playlist.where(premium: [false, nil]).order(:id)
     @premium_playlists = Playlist.where(premium: true).order(:id)
+    @unlocked_playlists = []
+    if user_signed_in?
+      # Récupérer les playlists premium débloquées par l'utilisateur
+      unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
+      @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true)
+      @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+    end
     
     # Récupérer les playlists utilisées par l'utilisateur connecté
     @user_playlists = current_user.playlists.distinct if user_signed_in?
@@ -15,8 +22,9 @@ class PlaylistsController < ApplicationController
     
     # Vérifier si l'utilisateur a accès à cette playlist premium
     if @playlist.premium? && user_signed_in?
-      # L'utilisateur doit avoir au moins 500 points pour accéder aux playlists premium
-      redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium." unless current_user.total_points >= 500
+      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
+        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points ou d'avoir débloqué cette playlist premium."
+      end
     end
     
     # Récupérer les vidéos non encore swipées par l'utilisateur s'il est connecté

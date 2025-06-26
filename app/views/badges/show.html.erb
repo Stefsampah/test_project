@@ -102,45 +102,17 @@
               <p class="text-gray-300"><%= @badge.points_required %> points de <%= @badge.badge_type.capitalize %></p>
             </div>
             
-            <!-- Section de Récompense -->
-            <% if @badge.reward_type.present? && @badge.reward_description.present? %>
-              <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-lg p-4 mb-6">
-                <h3 class="text-lg font-semibold text-white mb-3">Récompense <%= @badge.reward_type == 'premium' ? 'Premium' : 'Standard' %></h3>
-                
-                <div class="flex flex-col md:flex-row items-center">
-                  <% if @badge.image.present? %>
-                    <div class="w-full md:w-1/3 mb-4 md:mb-0 md:mr-4">
-                      <img src="<%= asset_path("badges/#{@badge.image}") %>" alt="<%= @badge.name %>" class="w-full h-auto rounded-lg shadow-lg">
-                    </div>
-                  <% end %>
-                  
-                  <div class="w-full <%= @badge.image.present? ? 'md:w-2/3' : '' %>">
-                    <div class="bg-black bg-opacity-30 rounded-lg p-4">
-                      <p class="text-white text-lg mb-2"><%= @badge.reward_description %></p>
-                      
-                      <% if @user_badge && @user_badge.earned_at && !@user_badge.claimed_at %>
-                        <%= form_with url: claim_reward_badge_path(@badge), method: :post, data: { turbo: false } do |f| %>
-                          <%= f.submit "Réclamer cette récompense", class: "mt-4 w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200" %>
-                        <% end %>
-                      <% elsif @user_badge && @user_badge.claimed_at %>
-                        <div class="mt-4 bg-green-800 bg-opacity-30 text-green-300 p-3 rounded-lg">
-                          <div class="flex items-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                            </svg>
-                            <span>Récompense réclamée le <%= @user_badge.claimed_at.strftime("%d/%m/%Y") %></span>
-                          </div>
-                        </div>
-                      <% else %>
-                        <div class="mt-4 bg-gray-700 bg-opacity-50 text-gray-300 p-3 rounded-lg">
-                          Gagnez ce badge pour débloquer cette récompense.
-                        </div>
-                      <% end %>
-                    </div>
-                  </div>
-                </div>
+            <!-- Bouton Jouer -->
+            <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-lg p-4 mb-6">
+              <div class="text-center">
+                <%= link_to playlists_path, class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-lg rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg" do %>
+                  <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  Jouer
+                <% end %>
               </div>
-            <% end %>
+            </div>
             
             <% if @badge.name == "The Engager" || @badge.badge_type == "engager" %>
               <!-- Actions qui donnent des points pour le badge Engager -->
@@ -426,49 +398,15 @@
           </div>
         </div>
 
-        <!-- Récompense associée -->
+        <!-- Boutons d'action -->
         <div class="mt-8 border-t border-gray-700 pt-8">
-          <h2 class="text-2xl font-bold text-white mb-4">Récompense</h2>
-          
-          <div class="bg-gradient-to-r from-amber-600 to-red-600 rounded-lg p-6">
-            <div class="flex flex-col md:flex-row items-center">
-              <div class="flex-1">
-                <h3 class="text-xl font-semibold text-white mb-2">Valeur de la récompense</h3>
-                <p class="text-white mb-4">
-                  <% if @badge.name == "The Competitor" || @badge.badge_type == "competitor" %>
-                    Accès VIP à du contenu exclusif ou à une playlist privée.
-                  <% else %>
-                    <%= @badge.reward_description %>
-                  <% end %>
-                </p>
-                
-                <% if @user_badge.present? %>
-                  <% if @user_badge.claimed_at %>
-                    <div class="bg-green-600 text-white text-center py-2 px-4 rounded-lg">
-                      Récompense déjà réclamée le <%= @user_badge.claimed_at.strftime("%d/%m/%Y") %>
-                    </div>
-                  <% elsif @user_badge.earned_at %>
-                    <%= button_to claim_reward_path(@user_badge), method: :post, class: "w-full md:w-auto bg-white hover:bg-gray-100 text-amber-600 font-bold py-2 px-6 rounded-lg transition-all duration-300" do %>
-                      Réclamer ma récompense
-                    <% end %>
-                  <% else %>
-                    <div class="bg-gray-600 text-white text-center py-2 px-4 rounded-lg">
-                      Badge non encore obtenu
-                    </div>
-                  <% end %>
-                <% else %>
-                  <div class="bg-gray-600 text-white text-center py-2 px-4 rounded-lg">
-                    Connectez-vous et gagnez ce badge pour obtenir cette récompense
-                  </div>
-                <% end %>
-              </div>
-              
-              <% if @badge.reward_image.present? %>
-                <div class="w-full md:w-1/3 mt-4 md:mt-0">
-                  <div class="w-full h-48 bg-center bg-cover rounded-lg" style="background-image: url('<%= @badge.reward_image %>')"></div>
-                </div>
-              <% end %>
-            </div>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <%= link_to store_path, class: "inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold text-lg rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg" do %>
+              <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+              Acheter des Points
+            <% end %>
           </div>
         </div>
       </div>

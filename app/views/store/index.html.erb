@@ -97,29 +97,30 @@
                 <% break %>
               <% end %>
             <% end %>
-            <div class="rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
-                 style="background-image: url('<%= found_image.present? ? asset_path("playlists/#{found_image}") : asset_path("playlists/This is Pop.jpg") %>'); background-size: cover; background-position: center;">
-              <!-- Overlay gradient -->
-              <div class="absolute inset-0 bg-gradient-to-br from-green-600/50 to-emerald-600/50 rounded-xl"></div>
-              
-              <div class="relative z-10 text-center">
-                <h3 class="text-xl font-semibold text-white mb-2"><%= playlist.title %></h3>
-                <p class="text-gray-300 text-sm mb-4"><%= truncate(playlist.description, length: 100) %></p>
+            <%= link_to buy_playlist_store_path(playlist), class: "block" do %>
+              <div class="rounded-xl p-6 border border-gray-700 hover:border-green-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
+                   style="background-image: url('<%= found_image.present? ? asset_path("playlists/#{found_image}") : asset_path("playlists/This is Pop.jpg") %>'); background-size: cover; background-position: center;">
+                <!-- Overlay gradient -->
+                <div class="absolute inset-0 bg-gradient-to-br from-green-600/50 to-emerald-600/50 rounded-xl"></div>
                 
-                <div class="flex items-center justify-center mb-4">
-                  <span class="text-2xl mr-2">💰</span>
-                  <span class="text-green-400 font-bold text-lg"><%= playlist.points_required %> points</span>
+                <div class="relative z-10 text-center">
+                  <h3 class="text-xl font-semibold text-white mb-2"><%= playlist.title %></h3>
+                  <p class="text-gray-300 text-sm mb-4"><%= truncate(playlist.description, length: 100) %></p>
+                  
+                  <div class="flex items-center justify-center mb-4">
+                    <span class="text-2xl mr-2">💰</span>
+                    <span class="text-green-400 font-bold text-lg"><%= playlist.points_required %> points</span>
+                  </div>
+                  
+                  <div class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 inline-block text-center relative z-20">
+                    <span class="flex items-center justify-center">
+                      <span class="mr-2">🛒</span>
+                      Acheter
+                    </span>
+                  </div>
                 </div>
-                
-                <%= link_to buy_playlist_store_path(playlist), 
-                          class: "w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 inline-block text-center relative z-20" do %>
-                  <span class="flex items-center justify-center">
-                    <span class="mr-2">🛒</span>
-                    Acheter
-                  </span>
-                <% end %>
               </div>
-            </div>
+            <% end %>
           <% end %>
         </div>
       <% else %>
@@ -129,6 +130,13 @@
         </div>
       <% end %>
     </div>
+
+    <% if flash[:notice] %>
+      <div class="bg-green-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
+        <span><%= flash[:notice] %></span>
+        <%= link_to 'Retour aux playlists', playlists_path, class: 'inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105' %>
+      </div>
+    <% end %>
   </div>
 </div>
 

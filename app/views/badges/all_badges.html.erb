@@ -61,6 +61,11 @@
                 <div class="badge-name"><%= badge.name %></div>
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
+                <% unless has_badge %>
+                  <a href="<%= store_path %>" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
+                    Acheter points
+                  </a>
+                <% end %>
               </a>
             <% end %>
           <% else %>
@@ -102,6 +107,11 @@
                 <div class="badge-name"><%= badge.name %></div>
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
+                <% unless has_badge %>
+                  <a href="<%= store_path %>" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
+                    Acheter points
+                  </a>
+                <% end %>
               </a>
             <% end %>
           <% else %>
@@ -143,6 +153,11 @@
                 <div class="badge-name"><%= badge.name %></div>
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
+                <% unless has_badge %>
+                  <a href="<%= store_path %>" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
+                    Acheter points
+                  </a>
+                <% end %>
               </a>
             <% end %>
           <% else %>
@@ -184,6 +199,11 @@
                 <div class="badge-name"><%= badge.name %></div>
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
+                <% unless has_badge %>
+                  <a href="<%= store_path %>" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
+                    Acheter points
+                  </a>
+                <% end %>
               </a>
             <% end %>
           <% else %>

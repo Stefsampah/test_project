@@ -14,6 +14,9 @@ class User < ApplicationRecord
   has_many :user_badges
   has_many :badges, through: :user_badges
 
+  has_many :user_playlist_unlocks
+  has_many :unlocked_playlists, through: :user_playlist_unlocks, source: :playlist
+
   after_save :assign_badges
 
   def competitor_score

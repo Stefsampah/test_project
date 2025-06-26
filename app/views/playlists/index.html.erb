@@ -23,99 +23,67 @@
         <%= flash[:alert] %>
       </div>
     <% end %>
-    <% if flash[:notice] %>
-      <div class="bg-green-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto">
-        <%= flash[:notice] %>
+    <% if flash[:notice] || params[:notice] %>
+      <div class="bg-green-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
+        <span><%= flash[:notice] || params[:notice] %></span>
       </div>
     <% end %>
-
-    <!-- Section playlists standard -->
-    <div class="mb-16">
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Playlists Standard</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <% @standard_playlists.each do |playlist| %>
-          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-            <!-- Lien global sur toute la carte si l'utilisateur est connecté -->
-            <% if user_signed_in? %>
-              <%= link_to new_playlist_game_path(playlist), class: "block absolute inset-0 z-40" do %>
-                <span class="sr-only">Jouer à <%= playlist.title %></span>
-              <% end %>
-            <% else %>
-              <%= link_to new_user_session_path, class: "block absolute inset-0 z-40" do %>
-                <span class="sr-only">Connexion pour jouer</span>
-              <% end %>
+    <% if @unlocked_playlist %>
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-green-600 pb-2">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600">Playlist Premium Débloquée</span>
+        </h2>
+        <div class="flex justify-center">
+          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl w-full max-w-md">
+            <%= link_to new_playlist_game_path(@unlocked_playlist), class: "clickable-card" do %>
+              <span style="display: none;">Jouer à <%= @unlocked_playlist.title %></span>
             <% end %>
-            
-            <!-- Image de fond avec overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10"></div>
             <div class="h-64 overflow-hidden">
-              <% 
-                # Différentes façons d'écrire le nom de fichier
-                image_variations = [
-                  playlist.title + '.jpg',                                          # Exact match: "This is Pop.jpg"
-                  playlist.title.parameterize.underscore + '.jpg',                  # Underscore version: "this_is_pop.jpg"
-                  playlist.title.downcase.gsub(' ', '_') + '.jpg',                   # Manual lowercase with underscore: "this_is_pop.jpg"
-                  # Variations spécifiques pour certaines playlists
-                  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',  # Pour "This is AfroPop"
-                  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'               # Pour "Best of Reggae"
-                ]
-                
-                # Vérifier quelle variation existe
-                found_image = nil
-                image_variations.each do |img_name|
-                  if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
-                    found_image = img_name
-                    break
-                  end
+              <% image_variations = [
+                @unlocked_playlist.title + '.jpg',
+                @unlocked_playlist.title.parameterize.underscore + '.jpg',
+                @unlocked_playlist.title.downcase.gsub(' ', '_') + '.jpg',
+                @unlocked_playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+                @unlocked_playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
+              ]
+              found_image = nil
+              image_variations.each do |img_name|
+                if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                  found_image = img_name
+                  break
                 end
-              %>
-              
+              end %>
               <% if found_image %>
                 <%= image_tag "playlists/#{found_image}", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
               <% else %>
-                <!-- Utiliser la première image disponible comme image par défaut -->
                 <%= image_tag "playlists/This is Pop.jpg", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
               <% end %>
             </div>
-            
-            <!-- Contenu de la playlist -->
-            <div class="absolute inset-0 z-20 flex flex-col justify-end p-6">
+            <div class="absolute inset-0 z-30 flex flex-col justify-end p-6">
               <div>
-                <h3 class="text-2xl font-bold text-white mb-1"><%= playlist.title %></h3>
-                <% if playlist.genre.present? %>
-                  <span class="inline-block bg-gray-800 text-cyan-400 text-xs px-2 py-1 rounded mb-2"><%= playlist.genre %></span>
+                <div class="flex items-center mb-1">
+                  <h3 class="text-2xl font-bold text-white mr-2"><%= @unlocked_playlist.title %></h3>
+                  <span class="inline-flex items-center bg-green-900 text-green-300 text-xs px-2 py-1 rounded">
+                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                    Premium débloquée
+                  </span>
+                </div>
+                <% if @unlocked_playlist.genre.present? %>
+                  <span class="inline-block bg-gray-800 text-green-400 text-xs px-2 py-1 rounded mb-2"><%= @unlocked_playlist.genre %></span>
                 <% end %>
-                <p class="text-gray-300 text-sm mb-4 line-clamp-2"><%= playlist.description %></p>
+                <p class="text-gray-300 text-sm mb-4 line-clamp-2"><%= @unlocked_playlist.description %></p>
               </div>
-              
               <div class="flex items-center justify-between">
-                <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
-                
-                <% if user_signed_in? %>
-                  <div class="z-50 relative">
-                    <%= link_to new_playlist_game_path(playlist), class: "inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 transition-all focus:outline-none", onclick: "event.stopPropagation();" do %>
-                      <span>Jouer</span>
-                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    <% end %>
-                  </div>
-                <% else %>
-                  <div class="z-50 relative">
-                    <%= link_to new_user_session_path, class: "inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 transition-all focus:outline-none", onclick: "event.stopPropagation();" do %>
-                      <span>Connexion</span>
-                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                      </svg>
-                    <% end %>
-                  </div>
-                <% end %>
+                <span class="text-gray-400 text-sm"><%= pluralize(@unlocked_playlist.videos.count, 'titre') %></span>
               </div>
             </div>
           </div>
-        <% end %>
+        </div>
       </div>
-    </div>
+    <% end %>
 
     <!-- Section playlists premium -->
     <div class="mb-16">
@@ -126,20 +94,19 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <% @premium_playlists.each do |playlist| %>
+          <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
           <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-            <!-- Lien global sur toute la carte si l'utilisateur est connecté et a assez de points -->
-            <% if user_signed_in? && current_user.total_points >= 500 %>
-              <%= link_to new_playlist_game_path(playlist), class: "block absolute inset-0 z-40" do %>
-                <span class="sr-only">Jouer à <%= playlist.title %></span>
+            <% if (user_signed_in? && current_user.total_points >= 500) || unlocked %>
+              <!-- Lien global sur toute la carte si l'utilisateur a assez de points OU si la playlist vient d'être débloquée -->
+              <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <span style="display: none;">Jouer à <%= playlist.title %></span>
               <% end %>
             <% end %>
             
             <!-- Image de fond avec overlay -->
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10"></div>
-            <% if user_signed_in? && current_user.total_points >= 500 %>
-              <!-- Aucun filtre pour les utilisateurs avec assez de points -->
-            <% else %>
-              <!-- Filtre de verrouillage pour les utilisateurs sans assez de points -->
+            <% unless (user_signed_in? && current_user.total_points >= 500) || unlocked %>
+              <!-- Filtre de verrouillage pour les utilisateurs sans assez de points et non débloquée à l'instant -->
               <div class="absolute inset-0 bg-black/70 z-20 flex flex-col items-center justify-center">
                 <svg class="w-12 h-12 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
@@ -153,15 +120,12 @@
               <% 
                 # Différentes façons d'écrire le nom de fichier
                 image_variations = [
-                  playlist.title + '.jpg',                                          # Exact match: "This is Pop.jpg"
-                  playlist.title.parameterize.underscore + '.jpg',                  # Underscore version: "this_is_pop.jpg"
-                  playlist.title.downcase.gsub(' ', '_') + '.jpg',                   # Manual lowercase with underscore: "this_is_pop.jpg"
-                  # Variations spécifiques pour certaines playlists
-                  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',  # Pour "This is AfroPop"
-                  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'               # Pour "Best of Reggae"
+                  playlist.title + '.jpg',
+                  playlist.title.parameterize.underscore + '.jpg',
+                  playlist.title.downcase.gsub(' ', '_') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
                 ]
-                
-                # Vérifier quelle variation existe
                 found_image = nil
                 image_variations.each do |img_name|
                   if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
@@ -170,17 +134,13 @@
                   end
                 end
               %>
-              
               <% if found_image %>
                 <%= image_tag "playlists/#{found_image}", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
               <% else %>
-                <!-- Utiliser la première image disponible comme image par défaut -->
                 <%= image_tag "playlists/This is Pop.jpg", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
               <% end %>
             </div>
-            
-            <!-- Contenu de la playlist -->
-            <div class="absolute inset-0 z-30 flex flex-col justify-end p-6 <%= 'opacity-50' unless user_signed_in? && current_user.total_points >= 500 %>">
+            <div class="absolute inset-0 z-30 flex flex-col justify-end p-6 <%= 'opacity-50' unless (user_signed_in? && current_user.total_points >= 500) || unlocked %>" style="pointer-events: none;">
               <div>
                 <div class="flex items-center mb-1">
                   <h3 class="text-2xl font-bold text-white mr-2"><%= playlist.title %></h3>
@@ -196,19 +156,10 @@
                 <% end %>
                 <p class="text-gray-300 text-sm mb-4 line-clamp-2"><%= playlist.description %></p>
               </div>
-              
               <div class="flex items-center justify-between">
                 <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
-                
-                <% if user_signed_in? && current_user.total_points >= 500 %>
-                  <div class="z-50 relative">
-                    <%= link_to new_playlist_game_path(playlist), class: "inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all focus:outline-none", onclick: "event.stopPropagation();" do %>
-                      <span>Jouer</span>
-                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    <% end %>
-                  </div>
+                <% if (user_signed_in? && current_user.total_points >= 500) || unlocked %>
+                  <!-- Pas de bouton ici - la carte entière est cliquable -->
                 <% elsif user_signed_in? %>
                   <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gray-700">
                     <span>Débloquer (<%= current_user.total_points %>/500 pts)</span>
@@ -230,6 +181,70 @@
       </div>
     </div>
 
+    <!-- Section playlists standard -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Playlists Standard</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% @standard_playlists.each do |playlist| %>
+          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+            <!-- Lien global sur toute la carte si l'utilisateur est connecté -->
+            <% if user_signed_in? %>
+              <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <span style="display: none;">Jouer à <%= playlist.title %></span>
+              <% end %>
+            <% else %>
+              <%= link_to new_user_session_path, class: "clickable-card" do %>
+                <span style="display: none;">Jouer à <%= playlist.title %></span>
+              <% end %>
+            <% end %>
+            <!-- Image de fond avec overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10"></div>
+            <div class="h-64 overflow-hidden">
+              <% 
+                image_variations = [
+                  playlist.title + '.jpg',
+                  playlist.title.parameterize.underscore + '.jpg',
+                  playlist.title.downcase.gsub(' ', '_') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
+                ]
+                found_image = nil
+                image_variations.each do |img_name|
+                  if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                    found_image = img_name
+                    break
+                  end
+                end
+              %>
+              <% if found_image %>
+                <%= image_tag "playlists/#{found_image}", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
+              <% else %>
+                <%= image_tag "playlists/This is Pop.jpg", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
+              <% end %>
+            </div>
+            <!-- Contenu de la playlist -->
+            <div class="absolute inset-0 z-20 flex flex-col justify-end p-6" style="pointer-events: none;">
+              <div>
+                <h3 class="text-2xl font-bold text-white mb-1"><%= playlist.title %></h3>
+                <% if playlist.genre.present? %>
+                  <span class="inline-block bg-gray-800 text-cyan-400 text-xs px-2 py-1 rounded mb-2"><%= playlist.genre %></span>
+                <% end %>
+                <p class="text-gray-300 text-sm mb-4 line-clamp-2"><%= playlist.description %></p>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
+              </div>
+            </div>
+            
+            <!-- Bouton Jouer positionné dans le premier quart au milieu bas -->
+            <% if user_signed_in? %>
+              <!-- Pas de bouton - la carte entière est cliquable -->
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
     <!-- Section mes playlists (si connecté) -->
     <% if user_signed_in? && @user_playlists&.any? %>
       <div class="mb-16">
@@ -238,8 +253,8 @@
           <% @user_playlists.each do |playlist| %>
             <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
               <!-- Lien global sur toute la carte -->
-              <%= link_to new_playlist_game_path(playlist), class: "block absolute inset-0 z-40" do %>
-                <span class="sr-only">Rejouer à <%= playlist.title %></span>
+              <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <span style="display: none;">Jouer à <%= playlist.title %></span>
               <% end %>
               
               <!-- Image de fond avec overlay -->
@@ -261,7 +276,7 @@
                   image_variations.each do |img_name|
                     if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
                       found_image = img_name
-                      break
+                    break
                     end
                   end
                 %>
@@ -275,7 +290,7 @@
               </div>
               
               <!-- Contenu de la playlist -->
-              <div class="absolute inset-0 z-20 flex flex-col justify-end p-6">
+              <div class="absolute inset-0 z-20 flex flex-col justify-end p-6" style="pointer-events: none;">
                 <div>
                   <div class="flex items-center mb-1">
                     <h3 class="text-2xl font-bold text-white mr-2"><%= playlist.title %></h3>
@@ -305,16 +320,76 @@
                 <div class="flex items-center justify-between">
                   <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
                   
-                  <div class="z-50 relative">
-                    <%= link_to new_playlist_game_path(playlist), class: "inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 transition-all focus:outline-none", onclick: "event.stopPropagation();" do %>
-                      <span>Rejouer</span>
-                      <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                      </svg>
-                    <% end %>
-                  </div>
+                  <!-- Bouton Jouer positionné dans le premier quart au milieu bas -->
+                  <% if user_signed_in? %>
+                    <!-- Pas de bouton - la carte entière est cliquable -->
+                  <% end %>
                 </div>
               </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @unlocked_playlists.present? %>
+      <div class="mb-16">
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-green-600 pb-2">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600">Playlists Premium Débloquées</span>
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <% @unlocked_playlists.each do |playlist| %>
+            <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl w-full max-w-md">
+              <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <span style="display: none;">Jouer à <%= playlist.title %></span>
+              <% end %>
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent z-10"></div>
+              <div class="h-64 overflow-hidden">
+                <% image_variations = [
+                  playlist.title + '.jpg',
+                  playlist.title.parameterize.underscore + '.jpg',
+                  playlist.title.downcase.gsub(' ', '_') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+                  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
+                ]
+                found_image = nil
+                image_variations.each do |img_name|
+                  if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                    found_image = img_name
+                    break
+                  end
+                end %>
+                <% if found_image %>
+                  <%= image_tag "playlists/#{found_image}", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
+                <% else %>
+                  <%= image_tag "playlists/This is Pop.jpg", class: "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" %>
+                <% end %>
+              </div>
+              <div class="absolute inset-0 z-30 flex flex-col justify-end p-6" style="pointer-events: none;">
+                <div>
+                  <div class="flex items-center mb-1">
+                    <h3 class="text-2xl font-bold text-white mr-2"><%= playlist.title %></h3>
+                    <span class="inline-flex items-center bg-green-900 text-green-300 text-xs px-2 py-1 rounded">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                      </svg>
+                      Premium débloquée
+                    </span>
+                  </div>
+                  <% if playlist.genre.present? %>
+                    <span class="inline-block bg-gray-800 text-green-400 text-xs px-2 py-1 rounded mb-2"><%= playlist.genre %></span>
+                  <% end %>
+                  <p class="text-gray-300 text-sm mb-4 line-clamp-2"><%= playlist.description %></p>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
+                </div>
+              </div>
+              
+              <!-- Bouton Jouer positionné dans le premier quart au milieu bas -->
+              <% if user_signed_in? %>
+                <!-- Pas de bouton - la carte entière est cliquable -->
+              <% end %>
             </div>
           <% end %>
         </div>
@@ -335,5 +410,54 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  
+  /* Styles pour les z-index personnalisés */
+  .z-45 {
+    z-index: 45 !important;
+  }
+  
+  .z-50 {
+    z-index: 50 !important;
+  }
+  
+  /* Style pour les boutons Jouer */
+  .play-button {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50 !important;
+    background: linear-gradient(to right, #2563eb, #7c3aed);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .play-button:hover {
+    background: linear-gradient(to right, #1d4ed8, #6d28d9);
+    transform: translateX(-50%) scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Style pour les liens cliquables */
+  .clickable-card {
+    position: absolute;
+    inset: 0;
+    z-index: 45;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  
+  .clickable-card:hover {
+    background: rgba(255, 255, 255, 0.05);
   }
 </style>

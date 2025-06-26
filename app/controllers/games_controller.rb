@@ -108,6 +108,15 @@ class GamesController < ApplicationController
 
   def play
     @playlist = Playlist.find(params[:playlist_id])
+    
+    # Vérifier l'accès premium avant de créer le jeu
+    if @playlist.premium?
+      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
+        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
+        return
+      end
+    end
+    
     @game = Game.new(playlist: @playlist, user: current_user)
     
     if @game.save
@@ -128,9 +137,12 @@ class GamesController < ApplicationController
   end
   
   def check_premium_access
-    # Vérifier si la playlist est premium et si l'utilisateur a suffisamment de points
-    if @playlist.premium? && current_user.total_points < 500
-      redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
+    # Vérifier si la playlist est premium et si l'utilisateur a accès
+    if @playlist.premium?
+      # Vérifier si l'utilisateur a débloqué cette playlist ou s'il a suffisamment de points
+      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
+        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
+      end
     end
   end
 end
