@@ -1,3 +1,68 @@
+<pre>
+<%= @total_scores.inspect %>
+</pre>
+
+<% @total_scores.first(3).each_with_index do |score, index| %>
+  <% user = User.find(score[:user_id]) rescue nil %>
+  <% badge = user&.badges&.last %>
+  <% effect_level = [score[:points].to_i / 100, 4].min %>
+  <div class="relative flex-1 flex flex-col items-center justify-center mb-6 md:mb-0">
+    <!-- Halo lumineux si pas de photo -->
+    <div class="relative mb-2">
+      <% if user.avatar.attached? %>
+        <%= image_tag user.avatar, class: "h-24 w-24 rounded-full border-4 border-yellow-400 shadow-xl z-10" %>
+      <% else %>
+        <div class="h-24 w-24 rounded-full bg-gray-700 flex items-center justify-center border-4 border-yellow-400 shadow-xl z-10 halo-glow">
+          <span class="text-white text-4xl font-bold"><%= user.email.first.upcase %></span>
+        </div>
+      <% end %>
+      <!-- Badge animé issu de /my_badges -->
+      <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+        <% if badge && badge.image.present? %>
+          <%= image_tag asset_path("badges/#{badge.image}"), class: "w-10 h-10 rounded-full border-2 border-yellow-400 animate-spin-slow bg-white" %>
+        <% elsif badge %>
+          <% case badge.badge_type %>
+          <% when "competitor" %>
+            <svg class="w-10 h-10 text-yellow-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          <% when "engager" %>
+            <svg class="w-10 h-10 text-blue-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
+            </svg>
+          <% when "critic" %>
+            <svg class="w-10 h-10 text-red-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
+            </svg>
+          <% when "challenger" %>
+            <svg class="w-10 h-10 text-purple-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path>
+            </svg>
+          <% end %>
+        <% else %>
+          <svg class="w-10 h-10 text-yellow-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+    <!-- Effets autour du pseudo -->
+    <% icons = %w[★ ⚡ ✨ 🔥] %>
+    <div class="flex items-center justify-center mb-1 relative pseudo-effects">
+      <span class="text-xl font-bold text-white"><%= user.email.split('@').first %></span>
+      <% effect_level.times do |i| %>
+        <span class="absolute <%= i == 0 ? '-top-3 -left-4 animate-pulse text-yellow-300' : i == 1 ? '-top-3 -right-4 animate-bounce text-orange-400' : i == 2 ? '-bottom-3 left-1/2 -translate-x-1/2 animate-ping text-blue-400' : '-bottom-3 right-2 animate-bounce text-red-400' %> text-lg"><%= icons[i % icons.length] %></span>
+      <% end %>
+    </div>
+    <div class="flex flex-col items-center">
+      <span class="inline-block px-3 py-1 rounded-full bg-yellow-500 text-white text-xs font-semibold mb-1">
+        <%= badge&.name || (index == 0 ? 'Top engager du jour' : index == 1 ? 'Best Ratio du jour' : 'Wise Critic du jour') %>
+      </span>
+      <span class="text-3xl font-extrabold text-yellow-300"><%= score[:points] %></span>
+    </div>
+  </div>
+<% end %>
+
 <!-- Section des scores totaux -->
 <div class="min-h-screen bg-gray-900 py-6 sm:py-10">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,39 +105,83 @@
           </svg>
           Top Players
         </h2>
-        <div class="space-y-3">
-          <% @total_scores.each_with_index do |score, index| %>
-            <% user = User.find(score[:user_id]) %>
-            <div class="flex items-center bg-gray-800 bg-opacity-50 rounded-lg p-4 transition-all hover:bg-opacity-70">
-              <div class="flex-shrink-0 flex items-center justify-center <%= index < 3 ? "w-10 h-10 rounded-full" : "w-8 h-8 rounded-full" %> <%= index == 0 ? "bg-yellow-500" : (index == 1 ? "bg-gray-300" : (index == 2 ? "bg-amber-700" : "bg-gray-700")) %> mr-4">
-                <span class="text-white font-bold"><%= index + 1 %></span>
-              </div>
+        
+        <!-- Debug temporaire -->
+        <div class="mb-4 p-4 bg-gray-700 rounded">
+          <h3 class="text-white font-bold mb-2">Debug - Contenu de @total_scores:</h3>
+          <pre class="text-green-400 text-sm"><%= @total_scores.inspect %></pre>
+        </div>
+        
+        <div class="flex flex-col md:flex-row md:space-x-6 mb-8 justify-center items-end">
+          <% if @total_scores.present? %>
+            <% @total_scores.first(3).each_with_index do |score, index| %>
+              <% user = User.find(score[:user_id]) rescue nil %>
+              <% next unless user %>
+              <% badge = user.badges.last rescue nil %>
+              <% effect_level = [score[:points].to_i / 100, 4].min %>
               
-              <div class="flex-shrink-0 mr-4">
-                <% if user.avatar.attached? %>
-                  <%= image_tag user.avatar, class: "h-10 w-10 rounded-full" %>
-                <% else %>
-                  <div class="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
-                    <span class="text-white text-lg"><%= user.email.first.upcase %></span>
+              <div class="relative flex-1 flex flex-col items-center justify-center mb-6 md:mb-0">
+                <!-- Halo lumineux si pas de photo -->
+                <div class="relative mb-2">
+                  <% if user.avatar.attached? %>
+                    <%= image_tag user.avatar, class: "h-24 w-24 rounded-full border-4 border-yellow-400 shadow-xl z-10" %>
+                  <% else %>
+                    <div class="h-24 w-24 rounded-full bg-gray-700 flex items-center justify-center border-4 border-yellow-400 shadow-xl z-10 halo-glow">
+                      <span class="text-white text-4xl font-bold"><%= user.email.first.upcase %></span>
+                    </div>
+                  <% end %>
+                  
+                  <!-- Badge animé issu de /my_badges -->
+                  <div class="absolute -bottom-3 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+                    <% if badge && badge.image.present? %>
+                      <%= image_tag asset_path("badges/#{badge.image}"), class: "w-10 h-10 rounded-full border-2 border-yellow-400 animate-spin-slow bg-white" %>
+                    <% elsif badge %>
+                      <% case badge.badge_type %>
+                      <% when "competitor" %>
+                        <svg class="w-10 h-10 text-yellow-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      <% when "engager" %>
+                        <svg class="w-10 h-10 text-blue-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
+                        </svg>
+                      <% when "critic" %>
+                        <svg class="w-10 h-10 text-red-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
+                        </svg>
+                      <% when "challenger" %>
+                        <svg class="w-10 h-10 text-purple-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path>
+                        </svg>
+                      <% end %>
+                    <% else %>
+                      <svg class="w-10 h-10 text-yellow-400 animate-spin-slow" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    <% end %>
                   </div>
-                <% end %>
-              </div>
-              
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-white truncate"><%= user.email %></p>
-                <div class="flex flex-wrap mt-1">
-                  <% score[:badges].each do |badge| %>
-                    <span class="inline-flex items-center px-2 py-0.5 text-xs font-medium rounded bg-blue-900 text-blue-200 mr-1 mb-1">
-                      <%= badge %>
-                    </span>
+                </div>
+                
+                <!-- Effets autour du pseudo -->
+                <% icons = %w[★ ⚡ ✨ 🔥] %>
+                <div class="flex items-center justify-center mb-1 relative pseudo-effects">
+                  <span class="text-xl font-bold text-white"><%= user.email.split('@').first %></span>
+                  <% effect_level.times do |i| %>
+                    <span class="absolute <%= i == 0 ? '-top-3 -left-4 animate-pulse text-yellow-300' : i == 1 ? '-top-3 -right-4 animate-bounce text-orange-400' : i == 2 ? '-bottom-3 left-1/2 -translate-x-1/2 animate-ping text-blue-400' : '-bottom-3 right-2 animate-bounce text-red-400' %> text-lg"><%= icons[i % icons.length] %></span>
                   <% end %>
                 </div>
+                
+                <div class="flex flex-col items-center">
+                  <span class="inline-block px-3 py-1 rounded-full bg-yellow-500 text-white text-xs font-semibold mb-1">
+                    <%= badge&.name || (index == 0 ? 'Top engager du jour' : index == 1 ? 'Best Ratio du jour' : 'Wise Critic du jour') %>
+                  </span>
+                  <span class="text-3xl font-extrabold text-yellow-300"><%= score[:points] %></span>
+                </div>
               </div>
-              
-              <div class="text-right">
-                <p class="text-sm text-gray-400">Score</p>
-                <p class="text-xl font-bold text-white"><%= score[:points] %></p>
-              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center text-gray-400 py-8">
+              <p>Aucun score disponible pour le moment.</p>
             </div>
           <% end %>
         </div>
@@ -91,16 +200,20 @@
             <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Engagements</h2>
           </div>
           <div class="space-y-2">
-            <% @top_engager_scores.each_with_index do |score, index| %>
-              <% if index < 5 # Limiter à 5 entrées %>
+            <% if @top_engager_scores.present? %>
+              <% @top_engager_scores.first(5).each_with_index do |score, index| %>
                 <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
                   <div class="flex items-center">
                     <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
                   </div>
                   <span class="text-lg font-bold text-purple-300"><%= score[:points] %></span>
                 </div>
               <% end %>
+            <% else %>
+              <div class="text-center text-gray-400 py-4">
+                <p>Aucun score d'engagement disponible.</p>
+              </div>
             <% end %>
           </div>
         </div>
@@ -114,16 +227,20 @@
             <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Ratios</h2>
           </div>
           <div class="space-y-2">
-            <% @best_ratio_scores.each_with_index do |score, index| %>
-              <% if index < 5 # Limiter à 5 entrées %>
+            <% if @best_ratio_scores.present? %>
+              <% @best_ratio_scores.first(5).each_with_index do |score, index| %>
                 <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
                   <div class="flex items-center">
                     <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
                   </div>
                   <span class="text-lg font-bold text-blue-300"><%= score[:points] %>%</span>
                 </div>
               <% end %>
+            <% else %>
+              <div class="text-center text-gray-400 py-4">
+                <p>Aucun score de ratio disponible.</p>
+              </div>
             <% end %>
           </div>
         </div>
@@ -137,16 +254,20 @@
             <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Critiques</h2>
           </div>
           <div class="space-y-2">
-            <% @wise_critic_scores.each_with_index do |score, index| %>
-              <% if index < 5 # Limiter à 5 entrées %>
+            <% if @wise_critic_scores.present? %>
+              <% @wise_critic_scores.first(5).each_with_index do |score, index| %>
                 <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
                   <div class="flex items-center">
                     <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email %></span>
+                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
                   </div>
                   <span class="text-lg font-bold text-teal-300"><%= score[:points] %></span>
                 </div>
               <% end %>
+            <% else %>
+              <div class="text-center text-gray-400 py-4">
+                <p>Aucun score de critique disponible.</p>
+              </div>
             <% end %>
           </div>
         </div>
@@ -155,39 +276,45 @@
 
     <!-- Section scores par playlist -->
     <div id="playlists-section" class="score-section">
-      <% @scores_by_playlist.each_slice(3).each do |playlist_group| %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-          <% playlist_group.each do |playlist, scores| %>
-            <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-5 shadow-lg">
-              <h3 class="text-xl font-semibold text-white mb-4 truncate"><%= playlist.title %></h3>
-              <div class="space-y-2">
-                <% scores.first(5).each_with_index do |score, index| %>
-                  <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
-                    <div class="flex items-center">
-                      <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                      <% if score.user.avatar.attached? %>
-                        <%= image_tag score.user.avatar, class: "h-6 w-6 rounded-full mr-2" %>
-                      <% else %>
-                        <div class="h-6 w-6 rounded-full bg-gray-700 flex items-center justify-center mr-2">
-                          <span class="text-white text-xs"><%= score.user.email.first.upcase %></span>
-                        </div>
-                      <% end %>
-                      <span class="text-white text-sm truncate max-w-[120px]"><%= score.user.email %></span>
+      <% if @scores_by_playlist.present? %>
+        <% @scores_by_playlist.each_slice(3).each do |playlist_group| %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <% playlist_group.each do |playlist, scores| %>
+              <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg p-5 shadow-lg">
+                <h3 class="text-xl font-semibold text-white mb-4 truncate"><%= playlist.title %></h3>
+                <div class="space-y-2">
+                  <% scores.first(5).each_with_index do |score, index| %>
+                    <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
+                      <div class="flex items-center">
+                        <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
+                        <% if score.user.avatar.attached? %>
+                          <%= image_tag score.user.avatar, class: "h-6 w-6 rounded-full mr-2" %>
+                        <% else %>
+                          <div class="h-6 w-6 rounded-full bg-gray-700 flex items-center justify-center mr-2">
+                            <span class="text-white text-xs"><%= score.user.email.first.upcase %></span>
+                          </div>
+                        <% end %>
+                        <span class="text-white text-sm truncate max-w-[120px]"><%= score.user.email %></span>
+                      </div>
+                      <span class="text-lg font-bold text-green-300"><%= score.points %></span>
                     </div>
-                    <span class="text-lg font-bold text-green-300"><%= score.points %></span>
-                  </div>
-                <% end %>
-                
-                <% if scores.size > 5 %>
-                  <div class="text-center pt-2">
-                    <a href="<%= score_path(playlist) %>" class="text-xs text-gray-400 hover:text-white transition-colors">
-                      Voir tous les scores →
-                    </a>
-                  </div>
-                <% end %>
+                  <% end %>
+                  
+                  <% if scores.size > 5 %>
+                    <div class="text-center pt-2">
+                      <a href="<%= score_path(playlist) %>" class="text-xs text-gray-400 hover:text-white transition-colors">
+                        Voir tous les scores →
+                      </a>
+                    </div>
+                  <% end %>
+                </div>
               </div>
-            </div>
-          <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="text-center text-gray-400 py-8">
+          <p>Aucun score par playlist disponible.</p>
         </div>
       <% end %>
     </div>
@@ -213,6 +340,21 @@
   
   .score-section {
     transition: all 0.3s ease;
+  }
+
+  .halo-glow {
+    box-shadow: 0 0 32px 8px #ffe066, 0 0 0 4px #fffbe6;
+    animation: halo-pulse 2s infinite alternate;
+  }
+  @keyframes halo-pulse {
+    0% { box-shadow: 0 0 32px 8px #ffe066, 0 0 0 4px #fffbe6; }
+    100% { box-shadow: 0 0 48px 16px #ffd700, 0 0 0 8px #fffbe6; }
+  }
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  @keyframes spin {
+    100% { transform: rotate(360deg); }
   }
 </style>
 
