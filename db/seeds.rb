@@ -620,7 +620,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   # Badges pour The Engager
   Badge.find_or_create_by!(badge_type: "engager", level: "bronze") do |badge|
     badge.name = "Bronze Engager"
-    badge.points_required = 50
+    badge.points_required = 500
     badge.description = "Vous commencez à vous engager activement"
     badge.reward_type = "standard"
     badge.reward_description = "Accès à des statistiques détaillées"

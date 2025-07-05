@@ -8,77 +8,36 @@ class Score < ApplicationRecord
 
   # Méthodes pour calculer les différents types de scores
   def self.calculate_top_engager_scores
-    # Récupérer tous les swipes groupés par utilisateur
-    swipes_by_user = Swipe.group(:user_id)
-                         .select('user_id, COUNT(*) as total_swipes')
-                         .order('total_swipes DESC')
-    
-    # Calculer les points (1 point par swipe)
-    swipes_by_user.map do |swipe|
+    # Utiliser la même logique que les badges permanents
+    User.all.map do |user|
       {
-        user_id: swipe.user_id,
-        points: swipe.total_swipes,
-        badges: ["Top engager du jour"]
+        user_id: user.id,
+        points: user.engager_score,
+        badges: []
       }
-    end
+    end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_best_ratio_scores
-    # Récupérer les likes et dislikes par utilisateur
-    interactions = Swipe.group(:user_id)
-                       .select("user_id, 
-                              SUM(CASE WHEN action = 'like' THEN 1 ELSE 0 END) as likes,
-                              SUM(CASE WHEN action = 'dislike' THEN 1 ELSE 0 END) as dislikes")
-    
-    interactions.map do |interaction|
-      total = interaction.likes + interaction.dislikes
-      next if total.zero?
-
-      ratio = (interaction.likes.to_f / total) * 100
-      
-      points = case ratio
-               when 40..60 then 5
-               when 20..40, 60..80 then 3
-               else 1
-               end
-
+    # Utiliser la même logique que les badges permanents
+    User.all.map do |user|
       {
-        user_id: interaction.user_id,
-        points: points,
-        ratio: ratio.round(2),
-        badges: ratio.between?(40, 60) ? ["Best Ratio du jour"] : []
+        user_id: user.id,
+        points: user.competitor_score,
+        badges: []
       }
-    end.compact
+    end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_wise_critic_scores
-    # Récupérer les likes et dislikes par utilisateur
-    interactions = Swipe.group(:user_id)
-                       .select("user_id, 
-                              SUM(CASE WHEN action = 'like' THEN 1 ELSE 0 END) as likes,
-                              SUM(CASE WHEN action = 'dislike' THEN 1 ELSE 0 END) as dislikes")
-    
-    interactions.map do |interaction|
-      total = interaction.likes + interaction.dislikes
-      next if total.zero?
-
-      like_proportion = (interaction.likes.to_f / total) * 100
-      dislike_proportion = (interaction.dislikes.to_f / total) * 100
-      gap = (like_proportion - dislike_proportion).abs
-
-      points = case gap
-               when 0..20 then 5
-               when 20..50 then 3
-               else 1
-               end
-
+    # Utiliser la même logique que les badges permanents
+    User.all.map do |user|
       {
-        user_id: interaction.user_id,
-        points: points,
-        gap: gap.round(2),
-        badges: gap <= 20 ? ["Wise Critic du jour"] : []
+        user_id: user.id,
+        points: user.critic_score,
+        badges: []
       }
-    end.compact
+    end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_total_scores
@@ -96,6 +55,25 @@ class Score < ApplicationRecord
         combined_scores[user_id][:points] += score[:points]
         combined_scores[user_id][:badges].concat(score[:badges])
       end
+    end
+
+    # Attribuer les badges temporaires aux meilleurs de chaque catégorie
+    if top_engager.any?
+      top_engager_user_id = top_engager.first[:user_id]
+      combined_scores[top_engager_user_id] ||= { points: 0, badges: [] }
+      combined_scores[top_engager_user_id][:badges] << "Top engager du jour"
+    end
+
+    if best_ratio.any?
+      best_ratio_user_id = best_ratio.first[:user_id]
+      combined_scores[best_ratio_user_id] ||= { points: 0, badges: [] }
+      combined_scores[best_ratio_user_id][:badges] << "Top Ratio du jour"
+    end
+
+    if wise_critic.any?
+      top_critic_user_id = wise_critic.first[:user_id]
+      combined_scores[top_critic_user_id] ||= { points: 0, badges: [] }
+      combined_scores[top_critic_user_id][:badges] << "Top Critic du jour"
     end
 
     # Convertir en tableau pour la vue
