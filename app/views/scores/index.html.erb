@@ -125,89 +125,27 @@
       </div>
     </div>
 
-    <!-- Section catégories spéciales -->
+    <!-- Section catégories spéciales moderne -->
     <div id="categories-section" class="score-section">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <!-- Top Engager -->
-        <div class="bg-gradient-to-r from-purple-900 to-purple-800 rounded-lg p-5 shadow-lg">
-          <div class="flex items-center mb-4">
-            <svg class="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
-            </svg>
-            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Engagements</h2>
-          </div>
-          <div class="space-y-2">
-            <% if @top_engager_scores.present? %>
-              <% @top_engager_scores.first(5).each_with_index do |score, index| %>
-                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
-                  <div class="flex items-center">
-                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
-                  </div>
-                  <span class="text-lg font-bold text-purple-300"><%= score[:points] %></span>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="text-center text-gray-400 py-4">
-                <p>Aucun score d'engagement disponible.</p>
-              </div>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Best Ratio -->
-        <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-lg p-5 shadow-lg">
-          <div class="flex items-center mb-4">
-            <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M3 3a1 1 0 000 2h10a1 1 0 100-2H3zm0 4a1 1 0 000 2h6a1 1 0 100-2H3zm0 4a1 1 0 100 2h8a1 1 0 100-2H3zm10-4a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd"></path>
-            </svg>
-            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Ratios</h2>
-          </div>
-          <div class="space-y-2">
-            <% if @best_ratio_scores.present? %>
-              <% @best_ratio_scores.first(5).each_with_index do |score, index| %>
-                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
-                  <div class="flex items-center">
-                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
-                  </div>
-                  <span class="text-lg font-bold text-blue-300"><%= score[:points] %>%</span>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="text-center text-gray-400 py-4">
-                <p>Aucun score de ratio disponible.</p>
-              </div>
-            <% end %>
-          </div>
-        </div>
-
-        <!-- Wise Critic -->
-        <div class="bg-gradient-to-r from-teal-900 to-teal-800 rounded-lg p-5 shadow-lg">
-          <div class="flex items-center mb-4">
-            <svg class="w-6 h-6 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
-            </svg>
-            <h2 class="text-xl font-semibold text-white ml-2">Meilleurs Critiques</h2>
-          </div>
-          <div class="space-y-2">
-            <% if @wise_critic_scores.present? %>
-              <% @wise_critic_scores.first(5).each_with_index do |score, index| %>
-                <div class="flex items-center justify-between bg-black bg-opacity-20 rounded-md p-2 transition-all hover:bg-opacity-30">
-                  <div class="flex items-center">
-                    <span class="text-gray-300 mr-2 w-5 text-center">#<%= index + 1 %></span>
-                    <span class="text-white text-sm truncate"><%= User.find(score[:user_id]).email rescue "Utilisateur inconnu" %></span>
-                  </div>
-                  <span class="text-lg font-bold text-teal-300"><%= score[:points] %></span>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="text-center text-gray-400 py-4">
-                <p>Aucun score de critique disponible.</p>
-              </div>
-            <% end %>
-          </div>
-        </div>
+      <div class="flex flex-col md:flex-row gap-6 mb-8">
+        <%= render partial: "leaderboard_section", locals: {
+          title: "Meilleurs Engagements",
+          icon: "💬",
+          data: @top_engager_leaderboard,
+          unit: ""
+        } %>
+        <%= render partial: "leaderboard_section", locals: {
+          title: "Meilleurs Ratios",
+          icon: "📈",
+          data: @best_ratio_leaderboard,
+          unit: "%"
+        } %>
+        <%= render partial: "leaderboard_section", locals: {
+          title: "Meilleurs Critiques",
+          icon: "⭐",
+          data: @wise_critic_leaderboard,
+          unit: ""
+        } %>
       </div>
     </div>
 
