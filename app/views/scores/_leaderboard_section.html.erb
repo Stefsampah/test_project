@@ -1,30 +1,37 @@
-<div class="relative flex-1 bg-gradient-to-br from-yellow-400 via-orange-300 to-pink-400 rounded-3xl shadow-2xl p-6 flex flex-col max-w-xl mx-auto overflow-hidden">
-  <!-- Overlay sombre pour améliorer le contraste -->
-  <div class="absolute inset-0 bg-black bg-opacity-20 rounded-3xl z-0"></div>
+<div class="relative flex-1 bg-gradient-to-br from-yellow-400 via-orange-300 to-pink-400 rounded-3xl shadow-2xl p-8 flex flex-col max-w-xl mx-auto overflow-hidden">
+  <!-- Overlay sombre renforcé -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 rounded-3xl z-0"></div>
   <div class="relative z-10">
-    <div class="flex items-center gap-3 mb-4">
-      <span class="text-3xl">🎤</span>
-      <h3 class="text-2xl font-bold text-white drop-shadow">Meilleurs Engagements</h3>
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-4xl">🎤</span>
+      <h3 class="text-3xl font-extrabold text-white drop-shadow">Meilleurs Engagements</h3>
     </div>
-    <% (@top_engager_scores || []).first(5).each_with_index do |score, idx| %>
-      <% user = User.find(score[:user_id]) rescue nil %>
-      <div class="flex items-center justify-between bg-black bg-opacity-40 border border-white border-opacity-10 rounded-lg px-3 py-2 mb-2 shadow">
-        <div class="flex items-center gap-2">
-          <span class="inline-block w-7 h-7 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 text-black font-bold flex items-center justify-center mr-2 shadow">
-            #<%= idx+1 %>
-          </span>
-          <% if user&.avatar&.attached? %>
-            <%= image_tag user.avatar, class: "h-8 w-8 rounded-full border-2 border-white" %>
-          <% else %>
-            <div class="h-8 w-8 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white">
-              <span class="text-white text-xs"><%= user&.email&.first&.upcase || '?' %></span>
-            </div>
-          <% end %>
-          <span class="text-white text-sm truncate max-w-[120px] font-semibold drop-shadow"><%= user&.email || 'Utilisateur inconnu' %></span>
+    <div class="flex flex-col gap-4">
+      <% (@top_engager_scores || []).first(5).each_with_index do |score, idx| %>
+        <% user = User.find(score[:user_id]) rescue nil %>
+        <div class="flex items-center justify-between bg-black bg-opacity-60 border border-white border-opacity-10 rounded-xl px-4 py-3 shadow-lg">
+          <div class="flex items-center gap-4">
+            <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 text-black font-extrabold flex items-center justify-center text-lg shadow">
+              #<%= idx+1 %>
+            </span>
+            <% if user&.avatar&.attached? %>
+              <%= image_tag user.avatar, class: "h-12 w-12 rounded-full border-2 border-white shadow" %>
+            <% elsif user %>
+              <%= image_tag "/players/#{user.id}.jpg", class: "h-12 w-12 rounded-full border-2 border-white shadow", onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
+              <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow" style="display:none;">
+                <span class="text-white text-xl"><%= user.email.first.upcase %></span>
+              </div>
+            <% else %>
+              <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow">
+                <span class="text-white text-xl">?</span>
+              </div>
+            <% end %>
+            <span class="text-white text-base font-semibold truncate max-w-[140px] drop-shadow"><%= user&.email || 'Utilisateur inconnu' %></span>
+          </div>
+          <span class="text-2xl font-extrabold text-yellow-200 drop-shadow"><%= score[:points] %></span>
         </div>
-        <span class="text-lg font-bold text-yellow-200 drop-shadow"><%= score[:points] %></span>
-      </div>
-    <% end %>
-    <%= link_to "Jouer la catégorie", playlists_path, class: "mt-4 px-4 py-2 rounded-full bg-orange-500 bg-opacity-90 text-white font-bold shadow hover:bg-opacity-100 transition text-center" %>
+      <% end %>
+    </div>
+    <%= link_to "Jouer la catégorie", playlists_path, class: "mt-8 px-6 py-3 rounded-full bg-orange-500 bg-opacity-90 text-white text-lg font-bold shadow-lg hover:bg-opacity-100 transition text-center" %>
   </div>
 </div> 
