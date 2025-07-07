@@ -1,37 +1,43 @@
-<div class="relative flex-1 bg-gradient-to-br from-yellow-400 via-orange-300 to-pink-400 rounded-3xl shadow-2xl p-8 flex flex-col max-w-xl mx-auto overflow-hidden">
-  <!-- Overlay sombre renforcé -->
-  <div class="absolute inset-0 bg-black bg-opacity-50 rounded-3xl z-0"></div>
-  <div class="relative z-10">
-    <div class="flex items-center gap-3 mb-6">
-      <span class="text-4xl">🎤</span>
-      <h3 class="text-3xl font-extrabold text-white drop-shadow">Meilleurs Engagements</h3>
-    </div>
-    <div class="flex flex-col gap-4">
-      <% (@top_engager_scores || []).first(5).each_with_index do |score, idx| %>
-        <% user = User.find(score[:user_id]) rescue nil %>
-        <div class="flex items-center justify-between bg-black bg-opacity-60 border border-white border-opacity-10 rounded-xl px-4 py-3 shadow-lg">
-          <div class="flex items-center gap-4">
-            <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 text-black font-extrabold flex items-center justify-center text-lg shadow">
-              #<%= idx+1 %>
-            </span>
-            <% if user&.avatar&.attached? %>
-              <%= image_tag user.avatar, class: "h-12 w-12 rounded-full border-2 border-white shadow" %>
-            <% elsif user %>
-              <%= image_tag "/players/#{user.id}.jpg", class: "h-12 w-12 rounded-full border-2 border-white shadow", onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
-              <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow" style="display:none;">
-                <span class="text-white text-xl"><%= user.email.first.upcase %></span>
-              </div>
-            <% else %>
-              <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow">
-                <span class="text-white text-xl">?</span>
-              </div>
-            <% end %>
-            <span class="text-white text-base font-semibold truncate max-w-[140px] drop-shadow"><%= user&.email || 'Utilisateur inconnu' %></span>
+<div class="min-h-screen flex items-center justify-center bg-[#181C2F]">
+  <div class="relative flex-1 bg-gradient-to-br from-yellow-400 via-orange-300 to-pink-400 rounded-3xl shadow-2xl p-8 flex flex-col max-w-xl mx-auto overflow-hidden">
+    <!-- Overlay sombre renforcé -->
+    <div class="absolute inset-0 bg-black bg-opacity-50 rounded-3xl z-0"></div>
+    <div class="relative z-10">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-4xl"><%= local_assigns[:icon] || "🎤" %></span>
+        <h3 class="text-3xl font-extrabold text-white drop-shadow"><%= local_assigns[:title] || "Meilleurs Engagements" %></h3>
+      </div>
+      <div class="flex flex-col gap-4">
+        <% (local_assigns[:data] || @top_engager_scores || []).first(5).each_with_index do |score, idx| %>
+          <% user = User.find(score[:user_id]) rescue nil %>
+          <div class="flex flex-col sm:flex-row items-center justify-between bg-black bg-opacity-60 border border-white border-opacity-10 rounded-xl px-4 py-3 shadow-lg gap-2 sm:gap-0">
+            <div class="flex items-center gap-2 w-full sm:w-auto min-w-0">
+              <span class="inline-block w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 text-black font-extrabold flex items-center justify-center text-lg shadow shrink-0">
+                #<%= idx+1 %>
+              </span>
+              <% if user&.avatar&.attached? %>
+                <%= image_tag user.avatar, class: "h-12 w-12 rounded-full border-2 border-white shadow shrink-0" %>
+              <% elsif user %>
+                <div class="relative w-12 h-12 shrink-0">
+                  <%= image_tag "/players/#{user.id}.jpg", class: "h-12 w-12 rounded-full border-2 border-white shadow absolute top-0 left-0", onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
+                  <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow absolute top-0 left-0" style="display:none;">
+                    <span class="text-white text-xl"><%= user.email.first.upcase %></span>
+                  </div>
+                </div>
+              <% else %>
+                <div class="h-12 w-12 rounded-full bg-gray-700 flex items-center justify-center border-2 border-white shadow shrink-0">
+                  <span class="text-white text-xl">?</span>
+                </div>
+              <% end %>
+              <span class="text-white text-base font-semibold truncate overflow-hidden text-ellipsis flex-1 max-w-[110px] sm:max-w-[180px] drop-shadow">
+                <%= user&.email || 'Utilisateur inconnu' %>
+              </span>
+            </div>
+            <span class="text-2xl font-extrabold text-yellow-200 drop-shadow sm:ml-4"><%= score[:points] %><%= local_assigns[:unit] || '' %></span>
           </div>
-          <span class="text-2xl font-extrabold text-yellow-200 drop-shadow"><%= score[:points] %></span>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+      <%= link_to "Jouer la catégorie", playlists_path, class: "mt-8 px-6 py-3 rounded-full bg-orange-500 bg-opacity-90 text-white text-lg font-bold shadow-lg hover:bg-opacity-100 transition text-center" %>
     </div>
-    <%= link_to "Jouer la catégorie", playlists_path, class: "mt-8 px-6 py-3 rounded-full bg-orange-500 bg-opacity-90 text-white text-lg font-bold shadow-lg hover:bg-opacity-100 transition text-center" %>
   </div>
 </div> 
