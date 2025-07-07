@@ -1,20 +1,19 @@
-<% # Détection de l'URL de cover %>
-<% cover_url =
-     if playlist.respond_to?(:cover) && playlist.cover.respond_to?(:attached?) && playlist.cover.attached?
-       url_for(playlist.cover)
-     elsif playlist.respond_to?(:image) && playlist.image.respond_to?(:attached?) && playlist.image.attached?
-       url_for(playlist.image)
-     elsif playlist.respond_to?(:cover_url) && playlist.cover_url.present?
-       playlist.cover_url
-     elsif playlist.respond_to?(:image_url) && playlist.image_url.present?
-       playlist.image_url
-     elsif playlist.respond_to?(:cover) && playlist.cover.present?
-       playlist.cover
-     elsif playlist.respond_to?(:image) && playlist.image.present?
-       playlist.image
-     else
-       asset_path('playlists/pop_play.jpg')
-     end
+<%
+image_variations = [
+  playlist.title + '.jpg',
+  playlist.title.parameterize.underscore + '.jpg',
+  playlist.title.downcase.gsub(' ', '_') + '.jpg',
+  playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+  playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
+]
+found_image = nil
+image_variations.each do |img_name|
+  if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+    found_image = img_name
+    break
+  end
+end
+cover_url = found_image ? asset_path("playlists/#{found_image}") : asset_path('playlists/This is Pop.jpg')
 %>
 <div class="playlist-card group relative rounded-3xl overflow-hidden shadow-2xl transition-all duration-300 hover:scale-105" style="background-image: url('<%= cover_url %>'); background-size: cover; background-position: center;">
   <div class="absolute inset-0 bg-black bg-opacity-60"></div>
