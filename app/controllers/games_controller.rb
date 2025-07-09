@@ -16,6 +16,10 @@ class GamesController < ApplicationController
   end
 
   def create
+    # Remise à zéro du score pour cette playlist et cet utilisateur
+    existing_score = Score.find_by(user: current_user, playlist: @playlist)
+    existing_score.destroy if existing_score
+
     @game = Game.new(playlist: @playlist, user: current_user)
     
     if @game.save
@@ -61,6 +65,13 @@ class GamesController < ApplicationController
     # Calcul de la position dans le classement
     scores = Score.where(playlist: @playlist).order(points: :desc)
     @position = scores.pluck(:user_id).index(current_user.id) + 1
+
+    # Ajout : scores globaux
+    # @competitor_score = current_user.competitor_score
+    # @engager_score = current_user.engager_score
+    # @critic_score = current_user.critic_score
+    # @challenger_score = current_user.challenger_score
+    # @total_points = current_user.total_points
   end
 
   def swipe
