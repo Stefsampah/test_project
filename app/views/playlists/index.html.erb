@@ -17,6 +17,20 @@
       </p>
     </div>
 
+    <!-- Boutons de filtrage -->
+    <div class="flex justify-center mb-8">
+      <div class="bg-gray-800 rounded-lg p-1 flex space-x-1">
+        <button id="all-playlists-btn" class="filter-btn active px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="all">
+          Toutes les playlists
+        </button>
+        <% if user_signed_in? %>
+          <button id="my-playlists-btn" class="filter-btn px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="my">
+            Mes playlists
+          </button>
+        <% end %>
+      </div>
+    </div>
+
     <!-- Notification -->
     <% if flash[:alert] %>
       <div class="bg-red-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto">
@@ -86,7 +100,7 @@
     <% end %>
 
     <!-- Section playlists premium -->
-    <div class="mb-16">
+    <div id="premium-section" class="mb-16 playlist-section">
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Playlists Premium</span>
         <span class="text-sm font-normal text-gray-400 ml-2">500 points requis</span>
@@ -182,7 +196,7 @@
     </div>
 
     <!-- Section playlists standard -->
-    <div class="mb-16">
+    <div id="standard-section" class="mb-16 playlist-section">
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Playlists Standard</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <% @standard_playlists.each do |playlist| %>
@@ -247,7 +261,7 @@
 
     <!-- Section mes playlists (si connecté) -->
     <% if user_signed_in? && @user_playlists&.any? %>
-      <div class="mb-16">
+      <div id="my-playlists-section" class="mb-16 playlist-section" style="display: none;">
         <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Mes Playlists</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <% @user_playlists.each do |playlist| %>
@@ -333,7 +347,7 @@
     <% end %>
 
     <% if @unlocked_playlists.present? %>
-      <div class="mb-16">
+      <div id="unlocked-section" class="mb-16 playlist-section">
         <h2 class="text-2xl font-bold text-white mb-6 border-b border-green-600 pb-2">
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-emerald-600">Playlists Premium Débloquées</span>
         </h2>
@@ -460,4 +474,56 @@
   .clickable-card:hover {
     background: rgba(255, 255, 255, 0.05);
   }
+  
+  /* Styles pour les boutons de filtrage */
+  .filter-btn {
+    color: #9ca3af;
+    background: transparent;
+  }
+  
+  .filter-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .filter-btn.active {
+    color: #ffffff;
+    background: #3b82f6;
+  }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const playlistSections = document.querySelectorAll('.playlist-section');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const filter = this.getAttribute('data-filter');
+        
+        // Mettre à jour les boutons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Filtrer les sections
+        playlistSections.forEach(section => {
+          if (filter === 'all') {
+            // Afficher toutes les sections sauf "Mes playlists"
+            if (section.id === 'my-playlists-section') {
+              section.style.display = 'none';
+            } else {
+              section.style.display = 'block';
+            }
+          } else if (filter === 'my') {
+            // Afficher seulement "Mes playlists"
+            if (section.id === 'my-playlists-section') {
+              section.style.display = 'block';
+            } else {
+              section.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+  });
+</script>

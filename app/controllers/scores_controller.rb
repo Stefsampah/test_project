@@ -15,6 +15,10 @@ class ScoresController < ApplicationController
     @scores_by_playlist = Playlist.includes(scores: :user).all.map do |playlist|
       [playlist, playlist.scores.order(points: :desc)]
     end
+    
+    # Récupérer les scores de l'utilisateur connecté
+    @my_scores = current_user.scores.includes(:playlist).order(points: :desc)
+    @my_scores_by_playlist = @my_scores.group_by(&:playlist)
   end
 
   def show

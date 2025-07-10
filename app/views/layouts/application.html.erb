@@ -179,13 +179,13 @@
       <div class="nav-container">
         <div class="nav-content">
           <!-- Logo -->
-          <%= link_to root_path, class: "logo", title: "Accueil - Video Swipe" do %>
+          <a href="<%= root_path %>" class="logo" title="Accueil - Video Swipe" onclick="window.location.href='<%= root_path %>'; return false;">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 8V4m0 4h16M4 8l4-4h8l4 4M4 8v8c0 1.1.9 2 2 2h12a2 2 0 002-2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M10 12l4 2-4 2v-4z" fill="currentColor"/>
             </svg>
             <span>Video Swipe</span>
-          <% end %>
+          </a>
 
           <!-- Menu principal -->
           <div class="main-menu">
@@ -340,9 +340,9 @@
           
                   // Créer le gestionnaire global
         window.mobileMenuGlobalClick = function(event) {
-          console.log('Global click detected, target:', event.target);
-          // Vérifier si on clique sur le bouton du menu mobile
-          if (event.target.closest('#mobile-menu-button')) {
+          // Vérifier si on clique spécifiquement sur le bouton du menu mobile
+          const mobileMenuButton = event.target.closest('#mobile-menu-button');
+          if (mobileMenuButton && !event.target.closest('.logo')) {
             console.log('Mobile menu button clicked!');
             event.preventDefault();
             event.stopPropagation();
@@ -400,6 +400,8 @@
           setTimeout(setupMobileMenu, 100);
         });
         document.addEventListener('DOMContentLoaded', setupMobileMenu);
+        
+        // Gestionnaire pour le logo (supprimé pour éviter les conflits avec Turbo)
       })();
     </script>
   </body>

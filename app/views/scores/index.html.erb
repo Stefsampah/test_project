@@ -17,19 +17,15 @@
       
       <!-- Filtres -->
       <div class="hidden sm:flex space-x-2">
-        <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Tous</button>
-        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="total">Top Players</button>
-        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="categories">Catégories</button>
-        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="playlists">Playlists</button>
+        <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Toutes les scores</button>
+        <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="my">Mes scores</button>
       </div>
     </div>
     
     <!-- Filtres mobile -->
     <div class="sm:hidden flex flex-wrap justify-center gap-2 mb-6">
-      <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Tous</button>
-      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="total">Top Players</button>
-      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="categories">Catégories</button>
-      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="playlists">Playlists</button>
+      <button class="score-filter active px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="all">Toutes les scores</button>
+      <button class="score-filter px-3 py-1 rounded-full text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 transition-colors" data-target="my">Mes scores</button>
     </div>
 
     <!-- Section scores totaux -->
@@ -165,6 +161,65 @@
         </div>
       <% end %>
     </div>
+
+    <!-- Section mes scores -->
+    <div id="my-scores-section" class="score-section" style="display: none;">
+      <div class="bg-gradient-to-r from-blue-800 to-blue-900 rounded-lg p-6 mb-8 shadow-lg">
+        <h2 class="text-2xl font-semibold text-white mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Mes Scores
+        </h2>
+        
+        <% if @my_scores.present? %>
+          <!-- Résumé des scores -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-blue-400 mb-2"><%= @my_scores.count %></div>
+              <div class="text-gray-300 text-sm">Playlists jouées</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-green-400 mb-2"><%= @my_scores.sum(&:points) %></div>
+              <div class="text-gray-300 text-sm">Points totaux</div>
+            </div>
+            <div class="bg-gray-800 rounded-lg p-4 text-center">
+              <div class="text-3xl font-bold text-yellow-400 mb-2"><%= @my_scores.maximum(:points) || 0 %></div>
+              <div class="text-gray-300 text-sm">Meilleur score</div>
+            </div>
+          </div>
+
+          <!-- Scores par playlist -->
+          <div class="space-y-6">
+            <% @my_scores_by_playlist.each do |playlist, scores| %>
+              <div class="bg-gray-800 rounded-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-xl font-semibold text-white"><%= playlist.title %></h3>
+                  <span class="text-2xl font-bold text-blue-400"><%= scores.first.points %></span>
+                </div>
+                
+                <div class="flex items-center justify-between text-sm text-gray-300">
+                  <span>Joué le <%= scores.first.updated_at.strftime("%d/%m/%Y") %></span>
+                  <span><%= pluralize(playlist.videos.count, 'titre') %></span>
+                </div>
+                
+                <% if playlist.genre.present? %>
+                  <div class="mt-2">
+                    <span class="inline-block bg-gray-700 text-blue-400 text-xs px-2 py-1 rounded">
+                      <%= playlist.genre %>
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center text-gray-400 py-8">
+            <p>Vous n'avez pas encore de scores. Commencez à jouer pour voir vos résultats ici !</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -265,15 +320,20 @@
     const totalSection = document.getElementById('total-section');
     const categoriesSection = document.getElementById('categories-section');
     const playlistsSection = document.getElementById('playlists-section');
+    const myScoresSection = document.getElementById('my-scores-section');
     
-    // Initialisation - montrer toutes les sections
+    // Initialisation - montrer toutes les sections sauf "Mes scores"
     function showAllSections() {
       scoreSections.forEach(section => {
-        section.style.display = 'block';
+        if (section.id === 'my-scores-section') {
+          section.style.display = 'none';
+        } else {
+          section.style.display = 'block';
+        }
       });
     }
     
-    // Par défaut, montrer toutes les sections
+    // Par défaut, montrer toutes les sections sauf "Mes scores"
     showAllSections();
     
     // Gestion des filtres
@@ -287,22 +347,17 @@
         
         // Afficher les sections appropriées
         if (target === 'all') {
+          // Afficher toutes les sections sauf "Mes scores"
           showAllSections();
-        } else if (target === 'total') {
+        } else if (target === 'my') {
+          // Afficher seulement "Mes scores"
           scoreSections.forEach(section => {
-            section.style.display = 'none';
+            if (section.id === 'my-scores-section') {
+              section.style.display = 'block';
+            } else {
+              section.style.display = 'none';
+            }
           });
-          totalSection.style.display = 'block';
-        } else if (target === 'categories') {
-          scoreSections.forEach(section => {
-            section.style.display = 'none';
-          });
-          categoriesSection.style.display = 'block';
-        } else if (target === 'playlists') {
-          scoreSections.forEach(section => {
-            section.style.display = 'none';
-          });
-          playlistsSection.style.display = 'block';
         }
         
         // Scroll en douceur vers le haut de la section
