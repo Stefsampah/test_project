@@ -14,7 +14,7 @@
         color: white;
         position: sticky;
         top: 0;
-        z-index: 50;
+        z-index: 1000;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
       
@@ -22,6 +22,7 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 1rem;
+        position: relative;
       }
       
       .nav-content {
@@ -38,6 +39,14 @@
         font-size: 1.25rem;
         color: white;
         text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+      }
+      
+      .logo:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.05);
       }
       
       .logo svg {
@@ -63,11 +72,15 @@
         padding: 0.5rem 0.75rem;
         border-radius: 0.375rem;
         transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        z-index: 1002;
       }
       
       .nav-link:hover {
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
+        transform: scale(1.05);
       }
       
       .mobile-menu-button {
@@ -86,6 +99,14 @@
         background-color: #1f2937;
         border-radius: 0 0 0.5rem 0.5rem;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 300px;
+        overflow-y: auto;
       }
       
       .mobile-menu.show {
@@ -131,13 +152,23 @@
       }
       
       /* Responsive styles */
-      @media (max-width: 768px) {
+      @media (max-width: 1024px) {
         .main-menu, .user-menu {
           display: none;
         }
         
         .mobile-menu-button {
           display: block;
+        }
+        
+        .logo {
+          font-size: 1rem;
+          padding: 0.25rem;
+        }
+        
+        .logo svg {
+          width: 24px;
+          height: 24px;
         }
       }
     </style>
@@ -148,7 +179,7 @@
       <div class="nav-container">
         <div class="nav-content">
           <!-- Logo -->
-          <%= link_to root_path, class: "logo" do %>
+          <%= link_to root_path, class: "logo", title: "Accueil - Video Swipe" do %>
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M4 8V4m0 4h16M4 8l4-4h8l4 4M4 8v8c0 1.1.9 2 2 2h12a2 2 0 002-2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M10 12l4 2-4 2v-4z" fill="currentColor"/>
@@ -225,73 +256,151 @@
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        // Simple toggle function for le menu mobile
-        mobileMenuButton.addEventListener('click', function(event) {
-          event.stopPropagation(); // Empêcher la propagation du clic
+      (function() {
+        // Utiliser window pour éviter les conflits de variables
+        if (!window.mobileMenuInitialized) {
+          window.mobileMenuDocumentClick = null;
+          window.mobileMenuKeydown = null;
+          window.mobileMenuInitialized = true;
+        }
+
+        function setupMobileMenu() {
+          console.log('setupMobileMenu called');
+          const mobileMenuButton = document.getElementById('mobile-menu-button');
+          const mobileMenu = document.getElementById('mobile-menu');
+          const nav = document.querySelector('.nav');
           
-          const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
-          mobileMenuButton.setAttribute('aria-expanded', !isExpanded);
+          console.log('mobileMenuButton:', mobileMenuButton);
+          console.log('mobileMenu:', mobileMenu);
+          console.log('nav:', nav);
           
-          // Basculer la classe show
-          mobileMenu.classList.toggle('show');
-          
-          // Changer l'icône du bouton selon l'état du menu
-          if (mobileMenu.classList.contains('show')) {
-            mobileMenuButton.innerHTML = `
+          if (!mobileMenuButton || !mobileMenu) {
+            console.log('Menu elements not found');
+            return;
+          }
+
+          if (window.mobileMenuDocumentClick) document.removeEventListener('click', window.mobileMenuDocumentClick);
+          if (window.mobileMenuKeydown) document.removeEventListener('keydown', window.mobileMenuKeydown);
+
+          function closeMobileMenuDirect(menuElement, buttonElement) {
+            menuElement.classList.remove('show');
+            menuElement.style.display = 'none';
+            buttonElement.setAttribute('aria-expanded', 'false');
+            buttonElement.innerHTML = `
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            `;
+          }
+
+          function openMobileMenuDirect(menuElement, buttonElement) {
+            console.log('openMobileMenuDirect called with elements:', menuElement, buttonElement);
+            menuElement.classList.add('show');
+            
+            // Forcer l'application des styles CSS
+            menuElement.style.display = 'flex';
+            menuElement.style.position = 'absolute';
+            menuElement.style.top = '100%';
+            menuElement.style.left = '0';
+            menuElement.style.right = '0';
+            menuElement.style.width = '100%';
+            menuElement.style.backgroundColor = '#1f2937';
+            menuElement.style.zIndex = '1001';
+            menuElement.style.padding = '1rem 0';
+            menuElement.style.borderRadius = '0 0 0.5rem 0.5rem';
+            menuElement.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
+            menuElement.style.flexDirection = 'column';
+            
+            console.log('Menu classes after adding show:', menuElement.className);
+            console.log('Menu display style:', window.getComputedStyle(menuElement).display);
+            console.log('Menu position:', window.getComputedStyle(menuElement).position);
+            console.log('Menu top:', window.getComputedStyle(menuElement).top);
+            console.log('Menu left:', window.getComputedStyle(menuElement).left);
+            console.log('Menu width:', window.getComputedStyle(menuElement).width);
+            console.log('Menu height:', window.getComputedStyle(menuElement).height);
+            console.log('Menu z-index:', window.getComputedStyle(menuElement).zIndex);
+            console.log('Menu background:', window.getComputedStyle(menuElement).backgroundColor);
+            console.log('Menu is visible:', menuElement.offsetParent !== null);
+            console.log('Menu offsetHeight:', menuElement.offsetHeight);
+            console.log('Menu offsetWidth:', menuElement.offsetWidth);
+            console.log('Menu innerHTML length:', menuElement.innerHTML.length);
+            buttonElement.setAttribute('aria-expanded', 'true');
+            buttonElement.innerHTML = `
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             `;
-          } else {
-            mobileMenuButton.innerHTML = `
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            `;
           }
-        });
-        
-        // Fermer le menu si on clique ailleurs sur la page
-        document.addEventListener('click', function(event) {
-          if (mobileMenu.classList.contains('show') && 
-              !mobileMenu.contains(event.target) && 
-              !mobileMenuButton.contains(event.target)) {
-            
-            mobileMenu.classList.remove('show');
-            mobileMenuButton.setAttribute('aria-expanded', 'false');
-            
-            mobileMenuButton.innerHTML = `
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            `;
+
+          // Utiliser la délégation d'événement au niveau du document
+          // Nettoyer l'ancien écouteur global
+          if (window.mobileMenuGlobalClick) {
+            document.removeEventListener('click', window.mobileMenuGlobalClick);
           }
-        });
-        
-        // Empêcher la fermeture du menu lorsqu'on clique dessus
-        mobileMenu.addEventListener('click', function(event) {
-          event.stopPropagation();
-        });
-        
-        // Fermer le menu lorsqu'on clique sur un lien
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a, button');
-        mobileMenuLinks.forEach(link => {
-          link.addEventListener('click', function() {
-            mobileMenu.classList.remove('show');
-            mobileMenuButton.setAttribute('aria-expanded', 'false');
+          
+                  // Créer le gestionnaire global
+        window.mobileMenuGlobalClick = function(event) {
+          console.log('Global click detected, target:', event.target);
+          // Vérifier si on clique sur le bouton du menu mobile
+          if (event.target.closest('#mobile-menu-button')) {
+            console.log('Mobile menu button clicked!');
+            event.preventDefault();
+            event.stopPropagation();
             
-            mobileMenuButton.innerHTML = `
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            `;
-          });
+            // Récupérer les éléments actuels à chaque clic
+            const currentMobileMenu = document.getElementById('mobile-menu');
+            const currentMobileMenuButton = document.getElementById('mobile-menu-button');
+            console.log('Current mobile menu found:', currentMobileMenu);
+            console.log('Current mobile menu button found:', currentMobileMenuButton);
+            
+            if (currentMobileMenu && currentMobileMenu.classList.contains('show')) {
+              console.log('Closing mobile menu');
+              closeMobileMenuDirect(currentMobileMenu, currentMobileMenuButton);
+            } else if (currentMobileMenu) {
+              console.log('Opening mobile menu');
+              openMobileMenuDirect(currentMobileMenu, currentMobileMenuButton);
+            }
+          }
+        };
+          
+          // Attacher l'écouteur global
+          document.addEventListener('click', window.mobileMenuGlobalClick);
+
+          mobileMenu.onclick = function(event) {
+            if (event.target.closest('a, button')) {
+              setTimeout(() => {
+                closeMobileMenuDirect(mobileMenu, mobileMenuButton);
+              }, 100);
+            }
+            event.stopPropagation();
+          };
+
+          window.mobileMenuDocumentClick = function(event) {
+            if (mobileMenu.classList.contains('show') && !nav.contains(event.target)) {
+              closeMobileMenuDirect(mobileMenu, mobileMenuButton);
+            }
+          };
+          document.addEventListener('click', window.mobileMenuDocumentClick);
+
+          window.mobileMenuKeydown = function(event) {
+            if (event.key === 'Escape' && mobileMenu.classList.contains('show')) {
+              closeMobileMenuDirect(mobileMenu, mobileMenuButton);
+            }
+          };
+          document.addEventListener('keydown', window.mobileMenuKeydown);
+        }
+
+        document.addEventListener('turbo:before-cache', function() {
+          if (window.mobileMenuDocumentClick) document.removeEventListener('click', window.mobileMenuDocumentClick);
+          if (window.mobileMenuKeydown) document.removeEventListener('keydown', window.mobileMenuKeydown);
+          if (window.mobileMenuGlobalClick) document.removeEventListener('click', window.mobileMenuGlobalClick);
         });
-      });
+
+        document.addEventListener('turbo:load', function() {
+          setTimeout(setupMobileMenu, 100);
+        });
+        document.addEventListener('DOMContentLoaded', setupMobileMenu);
+      })();
     </script>
   </body>
 </html>

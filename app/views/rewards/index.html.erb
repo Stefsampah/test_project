@@ -14,6 +14,7 @@
       </div>
       
       <!-- Lien vers les badges -->
+      <!--
       <div class="mt-4">
         <a href="<%= my_badges_path %>" class="inline-flex items-center px-6 py-3 text-sm font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none">
           <span>Voir mes badges</span>
@@ -22,22 +23,26 @@
           </svg>
         </a>
       </div>
+      -->
+    </div>
+
+    <!-- Navigation entre les pages de récompenses -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex rounded-md shadow-sm" role="group">
+        <button id="my-rewards-btn" class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+          Mes récompenses
+        </button>
+        <button id="all-rewards-btn" class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
+          Toutes les récompenses
+        </button>
+      </div>
     </div>
 
     <div id="notification" class="notification p-4 rounded mb-4 hidden"></div>
 
-    <!-- Filtres -->
-    <div class="mb-6">
-      <div class="flex flex-wrap justify-center gap-2">
-        <button id="all-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white filter-active">Toutes</button>
-        <button id="standard-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white">Standard</button>
-        <button id="premium-rewards" class="px-4 py-2 rounded-full bg-gray-800 text-white">Premium</button>
-      </div>
-    </div>
-
     <!-- Mes récompenses -->
-    <% if user_signed_in? && current_user.user_badges.where.not(claimed_at: nil).exists? %>
-      <div class="mb-12">
+    <div id="my-rewards-section" class="mb-12">
+      <% if user_signed_in? && current_user.user_badges.where.not(claimed_at: nil).exists? %>
         <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 mb-8">
           <h2 class="text-2xl font-light text-white mb-6">Mes récompenses</h2>
           
@@ -106,8 +111,13 @@
             <% end %>
           </div>
         </div>
-      </div>
-    <% end %>
+      <% else %>
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg p-6 mb-8 text-center text-white">
+          <h2 class="text-2xl font-light mb-4">Mes récompenses</h2>
+          <p>Aucune récompense obtenue pour le moment.</p>
+        </div>
+      <% end %>
+    </div>
 
     <!-- Récompenses standard -->
     <div class="mb-12 reward-section" id="standard-section">
@@ -282,9 +292,7 @@
     box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
   }
   
-  .filter-active {
-    background-color: #6366f1;
-  }
+
   
   @keyframes gradient {
     0% {
@@ -301,39 +309,45 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Filtres pour les récompenses
-    const allButton = document.getElementById('all-rewards');
-    const standardButton = document.getElementById('standard-rewards');
-    const premiumButton = document.getElementById('premium-rewards');
-    
-    const sections = document.querySelectorAll('.reward-section');
+    const myRewardsBtn = document.getElementById('my-rewards-btn');
+    const allRewardsBtn = document.getElementById('all-rewards-btn');
+    const myRewardsSection = document.getElementById('my-rewards-section');
     const standardSection = document.getElementById('standard-section');
     const premiumSection = document.getElementById('premium-section');
-    
-    allButton.addEventListener('click', function() {
-      allButton.classList.add('filter-active');
-      standardButton.classList.remove('filter-active');
-      premiumButton.classList.remove('filter-active');
-      
-      sections.forEach(section => section.style.display = 'block');
-    });
-    
-    standardButton.addEventListener('click', function() {
-      allButton.classList.remove('filter-active');
-      standardButton.classList.add('filter-active');
-      premiumButton.classList.remove('filter-active');
-      
-      standardSection.style.display = 'block';
-      premiumSection.style.display = 'none';
-    });
-    
-    premiumButton.addEventListener('click', function() {
-      allButton.classList.remove('filter-active');
-      standardButton.classList.remove('filter-active');
-      premiumButton.classList.add('filter-active');
-      
+    const howToSection = document.querySelector('.bg-gradient-to-r.from-indigo-600.to-purple-600');
+
+    function showMyRewards() {
+      // Afficher mes récompenses
+      myRewardsSection.style.display = 'block';
       standardSection.style.display = 'none';
+      premiumSection.style.display = 'none';
+      if (howToSection) howToSection.style.display = 'none';
+      
+      // Mettre à jour les styles des boutons
+      myRewardsBtn.classList.add('bg-blue-600');
+      myRewardsBtn.classList.remove('bg-gray-700');
+      allRewardsBtn.classList.remove('bg-blue-600');
+      allRewardsBtn.classList.add('bg-gray-700');
+    }
+
+    function showAllRewards() {
+      // Afficher toutes les récompenses
+      myRewardsSection.style.display = 'none';
+      standardSection.style.display = 'block';
       premiumSection.style.display = 'block';
-    });
+      if (howToSection) howToSection.style.display = 'block';
+      
+      // Mettre à jour les styles des boutons
+      allRewardsBtn.classList.add('bg-blue-600');
+      allRewardsBtn.classList.remove('bg-gray-700');
+      myRewardsBtn.classList.remove('bg-blue-600');
+      myRewardsBtn.classList.add('bg-gray-700');
+    }
+
+    myRewardsBtn.addEventListener('click', showMyRewards);
+    allRewardsBtn.addEventListener('click', showAllRewards);
+
+    // Par défaut, afficher mes récompenses
+    showMyRewards();
   });
 </script> 
