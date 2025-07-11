@@ -712,7 +712,7 @@ exclusive_videos = [
   { title: 'Help Me Find My Drawls · Tonio Armani', youtube_id: 'Qzq45Z95Ass' },
   { title: 'Joy · Snoop Dogg', youtube_id: 'bQrs57Uc7eY' },
   { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
-  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: 'vHA5lqrMMI' },
+  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: '7vHA5lqrMMI' },
   { title: 'Funk Pop Type Beat, Funky Type Beat ("feels") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
   { title: 'Rapid Fire · Cruel Santino', youtube_id: '40mssPDJodE' },
   { title: 'White Noise · Joyner Lucas', youtube_id: 'cMPzYnVD0ng' },
