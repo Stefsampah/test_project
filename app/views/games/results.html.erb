@@ -81,7 +81,7 @@
             <% @liked_videos.each do |video| %>
               <div class="flex justify-between items-center bg-white/10 rounded-lg p-4">
                 <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-white/80"><%= video.points %> points</span>
+                <span class="text-white/80">2 points</span>
               </div>
             <% end %>
           <% else %>
@@ -98,7 +98,7 @@
             <% @not_liked_videos.each do |video| %>
               <div class="flex justify-between items-center bg-white/10 rounded-lg p-4">
                 <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-white/80"><%= video.points %> points</span>
+                <span class="text-white/80">1 point</span>
               </div>
             <% end %>
           <% else %>

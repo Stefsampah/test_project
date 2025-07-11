@@ -5,10 +5,18 @@ class GamesController < ApplicationController
   before_action :check_premium_access, only: [:new, :create]
 
   def new
-    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
-    existing_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
+    completed_game = current_user.games.where(playlist: @playlist, completed_at: nil).where.not(completed_at: nil).last
     
-    if existing_game && !existing_game.completed?
+    if completed_game
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      return
+    end
+    
+    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+    
+    if existing_game
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
     else
       @game = Game.new(playlist: @playlist, user: current_user)
@@ -16,7 +24,24 @@ class GamesController < ApplicationController
   end
 
   def create
-    # Remise à zéro du score pour cette playlist et cet utilisateur
+    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
+    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    
+    if completed_game
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      return
+    end
+
+    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+    
+    if existing_game
+      redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+      return
+    end
+
+    # Remise à zéro du score pour cette playlist et cet utilisateur (seulement si pas de partie terminée)
+    # Ne pas supprimer le score si une partie est déjà terminée
     existing_score = Score.find_by(user: current_user, playlist: @playlist)
     existing_score.destroy if existing_score
 
@@ -42,7 +67,8 @@ class GamesController < ApplicationController
 
       # Calcul de la position dans le classement
       scores = Score.where(playlist: @playlist).order(points: :desc)
-      @position = scores.pluck(:user_id).index(current_user.id) + 1
+      user_score_index = scores.pluck(:user_id).index(current_user.id)
+      @position = user_score_index ? user_score_index + 1 : scores.count + 1
 
       # Affiche la vue des résultats
       render :results
@@ -64,7 +90,8 @@ class GamesController < ApplicationController
 
     # Calcul de la position dans le classement
     scores = Score.where(playlist: @playlist).order(points: :desc)
-    @position = scores.pluck(:user_id).index(current_user.id) + 1
+    user_score_index = scores.pluck(:user_id).index(current_user.id)
+    @position = user_score_index ? user_score_index + 1 : scores.count + 1
 
     # Ajout : scores globaux
     # @competitor_score = current_user.competitor_score
@@ -75,6 +102,12 @@ class GamesController < ApplicationController
   end
 
   def swipe
+    # Empêcher de swiper si le jeu est déjà terminé
+    if @game.completed?
+      redirect_to results_playlist_game_path(@game.playlist, @game), alert: "Cette partie est déjà terminée !"
+      return
+    end
+
     Rails.logger.info "Params reçus : #{params.inspect}"
 
     video = @game.current_video
@@ -95,9 +128,12 @@ class GamesController < ApplicationController
     # Calcul des points en fonction de l'action
     points = action == "like" ? 2 : 1
 
-    # Mettre à jour ou créer le score
+    # Mettre à jour ou créer le score (seulement pour cette partie)
     score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
-    score.points = (score.points || 0) + points
+    
+    # Calculer le score total de cette partie seulement
+    game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
+    score.points = game_score
     score.save!
 
     @game.reload
@@ -120,12 +156,28 @@ class GamesController < ApplicationController
   def play
     @playlist = Playlist.find(params[:playlist_id])
     
+    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
+    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    
+    if completed_game
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      return
+    end
+    
     # Vérifier l'accès premium avant de créer le jeu
     if @playlist.premium?
       unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
         redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
         return
       end
+    end
+    
+    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+    
+    if existing_game
+      redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+      return
     end
     
     @game = Game.new(playlist: @playlist, user: current_user)
