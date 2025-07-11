@@ -700,3 +700,29 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     badge.update(image: image) if badge
   end
 end
+
+# Playlist Exclusive: Exclusive Playlist
+exclusive_playlist = Playlist.find_or_create_by!(title: 'Exclusive Playlist') do |playlist|
+  playlist.description = 'Une playlist réservée aux membres ayant débloqué la récompense exclusive.'
+  playlist.genre = 'Exclusive'
+  playlist.premium = true
+end
+
+exclusive_videos = [
+  { title: 'Help Me Find My Drawls · Tonio Armani', youtube_id: 'Qzq45Z95Ass' },
+  { title: 'Joy · Snoop Dogg', youtube_id: 'bQrs57Uc7eY' },
+  { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
+  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: 'vHA5lqrMMI' },
+  { title: 'Funk Pop Type Beat, Funky Type Beat ("feels") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
+  { title: 'Rapid Fire · Cruel Santino', youtube_id: '40mssPDJodE' },
+  { title: 'White Noise · Joyner Lucas', youtube_id: 'cMPzYnVD0ng' },
+  { title: 'Fuego · Manu Crooks · Anfa Rose', youtube_id: 'u7i9oCgsukE' },
+  { title: 'Mary Jane (All Night Long) · Mary J. Blige', youtube_id: 'XWP9LWeE0-I' },
+  { title: 'Cowgirl Trailride (feat. Tonio Armani) S Dott', youtube_id: '33TIBfNR_bM' }
+]
+
+exclusive_videos.each do |video|
+  exclusive_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
