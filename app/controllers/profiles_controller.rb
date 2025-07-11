@@ -1,6 +1,13 @@
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
 
+  def show
+    @user = current_user
+    @scores = current_user.scores.includes(:playlist)
+    @badges = current_user.user_badges.includes(:badge)
+    @rewards = current_user.user_badges.where.not(claimed_at: nil).includes(:badge)
+  end
+
   def edit
     @user = current_user
   end
@@ -8,7 +15,7 @@ class ProfilesController < ApplicationController
   def update
     @user = current_user
     if @user.update(user_params)
-      redirect_to edit_profile_path, notice: 'Profil mis à jour avec succès!'
+      redirect_to profile_path, notice: 'Profil mis à jour avec succès!'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -17,6 +24,6 @@ class ProfilesController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:avatar)
+    params.require(:user).permit(:avatar, :username, :email)
   end
 end 

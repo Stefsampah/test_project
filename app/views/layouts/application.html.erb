@@ -202,7 +202,7 @@
               <span class="nav-link text-green-400 font-medium">
                 <%= current_user.email %>
               </span>
-              <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
+              <%= link_to "Mon Profil", profile_path, class: "nav-link" %>
               <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link" %>
             <% else %>
               <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>
@@ -230,7 +230,7 @@
             <span class="nav-link text-green-400 font-medium">
               <%= current_user.email %>
             </span>
-            <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
+            <%= link_to "Mon Profil", profile_path, class: "nav-link" %>
             <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link text-left w-full" %>
           <% else %>
             <div class="border-t border-gray-700 my-2"></div>
