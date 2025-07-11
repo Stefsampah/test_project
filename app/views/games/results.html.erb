@@ -110,12 +110,11 @@
 
     <!-- Boutons -->
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-      <%= link_to scores_path, 
-          class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all focus:outline-none transform hover:scale-105" do %>
+      <button id="force-leaderboard" type="button" class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all focus:outline-none transform hover:scale-105">
         <span>View Party Leaderboard</span>
-      <% end %>
+      </button>
 
-      <%= link_to playlist_games_path(@playlist), 
+      <%= link_to playlists_path, 
           class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-white/20 hover:bg-white/30 transition-all focus:outline-none transform hover:scale-105" do %>
         <span>Next</span>
         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,6 +122,17 @@
         </svg>
       <% end %>
     </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('force-leaderboard');
+        if (btn) {
+          btn.addEventListener('click', function(e) {
+            window.location.href = '/scores';
+          });
+        }
+      });
+    </script>
   </div>
 </div>
 
