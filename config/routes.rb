@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   root 'playlists#index'
   get 'check_user', to: 'tests#check_user'
+  get 'debug_user', to: 'tests#debug_user'
 
   # Routes pour le profil
   resource :profile, only: [:edit, :update]

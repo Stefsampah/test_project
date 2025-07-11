@@ -1,0 +1,101 @@
+<div class="min-h-screen bg-gray-900 py-8">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="bg-gray-800 rounded-lg p-8 mb-8">
+      <h1 class="text-3xl font-bold text-white mb-6">Debug Utilisateur</h1>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Informations de base -->
+        <div class="bg-gray-700 rounded-lg p-6">
+          <h2 class="text-xl font-semibold text-white mb-4">Informations de base</h2>
+          
+          <!-- Avatar -->
+          <div class="flex items-center mb-6">
+            <% if @user.avatar.attached? %>
+              <%= image_tag @user.avatar, class: "w-20 h-20 rounded-full border-4 border-gray-600 object-cover" %>
+            <% else %>
+              <div class="w-20 h-20 rounded-full border-4 border-gray-600 bg-gray-600 flex items-center justify-center">
+                <span class="text-white text-2xl font-bold"><%= @user.email.first.upcase %></span>
+              </div>
+            <% end %>
+            <div class="ml-4">
+              <h3 class="text-lg font-semibold text-white"><%= @user.email %></h3>
+              <p class="text-gray-400"><%= @user.username || "Utilisateur" %></p>
+            </div>
+          </div>
+          
+          <div class="space-y-2 text-gray-300">
+            <p><strong>ID:</strong> <%= @user.id %></p>
+            <p><strong>Email:</strong> <%= @user.email %></p>
+            <p><strong>Username:</strong> <%= @user.username || "Non défini" %></p>
+            <p><strong>Points:</strong> <%= @user.points || 0 %></p>
+            <p><strong>VIP:</strong> <%= @user.vip_subscription ? "Oui" : "Non" %></p>
+            <% if @user.vip_subscription && @user.vip_expires_at %>
+              <p><strong>VIP expire le:</strong> <%= @user.vip_expires_at.strftime("%d/%m/%Y") %></p>
+            <% end %>
+            <p><strong>Inscrit le:</strong> <%= @user.created_at.strftime("%d/%m/%Y à %H:%M") %></p>
+            <p><strong>Dernière mise à jour:</strong> <%= @user.updated_at.strftime("%d/%m/%Y à %H:%M") %></p>
+          </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="bg-gray-700 rounded-lg p-6">
+          <h2 class="text-xl font-semibold text-white mb-4">Statistiques</h2>
+          <div class="space-y-2 text-gray-300">
+            <p><strong>Scores:</strong> <%= @scores.count %></p>
+            <p><strong>Badges:</strong> <%= @badges.count %></p>
+            <p><strong>Points totaux:</strong> <%= @scores.sum(&:points) %></p>
+            <p><strong>Playlists jouées:</strong> <%= @scores.map(&:playlist).uniq.count %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scores détaillés -->
+      <% if @scores.any? %>
+        <div class="bg-gray-700 rounded-lg p-6 mt-6">
+          <h2 class="text-xl font-semibold text-white mb-4">Scores détaillés</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm text-gray-300">
+              <thead>
+                <tr class="border-b border-gray-600">
+                  <th class="text-left py-2">Playlist</th>
+                  <th class="text-left py-2">Points</th>
+                  <th class="text-left py-2">Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @scores.order(points: :desc).each do |score| %>
+                  <tr class="border-b border-gray-600">
+                    <td class="py-2"><%= score.playlist.title %></td>
+                    <td class="py-2"><%= score.points %></td>
+                    <td class="py-2"><%= score.created_at.strftime("%d/%m/%Y") %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Badges -->
+      <% if @badges.any? %>
+        <div class="bg-gray-700 rounded-lg p-6 mt-6">
+          <h2 class="text-xl font-semibold text-white mb-4">Badges</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <% @badges.each do |user_badge| %>
+              <div class="bg-gray-600 rounded-lg p-4">
+                <h3 class="font-semibold text-white"><%= user_badge.badge.name %></h3>
+                <p class="text-gray-300 text-sm"><%= user_badge.badge.description %></p>
+                <p class="text-gray-400 text-xs mt-2">
+                  Gagné le: <%= user_badge.earned_at.strftime("%d/%m/%Y") %>
+                  <% if user_badge.claimed_at %>
+                    <br>Réclamé le: <%= user_badge.claimed_at.strftime("%d/%m/%Y") %>
+                  <% end %>
+                </p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div> 

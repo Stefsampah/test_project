@@ -199,6 +199,9 @@
           <!-- Menu utilisateur -->
           <div class="user-menu">
             <% if user_signed_in? %>
+              <span class="nav-link text-green-400 font-medium">
+                <%= current_user.email %>
+              </span>
               <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
               <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link" %>
             <% else %>
@@ -224,6 +227,9 @@
           
           <% if user_signed_in? %>
             <div class="border-t border-gray-700 my-2"></div>
+            <span class="nav-link text-green-400 font-medium">
+              <%= current_user.email %>
+            </span>
             <%= link_to "Mon Profil", edit_profile_path, class: "nav-link" %>
             <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link text-left w-full" %>
           <% else %>
