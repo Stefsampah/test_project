@@ -37,18 +37,22 @@
             📧 <%= @user.email %>
           </p>
           
-          <!-- Statistiques rapides -->
+          <!-- Statistiques rapides alignées avec le système de badges -->
           <div class="flex flex-wrap justify-center md:justify-start gap-4">
             <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-yellow-400"><%= @user.points || 0 %></span>
-              <span class="text-white/80 text-sm">points</span>
+              <span class="text-2xl font-bold text-yellow-400"><%= @user.total_points %></span>
+              <span class="text-white/80 text-sm">points totaux</span>
             </div>
             <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-blue-400"><%= @scores.count %></span>
+              <span class="text-2xl font-bold text-blue-400"><%= @user.games.count %></span>
               <span class="text-white/80 text-sm">parties</span>
             </div>
             <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-green-400"><%= @badges.count %></span>
+              <span class="text-2xl font-bold text-green-400"><%= @user.win_ratio %>%</span>
+              <span class="text-white/80 text-sm">victoires</span>
+            </div>
+            <div class="bg-white/10 rounded-lg px-4 py-2">
+              <span class="text-2xl font-bold text-purple-400"><%= @badges.count %></span>
               <span class="text-white/80 text-sm">badges</span>
             </div>
           </div>
@@ -93,7 +97,7 @@
         <% end %>
       </div>
 
-      <!-- 📊 Statistiques de jeu -->
+      <!-- 📊 Nouvelles statistiques alignées avec le système de badges -->
       <div class="bg-gray-800 rounded-lg p-6">
         <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
           📊 <span class="ml-2">Mes Statistiques</span>
@@ -105,57 +109,93 @@
             <div class="flex items-center justify-between">
               <div>
                 <p class="text-white/80 text-sm">Points totaux</p>
-                <p class="text-3xl font-bold text-white"><%= @scores.sum(&:points) %></p>
+                <p class="text-3xl font-bold text-white"><%= @user.total_points %></p>
               </div>
               <div class="text-4xl">🎯</div>
             </div>
           </div>
           
-          <!-- Playlists jouées -->
-          <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4">
+          <!-- Win Ratio -->
+          <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-4">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-white/80 text-sm">Playlists jouées</p>
-                <p class="text-3xl font-bold text-white"><%= @scores.map(&:playlist).uniq.count %></p>
+                <p class="text-white/80 text-sm">Ratio de victoires</p>
+                <p class="text-3xl font-bold text-white"><%= @user.win_ratio %>%</p>
+                <p class="text-white/60 text-xs">
+                  <%= @user.games.count %> parties jouées
+                </p>
+              </div>
+              <div class="text-4xl">🏆</div>
+            </div>
+          </div>
+          
+          <!-- Top 3 Count -->
+          <div class="bg-gradient-to-r from-yellow-600 to-amber-600 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white/80 text-sm">Top 3</p>
+                <p class="text-3xl font-bold text-white"><%= @user.top_3_finishes_count %></p>
+                <p class="text-white/60 text-xs">
+                  fois dans le top 3
+                </p>
+              </div>
+              <div class="text-4xl">🥉</div>
+            </div>
+          </div>
+          
+          <!-- Unique Playlists -->
+          <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-white/80 text-sm">Playlists uniques</p>
+                <p class="text-3xl font-bold text-white"><%= @user.unique_playlists_played_count %></p>
+                <p class="text-white/60 text-xs">
+                  playlists différentes
+                </p>
               </div>
               <div class="text-4xl">🎵</div>
             </div>
           </div>
-          
-          <!-- Meilleur score -->
-          <% if @scores.any? %>
-            <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-white/80 text-sm">Meilleur score</p>
-                  <p class="text-3xl font-bold text-white"><%= @scores.maximum(:points) %></p>
-                  <p class="text-white/60 text-xs">
-                    <%= @scores.order(points: :desc).first.playlist.title %>
-                  </p>
-                </div>
-                <div class="text-4xl">🏆</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progression vers les badges -->
+    <div class="bg-gray-800 rounded-lg p-6 mt-8">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+        🎯 <span class="ml-2">Progression vers les badges</span>
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <% @user.next_badges.each do |badge_type, data| %>
+          <% if data[:badge] %>
+            <div class="bg-gray-700 rounded-lg p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-white text-sm"><%= data[:badge].name %></h3>
+                <span class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-600 text-white px-2 py-1 rounded text-xs">
+                  <%= badge_type.capitalize %>
+                </span>
               </div>
+              <div class="mb-3">
+                <div class="flex justify-between text-xs text-white/80 mb-1">
+                  <span>Progression</span>
+                  <span><%= data[:current_score] %> / <%= data[:badge].points_required %></span>
+                </div>
+                <div class="w-full bg-gray-600 rounded-full h-2">
+                  <% progress = (data[:current_score].to_f / data[:badge].points_required * 100).round %>
+                  <div class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-500 h-2 rounded-full" style="width: <%= [progress, 100].min %>%"></div>
+                </div>
+              </div>
+              <p class="text-xs text-white/60">
+                <% if data[:points_needed] > 0 %>
+                  Il manque <%= data[:points_needed] %> points
+                <% else %>
+                  Badge disponible !
+                <% end %>
+              </p>
             </div>
           <% end %>
-          
-          <!-- Statut VIP -->
-          <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm">Statut VIP</p>
-                <p class="text-3xl font-bold text-white">
-                  <%= @user.vip_subscription ? "Actif" : "Inactif" %>
-                </p>
-                <% if @user.vip_subscription && @user.vip_expires_at %>
-                  <p class="text-white/60 text-xs">
-                    Expire le <%= @user.vip_expires_at.strftime("%d/%m/%Y") %>
-                  </p>
-                <% end %>
-              </div>
-              <div class="text-4xl">👑</div>
-            </div>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
 
