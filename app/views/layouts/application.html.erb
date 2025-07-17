@@ -203,7 +203,9 @@
                 <%= current_user.email %>
               </span>
               <%= link_to "Mon Profil", profile_path, class: "nav-link" %>
-              <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link" %>
+              <%= form_with url: destroy_user_session_path, method: :delete, local: true, class: "inline" do |f| %>
+                <%= f.submit "Déconnexion", class: "nav-link bg-transparent border-0 cursor-pointer" %>
+              <% end %>
             <% else %>
               <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>
             <% end %>
@@ -231,7 +233,9 @@
               <%= current_user.email %>
             </span>
             <%= link_to "Mon Profil", profile_path, class: "nav-link" %>
-            <%= button_to "Déconnexion", destroy_user_session_path, method: :delete, class: "nav-link text-left w-full" %>
+            <%= form_with url: destroy_user_session_path, method: :delete, local: true, class: "inline w-full" do |f| %>
+              <%= f.submit "Déconnexion", class: "nav-link text-left w-full bg-transparent border-0 cursor-pointer" %>
+            <% end %>
           <% else %>
             <div class="border-t border-gray-700 my-2"></div>
             <%= link_to "Connexion", new_user_session_path, class: "nav-link" %>

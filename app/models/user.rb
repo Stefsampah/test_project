@@ -21,8 +21,8 @@ class User < ApplicationRecord
   after_create :assign_badges
   
   # Callbacks pour attribuer les badges après modification des scores
-  after_save :assign_badges_after_score_change, if: :saved_change_to_swipes_count?
-  after_save :assign_badges_after_score_change, if: :saved_change_to_scores_count?
+  # Note: Ces callbacks sont désactivés car les associations n'ont pas de compteurs automatiques
+  # Les badges sont assignés via BadgeService.assign_badges(user) après chaque action
 
   def competitor_score
     scores.sum(:points) || 0
@@ -49,15 +49,16 @@ class User < ApplicationRecord
     total_games = games.count
     return 0 if total_games == 0
     
-    # Considérer une "victoire" comme un score dans le top 50% de la playlist
+    # Considérer une "victoire" comme un score dans le top 75% de la playlist
     wins = 0
     games.includes(:playlist).each do |game|
       playlist_scores = Score.where(playlist: game.playlist).order(points: :desc)
       user_score = scores.find_by(playlist: game.playlist)&.points || 0
       
       if playlist_scores.count > 0
-        median_score = playlist_scores.offset(playlist_scores.count / 2).first&.points || 0
-        wins += 1 if user_score >= median_score
+        # Top 75% au lieu de 50% (médiane)
+        top_75_threshold = playlist_scores.offset((playlist_scores.count * 0.25).to_i).first&.points || 0
+        wins += 1 if user_score >= top_75_threshold
       end
     end
     
@@ -175,11 +176,6 @@ class User < ApplicationRecord
   private
 
   def assign_badges
-    BadgeService.assign_badges(self)
-  end
-  
-  def assign_badges_after_score_change
-    # Attendre un peu pour s'assurer que les scores sont mis à jour
     BadgeService.assign_badges(self)
   end
 end

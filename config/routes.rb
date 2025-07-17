@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   devise_for :users
   root 'playlists#index'
   get 'check_user', to: 'tests#check_user'
+  
+  # Route temporaire pour gérer les anciens liens GET vers sign_out
+  get '/users/sign_out', to: 'application#sign_out_redirect'
 
   # Routes pour le profil
   resource :profile, only: [:show, :edit, :update]
