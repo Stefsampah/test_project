@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_24_145534) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_17_130802) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -51,6 +51,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_24_145534) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "image"
+    t.string "condition_1_type"
+    t.integer "condition_1_value"
+    t.string "condition_2_type"
+    t.integer "condition_2_value"
+    t.string "condition_3_type"
+    t.integer "condition_3_value"
     t.index ["badge_type", "level"], name: "index_badges_on_badge_type_and_level", unique: true
   end
 

@@ -10,7 +10,11 @@ class Badge < ApplicationRecord
   validates :reward_type, inclusion: { in: REWARD_TYPES }, allow_nil: true
   validates :badge_type, uniqueness: { scope: :level }
   validates :reward_description, presence: true, if: -> { reward_type.present? }
-  # L'image est optionnelle mais recommandée
+  
+  # Nouvelles validations pour les conditions multiples
+  validates :condition_1_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
+  validates :condition_2_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
+  validates :condition_3_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
 
   has_many :user_badges
   has_many :users, through: :user_badges
@@ -54,5 +58,48 @@ class Badge < ApplicationRecord
       # Image par défaut basée sur le type et le niveau
       "/assets/badges/default-#{badge_type}-#{level}.png"
     end
+  end
+
+  # Méthodes pour vérifier les conditions multiples
+  def conditions_met?(user)
+    return true if condition_1_type.blank? # Fallback vers l'ancien système
+    
+    conditions = []
+    conditions << check_condition(user, condition_1_type, condition_1_value) if condition_1_type.present?
+    conditions << check_condition(user, condition_2_type, condition_2_value) if condition_2_type.present?
+    conditions << check_condition(user, condition_3_type, condition_3_value) if condition_3_type.present?
+    
+    conditions.all?
+  end
+
+  def check_condition(user, condition_type, required_value)
+    return false if required_value.blank?
+    
+    actual_value = case condition_type
+                   when 'points_earned'
+                     user.competitor_score
+                   when 'games_played'
+                     user.games.count
+                   when 'win_ratio'
+                     user.win_ratio
+                   when 'top_3_count'
+                     user.top_3_finishes_count
+                   when 'consecutive_wins'
+                     user.consecutive_wins_count
+                   when 'unique_playlists'
+                     user.unique_playlists_played_count
+                   else
+                     0
+                   end
+    
+    actual_value >= required_value
+  end
+
+  def conditions_description
+    conditions = []
+    conditions << "#{condition_1_type.humanize}: #{condition_1_value}" if condition_1_type.present?
+    conditions << "#{condition_2_type.humanize}: #{condition_2_value}" if condition_2_type.present?
+    conditions << "#{condition_3_type.humanize}: #{condition_3_value}" if condition_3_type.present?
+    conditions.join(" + ")
   end
 end 

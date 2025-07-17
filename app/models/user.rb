@@ -44,6 +44,66 @@ class User < ApplicationRecord
     competitor_score + engager_score + critic_score + challenger_score
   end
 
+  # Nouvelles méthodes pour les conditions multiples
+  def win_ratio
+    total_games = games.count
+    return 0 if total_games == 0
+    
+    # Considérer une "victoire" comme un score dans le top 50% de la playlist
+    wins = 0
+    games.includes(:playlist).each do |game|
+      playlist_scores = Score.where(playlist: game.playlist).order(points: :desc)
+      user_score = scores.find_by(playlist: game.playlist)&.points || 0
+      
+      if playlist_scores.count > 0
+        median_score = playlist_scores.offset(playlist_scores.count / 2).first&.points || 0
+        wins += 1 if user_score >= median_score
+      end
+    end
+    
+    (wins.to_f / total_games * 100).round(1)
+  end
+
+  def top_3_finishes_count
+    count = 0
+    games.includes(:playlist).each do |game|
+      playlist_scores = Score.where(playlist: game.playlist).order(points: :desc).limit(3)
+      user_score = scores.find_by(playlist: game.playlist)&.points || 0
+      
+      if playlist_scores.any? && user_score >= playlist_scores.last&.points.to_i
+        count += 1
+      end
+    end
+    count
+  end
+
+  def consecutive_wins_count
+    max_consecutive = 0
+    current_consecutive = 0
+    
+    games.includes(:playlist).order(created_at: :asc).each do |game|
+      playlist_scores = Score.where(playlist: game.playlist).order(points: :desc)
+      user_score = scores.find_by(playlist: game.playlist)&.points || 0
+      
+      if playlist_scores.count > 0
+        median_score = playlist_scores.offset(playlist_scores.count / 2).first&.points || 0
+        
+        if user_score >= median_score
+          current_consecutive += 1
+          max_consecutive = [max_consecutive, current_consecutive].max
+        else
+          current_consecutive = 0
+        end
+      end
+    end
+    
+    max_consecutive
+  end
+
+  def unique_playlists_played_count
+    games.joins(:playlist).distinct.count(:playlist_id)
+  end
+
   def earned_badges
     user_badges.includes(:badge).where.not(earned_at: nil)
   end
@@ -66,6 +126,10 @@ class User < ApplicationRecord
 
   # Vérifier si l'utilisateur peut obtenir un badge spécifique
   def can_earn_badge?(badge)
+    # Vérifier d'abord les conditions multiples si elles existent
+    return false unless badge.conditions_met?(self)
+    
+    # Fallback vers l'ancien système si pas de conditions multiples
     current_score = case badge.badge_type
                    when 'competitor' then competitor_score
                    when 'engager' then engager_score
