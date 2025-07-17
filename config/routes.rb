@@ -7,7 +7,11 @@ Rails.application.routes.draw do
   resource :profile, only: [:show, :edit, :update]
 
   # Routes pour les badges
-  resources :badges, only: [:index, :show]
+  resources :badges, only: [:index, :show] do
+    member do
+      patch :claim_reward
+    end
+  end
   get 'my_badges', to: 'badges#my_badges'
   get 'all_badges', to: 'badges#all_badges'
   post 'claim_reward/:id', to: 'badges#claim_reward', as: :claim_reward
