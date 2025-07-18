@@ -46,19 +46,19 @@
 
     <!-- Section playlists premium -->
     <% if (@unlocked_playlists + @premium_playlists).any? %>
-      <div id="premium-section" class="mb-16 playlist-section">
+      <div id="premium-section" class="mb-20 sm:mb-24 playlist-section">
         <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Playlists Premium</span>
           <span class="text-sm font-normal text-gray-400 ml-2">500 points requis</span>
         </h2>
         
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
           <% (@unlocked_playlists + @premium_playlists).each do |playlist| %>
             <% is_unlocked = @unlocked_playlists.include?(playlist) %>
             <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
             <% can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked %>
           
-          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6">
             <% if can_access %>
               <!-- Lien global sur toute la carte si l'utilisateur peut y accéder -->
               <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
@@ -158,11 +158,11 @@
     <% end %>
 
     <!-- Section playlists standard -->
-    <div id="standard-section" class="mb-16 playlist-section">
+    <div id="standard-section" class="mb-20 sm:mb-24 playlist-section">
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Playlists Standard</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
         <% @standard_playlists.each do |playlist| %>
-          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+          <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6">
             <!-- Lien global sur toute la carte si l'utilisateur est connecté -->
             <% if user_signed_in? %>
               <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
@@ -236,7 +236,7 @@
         <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Mes Playlists</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <% @user_playlists.each do |playlist| %>
-            <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
+            <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6">
               <!-- Lien global sur toute la carte -->
               <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
                 <span style="display: none;">Jouer à <%= playlist.title %></span>
