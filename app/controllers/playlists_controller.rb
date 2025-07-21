@@ -13,8 +13,11 @@ class PlaylistsController < ApplicationController
       @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
     end
     
-    # Récupérer les playlists utilisées par l'utilisateur connecté
-    @user_playlists = current_user.playlists.distinct if user_signed_in?
+    # Récupérer les playlists jouées par l'utilisateur connecté (avec score existant)
+    if user_signed_in?
+      played_playlist_ids = current_user.scores.pluck(:playlist_id)
+      @user_playlists = Playlist.where(id: played_playlist_ids).order(:id)
+    end
   end
 
   def show
