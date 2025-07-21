@@ -11,6 +11,24 @@ class PlaylistsController < ApplicationController
       unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
       @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true)
       @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+      
+      # Trier les playlists avec les non jouées en premier
+      played_playlist_ids = current_user.scores.pluck(:playlist_id)
+      
+      # Trier les playlists standard : non jouées en premier
+      unplayed_standard = @standard_playlists.where.not(id: played_playlist_ids)
+      played_standard = @standard_playlists.where(id: played_playlist_ids)
+      @standard_playlists = unplayed_standard + played_standard
+      
+      # Trier les playlists premium : non jouées en premier
+      unplayed_premium = @premium_playlists.where.not(id: played_playlist_ids)
+      played_premium = @premium_playlists.where(id: played_playlist_ids)
+      @premium_playlists = unplayed_premium + played_premium
+      
+      # Trier les playlists débloquées : non jouées en premier
+      unplayed_unlocked = @unlocked_playlists.where.not(id: played_playlist_ids)
+      played_unlocked = @unlocked_playlists.where(id: played_playlist_ids)
+      @unlocked_playlists = unplayed_unlocked + played_unlocked
     end
     
     # Récupérer les playlists jouées par l'utilisateur connecté (avec score existant)

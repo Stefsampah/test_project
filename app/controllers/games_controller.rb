@@ -83,6 +83,16 @@ class GamesController < ApplicationController
     @score = Score.find_by(user: current_user, playlist: @game.playlist)
     @playlist = @game.playlist
     
+    # Si pas de score, créer un score basé sur le jeu
+    unless @score
+      game_score = @game.score
+      @score = Score.create!(
+        user: current_user,
+        playlist: @playlist,
+        points: game_score
+      )
+    end
+    
     # Calcul des vidéos likées et non likées
     swipes = @game.swipes.includes(:video)
     @liked_videos = swipes.where(action: "like").map(&:video)
