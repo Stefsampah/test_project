@@ -193,12 +193,12 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     { title: 'Dr. Dre - Still D.R.E. ft. Snoop Dogg', youtube_id: '_CL6n0FJZpk' },
     { title: 'Eminem - Lose Yourself', youtube_id: '_Yhyp-_hX2s' },
     { title: 'The Notorious B.I.G. - Juicy', youtube_id: '_JZom_gVfuw' },
-    { title: 'Tupac - California Love', youtube_id: '5wBTdfAkqGU' },
-    { title: 'Jay-Z - Empire State of Mind', youtube_id: 'QsZlY0Vz4-o' },
-    { title: 'Nas - N.Y. State of Mind', youtube_id: '3uGIEY7tdg8' },
+    { title: 'Tupac - California Love', youtube_id: 'J7_bMdYfSws' },
+    { title: 'Jay-Z - Empire State of Mind', youtube_id: 'vk6014HuxcE' },
+    { title: 'Nas - N.Y. State of Mind', youtube_id: 'hI8A14Qcv68' },
     { title: 'Wu-Tang Clan - C.R.E.A.M.', youtube_id: 'PBwAxmrE194' },
     { title: 'Kendrick Lamar - Alright', youtube_id: 'Z-48u_uWMHY' },
-    { title: 'OutKast - Ms. Jackson', youtube_id: 'MYxAiK6VnXw' },
+    { title: 'OutKast - Ms. Jackson', youtube_id: 'EUVo8epKwv0' },
     { title: 'Kanye West - Runaway', youtube_id: 'VhEoCOWUtcU' }
   ]
   
@@ -217,16 +217,16 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Reggae Vibes
   reggae_vibes_videos = [
-    { title: 'Steel Pulse - Steppin\' Out', youtube_id: '7mJ_oRHSA00' },
-    { title: 'Jimmy Cliff - Many Rivers to Cross', youtube_id: 'RO3g-39LHTg' },
-    { title: 'Peter Tosh - Legalize It', youtube_id: 'ABc8ciT5QLs' },
-    { title: 'Burning Spear - Columbus', youtube_id: 'GAqcmAm-H8o' },
-    { title: 'Dennis Brown - Revolution', youtube_id: 'JhY9GOhFwN4' },
+    { title: 'Steel Pulse - Steppin\' Out', youtube_id: '8SXCPuJCFmA' },
+    { title: 'Jimmy Cliff - Many Rivers to Cross', youtube_id: 'doWWHQDWe2k' },
+    { title: 'Peter Tosh - Legalize It', youtube_id: 'j6QkVTx2d88' },
+    { title: 'Burning Spear - Columbus', youtube_id: 'CZyTqj-vRrM' },
+    { title: 'Dennis Brown - Revolution', youtube_id: '0CGI0lS1ir4' },
     { title: 'Gregory Isaacs - Night Nurse', youtube_id: 'K6oYyG0KcvQ' },
-    { title: 'Black Uhuru - Guess Who\'s Coming to Dinner', youtube_id: 'JkZbmzyDcEE' },
-    { title: 'Toots & The Maytals - Pressure Drop', youtube_id: 'CRSwjhYmAY4' },
-    { title: 'Third World - Now That We Found Love', youtube_id: 'WDw-Ina5y4E' },
-    { title: 'Buju Banton - Untold Stories', youtube_id: 'S9wy6KXnaxA' }
+    { title: 'Black Uhuru - Guess Who\'s Coming to Dinner', youtube_id: 'KWEGXb2juvM' },
+    { title: 'Toots & The Maytals - Pressure Drop', youtube_id: 'DKVB_CtU8XQ' },
+    { title: 'Third World - Now That We Found Love', youtube_id: 'XXeY74ttezU' },
+    { title: 'Buju Banton - Untold Stories', youtube_id: 'Kb-0Eo0Yk0o' }
   ]
   
   reggae_vibes_videos.each do |video|
@@ -244,16 +244,16 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Afro Pop Hits
   afro_pop_hits_videos = [
-    { title: 'Fally Ipupa - Eloko Oyo', youtube_id: 'hmNFl5z93MU' },
-    { title: 'Tiwa Savage - Koroba', youtube_id: 'M_K9c9QMt4g' },
-    { title: 'Diamond Platnumz - Waah! ft. Koffi Olomide', youtube_id: 'DgTF3KQNabc' },
-    { title: 'Sarkodie - Adonai ft. Castro', youtube_id: 'czQu1sLagIA' },
+    { title: 'Fally Ipupa - Eloko Oyo', youtube_id: 'T4KNVT2w0mU' },
+    { title: 'Tiwa Savage - Koroba', youtube_id: '5goMslKxEWs' },
+    { title: 'Diamond Platnumz - Waah! ft. Koffi Olomide', youtube_id: 'HCuTwNgY3_M' },
+    { title: 'Sarkodie - Adonai ft. Castro', youtube_id: 'pZvlG-wwWk' },
     { title: 'Yemi Alade - Johnny', youtube_id: 'C_XkTKoDI18' },
-    { title: 'P-Square - Personally', youtube_id: 'P_m1J14Nj_A' },
-    { title: 'D\'Banj - Oliver Twist', youtube_id: 'KdoVgJ156U4' },
-    { title: 'Tekno - Pana', youtube_id: 'd8rL2fYqA7w' },
-    { title: 'Mr Eazi - Skin Tight ft. Efya', youtube_id: 'ACEuznZDtIU' },
-    { title: 'Sauti Sol - Suzanna', youtube_id: 'SJ0l_aGl-zg' }
+    { title: 'P-Square - Personally', youtube_id: 'ttdU19Kwce8' },
+    { title: 'D\'Banj - Oliver Twist', youtube_id: 'EUYNnVgkAag' },
+    { title: 'Tekno - Pana', youtube_id: '8YhAFBOSk1U' },
+    { title: 'Mr Eazi - Skin Tight ft. Efya', youtube_id: 'vk_4yxkgjAI' },
+    { title: 'Sauti Sol - Suzanna', youtube_id: 'mFBJtuQ1Llc' }
   ]
   
   afro_pop_hits_videos.each do |video|
