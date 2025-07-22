@@ -29,15 +29,18 @@ class User < ApplicationRecord
   end
 
   def engager_score
-    swipes.count * 10 || 0
+    # Points pour l'engagement : likes donnent plus de points que dislikes
+    swipes.where(action: 'like').count * 5 + swipes.where(action: 'dislike').count * 2 || 0
   end
 
   def critic_score
-    swipes.where(action: 'dislike').count * 5 || 0
+    # Points pour les critiques : dislikes donnent des points pour l'opinion critique
+    swipes.where(action: 'dislike').count * 3 || 0
   end
 
   def challenger_score
-    (competitor_score + engager_score + critic_score) / 3 || 0
+    # Score basé sur la performance globale (pas une moyenne)
+    (competitor_score + engager_score + critic_score) || 0
   end
 
   def total_points

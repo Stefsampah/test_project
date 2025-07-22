@@ -17,12 +17,14 @@
     <!-- Navigation entre les pages de badges -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-md shadow-sm" role="group">
-        <a href="<%= my_badges_path %>" class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+        <button onclick="window.location.href='<%= my_badges_path %>'" 
+            class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
           Mes badges
-        </a>
-        <a href="<%= all_badges_path %>" class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
+        </button>
+        <button onclick="window.location.href='<%= all_badges_path %>'" 
+            class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
           Tous les badges
-        </a>
+        </button>
       </div>
     </div>
 
@@ -42,7 +44,7 @@
                 badge_class += " silver" if badge.level == "silver"
                 badge_class += " gold" if badge.level == "gold"
               %>
-              <a href="<%= badge_path(badge) %>" class="<%= badge_class %>">
+              <button onclick="window.location.href='<%= badge_path(badge) %>'" class="<%= badge_class %>">
                 <div class="badge-icon">
                   <% case badge.badge_type %>
                   <% when "competitor" %>
@@ -67,7 +69,7 @@
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
                 <div class="badge-earned">Obtenu le <%= user_badge.earned_at.strftime("%d/%m/%Y") %></div>
-              </a>
+              </button>
             <% end %>
           </div>
         <% else %>

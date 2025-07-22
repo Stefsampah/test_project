@@ -17,12 +17,14 @@
     <!-- Navigation entre les pages de badges -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-md shadow-sm" role="group">
-        <a href="<%= my_badges_path %>" class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
+        <button onclick="window.location.href='<%= my_badges_path %>'" 
+            class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
           Mes badges
-        </a>
-        <a href="<%= all_badges_path %>" class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
+        </button>
+        <button onclick="window.location.href='<%= all_badges_path %>'" 
+            class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none">
           Tous les badges
-        </a>
+        </button>
       </div>
     </div>
 
@@ -52,7 +54,7 @@
                 has_badge = user_signed_in? && current_user.badges.include?(badge)
                 badge_class += " locked" unless has_badge
               %>
-              <a href="<%= badge_path(badge) %>" class="<%= badge_class %>">
+              <button onclick="window.location.href='<%= badge_path(badge) %>'" class="<%= badge_class %>">
                 <div class="badge-icon">
                   <svg fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
@@ -62,11 +64,11 @@
                 <div class="badge-level"><%= badge.level.capitalize %></div>
                 <div class="badge-points"><%= badge.points_required %> points</div>
                 <% unless has_badge %>
-                  <a href="<%= store_path %>" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
+                  <button onclick="window.location.href='<%= store_path %>'" class="text-xs bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded mt-3 inline-block">
                     Acheter points
-                  </a>
+                  </button>
                 <% end %>
-              </a>
+              </button>
             <% end %>
           <% else %>
             <div class="empty-badges">
@@ -98,7 +100,7 @@
                 has_badge = user_signed_in? && current_user.badges.include?(badge)
                 badge_class += " locked" unless has_badge
               %>
-              <a href="<%= badge_path(badge) %>" class="<%= badge_class %>">
+              <button onclick="window.location.href='<%= badge_path(badge) %>'" class="<%= badge_class %>">
                 <div class="badge-icon">
                   <svg fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>

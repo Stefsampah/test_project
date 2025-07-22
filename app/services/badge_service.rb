@@ -9,22 +9,22 @@ class BadgeService
   private
 
   def self.assign_competitor_badge(user)
-    score = user.competitor_score
+    score = user.total_points
     assign_badge_by_conditions(user, 'competitor', score)
   end
 
   def self.assign_engager_badge(user)
-    score = user.engager_score
+    score = user.total_points
     assign_badge_by_conditions(user, 'engager', score)
   end
 
   def self.assign_critic_badge(user)
-    score = user.critic_score
+    score = user.total_points
     assign_badge_by_conditions(user, 'critic', score)
   end
 
   def self.assign_challenger_badge(user)
-    score = user.challenger_score
+    score = user.total_points
     assign_badge_by_conditions(user, 'challenger', score)
   end
 
