@@ -465,7 +465,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
       name: 'Bronze Challenger',
       badge_type: 'challenger',
       level: 'bronze',
-      points_required: 2500,
+      points_required: 800,
       description: 'You\'re climbing the ranks!',
       reward_type: 'standard',
       reward_description: 'Accès anticipé à du contenu exclusif'
@@ -474,7 +474,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
       name: 'Silver Challenger',
       badge_type: 'challenger',
       level: 'silver',
-      points_required: 5000,
+      points_required: 1500,
       description: 'You\'re a formidable opponent!',
       reward_type: 'standard',
       reward_description: 'Merchandising exclusif'
@@ -483,7 +483,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
       name: 'Gold Challenger',
       badge_type: 'challenger',
       level: 'gold',
-      points_required: 7000,
+      points_required: 2500,
       description: 'You\'re the ultimate champion!',
       reward_type: 'premium',
       reward_description: 'Invitation à un concert VIP'
@@ -620,7 +620,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   # Badges pour The Engager
   Badge.find_or_create_by!(badge_type: "engager", level: "bronze") do |badge|
     badge.name = "Bronze Engager"
-    badge.points_required = 500
+    badge.points_required = 300
     badge.description = "Vous commencez à vous engager activement"
     badge.reward_type = "standard"
     badge.reward_description = "Accès à des statistiques détaillées"
@@ -628,7 +628,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   Badge.find_or_create_by!(badge_type: "engager", level: "silver") do |badge|
     badge.name = "Silver Engager"
-    badge.points_required = 200
+    badge.points_required = 600
     badge.description = "Vous êtes un membre très actif"
     badge.reward_type = "premium"
     badge.reward_description = "Accès à des fonctionnalités avancées"
@@ -636,7 +636,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   Badge.find_or_create_by!(badge_type: "engager", level: "gold") do |badge|
     badge.name = "Gold Engager"
-    badge.points_required = 500
+    badge.points_required = 1200
     badge.description = "Vous êtes un pilier de la communauté"
     badge.reward_type = "premium"
     badge.reward_description = "Accès à des fonctionnalités exclusives"
