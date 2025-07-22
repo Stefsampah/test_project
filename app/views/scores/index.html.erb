@@ -60,12 +60,16 @@
                   
                   <!-- Avatar -->
                   <div class="mb-4">
-                    <img src="/players/<%= user.id %>.jpg"
-                         class="h-16 w-16 rounded-full border-2 border-white shadow-lg mx-auto object-cover"
-                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                    <div class="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mx-auto" style="display:none;">
-                      <%= user.email.first.upcase %>
-                    </div>
+                    <% if user.avatar.attached? %>
+                      <%= image_tag user.avatar, class: "h-16 w-16 rounded-full border-2 border-white shadow-lg mx-auto object-cover" %>
+                    <% else %>
+                      <img src="/players/<%= user.id %>.jpg"
+                           class="h-16 w-16 rounded-full border-2 border-white shadow-lg mx-auto object-cover"
+                           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                      <div class="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mx-auto" style="display:none;">
+                        <%= user.email.first.upcase %>
+                      </div>
+                    <% end %>
                   </div>
                   
                   <!-- Username -->
@@ -126,12 +130,16 @@
                     
                     <!-- Avatar compact -->
                     <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                      <img src="/players/<%= user.id %>.jpg"
-                           class="w-full h-full object-cover"
-                           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                      <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold" style="display:none;">
-                        <%= user.email.first.upcase %>
-                      </div>
+                      <% if user.avatar.attached? %>
+                        <%= image_tag user.avatar, class: "w-full h-full object-cover" %>
+                      <% else %>
+                        <img src="/players/<%= user.id %>.jpg"
+                             class="w-full h-full object-cover"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold" style="display:none;">
+                          <%= user.email.first.upcase %>
+                        </div>
+                      <% end %>
                     </div>
                     
                     <!-- Infos utilisateur -->
