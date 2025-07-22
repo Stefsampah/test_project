@@ -253,20 +253,20 @@
 
     <!-- Actions -->
     <div class="flex justify-center mt-8 gap-4">
-      <%= link_to playlists_path, 
-          class: "inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all" do %>
+      <button onclick="window.location.href='<%= playlists_path %>'" 
+          class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all">
         <span>🎵 Jouer</span>
-      <% end %>
+      </button>
       
-      <%= link_to scores_path, 
-          class: "inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all" do %>
+      <button onclick="window.location.href='<%= scores_path %>'" 
+          class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all">
         <span>🏆 Classements</span>
-      <% end %>
+      </button>
       
-      <%= link_to my_badges_path, 
-          class: "inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-yellow-600 hover:bg-yellow-700 transition-all" do %>
+      <button onclick="window.location.href='<%= my_badges_path %>'" 
+          class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-yellow-600 hover:bg-yellow-700 transition-all">
         <span>🏅 Badges</span>
-      <% end %>
+      </button>
     </div>
   </div>
 </div>
