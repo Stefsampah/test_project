@@ -14,9 +14,14 @@ class ProfilesController < ApplicationController
 
   def update
     @user = current_user
+    
+    # Debug: afficher les paramètres reçus
+    Rails.logger.info "Params reçus: #{params.inspect}"
+    
     if @user.update(user_params)
       redirect_to profile_path, notice: 'Profil mis à jour avec succès!'
     else
+      Rails.logger.error "Erreurs de validation: #{@user.errors.full_messages}"
       render :edit, status: :unprocessable_entity
     end
   end
@@ -24,6 +29,16 @@ class ProfilesController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:avatar, :username, :email)
+    # Gérer les deux cas possibles
+    if params[:user].present?
+      # Cas normal avec namespace user
+      params.require(:user).permit(:avatar, :username, :email)
+    elsif params[:avatar].present? || params[:username].present? || params[:email].present?
+      # Cas où les paramètres viennent directement
+      params.permit(:avatar, :username, :email)
+    else
+      # Fallback - permettre tous les paramètres autorisés
+      params.permit(:avatar, :username, :email)
+    end
   end
 end 

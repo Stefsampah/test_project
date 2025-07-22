@@ -6,7 +6,7 @@
       </div>
 
       <div class="p-6">
-        <%= form_with(model: @user, url: profile_path, method: :patch, class: "space-y-6") do |f| %>
+        <%= form_with(model: @user, url: profile_path, method: :patch, local: true, class: "space-y-6") do |f| %>
           <% if @user.errors.any? %>
             <div class="bg-red-50 p-4 rounded-md">
               <div class="text-sm text-red-700">
