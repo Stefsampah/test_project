@@ -41,7 +41,10 @@ class User < ApplicationRecord
   end
 
   def total_points
-    competitor_score + engager_score + critic_score + challenger_score
+    # Inclure les points achetés dans la boutique
+    purchased_points = self.points || 0
+    game_points = competitor_score + engager_score + critic_score + challenger_score
+    purchased_points + game_points
   end
 
   # Nouvelles méthodes pour les conditions multiples
@@ -130,13 +133,8 @@ class User < ApplicationRecord
     # Vérifier d'abord les conditions multiples si elles existent
     return false unless badge.conditions_met?(self)
     
-    # Fallback vers l'ancien système si pas de conditions multiples
-    current_score = case badge.badge_type
-                   when 'competitor' then competitor_score
-                   when 'engager' then engager_score
-                   when 'critic' then critic_score
-                   when 'challenger' then challenger_score
-                   end
+    # Utiliser total_points pour inclure les points achetés
+    current_score = total_points
     
     current_score >= badge.points_required && !badges.include?(badge)
   end
@@ -151,12 +149,8 @@ class User < ApplicationRecord
     next_badges = {}
     
     Badge::BADGE_TYPES.each do |badge_type|
-      current_score = case badge_type
-                     when 'competitor' then competitor_score
-                     when 'engager' then engager_score
-                     when 'critic' then critic_score
-                     when 'challenger' then challenger_score
-                     end
+      # Utiliser total_points pour inclure les points achetés
+      current_score = total_points
       
       next_badge = Badge.where(badge_type: badge_type)
                        .where('points_required > ?', current_score)

@@ -77,7 +77,7 @@ class Badge < ApplicationRecord
     
     actual_value = case condition_type
                    when 'points_earned'
-                     user.competitor_score
+                     user.total_points  # Utiliser total_points au lieu de competitor_score
                    when 'games_played'
                      user.games.count
                    when 'win_ratio'
