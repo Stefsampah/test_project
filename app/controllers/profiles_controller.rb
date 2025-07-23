@@ -5,7 +5,7 @@ class ProfilesController < ApplicationController
     @user = current_user
     @scores = current_user.scores.includes(:playlist)
     @badges = current_user.user_badges.includes(:badge)
-    @rewards = current_user.user_badges.where.not(claimed_at: nil).includes(:badge)
+    @badges = current_user.user_badges.includes(:badge)
   end
 
   def edit
