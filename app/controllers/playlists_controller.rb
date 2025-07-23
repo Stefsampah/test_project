@@ -7,10 +7,19 @@ class PlaylistsController < ApplicationController
     @premium_playlists = Playlist.where(premium: true).order(:id)
     @unlocked_playlists = []
     if user_signed_in?
-      # Récupérer les playlists premium débloquées par l'utilisateur
-      unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
-      @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true)
-      @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+      # Vérifier si l'utilisateur a un abonnement VIP actif
+      has_vip = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
+      
+      if has_vip
+        # Si VIP actif, toutes les playlists premium sont débloquées
+        @unlocked_playlists = @premium_playlists
+        @premium_playlists = []
+      else
+        # Sinon, récupérer les playlists premium débloquées par l'utilisateur
+        unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
+        @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true)
+        @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+      end
       
       # Trier les playlists avec les non jouées en premier
       played_playlist_ids = current_user.scores.pluck(:playlist_id)
@@ -21,14 +30,18 @@ class PlaylistsController < ApplicationController
       @standard_playlists = unplayed_standard + played_standard
       
       # Trier les playlists premium : non jouées en premier
-      unplayed_premium = @premium_playlists.where.not(id: played_playlist_ids)
-      played_premium = @premium_playlists.where(id: played_playlist_ids)
-      @premium_playlists = unplayed_premium + played_premium
+      if @premium_playlists.respond_to?(:where)
+        unplayed_premium = @premium_playlists.where.not(id: played_playlist_ids)
+        played_premium = @premium_playlists.where(id: played_playlist_ids)
+        @premium_playlists = unplayed_premium + played_premium
+      end
       
       # Trier les playlists débloquées : non jouées en premier
-      unplayed_unlocked = @unlocked_playlists.where.not(id: played_playlist_ids)
-      played_unlocked = @unlocked_playlists.where(id: played_playlist_ids)
-      @unlocked_playlists = unplayed_unlocked + played_unlocked
+      if @unlocked_playlists.respond_to?(:where)
+        unplayed_unlocked = @unlocked_playlists.where.not(id: played_playlist_ids)
+        played_unlocked = @unlocked_playlists.where(id: played_playlist_ids)
+        @unlocked_playlists = unplayed_unlocked + played_unlocked
+      end
     end
     
     # Récupérer les playlists jouées par l'utilisateur connecté (avec score existant)
@@ -43,8 +56,12 @@ class PlaylistsController < ApplicationController
     
     # Vérifier si l'utilisateur a accès à cette playlist premium
     if @playlist.premium? && user_signed_in?
-      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
-        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points ou d'avoir débloqué cette playlist premium."
+      has_vip = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
+      has_unlock = UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist)
+      has_points = current_user.total_points >= 500
+      
+      unless has_vip || has_unlock || has_points
+        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points, d'avoir débloqué cette playlist premium, ou d'avoir un abonnement VIP actif."
       end
     end
     

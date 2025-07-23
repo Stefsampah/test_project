@@ -46,7 +46,7 @@ class StoreController < ApplicationController
     if subscription_type == "vip"
       # Ici vous pouvez ajouter la logique de paiement pour l'abonnement VIP
       current_user.update(vip_subscription: true, vip_expires_at: 1.month.from_now)
-      redirect_to store_path, notice: "Abonnement VIP activé ! Toutes les playlists premium sont maintenant débloquées. <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>ici</a>".html_safe
+      redirect_to playlists_path, notice: "Abonnement VIP activé ! Toutes les playlists premium sont maintenant débloquées. <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>".html_safe
     else
       redirect_to store_path, alert: "Type d'abonnement invalide."
     end
