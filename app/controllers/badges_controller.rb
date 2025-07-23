@@ -16,5 +16,8 @@ class BadgesController < ApplicationController
   def show
     @badge = Badge.find(params[:id])
     @user_badge = current_user.user_badges.find_by(badge_id: @badge.id) if user_signed_in?
+  rescue ActiveRecord::RecordNotFound
+    # Rediriger vers la page des badges si le badge n'existe plus
+    redirect_to all_badges_path, alert: "Ce badge n'existe plus. Voici tous les badges disponibles."
   end
 end 
