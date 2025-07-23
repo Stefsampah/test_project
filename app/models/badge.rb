@@ -12,9 +12,9 @@ class Badge < ApplicationRecord
   validates :reward_description, presence: true, if: -> { reward_type.present? }
   
   # Nouvelles validations pour les conditions multiples
-  validates :condition_1_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
-  validates :condition_2_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
-  validates :condition_3_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists] }, allow_nil: true
+  validates :condition_1_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
+  validates :condition_2_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
+  validates :condition_3_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
 
   has_many :user_badges
   has_many :users, through: :user_badges
@@ -90,6 +90,12 @@ class Badge < ApplicationRecord
                      user.consecutive_wins_count
                    when 'unique_playlists'
                      user.unique_playlists_played_count
+                   when 'genres_explored'
+                     user.genres_explored_count
+                   when 'completed_playlists'
+                     user.completed_playlists_count
+                   when 'performance_diversity'
+                     user.performance_diversity
                    else
                      0
                    end

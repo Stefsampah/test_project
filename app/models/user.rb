@@ -112,6 +112,20 @@ class User < ApplicationRecord
     games.joins(:playlist).distinct.count(:playlist_id)
   end
 
+  def genres_explored_count
+    games.joins(:playlist).where.not(playlists: { genre: [nil, ''] }).distinct.count('playlists.genre')
+  end
+
+  def completed_playlists_count
+    games.where.not(completed_at: nil).distinct.count(:playlist_id)
+  end
+
+  def performance_diversity
+    # Nombre de playlists où l'utilisateur a un score > moyenne de ses scores
+    user_average = scores.average(:points) || 0
+    scores.where('points > ?', user_average).distinct.count(:playlist_id)
+  end
+
   def earned_badges
     user_badges.includes(:badge).where.not(earned_at: nil)
   end
