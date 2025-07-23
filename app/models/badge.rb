@@ -18,6 +18,8 @@ class Badge < ApplicationRecord
 
   has_many :user_badges
   has_many :users, through: :user_badges
+  has_many :badge_playlist_unlocks
+  has_many :exclusive_playlists, through: :badge_playlist_unlocks, source: :playlist
 
   def self.competitor_badges
     where(badge_type: 'competitor').order(points_required: :asc)

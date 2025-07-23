@@ -179,6 +179,129 @@
       </div>
     <% end %>
 
+    <!-- Section playlists exclusives -->
+    <% if (@unlocked_exclusive_playlists + @exclusive_playlists).any? %>
+      <div id="exclusive-section" class="mb-20 sm:mb-24 playlist-section">
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
+          <span class="bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-orange-600">Playlists Exclusives</span>
+          <span class="text-sm font-normal text-gray-400 ml-2">Réservées aux récompenses</span>
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
+          <% (@unlocked_exclusive_playlists + @exclusive_playlists).each do |playlist| %>
+            <% is_unlocked = @unlocked_exclusive_playlists.include?(playlist) %>
+            <% can_access = is_unlocked %>
+          
+            <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
+              <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
+                <!-- Lien global sur toute la carte si l'utilisateur peut y accéder ET n'a pas encore joué -->
+                <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                  <span style="display: none;">Jouer à <%= playlist.title %></span>
+                <% end %>
+              <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
+                <!-- Overlay pour indiquer que c'est déjà joué -->
+                <div class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center">
+                  <svg class="w-12 h-12 text-green-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <p class="text-white font-bold text-lg">Déjà jouée</p>
+                  <p class="text-gray-300 text-sm mt-1">Vous avez déjà terminé cette playlist</p>
+                </div>
+              <% end %>
+              
+              <!-- Section image (60%) -->
+              <div class="playlist-image-section">
+                <% unless can_access %>
+                  <!-- Filtre de verrouillage pour les utilisateurs sans accès exclusif -->
+                  <div class="absolute inset-0 bg-black/80 z-20 flex flex-col items-center justify-center">
+                    <svg class="w-12 h-12 text-yellow-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="text-white font-bold text-lg">Contenu Exclusif</p>
+                    <p class="text-gray-300 text-sm mt-1">Réservé aux récompenses</p>
+                  </div>
+                <% end %>
+                
+                <% 
+                  # Différentes façons d'écrire le nom de fichier
+                  image_variations = [
+                    playlist.title + '.jpg',
+                    playlist.title.parameterize.underscore + '.jpg',
+                    playlist.title.downcase.gsub(' ', '_') + '.jpg',
+                    playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
+                    playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
+                  ]
+                  found_image = nil
+                  image_variations.each do |img_name|
+                    if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                      found_image = img_name
+                      break
+                    end
+                  end
+                %>
+                <% if found_image %>
+                  <%= image_tag "playlists/#{found_image}", class: "w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" %>
+                <% else %>
+                  <%= image_tag "playlists/This is Pop.jpg", class: "w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" %>
+                <% end %>
+              </div>
+              
+              <!-- Section texte (40%) -->
+              <div class="playlist-text-section">
+                <div>
+                  <div class="flex items-center mb-2 gap-2">
+                    <h3 class="text-lg font-bold text-white"><%= playlist.title %></h3>
+                    <!-- BADGES SUPERPOSÉS SUR L'IMAGE -->
+                    <div class="flex gap-1">
+                      <% if is_unlocked %>
+                        <!-- BADGE EXCLUSIF DÉBLOQUÉ -->
+                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #f59e0b !important; color: white !important; border: 3px solid #fbbf24 !important; box-shadow: 0 4px 8px rgba(245,158,11,0.5); font-size: 12px; padding: 3px 6px; min-width: fit-content;">
+                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                          </svg>
+                          EXCLUSIF
+                        </span>
+                      <% else %>
+                        <!-- BADGE EXCLUSIF VERROUILLÉ -->
+                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #f59e0b !important; color: white !important; border: 3px solid #fbbf24 !important; box-shadow: 0 4px 8px rgba(245,158,11,0.5); font-size: 12px; padding: 3px 6px; min-width: fit-content;">
+                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                          </svg>
+                          EXCLUSIF
+                        </span>
+                      <% end %>
+                      
+                      <!-- BADGE DÉJÀ JOUÉE -->
+                      <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
+                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #10b981 !important; color: white !important; border: 2px solid #34d399 !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
+                          <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                          </svg>
+                          JOUÉE
+                        </span>
+                      <% end %>
+                    </div>
+                  </div>
+                  <% if playlist.genre.present? %>
+                    <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded mb-2 font-medium uppercase tracking-wide" style="color: #fbbf24 !important; border: 1px solid #f59e0b;"><%= playlist.genre %></span>
+                  <% end %>
+                  <p class="text-gray-300 text-sm line-clamp-2"><%= playlist.description %></p>
+                </div>
+                <div class="flex items-center justify-between mt-2">
+                  <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
+                  <% unless can_access %>
+                    <span class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gray-700">
+                      <span>Récompense exclusive</span>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Section playlists standard -->
     <div id="standard-section" class="mb-20 sm:mb-24 playlist-section">
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Playlists Standard</h2>

@@ -706,6 +706,7 @@ exclusive_playlist = Playlist.find_or_create_by!(title: 'Exclusive Playlist') do
   playlist.description = 'Une playlist réservée aux membres ayant débloqué la récompense exclusive.'
   playlist.genre = 'Exclusive'
   playlist.premium = true
+  playlist.exclusive = true
 end
 
 exclusive_videos = [
@@ -726,3 +727,17 @@ exclusive_videos.each do |video|
     v.title = video[:title]
   end
 end
+
+# Créer les liaisons entre badges et playlists exclusives
+# Par exemple, le badge "Gold Competitor" débloque la "Exclusive Playlist"
+gold_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'gold')
+if gold_competitor_badge && exclusive_playlist
+  BadgePlaylistUnlock.find_or_create_by!(badge: gold_competitor_badge, playlist: exclusive_playlist)
+end
+
+# Vous pouvez ajouter d'autres liaisons ici selon vos besoins
+# Par exemple :
+# silver_engager_badge = Badge.find_by(badge_type: 'engager', level: 'silver')
+# if silver_engager_badge && exclusive_playlist
+#   BadgePlaylistUnlock.find_or_create_by!(badge: silver_engager_badge, playlist: exclusive_playlist)
+# end

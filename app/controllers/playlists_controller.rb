@@ -4,21 +4,36 @@ class PlaylistsController < ApplicationController
   def index
     # Récupérer toutes les playlists et les trier
     @standard_playlists = Playlist.where(premium: [false, nil]).order(:id)
-    @premium_playlists = Playlist.where(premium: true).order(:id)
+    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil]).order(:id)
+    @exclusive_playlists = Playlist.where(exclusive: true).order(:id)
     @unlocked_playlists = []
+    @unlocked_exclusive_playlists = []
+    
     if user_signed_in?
       # Vérifier si l'utilisateur a un abonnement VIP actif
       has_vip = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
       
       if has_vip
-        # Si VIP actif, toutes les playlists premium sont débloquées
+        # Si VIP actif, toutes les playlists premium sont débloquées (sauf exclusives)
         @unlocked_playlists = @premium_playlists
         @premium_playlists = []
       else
         # Sinon, récupérer les playlists premium débloquées par l'utilisateur
         unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
-        @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true)
+        @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true, exclusive: [false, nil])
         @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+      end
+      
+      # Gérer les playlists exclusives - seulement pour ceux qui ont gagné la récompense
+      # Vérifier quels badges l'utilisateur a et quelles playlists exclusives ils débloquent
+      user_badge_ids = current_user.user_badges.pluck(:badge_id)
+      unlocked_exclusive_playlist_ids = BadgePlaylistUnlock.where(badge_id: user_badge_ids).pluck(:playlist_id)
+      
+      if unlocked_exclusive_playlist_ids.any?
+        @unlocked_exclusive_playlists = @exclusive_playlists.where(id: unlocked_exclusive_playlist_ids)
+        @exclusive_playlists = @exclusive_playlists.where.not(id: unlocked_exclusive_playlist_ids)
+      else
+        @unlocked_exclusive_playlists = []
       end
       
       # Trier les playlists avec les non jouées en premier
@@ -41,6 +56,13 @@ class PlaylistsController < ApplicationController
         unplayed_unlocked = @unlocked_playlists.where.not(id: played_playlist_ids)
         played_unlocked = @unlocked_playlists.where(id: played_playlist_ids)
         @unlocked_playlists = unplayed_unlocked + played_unlocked
+      end
+      
+      # Trier les playlists exclusives débloquées : non jouées en premier
+      if @unlocked_exclusive_playlists.respond_to?(:where)
+        unplayed_exclusive = @unlocked_exclusive_playlists.where.not(id: played_playlist_ids)
+        played_exclusive = @unlocked_exclusive_playlists.where(id: played_playlist_ids)
+        @unlocked_exclusive_playlists = unplayed_exclusive + played_exclusive
       end
     end
     
