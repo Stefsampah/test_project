@@ -75,11 +75,7 @@
               <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-yellow-400">
                 <div class="flex items-center justify-between mb-2">
                   <h3 class="font-semibold text-white"><%= user_badge.badge.name %></h3>
-                  <% if user_badge.claimed_at %>
-                    <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">Réclamé</span>
-                  <% else %>
-                    <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">À réclamer</span>
-                  <% end %>
+                  <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">✓ Gagné</span>
                 </div>
                 <p class="text-gray-300 text-sm mb-2"><%= user_badge.badge.description %></p>
                 <p class="text-gray-400 text-xs">
