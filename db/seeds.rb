@@ -735,20 +735,5 @@ if bronze_competitor_badge && exclusive_playlist
   BadgePlaylistUnlock.find_or_create_by!(badge: bronze_competitor_badge, playlist: exclusive_playlist)
 end
 
-# Vous pouvez ajouter d'autres liaisons ici selon vos besoins
-# Par exemple :
-# silver_engager_badge = Badge.find_by(badge_type: 'engager', level: 'silver')
-# if silver_engager_badge && exclusive_playlist
-#   BadgePlaylistUnlock.find_or_create_by!(badge: silver_engager_badge, playlist: exclusive_playlist)
-# end
-
-# Donner le badge Bronze Competitor à l'utilisateur test pour tester la playlist exclusive
-test_user = User.find_by(email: 'test@example.com')
-bronze_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'bronze')
-if test_user && bronze_competitor_badge
-  UserBadge.find_or_create_by!(user: test_user, badge: bronze_competitor_badge) do |user_badge|
-    user_badge.earned_at = 1.day.ago
-    user_badge.points_at_earned = 150
-  end
-  puts "✓ Badge Bronze Competitor ajouté à test@example.com"
-end
+# Note: Les badges sont maintenant attribués naturellement via BadgeService
+# Pas de badges forcés pour maintenir la cohérence du gameplay

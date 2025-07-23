@@ -46,7 +46,8 @@ class User < ApplicationRecord
   def total_points
     # Inclure les points achetés dans la boutique
     purchased_points = self.points || 0
-    game_points = competitor_score + engager_score + critic_score + challenger_score
+    # challenger_score est déjà la somme des autres scores, éviter la double comptabilisation
+    game_points = challenger_score
     purchased_points + game_points
   end
 
