@@ -17,27 +17,4 @@ class BadgesController < ApplicationController
     @badge = Badge.find(params[:id])
     @user_badge = current_user.user_badges.find_by(badge_id: @badge.id) if user_signed_in?
   end
-
-  def claim_reward
-    @badge = Badge.find(params[:id])
-    user_badge = current_user.user_badges.find_by(badge_id: @badge.id)
-    
-    if user_badge && user_badge.earned_at && !user_badge.claimed_at
-      user_badge.update(claimed_at: Time.current)
-      redirect_to badge_path(@badge), notice: "Récompense réclamée avec succès!"
-    else
-      redirect_to badge_path(@badge), alert: "Impossible de réclamer cette récompense."
-    end
-  end
-
-  def claim_reward_legacy
-    user_badge = current_user.user_badges.find(params[:id])
-    
-    if user_badge && user_badge.earned_at && !user_badge.claimed_at
-      user_badge.update(claimed_at: Time.current)
-      redirect_to badge_path(user_badge.badge), notice: "Récompense réclamée avec succès!"
-    else
-      redirect_to badge_path(user_badge.badge), alert: "Impossible de réclamer cette récompense."
-    end
-  end
 end 

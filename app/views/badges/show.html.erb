@@ -161,24 +161,6 @@
 
     <!-- Actions -->
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-      <% if user_signed_in? && @user_badge&.earned_at && !@user_badge&.claimed_at %>
-        <%= link_to claim_reward_badge_path(@badge), 
-            method: :patch,
-            class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-green-600 hover:bg-green-700 transition-all focus:outline-none transform hover:scale-105" do %>
-          <span>Réclamer la récompense</span>
-          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        <% end %>
-      <% elsif user_signed_in? && @user_badge&.claimed_at %>
-        <div class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gray-600">
-          <span>Récompense déjà réclamée</span>
-          <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-      <% end %>
-
       <%= link_to badges_path, 
           class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-white/20 hover:bg-white/30 transition-all focus:outline-none transform hover:scale-105" do %>
         <span>Retour aux badges</span>

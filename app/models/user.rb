@@ -116,12 +116,8 @@ class User < ApplicationRecord
   end
 
   def available_rewards
-    user_badges.includes(:badge).where(claimed_at: nil).where.not(earned_at: nil)
-  end
-
-  def claim_reward!(user_badge_id)
-    user_badge = user_badges.find(user_badge_id)
-    user_badge.claim_reward! if user_badge.reward_available?
+    # Tous les badges gagnés ont leurs récompenses automatiquement disponibles
+    user_badges.includes(:badge).where.not(earned_at: nil)
   end
 
   # Méthode de classe pour vérifier et corriger les badges de tous les utilisateurs

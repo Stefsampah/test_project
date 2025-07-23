@@ -729,10 +729,10 @@ exclusive_videos.each do |video|
 end
 
 # Créer les liaisons entre badges et playlists exclusives
-# Par exemple, le badge "Gold Competitor" débloque la "Exclusive Playlist"
-gold_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'gold')
-if gold_competitor_badge && exclusive_playlist
-  BadgePlaylistUnlock.find_or_create_by!(badge: gold_competitor_badge, playlist: exclusive_playlist)
+# Le badge "Bronze Competitor" débloque la "Exclusive Playlist" (Accès à une playlist exclusive)
+bronze_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'bronze')
+if bronze_competitor_badge && exclusive_playlist
+  BadgePlaylistUnlock.find_or_create_by!(badge: bronze_competitor_badge, playlist: exclusive_playlist)
 end
 
 # Vous pouvez ajouter d'autres liaisons ici selon vos besoins
@@ -741,3 +741,14 @@ end
 # if silver_engager_badge && exclusive_playlist
 #   BadgePlaylistUnlock.find_or_create_by!(badge: silver_engager_badge, playlist: exclusive_playlist)
 # end
+
+# Donner le badge Bronze Competitor à l'utilisateur test pour tester la playlist exclusive
+test_user = User.find_by(email: 'test@example.com')
+bronze_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'bronze')
+if test_user && bronze_competitor_badge
+  UserBadge.find_or_create_by!(user: test_user, badge: bronze_competitor_badge) do |user_badge|
+    user_badge.earned_at = 1.day.ago
+    user_badge.points_at_earned = 150
+  end
+  puts "✓ Badge Bronze Competitor ajouté à test@example.com"
+end
