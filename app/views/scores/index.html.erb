@@ -83,8 +83,12 @@
                   
                   <!-- Badge si présent -->
                   <% if score[:badges].any? %>
-                    <div class="inline-block px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600">
-                      <%= score[:badges].first %>
+                    <div class="space-y-1">
+                      <% score[:badges].each do |badge| %>
+                        <div class="inline-block px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600">
+                          <%= badge %>
+                        </div>
+                      <% end %>
                     </div>
                   <% end %>
                 </div>
