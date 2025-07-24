@@ -33,10 +33,17 @@ Rails.application.routes.draw do
     resources :playlists, only: [:new, :create]
   end
 
-  # Routes pour les badges (remplace les récompenses)
+  # Routes pour les badges
   resources :badges, only: [:index, :show]
   get 'my_badges', to: 'badges#my_badges'
   get 'all_badges', to: 'badges#all_badges'
+
+  # Routes pour les récompenses
+  resources :rewards, only: [:index, :show] do
+    collection do
+      post :unlock
+    end
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

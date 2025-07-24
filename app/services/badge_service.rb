@@ -4,6 +4,9 @@ class BadgeService
     assign_engager_badge(user)
     assign_critic_badge(user)
     assign_challenger_badge(user)
+    
+    # Vérifier et créer les récompenses après attribution des badges
+    Reward.check_and_create_rewards_for_user(user)
   end
 
   private

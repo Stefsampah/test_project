@@ -16,6 +16,8 @@ class User < ApplicationRecord
 
   has_many :user_playlist_unlocks
   has_many :unlocked_playlists, through: :user_playlist_unlocks, source: :playlist
+  
+  has_many :rewards
 
   after_save :assign_badges
   after_create :assign_badges

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_23_144858) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_24_124535) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -88,6 +88,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_23_144858) do
     t.string "genre"
     t.integer "points_required"
     t.boolean "exclusive"
+  end
+
+  create_table "rewards", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "badge_type", null: false
+    t.integer "quantity_required", null: false
+    t.string "reward_type", null: false
+    t.string "reward_description"
+    t.boolean "unlocked", default: false
+    t.datetime "unlocked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "badge_type", "quantity_required"], name: "index_rewards_on_user_badge_quantity", unique: true
+    t.index ["user_id"], name: "index_rewards_on_user_id"
   end
 
   create_table "scores", force: :cascade do |t|
@@ -172,6 +186,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_23_144858) do
   add_foreign_key "badge_playlist_unlocks", "playlists"
   add_foreign_key "games", "playlists"
   add_foreign_key "games", "users"
+  add_foreign_key "rewards", "users"
   add_foreign_key "scores", "playlists"
   add_foreign_key "scores", "users"
   add_foreign_key "swipes", "games"

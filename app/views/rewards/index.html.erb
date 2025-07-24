@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold text-white mb-4">🏆 Récompenses</h1>
-      <p class="text-gray-300 text-lg">Débloquez des récompenses en collectant des badges du même type</p>
+      <p class="text-gray-300 text-lg">Débloquez des récompenses exclusives en collectant des badges</p>
     </div>
 
     <!-- Bouton pour vérifier les récompenses -->
@@ -12,101 +12,28 @@
           class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
     </div>
 
-    <!-- Statistiques des badges -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold text-white mb-4">📊 Mes badges par type</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <% @badge_counts.each do |badge_type, count| %>
-          <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
-            <div class="text-2xl font-bold text-white"><%= count %></div>
-            <div class="text-sm text-gray-200"><%= badge_type.humanize %></div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Récompenses par type de badge -->
-    <% @rewards_by_type.each do |badge_type, rewards| %>
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">
-          🎯 Récompenses <%= badge_type.humanize %>
-          <span class="text-sm font-normal text-gray-300">
-            (<%= @badge_counts[badge_type] || 0 %> badges collectés)
-          </span>
-        </h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <% [3, 5, 10].each do |quantity| %>
-            <% reward = rewards.find { |r| r.quantity_required == quantity } %>
-            <% if reward %>
-              <div class="<%= reward.unlocked? ? 'bg-gradient-to-r from-green-500 to-emerald-600' : 'bg-gradient-to-r from-gray-600 to-gray-700' %> rounded-lg p-4">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-white font-bold"><%= quantity %> badges</span>
-                  <% if reward.unlocked? %>
-                    <span class="text-green-300 text-sm">✅ Débloqué</span>
-                  <% else %>
-                    <span class="text-gray-400 text-sm">🔒 Verrouillé</span>
-                  <% end %>
-                </div>
-                
-                <div class="text-sm text-gray-200 mb-2">
-                  <%= reward.reward_type.humanize %>
-                </div>
-                
-                <div class="text-xs text-gray-300">
-                  <%= reward.reward_description %>
-                </div>
-                
-                <% if reward.unlocked? && reward.unlocked_at %>
-                  <div class="text-xs text-green-300 mt-2">
-                    Débloqué le <%= reward.unlocked_at.strftime("%d/%m/%Y") %>
-                  </div>
-                <% end %>
-              </div>
-            <% else %>
-              <!-- Récompense non encore créée -->
-              <div class="bg-gradient-to-r from-gray-600 to-gray-700 rounded-lg p-4 opacity-50">
-                <div class="flex items-center justify-between mb-2">
-                  <span class="text-white font-bold"><%= quantity %> badges</span>
-                  <span class="text-gray-400 text-sm">🔒 Verrouillé</span>
-                </div>
-                
-                <div class="text-sm text-gray-200 mb-2">
-                  <%= case quantity
-                      when 3 then 'Challenge'
-                      when 5 then 'Exclusif'
-                      when 10 then 'Premium'
-                      end %>
-                </div>
-                
-                <div class="text-xs text-gray-300">
-                  Collectez <%= quantity %> badges <%= badge_type.humanize %> pour débloquer
-                </div>
-              </div>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
     <!-- Récompenses débloquées -->
-    <% if @unlocked_rewards.any? %>
-      <div class="bg-gradient-to-r from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-xl p-6">
-        <h2 class="text-2xl font-bold text-white mb-4">🎉 Récompenses débloquées</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
+      <% if @unlocked_rewards.any? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <% @unlocked_rewards.each do |reward| %>
-            <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-white font-bold"><%= reward.badge_type.humanize %></span>
-                <span class="text-green-300 text-sm">✅</span>
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200">
+              <div class="flex items-center justify-between mb-4">
+                <div class="text-2xl">🏆</div>
+                <span class="text-green-300 text-sm font-medium">DÉBLOQUÉ</span>
               </div>
               
-              <div class="text-sm text-white mb-2">
-                <%= reward.quantity_required %> badges - <%= reward.reward_type.humanize %>
-              </div>
+              <h3 class="text-xl font-bold text-white mb-2">
+                <%= reward.reward_type.humanize %>
+              </h3>
               
-              <div class="text-xs text-green-200">
+              <p class="text-green-100 text-sm mb-4">
                 <%= reward.reward_description %>
+              </p>
+              
+              <div class="text-xs text-green-300">
+                <%= reward.badge_type.humanize %> - <%= reward.quantity_required %> badges requis
               </div>
               
               <% if reward.unlocked_at %>
@@ -117,16 +44,92 @@
             </div>
           <% end %>
         </div>
-      </div>
-    <% end %>
+      <% else %>
+        <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
+          <div class="text-6xl mb-4">🎯</div>
+          <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
+          <p class="text-gray-300">Collectez des badges pour débloquer vos premières récompenses !</p>
+        </div>
+      <% end %>
+    </div>
 
-    <!-- Message si aucune récompense -->
-    <% if @rewards.empty? %>
-      <div class="text-center py-12">
-        <div class="text-6xl mb-4">🎯</div>
-        <h3 class="text-xl font-bold text-white mb-2">Aucune récompense encore</h3>
-        <p class="text-gray-300">Commencez à collecter des badges pour débloquer vos premières récompenses !</p>
+    <!-- Récompenses disponibles -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🔒 Récompenses disponibles</h2>
+      
+      <!-- Par type de badge -->
+      <% @rewards_by_type.each do |badge_type, rewards| %>
+        <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+          <h3 class="text-xl font-bold text-white mb-4">
+            <%= badge_type.humanize %> Badges
+            <span class="text-sm font-normal text-gray-300">
+              (<%= @badge_counts[badge_type] || 0 %> collectés)
+            </span>
+          </h3>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <% [3, 5, 10].each do |quantity| %>
+              <% reward = rewards.find { |r| r.quantity_required == quantity } %>
+              <% current_count = @badge_counts[badge_type] || 0 %>
+              <% progress = [(current_count.to_f / quantity * 100), 100].min %>
+              
+              <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 border border-gray-600">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-white font-bold"><%= quantity %> badges</span>
+                  <span class="text-gray-400 text-sm">
+                    <%= current_count %>/<%= quantity %>
+                  </span>
+                </div>
+                
+                <!-- Barre de progression -->
+                <div class="w-full bg-gray-600 rounded-full h-2 mb-3">
+                  <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
+                       style="width: <%= progress %>%"></div>
+                </div>
+                
+                <div class="text-sm text-gray-200 mb-2">
+                  <%= case quantity
+                      when 3 then 'Challenge'
+                      when 5 then 'Exclusif'
+                      when 10 then 'Premium'
+                      end %>
+                </div>
+                
+                <div class="text-xs text-gray-400">
+                  <%= case quantity
+                      when 3 then 'Défi spécial débloqué'
+                      when 5 then 'Contenu exclusif débloqué'
+                      when 10 then 'Récompense premium débloquée'
+                      end %>
+                </div>
+                
+                <% if current_count >= quantity %>
+                  <div class="text-green-400 text-xs mt-2 font-medium">
+                    ✅ Prêt à débloquer !
+                  </div>
+                <% else %>
+                  <div class="text-gray-500 text-xs mt-2">
+                    Il vous manque <%= quantity - current_count %> badge(s)
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+      <h2 class="text-2xl font-bold text-white mb-4">📊 Mes statistiques</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <% @badge_counts.each do |badge_type, count| %>
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
+            <div class="text-2xl font-bold text-white"><%= count %></div>
+            <div class="text-sm text-gray-200"><%= badge_type.humanize %></div>
+          </div>
+        <% end %>
       </div>
-    <% end %>
+    </div>
   </div>
 </div> 
