@@ -6,6 +6,16 @@
       <p class="text-gray-300 text-lg">Débloquez des récompenses exclusives en collectant des badges</p>
     </div>
 
+    <!-- Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-1">
+        <%= link_to "Mes récompenses", my_rewards_path, 
+            class: "px-6 py-2 rounded-md bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium" %>
+        <%= link_to "Toutes les récompenses", all_rewards_path, 
+            class: "px-6 py-2 rounded-md text-gray-300 hover:text-white transition-colors" %>
+      </div>
+    </div>
+
     <!-- Bouton pour vérifier les récompenses -->
     <div class="text-center mb-8">
       <%= link_to "Vérifier mes récompenses", unlock_rewards_path, method: :post, 
@@ -40,6 +50,11 @@
                 <div class="text-xs text-green-300 mt-2">
                   Débloqué le <%= reward.unlocked_at.strftime("%d/%m/%Y") %>
                 </div>
+              <% end %>
+              
+              <!-- Lien vers les détails -->
+              <%= link_to reward_path(reward), class: "inline-block mt-4 text-green-300 hover:text-green-100 text-sm font-medium" do %>
+                Voir les détails →
               <% end %>
             </div>
           <% end %>
