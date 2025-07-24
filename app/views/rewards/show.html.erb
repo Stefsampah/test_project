@@ -1,0 +1,84 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-white mb-4">🏆 Détails de la Récompense</h1>
+      <p class="text-gray-300 text-lg">Informations détaillées sur cette récompense</p>
+    </div>
+
+    <!-- Détails de la récompense -->
+    <div class="max-w-2xl mx-auto">
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="text-4xl">🏆</div>
+          <% if @reward.unlocked? %>
+            <span class="text-green-300 text-sm font-medium bg-green-500/20 px-3 py-1 rounded-full">DÉBLOQUÉ</span>
+          <% else %>
+            <span class="text-gray-400 text-sm font-medium bg-gray-500/20 px-3 py-1 rounded-full">VERROUILLÉ</span>
+          <% end %>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-white mb-4">
+          <%= @reward.reward_type.humanize %>
+        </h2>
+        
+        <div class="space-y-4">
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Description</h3>
+            <p class="text-gray-300"><%= @reward.reward_description %></p>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Type de badge requis</h3>
+            <p class="text-gray-300"><%= @reward.badge_type.humanize %></p>
+          </div>
+          
+          <div>
+            <h3 class="text-lg font-semibold text-white mb-2">Quantité de badges requis</h3>
+            <p class="text-gray-300"><%= @reward.quantity_required %> badges</p>
+          </div>
+          
+          <% if @reward.unlocked? %>
+            <div>
+              <h3 class="text-lg font-semibold text-white mb-2">Date de déblocage</h3>
+              <p class="text-gray-300"><%= @reward.unlocked_at.strftime("%d/%m/%Y à %H:%M") %></p>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Progression actuelle -->
+        <% current_user_badges = current_user.user_badges.joins(:badge).where(badges: { badge_type: @reward.badge_type }).count %>
+        <% progress = [(current_user_badges.to_f / @reward.quantity_required * 100), 100].min %>
+        
+        <div class="mt-8">
+          <h3 class="text-lg font-semibold text-white mb-4">Votre progression</h3>
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-gray-300">Badges <%= @reward.badge_type.humanize %> collectés</span>
+            <span class="text-white font-bold"><%= current_user_badges %>/<%= @reward.quantity_required %></span>
+          </div>
+          <div class="w-full bg-gray-600 rounded-full h-3">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300" 
+                 style="width: <%= progress %>%"></div>
+          </div>
+          
+          <% if current_user_badges >= @reward.quantity_required %>
+            <p class="text-green-400 text-sm mt-2">✅ Vous avez assez de badges pour débloquer cette récompense !</p>
+          <% else %>
+            <p class="text-gray-400 text-sm mt-2">Il vous manque <%= @reward.quantity_required - current_user_badges %> badge(s) pour débloquer cette récompense</p>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Actions -->
+      <div class="flex justify-center mt-8 space-x-4">
+        <%= link_to my_rewards_path, class: "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" do %>
+          ← Retour à mes récompenses
+        <% end %>
+        
+        <%= link_to all_rewards_path, class: "bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" do %>
+          Voir toutes les récompenses
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div> 

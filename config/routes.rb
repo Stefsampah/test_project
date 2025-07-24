@@ -44,6 +44,8 @@ Rails.application.routes.draw do
       post :unlock
     end
   end
+  get 'my_rewards', to: 'rewards#my_rewards'
+  get 'all_rewards', to: 'rewards#all_rewards'
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
