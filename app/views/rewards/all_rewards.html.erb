@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold text-white mb-4">🏆 Toutes les Récompenses</h1>
-      <p class="text-gray-300 text-lg">Découvrez toutes les récompenses disponibles sur la plateforme</p>
+      <p class="text-gray-300 text-lg">Découvrez tous les badges et leurs récompenses disponibles</p>
     </div>
 
     <!-- Navigation -->
@@ -19,10 +19,10 @@
     <!-- Statistiques globales -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
       <h2 class="text-2xl font-bold text-white mb-4">📊 Statistiques globales</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
-          <div class="text-3xl font-bold text-white"><%= @total_rewards %></div>
-          <div class="text-sm text-gray-200">Total récompenses</div>
+          <div class="text-3xl font-bold text-white"><%= Badge.count %></div>
+          <div class="text-sm text-gray-200">Total badges</div>
         </div>
         <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-center">
           <div class="text-3xl font-bold text-white"><%= @unlocked_rewards %></div>
@@ -32,62 +32,115 @@
           <div class="text-3xl font-bold text-white"><%= @locked_rewards %></div>
           <div class="text-sm text-gray-200">Récompenses à débloquer</div>
         </div>
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-white"><%= User.count %></div>
+          <div class="text-sm text-gray-200">Utilisateurs</div>
+        </div>
       </div>
     </div>
 
-    <!-- Récompenses par type -->
+    <!-- Tous les badges avec leurs récompenses -->
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎯 Récompenses par type de badge</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">🎯 Tous les badges et leurs récompenses</h2>
       
-      <% @rewards_by_type.each do |badge_type, rewards| %>
+      <% Badge.all.group_by(&:badge_type).each do |badge_type, badges| %>
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
           <h3 class="text-xl font-bold text-white mb-4">
             <%= badge_type.humanize %> Badges
           </h3>
           
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <% [3, 5, 10].each do |quantity| %>
-              <% reward = rewards.find { |r| r.quantity_required == quantity } %>
-              
-              <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 border border-gray-600">
-                <div class="flex items-center justify-between mb-3">
-                  <span class="text-white font-bold"><%= quantity %> badges</span>
-                  <span class="text-gray-400 text-sm">
-                    <%= reward&.unlocked? ? 'Débloqué' : 'À débloquer' %>
-                  </span>
-                </div>
-                
-                <div class="text-sm text-gray-200 mb-2">
-                  <%= case quantity
-                      when 3 then 'Challenge'
-                      when 5 then 'Exclusif'
-                      when 10 then 'Premium'
-                      end %>
-                </div>
-                
-                <div class="text-xs text-gray-400 mb-3">
-                  <%= case quantity
-                      when 3 then 'Défi spécial débloqué'
-                      when 5 then 'Contenu exclusif débloqué'
-                      when 10 then 'Récompense premium débloquée'
-                      end %>
-                </div>
-                
-                <div class="text-xs text-gray-500">
-                  Collectez <%= quantity %> badges <%= badge_type.humanize.downcase %> pour débloquer cette récompense
-                </div>
-                
-                <% if reward&.unlocked? %>
-                  <div class="text-green-400 text-xs mt-2 font-medium">
-                    ✅ Débloqué
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <% badges.each do |badge| %>
+              <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg">
+                <!-- Bannière avec image ou dégradé -->
+                <div class="h-32 relative">
+                  <% if badge.image.present? %>
+                    <%= image_tag "badges/#{badge.image}", class: "w-full h-full object-cover" %>
+                  <% else %>
+                    <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                      <span class="text-white text-2xl font-bold"><%= badge.level.first.upcase %></span>
+                    </div>
+                  <% end %>
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
                   </div>
-                <% else %>
-                  <div class="text-gray-500 text-xs mt-2">
-                    🔒 Verrouillé
+                </div>
+                
+                <!-- Contenu de la carte -->
+                <div class="p-4">
+                  <!-- Étiquettes -->
+                  <div class="flex gap-2 mb-3">
+                    <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">Standard</span>
+                    <span class="bg-white text-black text-xs px-3 py-1 rounded-full"><%= badge_type.humanize %></span>
                   </div>
-                <% end %>
+                  
+                  <!-- Titre -->
+                  <h4 class="text-lg font-bold text-white mb-2">
+                    <%= badge.name %>
+                  </h4>
+                  
+                  <!-- Description -->
+                  <p class="text-gray-300 text-sm mb-4">
+                    <%= badge.reward_description %>
+                  </p>
+                  
+                  <!-- Détails en bas -->
+                  <div class="flex items-center justify-between pt-3 border-t border-gray-600">
+                    <span class="text-white text-sm">Niveau <%= badge.level.humanize %></span>
+                    <div class="text-center">
+                      <div class="text-white font-bold"><%= badge.points_required %></div>
+                      <div class="text-gray-400 text-xs">points</div>
+                    </div>
+                    <span class="text-blue-400 text-sm">Détails</span>
+                  </div>
+                </div>
               </div>
             <% end %>
+          </div>
+          
+          <!-- Récompenses par quantité pour ce type de badge -->
+          <div class="border-t border-gray-600 pt-4">
+            <h4 class="text-lg font-semibold text-white mb-3">Récompenses par quantité</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <% [3, 5, 10].each do |quantity| %>
+                <% reward = @rewards_by_type[badge_type]&.find { |r| r.quantity_required == quantity } %>
+                
+                <div class="bg-gradient-to-r from-gray-600 to-gray-700 rounded-lg p-3 border border-gray-500">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-white font-bold"><%= quantity %> badges</span>
+                    <span class="text-gray-400 text-xs">
+                      <%= reward&.unlocked? ? 'Débloqué' : 'À débloquer' %>
+                    </span>
+                  </div>
+                  
+                  <div class="text-sm text-gray-200 mb-2">
+                    <%= case quantity
+                        when 3 then 'Challenge'
+                        when 5 then 'Exclusif'
+                        when 10 then 'Premium'
+                        end %>
+                  </div>
+                  
+                  <div class="text-xs text-gray-400">
+                    <%= case quantity
+                        when 3 then 'Défi spécial débloqué'
+                        when 5 then 'Contenu exclusif débloqué'
+                        when 10 then 'Récompense premium débloquée'
+                        end %>
+                  </div>
+                  
+                  <% if reward&.unlocked? %>
+                    <div class="text-green-400 text-xs mt-2 font-medium">
+                      ✅ Débloqué
+                    </div>
+                  <% else %>
+                    <div class="text-gray-500 text-xs mt-2">
+                      🔒 Verrouillé
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       <% end %>

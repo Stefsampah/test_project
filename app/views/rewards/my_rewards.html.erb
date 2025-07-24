@@ -28,29 +28,47 @@
       <% if @unlocked_rewards.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <% @unlocked_rewards.each do |reward| %>
-            <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl p-6 shadow-lg transform hover:scale-105 transition-all duration-200">
-              <div class="flex items-center justify-between mb-4">
-                <div class="text-2xl">🏆</div>
-                <span class="text-green-300 text-sm font-medium">DÉBLOQUÉ</span>
-              </div>
-              
-              <h3 class="text-xl font-bold text-white mb-2">
-                <%= reward.reward_type.humanize %>
-              </h3>
-              
-              <p class="text-green-100 text-sm mb-4">
-                <%= reward.reward_description %>
-              </p>
-              
-              <div class="text-xs text-green-300">
-                <%= reward.badge_type.humanize %> - <%= reward.quantity_required %> badges requis
-              </div>
-              
-              <% if reward.unlocked_at %>
-                <div class="text-xs text-green-300 mt-2">
-                  Débloqué le <%= reward.unlocked_at.strftime("%d/%m/%Y") %>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200">
+              <!-- Bannière avec dégradé -->
+              <div class="h-32 bg-gradient-to-r from-orange-500 to-pink-500 relative">
+                <div class="absolute top-3 left-3">
+                  <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
                 </div>
-              <% end %>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span class="text-white text-lg font-bold">Music in Feed</span>
+                </div>
+              </div>
+              
+              <!-- Contenu de la carte -->
+              <div class="p-4">
+                <!-- Étiquettes -->
+                <div class="flex gap-2 mb-3">
+                  <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">Standard</span>
+                  <span class="bg-white text-black text-xs px-3 py-1 rounded-full"><%= reward.badge_type.humanize %></span>
+                </div>
+                
+                <!-- Titre -->
+                <h3 class="text-xl font-bold text-white mb-2">
+                  <%= reward.reward_type.humanize %> <%= reward.badge_type.humanize %>
+                </h3>
+                
+                <!-- Description -->
+                <p class="text-gray-300 text-sm mb-4">
+                  <%= reward.reward_description %>
+                </p>
+                
+                <!-- Détails en bas -->
+                <div class="flex items-center justify-between pt-3 border-t border-gray-600">
+                  <span class="text-white text-sm">Niveau <%= reward.badge_type.humanize %></span>
+                  <div class="text-center">
+                    <div class="text-white font-bold"><%= reward.quantity_required * 100 %></div>
+                    <div class="text-gray-400 text-xs">points</div>
+                  </div>
+                  <%= link_to reward_path(reward), class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
+                    Voir détails →
+                  <% end %>
+                </div>
+              </div>
             </div>
           <% end %>
         </div>

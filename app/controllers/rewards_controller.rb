@@ -21,13 +21,14 @@ class RewardsController < ApplicationController
   end
   
   def all_rewards
-    @all_rewards = Reward.includes(:user, :badge_type).order(:badge_type, :quantity_required)
-    @rewards_by_type = @all_rewards.group_by(&:badge_type)
+    # Toutes les récompenses de l'utilisateur pour l'affichage des récompenses par quantité
+    @user_rewards = current_user.rewards.includes(:badge_type).order(:badge_type, :quantity_required)
+    @rewards_by_type = @user_rewards.group_by(&:badge_type)
     
     # Statistiques globales
-    @total_rewards = @all_rewards.count
-    @unlocked_rewards = @all_rewards.unlocked.count
-    @locked_rewards = @all_rewards.where(unlocked: false).count
+    @total_rewards = Reward.count
+    @unlocked_rewards = Reward.unlocked.count
+    @locked_rewards = Reward.where(unlocked: false).count
   end
   
   def show
