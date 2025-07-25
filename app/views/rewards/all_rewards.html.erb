@@ -55,9 +55,9 @@
       <% Badge.distinct.pluck(:badge_type).each do |badge_type| %>
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
           <h3 class="text-xl font-bold text-white mb-4">
-            <%= badge_type.humanize %> Badges
+            Récompenses <%= badge_type.humanize %>
             <span class="text-sm font-normal text-gray-300">
-              (<%= @badge_counts[badge_type] || 0 %> collectés)
+              (<%= @badge_counts[badge_type] || 0 %> badges collectés)
             </span>
           </h3>
           

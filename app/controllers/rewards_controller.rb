@@ -68,9 +68,24 @@ class RewardsController < ApplicationController
                    end
     
     @reward_description = case @quantity
-                         when 3 then 'Défi spécial débloqué'
-                         when 6 then 'Contenu exclusif débloqué'
-                         when 9 then 'Récompense premium débloquée'
+                         when 3 then case @badge_type
+                                     when 'competitor' then 'Récompense votre esprit compétitif et vos performances exceptionnelles'
+                                     when 'engager' then 'Reconnaît votre engagement actif et votre participation communautaire'
+                                     when 'critic' then 'Valorise votre expertise critique et votre capacité d\'analyse'
+                                     when 'challenger' then 'Célèbre votre goût du défi et votre persévérance'
+                                     end
+                         when 6 then case @badge_type
+                                     when 'competitor' then 'Récompense votre excellence compétitive et votre domination des classements'
+                                     when 'engager' then 'Reconnaît votre leadership communautaire et votre influence positive'
+                                     when 'critic' then 'Valorise votre jugement expert et votre contribution critique'
+                                     when 'challenger' then 'Célèbre votre maîtrise des défis et votre résilience exceptionnelle'
+                                     end
+                         when 9 then case @badge_type
+                                     when 'competitor' then 'Récompense votre statut de champion et votre domination absolue'
+                                     when 'engager' then 'Reconnaît votre rôle d\'ambassadeur et votre impact communautaire majeur'
+                                     when 'critic' then 'Valorise votre expertise reconnue et votre autorité critique'
+                                     when 'challenger' then 'Célèbre votre maîtrise ultime et votre conquête de tous les défis'
+                                     end
                          end
   end
   
