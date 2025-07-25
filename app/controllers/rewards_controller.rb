@@ -69,22 +69,22 @@ class RewardsController < ApplicationController
     
     @reward_description = case @quantity
                          when 3 then case @badge_type
-                                     when 'competitor' then 'Récompense votre esprit compétitif et vos performances exceptionnelles'
-                                     when 'engager' then 'Reconnaît votre engagement actif et votre participation communautaire'
-                                     when 'critic' then 'Valorise votre expertise critique et votre capacité d\'analyse'
-                                     when 'challenger' then 'Célèbre votre goût du défi et votre persévérance'
+                                     when 'competitor' then 'Accès à une playlist exclusive de compétition'
+                                     when 'engager' then 'Accès à une playlist communautaire exclusive'
+                                     when 'critic' then 'Accès à une playlist de critiques expertes'
+                                     when 'challenger' then 'Accès à une playlist de défis spéciaux'
                                      end
                          when 6 then case @badge_type
-                                     when 'competitor' then 'Récompense votre excellence compétitive et votre domination des classements'
-                                     when 'engager' then 'Reconnaît votre leadership communautaire et votre influence positive'
-                                     when 'critic' then 'Valorise votre jugement expert et votre contribution critique'
-                                     when 'challenger' then 'Célèbre votre maîtrise des défis et votre résilience exceptionnelle'
+                                     when 'competitor' then 'Accès à 3 playlists premium de compétition'
+                                     when 'engager' then 'Accès à 3 playlists communautaires premium'
+                                     when 'critic' then 'Accès à 3 playlists de critiques premium'
+                                     when 'challenger' then 'Accès à 3 playlists de défis premium'
                                      end
                          when 9 then case @badge_type
-                                     when 'competitor' then 'Récompense votre statut de champion et votre domination absolue'
-                                     when 'engager' then 'Reconnaît votre rôle d\'ambassadeur et votre impact communautaire majeur'
-                                     when 'critic' then 'Valorise votre expertise reconnue et votre autorité critique'
-                                     when 'challenger' then 'Célèbre votre maîtrise ultime et votre conquête de tous les défis'
+                                     when 'competitor' then 'Accès illimité à toutes les playlists de compétition'
+                                     when 'engager' then 'Accès illimité à toutes les playlists communautaires'
+                                     when 'critic' then 'Accès illimité à toutes les playlists de critiques'
+                                     when 'challenger' then 'Accès illimité à toutes les playlists de défis'
                                      end
                          end
   end
