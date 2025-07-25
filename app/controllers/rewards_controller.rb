@@ -6,6 +6,7 @@ class RewardsController < ApplicationController
   end
   
   def my_rewards
+    # Récupérer toutes les récompenses de l'utilisateur
     @rewards = current_user.rewards.includes(:badge_type).order(:badge_type, :quantity_required)
     @unlocked_rewards = @rewards.unlocked
     @locked_rewards = @rewards.where(unlocked: false)
@@ -21,9 +22,15 @@ class RewardsController < ApplicationController
   end
   
   def all_rewards
-    # Toutes les récompenses de l'utilisateur pour l'affichage des récompenses par quantité
+    # Récupérer toutes les récompenses de l'utilisateur
     @user_rewards = current_user.rewards.includes(:badge_type).order(:badge_type, :quantity_required)
     @rewards_by_type = @user_rewards.group_by(&:badge_type)
+    
+    # Statistiques des badges par type
+    @badge_counts = {}
+    Badge.distinct.pluck(:badge_type).each do |badge_type|
+      @badge_counts[badge_type] = current_user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
+    end
     
     # Statistiques globales
     @total_rewards = Reward.count

@@ -28,6 +28,23 @@ class Reward < ApplicationRecord
     end
   end
   
+  # Méthode pour vérifier si une récompense peut être débloquée
+  def can_be_unlocked?(user)
+    user_badges_count = user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
+    user_badges_count >= quantity_required
+  end
+  
+  # Méthode pour obtenir la progression actuelle
+  def current_progress(user)
+    user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
+  end
+  
+  # Méthode pour obtenir le pourcentage de progression
+  def progress_percentage(user)
+    current = current_progress(user)
+    [(current.to_f / quantity_required * 100), 100].min
+  end
+  
   private
   
   def self.check_reward_condition(user, badge_type, quantity_required, reward_type)
