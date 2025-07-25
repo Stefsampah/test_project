@@ -22,10 +22,21 @@ class Reward < ApplicationRecord
       # Calculer les points pondérés par niveau
       badge_points = calculate_badge_points(user, badge_type)
       
-      # Vérifier les conditions pour chaque niveau de récompense
-      check_reward_condition(user, badge_type, 3, 'challenge') if badge_points >= 3
-      check_reward_condition(user, badge_type, 6, 'exclusif') if badge_points >= 6
-      check_reward_condition(user, badge_type, 9, 'premium') if badge_points >= 9
+      # Vérifier et débloquer les récompenses de manière progressive
+      # Challenge (3 points)
+      if badge_points >= 3
+        check_reward_condition(user, badge_type, 3, 'challenge')
+      end
+      
+      # Exclusif (6 points) - seulement si pas déjà débloqué
+      if badge_points >= 6
+        check_reward_condition(user, badge_type, 6, 'exclusif')
+      end
+      
+      # Premium (9 points) - seulement si pas déjà débloqué
+      if badge_points >= 9
+        check_reward_condition(user, badge_type, 9, 'premium')
+      end
     end
   end
   
@@ -56,6 +67,20 @@ class Reward < ApplicationRecord
   def progress_percentage(user)
     current = current_progress(user)
     [(current.to_f / quantity_required * 100), 100].min
+  end
+  
+  # Méthode pour obtenir le prochain niveau de récompense
+  def self.next_reward_level(badge_type, current_points)
+    case current_points
+    when 0..2
+      { level: 'challenge', required: 3, current: current_points, remaining: 3 - current_points }
+    when 3..5
+      { level: 'exclusif', required: 6, current: current_points, remaining: 6 - current_points }
+    when 6..8
+      { level: 'premium', required: 9, current: current_points, remaining: 9 - current_points }
+    else
+      { level: 'max', required: 9, current: current_points, remaining: 0 }
+    end
   end
   
   private
