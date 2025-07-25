@@ -1,12 +1,21 @@
 <div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
   <div class="container mx-auto px-4 py-8">
-    <!-- Header -->
+    <!-- Header avec logo -->
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-white mb-4">🏆 Mes Récompenses</h1>
+      <div class="flex items-center justify-center mb-6">
+        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 text-purple-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 8h2v8H5zm7 0H9v8h3zm5 8h2V8h-2zM8 5h8v2H8z"/>
+            </svg>
+          </div>
+        </div>
+        <h1 class="text-4xl font-bold text-white ml-4">🏆 Mes Récompenses</h1>
+      </div>
       <p class="text-gray-300 text-lg">Débloquez des récompenses exclusives en collectant des badges</p>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation moderne -->
     <div class="flex justify-center mb-8">
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-1">
         <%= link_to "Mes récompenses", my_rewards_path, 
@@ -22,67 +31,81 @@
           class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
     </div>
 
-    <!-- Récompenses débloquées -->
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
-      <% if @unlocked_rewards.any? %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <% @unlocked_rewards.each do |reward| %>
-            <div class="bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200">
-              <!-- Bannière avec dégradé -->
-              <div class="h-32 bg-gradient-to-r from-orange-500 to-pink-500 relative">
-                <div class="absolute top-3 left-3">
-                  <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
-                </div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                  <span class="text-white text-lg font-bold">Music in Feed</span>
-                </div>
-              </div>
-              
-              <!-- Contenu de la carte -->
-              <div class="p-4">
-                <!-- Étiquettes -->
-                <div class="flex gap-2 mb-3">
-                  <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">Standard</span>
-                  <span class="bg-white text-black text-xs px-3 py-1 rounded-full"><%= reward.badge_type.humanize %></span>
-                </div>
-                
-                <!-- Titre -->
-                <h3 class="text-xl font-bold text-white mb-2">
-                  <%= reward.reward_type.humanize %> <%= reward.badge_type.humanize %>
-                </h3>
-                
-                <!-- Description -->
-                <p class="text-gray-300 text-sm mb-4">
-                  <%= reward.reward_description %>
-                </p>
-                
-                <!-- Détails en bas -->
-                <div class="flex items-center justify-between pt-3 border-t border-gray-600">
-                  <span class="text-white text-sm">Niveau <%= reward.badge_type.humanize %></span>
-                  <div class="text-center">
-                    <div class="text-white font-bold"><%= reward.quantity_required * 100 %></div>
-                    <div class="text-gray-400 text-xs">points</div>
+    <!-- Mes récompenses débloquées -->
+    <div class="mb-12">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8">
+        <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
+        
+        <% if @unlocked_rewards.any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% @unlocked_rewards.each do |reward| %>
+              <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
+                <!-- Bannière avec image ou dégradé -->
+                <div class="h-48 relative">
+                  <div class="w-full h-full bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center">
+                    <div class="text-white text-4xl">🏆</div>
                   </div>
-                  <%= link_to reward_path(reward), class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
-                    Voir détails →
-                  <% end %>
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
+                  </div>
+                  <div class="absolute top-3 right-3">
+                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
+                  </div>
+                </div>
+                
+                <!-- Contenu de la carte -->
+                <div class="p-4 flex-1 flex flex-col">
+                  <!-- Étiquettes -->
+                  <div class="flex gap-2 mb-3">
+                    <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
+                      <%= case reward.quantity_required
+                          when 3 then 'Challenge'
+                          when 5 then 'Exclusif'
+                          when 10 then 'Premium'
+                          end %>
+                    </span>
+                    <span class="bg-white text-black text-xs px-3 py-1 rounded-full">
+                      <%= reward.badge_type.humanize %>
+                    </span>
+                  </div>
+                  
+                  <!-- Titre -->
+                  <h3 class="text-xl font-bold text-white mb-2">
+                    <%= reward.reward_type.humanize %> <%= reward.badge_type.humanize %>
+                  </h3>
+                  
+                  <!-- Description -->
+                  <p class="text-gray-300 text-sm mb-4 flex-grow">
+                    <%= reward.reward_description %>
+                  </p>
+                  
+                  <!-- Détails en bas -->
+                  <div class="flex items-center justify-between pt-3 border-t border-gray-600 mt-auto">
+                    <span class="text-white text-sm">Niveau <%= reward.badge_type.humanize %></span>
+                    <div class="text-center">
+                      <div class="text-white font-bold"><%= reward.quantity_required * 100 %></div>
+                      <div class="text-gray-400 text-xs">points</div>
+                    </div>
+                    <%= link_to reward_path(reward), class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
+                      Voir détails →
+                    <% end %>
+                  </div>
                 </div>
               </div>
-            </div>
-          <% end %>
-        </div>
-      <% else %>
-        <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
-          <div class="text-6xl mb-4">🎯</div>
-          <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
-          <p class="text-gray-300">Collectez des badges pour débloquer vos premières récompenses !</p>
-        </div>
-      <% end %>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
+            <div class="text-6xl mb-4">🎯</div>
+            <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
+            <p class="text-gray-300">Collectez des badges pour débloquer vos premières récompenses !</p>
+          </div>
+        <% end %>
+      </div>
     </div>
 
     <!-- Récompenses disponibles -->
-    <div class="mb-8">
+    <div class="mb-12">
       <h2 class="text-2xl font-bold text-white mb-6">🔒 Récompenses disponibles</h2>
       
       <!-- Par type de badge -->
@@ -101,7 +124,7 @@
               <% current_count = @badge_counts[badge_type] || 0 %>
               <% progress = [(current_count.to_f / quantity * 100), 100].min %>
               
-              <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 border border-gray-600">
+              <div class="reward-card bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 border border-gray-600 transform hover:scale-105 transition-all duration-200">
                 <div class="flex items-center justify-between mb-3">
                   <span class="text-white font-bold"><%= quantity %> badges</span>
                   <span class="text-gray-400 text-sm">
@@ -160,4 +183,30 @@
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+<style>
+  .reward-card {
+    border: 2px solid transparent;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+  
+  .reward-card:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.1), 0 10px 10px -5px rgba(139, 92, 246, 0.04);
+    transform: translateY(-5px);
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+</style> 
