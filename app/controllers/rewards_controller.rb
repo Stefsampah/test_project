@@ -42,6 +42,38 @@ class RewardsController < ApplicationController
     @reward = current_user.rewards.find(params[:id])
   end
   
+  def details
+    @badge_type = params[:badge_type]
+    @quantity = params[:quantity].to_i
+    @current_points = Reward.calculate_badge_points(current_user, @badge_type)
+    @progress = [(@current_points.to_f / @quantity * 100), 100].min
+    
+    # Calculer les détails par niveau
+    user_badges = current_user.user_badges.joins(:badge).where(badges: { badge_type: @badge_type })
+    @bronze_count = user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+    
+    # Générer les informations de la récompense
+    @reward_type = case @quantity
+                   when 3 then 'challenge'
+                   when 6 then 'exclusif'
+                   when 9 then 'premium'
+                   end
+    
+    @reward_name = case @quantity
+                   when 3 then '🎯 Challenge'
+                   when 6 then '⭐ Exclusif'
+                   when 9 then '👑 Premium'
+                   end
+    
+    @reward_description = case @quantity
+                         when 3 then 'Défi spécial débloqué'
+                         when 6 then 'Contenu exclusif débloqué'
+                         when 9 then 'Récompense premium débloquée'
+                         end
+  end
+  
   def unlock
     # Vérifier et créer les récompenses pour l'utilisateur
     Reward.check_and_create_rewards_for_user(current_user)

@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   end
   get 'my_rewards', to: 'rewards#my_rewards'
   get 'all_rewards', to: 'rewards#all_rewards'
+  get 'reward_details', to: 'rewards#details', as: :reward_details
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

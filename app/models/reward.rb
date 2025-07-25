@@ -19,24 +19,37 @@ class Reward < ApplicationRecord
   def self.check_and_create_rewards_for_user(user)
     # Vérifier chaque type de badge
     Badge.distinct.pluck(:badge_type).each do |badge_type|
-      user_badges_count = user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
+      # Calculer les points pondérés par niveau
+      badge_points = calculate_badge_points(user, badge_type)
       
       # Vérifier les conditions pour chaque niveau de récompense
-      check_reward_condition(user, badge_type, 3, 'challenge') if user_badges_count >= 3
-      check_reward_condition(user, badge_type, 5, 'exclusif') if user_badges_count >= 5
-      check_reward_condition(user, badge_type, 10, 'premium') if user_badges_count >= 10
+      check_reward_condition(user, badge_type, 3, 'challenge') if badge_points >= 3
+      check_reward_condition(user, badge_type, 6, 'exclusif') if badge_points >= 6
+      check_reward_condition(user, badge_type, 9, 'premium') if badge_points >= 9
     end
+  end
+  
+  # Méthode pour calculer les points pondérés par niveau
+  def self.calculate_badge_points(user, badge_type)
+    user_badges = user.user_badges.joins(:badge).where(badges: { badge_type: badge_type })
+    
+    bronze_count = user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    silver_count = user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    gold_count = user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+    
+    # Pondération : Bronze=1, Silver=2, Gold=3
+    (bronze_count * 1) + (silver_count * 2) + (gold_count * 3)
   end
   
   # Méthode pour vérifier si une récompense peut être débloquée
   def can_be_unlocked?(user)
-    user_badges_count = user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
-    user_badges_count >= quantity_required
+    badge_points = self.class.calculate_badge_points(user, badge_type)
+    badge_points >= quantity_required
   end
   
-  # Méthode pour obtenir la progression actuelle
+  # Méthode pour obtenir la progression actuelle (en points pondérés)
   def current_progress(user)
-    user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
+    self.class.calculate_badge_points(user, badge_type)
   end
   
   # Méthode pour obtenir le pourcentage de progression
