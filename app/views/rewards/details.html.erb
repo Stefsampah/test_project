@@ -32,7 +32,7 @@
                 end %>
           </div>
           <div class="text-right">
-            <% if @current_points >= @quantity %>
+            <% if @current_count && @current_count >= @quantity %>
               <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-500 text-white">
                 DÉBLOQUÉ
               </span>
@@ -71,7 +71,7 @@
             </div>
             <div>
               <h3 class="text-lg font-semibold text-white mb-2">Quantité requise</h3>
-              <p class="text-gray-300"><%= @quantity %> points</p>
+              <p class="text-gray-300"><%= @quantity %> badges</p>
             </div>
           </div>
 
@@ -80,7 +80,7 @@
             <h3 class="text-lg font-semibold text-white mb-2">Votre progression</h3>
             <div class="flex items-center justify-between mb-2">
               <span class="text-gray-300">
-                <%= @current_points %> / <%= @quantity %>
+                <%= @current_count || 0 %> / <%= @quantity %>
               </span>
               <span class="text-gray-300">
                 <%= @progress.to_i %>%
@@ -95,30 +95,30 @@
             <!-- Détails par niveau -->
             <div class="mt-4 space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥉 Bronze (1 pt)</span>
+                <span class="text-gray-300">🥉 Bronze</span>
                 <span class="text-gray-300"><%= @bronze_count %> badge(s)</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥈 Silver (2 pts)</span>
+                <span class="text-gray-300">🥈 Silver</span>
                 <span class="text-gray-300"><%= @silver_count %> badge(s)</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥇 Gold (3 pts)</span>
+                <span class="text-gray-300">🥇 Gold</span>
                 <span class="text-gray-300"><%= @gold_count %> badge(s)</span>
               </div>
               <div class="border-t border-gray-600 pt-2 mt-2">
                 <div class="flex justify-between items-center font-semibold">
-                  <span class="text-white">Total points</span>
-                  <span class="text-white"><%= @current_points %></span>
+                  <span class="text-white">Total badges</span>
+                  <span class="text-white"><%= @current_count || 0 %></span>
                 </div>
               </div>
             </div>
             
-            <% if @current_points >= @quantity %>
-              <p class="text-green-400 text-sm mt-2">✅ Vous avez assez de points pour débloquer cette récompense !</p>
+            <% if @current_count && @current_count >= @quantity %>
+              <p class="text-green-400 text-sm mt-2">✅ Vous avez assez de badges pour débloquer cette récompense !</p>
             <% else %>
               <p class="text-gray-400 text-sm mt-2">
-                Il vous manque <%= @quantity - @current_points %> point(s) pour débloquer cette récompense
+                Il vous manque <%= @quantity - (@current_count || 0) %> badge(s) pour débloquer cette récompense
               </p>
             <% end %>
           </div>
@@ -126,7 +126,7 @@
 
         <!-- Actions -->
         <div class="mt-8 pt-6 border-t border-gray-600">
-          <% if @current_points >= @quantity %>
+          <% if @current_count && @current_count >= @quantity %>
             <div class="text-center">
               <p class="text-green-400 font-medium">🎉 Cette récompense est prête à être débloquée !</p>
             </div>

@@ -127,229 +127,128 @@
       </div>
     </div>
 
-    <!-- Progression vers les récompenses -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎯 Progression vers les récompenses</h2>
-      
-      <!-- Récompenses par type de badge -->
-      <div class="mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">📊 Par type de badge</h3>
-        <% Badge.distinct.pluck(:badge_type).each do |badge_type| %>
-          <% current_count = @badge_counts[badge_type] || 0 %>
-          <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 mb-4">
-            <div class="flex items-center justify-between mb-3">
-              <h4 class="text-lg font-bold text-white"><%= badge_type.humanize %></h4>
-              <span class="text-xl font-bold text-blue-400"><%= current_count %> badges</span>
-            </div>
-            
-            <!-- Progression pour ce type -->
-            <div class="space-y-3">
-              <% [3, 6, 9].each do |required| %>
-                <% progress = [(current_count.to_f / required * 100), 100].min %>
-                <div>
-                  <div class="flex justify-between text-sm text-gray-300 mb-1">
-                    <span><%= required %> badges <%= badge_type.humanize %></span>
-                    <span><%= current_count %>/<%= required %></span>
-                  </div>
-                  <div class="w-full bg-gray-600 rounded-full h-2">
-                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
-                         style="width: <%= progress %>%"></div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      
-      <!-- Récompenses mixtes -->
-      <div class="mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">🌈 Combinaisons mixtes</h3>
-        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4">
-          <div class="flex items-center justify-between mb-3">
-            <h4 class="text-lg font-bold text-white">Badges mixtes</h4>
-            <span class="text-xl font-bold text-purple-400"><%= @total_badges %> badges</span>
-          </div>
+        <!-- Progression vers les récompenses -->
+        <div class="mb-8">
+          <h3 class="text-xl font-bold text-white mb-4">🎯 Progression vers les récompenses</h3>
           
-          <div class="space-y-3">
-            <% [5, 8, 12].each do |required| %>
-              <% progress = [(@total_badges.to_f / required * 100), 100].min %>
-              <div>
-                <div class="flex justify-between text-sm text-gray-300 mb-1">
-                  <span><%= required %> badges mixtes</span>
-                  <span><%= @total_badges %>/<%= required %></span>
+          <!-- Système dual en parallèle -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4">
+              <h4 class="text-lg font-bold text-white mb-3">🌈 Combinaisons Mixtes</h4>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center">
+                  <span class="text-purple-100 text-sm">5 badges mixtes</span>
+                  <span class="text-purple-100 text-sm"><%= @total_badges %>/5</span>
                 </div>
-                <div class="w-full bg-gray-600 rounded-full h-2">
-                  <div class="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full transition-all duration-300" 
-                       style="width: <%= progress %>%"></div>
+                <div class="w-full bg-purple-700 rounded-full h-2">
+                  <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 5 * 100), 100].min %>%"></div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                  <span class="text-purple-100 text-sm">8 badges mixtes</span>
+                  <span class="text-purple-100 text-sm"><%= @total_badges %>/8</span>
+                </div>
+                <div class="w-full bg-purple-700 rounded-full h-2">
+                  <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 8 * 100), 100].min %>%"></div>
+                </div>
+                
+                <div class="flex justify-between items-center">
+                  <span class="text-purple-100 text-sm">12 badges mixtes</span>
+                  <span class="text-purple-100 text-sm"><%= @total_badges %>/12</span>
+                </div>
+                <div class="w-full bg-purple-700 rounded-full h-2">
+                  <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 12 * 100), 100].min %>%"></div>
                 </div>
               </div>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Récompenses par niveau -->
-      <div class="mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">🏅 Par niveau de badge</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <!-- Bronze -->
-          <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Bronze</h4>
-            <div class="text-2xl font-bold text-white mb-2"><%= @bronze_count %></div>
-            <div class="text-sm text-gray-200">
-              <% if @bronze_count >= 3 %>
-                ✅ Challenge débloqué
-              <% else %>
-                <%= 3 - @bronze_count %> de plus pour Challenge
-              <% end %>
+            </div>
+
+            <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg p-4">
+              <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Badge</h4>
+              <div class="space-y-3">
+                <% ['competitor', 'engager', 'critic', 'challenger'].each do |badge_type| %>
+                  <% badge_count = current_user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count %>
+                  <div>
+                    <div class="flex justify-between items-center mb-1">
+                      <span class="text-blue-100 text-sm capitalize"><%= badge_type %></span>
+                      <span class="text-blue-100 text-sm"><%= badge_count %> badges</span>
+                    </div>
+                    <div class="w-full bg-blue-700 rounded-full h-2">
+                      <div class="bg-blue-300 h-2 rounded-full" style="width: <%= [(badge_count.to_f / 3 * 100), 100].min %>%"></div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
-          
-          <!-- Silver -->
-          <div class="bg-gradient-to-r from-gray-400 to-gray-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Silver</h4>
-            <div class="text-2xl font-bold text-white mb-2"><%= @silver_count %></div>
-            <div class="text-sm text-gray-200">
-              <% if @silver_count >= 2 %>
-                ✅ Exclusif débloqué
-              <% else %>
-                <%= 2 - @silver_count %> de plus pour Exclusif
-              <% end %>
-            </div>
-          </div>
-          
-          <!-- Gold -->
-          <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Gold</h4>
-            <div class="text-2xl font-bold text-white mb-2"><%= @gold_count %></div>
-            <div class="text-sm text-gray-200">
-              <% if @gold_count >= 1 %>
-                ✅ Premium débloqué
-              <% else %>
-                1 de plus pour Premium
-              <% end %>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Rainbow collection -->
-        <% if @bronze_count >= 1 && @silver_count >= 1 && @gold_count >= 1 %>
-          <div class="mt-4 bg-gradient-to-r from-red-500 via-yellow-500 to-purple-500 rounded-lg p-4 text-center">
-            <div class="text-2xl mb-2">🌈</div>
-            <h4 class="text-lg font-bold text-white mb-2">Collection Arc-en-ciel</h4>
-            <p class="text-white text-sm">Bronze + Silver + Gold = Récompense ultime !</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-    
-    <!-- Guide des récompenses -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-      <h2 class="text-2xl font-bold text-white mb-6">📖 Guide des récompenses</h2>
-      
-      <!-- Niveaux de récompenses -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">🎯</div>
-          <h3 class="text-xl font-bold text-white mb-2">Challenge (3 badges)</h3>
-          <p class="text-green-100 text-sm">
-            Collectez 3 badges du même type pour débloquer des défis spéciaux
-          </p>
-          <div class="mt-4 text-xs text-green-200">
-            <p>• Accès anticipé à des playlists</p>
-            <p>• Contenu exclusif podcast</p>
-            <p>• Coffres surprises mensuels</p>
-          </div>
-        </div>
 
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">⭐</div>
-          <h3 class="text-xl font-bold text-white mb-2">Exclusif (6 badges)</h3>
-          <p class="text-blue-100 text-sm">
-            Collectez 6 badges du même type pour accéder à du contenu exclusif
-          </p>
-          <div class="mt-4 text-xs text-blue-200">
-            <p>• Photos dédicacées</p>
-            <p>• Messages vidéo d'artistes</p>
-            <p>• Trophées digitaux animés</p>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">👑</div>
-          <h3 class="text-xl font-bold text-white mb-2">Premium (9 badges)</h3>
-          <p class="text-purple-100 text-sm">
-            Collectez 9 badges du même type pour débloquer des récompenses premium
-          </p>
-          <div class="mt-4 text-xs text-purple-200">
-            <p>• Invitations concerts virtuels</p>
-            <p>• Accès backstage virtuel</p>
-            <p>• Invitations VIP concerts</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Types de badges -->
-      <div>
-        <h3 class="text-xl font-bold text-white mb-4">Types de badges disponibles :</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Niveaux de badges -->
           <div class="bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Competitor</h4>
-            <p class="text-amber-100 text-sm">Badges basés sur les points gagnés et les performances compétitives</p>
-            <div class="mt-2 text-xs text-amber-200">
-              <p>• Coffres surprises mensuels</p>
-              <p>• Trophées digitaux animés</p>
-              <p>• Invitations VIP concerts</p>
-            </div>
-          </div>
-          
-          <div class="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Engager</h4>
-            <p class="text-blue-100 text-sm">Badges basés sur l'engagement (likes/dislikes) et la participation communautaire</p>
-            <div class="mt-2 text-xs text-blue-200">
-              <p>• Accès anticipé à des playlists</p>
-              <p>• Photos dédicacées</p>
-              <p>• Invitations concerts virtuels</p>
-            </div>
-          </div>
-          
-          <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Critic</h4>
-            <p class="text-red-100 text-sm">Badges basés sur les critiques et l'évaluation des contenus</p>
-            <div class="mt-2 text-xs text-red-200">
-              <p>• Accès à du contenu exclusif podcast</p>
-              <p>• Messages vidéo d'artistes</p>
-              <p>• Accès backstage virtuel</p>
-            </div>
-          </div>
-          
-          <div class="bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Challenger</h4>
-            <p class="text-purple-100 text-sm">Badges basés sur la performance globale et les défis accomplis</p>
-            <div class="mt-2 text-xs text-purple-200">
-              <p>• Invitations bêtas de contenus exclusifs</p>
-              <p>• Merch exclusif</p>
-              <p>• Accès backstage réel</p>
+            <h4 class="text-lg font-bold text-white mb-3">🏅 Par Niveau de Badge</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="text-center">
+                <div class="text-2xl mb-1">🥉</div>
+                <div class="text-amber-100 text-sm"><%= @bronze_count %>/3 Bronze</div>
+                <div class="w-full bg-amber-700 rounded-full h-2 mt-1">
+                  <div class="bg-amber-300 h-2 rounded-full" style="width: <%= [(@bronze_count.to_f / 3 * 100), 100].min %>%"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl mb-1">🥈</div>
+                <div class="text-amber-100 text-sm"><%= @silver_count %>/2 Silver</div>
+                <div class="w-full bg-amber-700 rounded-full h-2 mt-1">
+                  <div class="bg-amber-300 h-2 rounded-full" style="width: <%= [(@silver_count.to_f / 2 * 100), 100].min %>%"></div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl mb-1">🥇</div>
+                <div class="text-amber-100 text-sm"><%= @gold_count %>/1 Gold</div>
+                <div class="w-full bg-amber-700 rounded-full h-2 mt-1">
+                  <div class="bg-amber-300 h-2 rounded-full" style="width: <%= [(@gold_count.to_f / 1 * 100), 100].min %>%"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      <!-- Collection Arc-en-ciel -->
-      <div class="mt-8 bg-gradient-to-r from-red-500 via-yellow-500 to-purple-500 rounded-lg p-6 text-center">
-        <div class="text-4xl mb-4">🌈</div>
-        <h3 class="text-xl font-bold text-white mb-2">Collection Arc-en-ciel</h3>
-        <p class="text-white text-sm mb-4">
-          Collectez 1 Bronze + 1 Silver + 1 Gold pour débloquer la récompense ultime !
-        </p>
-        <div class="text-xs text-white/80">
-          <p>• Accès backstage réel</p>
-          <p>• Rencontre avec un artiste</p>
-          <p>• Merch exclusif premium</p>
-        </div>
-      </div>
-    </div>
+
+                 <!-- Guide simplifié -->
+         <div class="mb-8">
+           <h3 class="text-xl font-bold text-white mb-4">📖 Guide des récompenses</h3>
+           
+           <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6">
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+               <div>
+                 <h4 class="text-lg font-bold text-white mb-3">🌈 Combinaisons Mixtes</h4>
+                 <p class="text-gray-300 text-sm mb-3">Encourage la diversité des badges</p>
+                 <div class="space-y-2 text-sm text-gray-300">
+                   <p>• <strong>5 badges mixtes</strong> = Challenge Mixte</p>
+                   <p>• <strong>8 badges mixtes</strong> = Exclusif Mixte</p>
+                   <p>• <strong>12 badges mixtes</strong> = Premium Mixte</p>
+                 </div>
+               </div>
+
+               <div>
+                 <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Badge</h4>
+                 <p class="text-gray-300 text-sm mb-3">Encourage la spécialisation</p>
+                 <div class="space-y-2 text-sm text-gray-300">
+                   <p>• <strong>3 badges du même type</strong> = Challenge [Type]</p>
+                   <p>• <strong>6 badges du même type</strong> = Exclusif [Type]</p>
+                   <p>• <strong>9 badges du même type</strong> = Premium [Type]</p>
+                 </div>
+               </div>
+             </div>
+
+             <!-- Collection Arc-en-ciel -->
+             <div class="mt-6 pt-6 border-t border-gray-600 text-center">
+               <div class="text-2xl mb-2">🌈</div>
+               <h4 class="text-lg font-bold text-white mb-2">Collection Arc-en-ciel</h4>
+               <p class="text-gray-300 text-sm">
+                 Collectez 1 Bronze + 1 Silver + 1 Gold pour débloquer la récompense ultime !
+               </p>
+             </div>
+           </div>
+         </div>
+
+
   </div>
 </div>
 
