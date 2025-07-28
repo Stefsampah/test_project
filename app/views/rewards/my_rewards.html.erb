@@ -12,7 +12,7 @@
         </div>
         <h1 class="text-4xl font-bold text-white ml-4">🏆 Mes Récompenses</h1>
       </div>
-      <p class="text-gray-300 text-lg">Débloquez des récompenses exclusives en collectant des badges</p>
+      <p class="text-gray-300 text-lg">Débloquez des récompenses en combinant vos badges</p>
     </div>
 
     <!-- Navigation moderne -->
@@ -31,9 +31,36 @@
           class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
     </div>
 
+    <!-- Statistiques des badges -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total badges -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-center">
+        <div class="text-3xl font-bold text-white mb-2"><%= @total_badges %></div>
+        <div class="text-gray-200">Total Badges</div>
+      </div>
+      
+      <!-- Bronze -->
+      <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl p-6 text-center">
+        <div class="text-3xl font-bold text-white mb-2"><%= @bronze_count %></div>
+        <div class="text-gray-200">Bronze</div>
+      </div>
+      
+      <!-- Silver -->
+      <div class="bg-gradient-to-r from-gray-400 to-gray-600 rounded-xl p-6 text-center">
+        <div class="text-3xl font-bold text-white mb-2"><%= @silver_count %></div>
+        <div class="text-gray-200">Silver</div>
+      </div>
+      
+      <!-- Gold -->
+      <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-6 text-center">
+        <div class="text-3xl font-bold text-white mb-2"><%= @gold_count %></div>
+        <div class="text-gray-200">Gold</div>
+      </div>
+    </div>
+
     <!-- Mes récompenses débloquées -->
     <div class="mb-12">
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8">
+      <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-6 mb-8">
         <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
         
         <% if @unlocked_rewards.any? %>
@@ -42,7 +69,7 @@
               <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
                 <!-- Bannière avec image ou dégradé -->
                 <div class="h-48 relative">
-                  <div class="w-full h-full bg-gradient-to-r from-orange-500 to-pink-500 flex items-center justify-center">
+                  <div class="w-full h-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
                     <div class="text-white text-4xl">🏆</div>
                   </div>
                   <div class="absolute top-3 left-3">
@@ -58,11 +85,7 @@
                   <!-- Étiquettes -->
                   <div class="flex gap-2 mb-3">
                     <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
-                      <%= case reward.quantity_required
-                          when 3 then 'Challenge'
-                          when 5 then 'Exclusif'
-                          when 10 then 'Premium'
-                          end %>
+                      <%= reward.reward_type.humanize %>
                     </span>
                     <span class="bg-white text-black text-xs px-3 py-1 rounded-full">
                       <%= reward.badge_type.humanize %>
@@ -81,7 +104,7 @@
                   
                   <!-- Détails en bas -->
                   <div class="flex items-center justify-between pt-3 border-t border-gray-600 mt-auto">
-                    <span class="text-white text-sm">Niveau <%= reward.badge_type.humanize %></span>
+                    <span class="text-white text-sm"><%= reward.quantity_required %> badges</span>
                     <div class="text-center">
                       <div class="text-white font-bold"><%= reward.quantity_required * 100 %></div>
                       <div class="text-gray-400 text-xs">points</div>
@@ -98,134 +121,126 @@
           <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
             <div class="text-6xl mb-4">🎯</div>
             <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
-            <p class="text-gray-300">Collectez des badges pour débloquer vos premières récompenses !</p>
+            <p class="text-gray-400">Collectez des badges pour débloquer vos premières récompenses !</p>
           </div>
         <% end %>
       </div>
     </div>
 
-    <!-- Statistiques -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-      <h2 class="text-2xl font-bold text-white mb-4">📊 Mes statistiques</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <% @badge_counts.each do |badge_type, count| %>
-          <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
-            <div class="text-2xl font-bold text-white"><%= count %></div>
-            <div class="text-sm text-gray-200"><%= badge_type.humanize %></div>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Progression vers le prochain niveau -->
+    <!-- Progression vers les récompenses -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎯 Progression vers le prochain niveau</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">🎯 Progression vers les récompenses</h2>
       
-      <% Badge.distinct.pluck(:badge_type).each do |badge_type| %>
-        <% current_points = Reward.calculate_badge_points(current_user, badge_type) %>
-        <% next_level = Reward.next_reward_level(badge_type, current_points) %>
+      <!-- Récompenses par type de badge -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-white mb-4">📊 Par type de badge</h3>
+        <% Badge.distinct.pluck(:badge_type).each do |badge_type| %>
+          <% current_count = @badge_counts[badge_type] || 0 %>
+          <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4 mb-4">
+            <div class="flex items-center justify-between mb-3">
+              <h4 class="text-lg font-bold text-white"><%= badge_type.humanize %></h4>
+              <span class="text-xl font-bold text-blue-400"><%= current_count %> badges</span>
+            </div>
+            
+            <!-- Progression pour ce type -->
+            <div class="space-y-3">
+              <% [3, 6, 9].each do |required| %>
+                <% progress = [(current_count.to_f / required * 100), 100].min %>
+                <div>
+                  <div class="flex justify-between text-sm text-gray-300 mb-1">
+                    <span><%= required %> badges <%= badge_type.humanize %></span>
+                    <span><%= current_count %>/<%= required %></span>
+                  </div>
+                  <div class="w-full bg-gray-600 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
+                         style="width: <%= progress %>%"></div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Récompenses mixtes -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-white mb-4">🌈 Combinaisons mixtes</h3>
+        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <h4 class="text-lg font-bold text-white">Badges mixtes</h4>
+            <span class="text-xl font-bold text-purple-400"><%= @total_badges %> badges</span>
+          </div>
+          
+          <div class="space-y-3">
+            <% [5, 8, 12].each do |required| %>
+              <% progress = [(@total_badges.to_f / required * 100), 100].min %>
+              <div>
+                <div class="flex justify-between text-sm text-gray-300 mb-1">
+                  <span><%= required %> badges mixtes</span>
+                  <span><%= @total_badges %>/<%= required %></span>
+                </div>
+                <div class="w-full bg-gray-600 rounded-full h-2">
+                  <div class="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full transition-all duration-300" 
+                       style="width: <%= progress %>%"></div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Récompenses par niveau -->
+      <div class="mb-8">
+        <h3 class="text-xl font-bold text-white mb-4">🏅 Par niveau de badge</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Bronze -->
+          <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-lg p-4">
+            <h4 class="text-lg font-bold text-white mb-2">Bronze</h4>
+            <div class="text-2xl font-bold text-white mb-2"><%= @bronze_count %></div>
+            <div class="text-sm text-gray-200">
+              <% if @bronze_count >= 3 %>
+                ✅ Challenge débloqué
+              <% else %>
+                <%= 3 - @bronze_count %> de plus pour Challenge
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Silver -->
+          <div class="bg-gradient-to-r from-gray-400 to-gray-600 rounded-lg p-4">
+            <h4 class="text-lg font-bold text-white mb-2">Silver</h4>
+            <div class="text-2xl font-bold text-white mb-2"><%= @silver_count %></div>
+            <div class="text-sm text-gray-200">
+              <% if @silver_count >= 2 %>
+                ✅ Exclusif débloqué
+              <% else %>
+                <%= 2 - @silver_count %> de plus pour Exclusif
+              <% end %>
+            </div>
+          </div>
+          
+          <!-- Gold -->
+          <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4">
+            <h4 class="text-lg font-bold text-white mb-2">Gold</h4>
+            <div class="text-2xl font-bold text-white mb-2"><%= @gold_count %></div>
+            <div class="text-sm text-gray-200">
+              <% if @gold_count >= 1 %>
+                ✅ Premium débloqué
+              <% else %>
+                1 de plus pour Premium
+              <% end %>
+            </div>
+          </div>
+        </div>
         
-        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 mb-4">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-white"><%= badge_type.humanize %></h3>
-            <span class="text-2xl font-bold text-blue-400"><%= current_points %> pts</span>
+        <!-- Rainbow collection -->
+        <% if @bronze_count >= 1 && @silver_count >= 1 && @gold_count >= 1 %>
+          <div class="mt-4 bg-gradient-to-r from-red-500 via-yellow-500 to-purple-500 rounded-lg p-4 text-center">
+            <div class="text-2xl mb-2">🌈</div>
+            <h4 class="text-lg font-bold text-white mb-2">Collection Arc-en-ciel</h4>
+            <p class="text-white text-sm">Bronze + Silver + Gold = Récompense ultime !</p>
           </div>
-          
-          <% if next_level[:level] != 'max' %>
-            <div class="mb-4">
-              <div class="flex justify-between text-sm text-gray-300 mb-2">
-                <span>Prochain niveau : <%= next_level[:level].humanize %></span>
-                <span><%= current_points %>/<%= next_level[:required] %></span>
-              </div>
-              <div class="w-full bg-gray-600 rounded-full h-3">
-                <% progress = [(current_points.to_f / next_level[:required] * 100), 100].min %>
-                <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300" 
-                     style="width: <%= progress %>%"></div>
-              </div>
-              <p class="text-sm text-gray-400 mt-2">
-                Il vous manque <%= next_level[:remaining] %> point(s) pour débloquer <%= next_level[:level].humanize %>
-              </p>
-            </div>
-          <% else %>
-            <div class="text-center">
-              <p class="text-green-400 font-medium">🎉 Tous les niveaux débloqués !</p>
-              <p class="text-sm text-gray-400">Vous avez atteint le niveau maximum pour ce type de badge</p>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Guide des récompenses -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mt-8">
-      <h2 class="text-2xl font-bold text-white mb-6">📖 Guide des récompenses</h2>
-      
-      <!-- Niveaux de récompenses -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">🎯</div>
-          <h3 class="text-xl font-bold text-white mb-2">Challenge (3 points)</h3>
-          <p class="text-green-100 text-sm">
-            Collectez 3 points en badges du même type pour débloquer des défis spéciaux
-          </p>
-          <div class="mt-4 text-xs text-green-200">
-            <p>🥉 Bronze = 1 pt</p>
-            <p>🥈 Silver = 2 pts</p>
-            <p>🥇 Gold = 3 pts</p>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">⭐</div>
-          <h3 class="text-xl font-bold text-white mb-2">Exclusif (6 points)</h3>
-          <p class="text-blue-100 text-sm">
-            Collectez 6 points en badges du même type pour accéder à du contenu exclusif
-          </p>
-          <div class="mt-4 text-xs text-blue-200">
-            <p>🥉 Bronze = 1 pt</p>
-            <p>🥈 Silver = 2 pts</p>
-            <p>🥇 Gold = 3 pts</p>
-          </div>
-        </div>
-
-        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-6 text-center">
-          <div class="text-4xl mb-4">👑</div>
-          <h3 class="text-xl font-bold text-white mb-2">Premium (9 points)</h3>
-          <p class="text-purple-100 text-sm">
-            Collectez 9 points en badges du même type pour débloquer des récompenses premium
-          </p>
-          <div class="mt-4 text-xs text-purple-200">
-            <p>🥉 Bronze = 1 pt</p>
-            <p>🥈 Silver = 2 pts</p>
-            <p>🥇 Gold = 3 pts</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Types de badges -->
-      <div>
-        <h3 class="text-xl font-bold text-white mb-4">Types de badges disponibles :</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-gradient-to-r from-amber-500 to-orange-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Competitor</h4>
-            <p class="text-amber-100 text-sm">Badges basés sur les points gagnés et les performances compétitives</p>
-          </div>
-          
-          <div class="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Engager</h4>
-            <p class="text-blue-100 text-sm">Badges basés sur l'engagement (likes/dislikes) et la participation communautaire</p>
-          </div>
-          
-          <div class="bg-gradient-to-r from-red-500 to-pink-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Critic</h4>
-            <p class="text-red-100 text-sm">Badges basés sur les critiques et l'évaluation des contenus</p>
-          </div>
-          
-          <div class="bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-2">Challenger</h4>
-            <p class="text-purple-100 text-sm">Badges basés sur la performance globale et les défis accomplis</p>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
   </div>
