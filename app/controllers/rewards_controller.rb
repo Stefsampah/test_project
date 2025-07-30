@@ -49,38 +49,27 @@ class RewardsController < ApplicationController
   end
   
   def details
-    @badge_type = params[:badge_type]
+    @badge_type = params[:badge_type] || 'unified'
     @quantity = params[:quantity].to_i
-    @category = params[:category] || 'badge_type'
+    @category = 'unified'
     
-    # Calculer la progression selon la catégorie
-    case @category
-    when 'badge_type'
-      @current_count = current_user.user_badges.joins(:badge).where(badges: { badge_type: @badge_type }).count
-    when 'mixed'
-      @current_count = current_user.user_badges.count
-    when 'level'
-      @current_count = current_user.user_badges.joins(:badge).where(badges: { level: @badge_type }).count
-    when 'rainbow'
-      bronze = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
-      silver = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
-      gold = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
-      @current_count = [bronze, silver, gold].min
-    end
-    
+    # Calculer la progression pour le système unifié
+    @current_count = current_user.user_badges.count
     @progress = [(@current_count.to_f / @quantity * 100), 100].min
     
     # Générer les informations de la récompense
     @reward_type = case @quantity
-                   when 1, 3 then 'challenge'
-                   when 2, 6, 8 then 'exclusif'
-                   when 9, 12 then 'premium'
+                   when 3 then 'challenge'
+                   when 6 then 'exclusif'
+                   when 9 then 'premium'
+                   when 12 then 'ultime'
                    end
     
     @reward_name = case @quantity
-                   when 1, 3 then '🎯 Challenge'
-                   when 2, 6, 8 then '⭐ Exclusif'
-                   when 9, 12 then '👑 Premium'
+                   when 3 then '🎯 Challenge'
+                   when 6 then '⭐ Exclusif'
+                   when 9 then '👑 Premium'
+                   when 12 then '🏆 Ultime'
                    end
     
     @reward_description = generate_reward_description(@badge_type, @quantity, @reward_type, @category)
@@ -100,41 +89,15 @@ class RewardsController < ApplicationController
   private
   
   def generate_reward_description(badge_type, quantity, reward_type, category)
-    case category
-    when 'badge_type'
-      badge_type_name = badge_type.humanize
-      case reward_type
-      when 'challenge'
-        "Accès à une playlist exclusive #{badge_type_name}"
-      when 'exclusif'
-        "Accès à 3 playlists premium #{badge_type_name}"
-      when 'premium'
-        "Accès illimité à toutes les playlists #{badge_type_name}"
-      end
-    when 'mixed'
-      case reward_type
-      when 'challenge'
-        "Accès à une collection de playlists mixtes"
-      when 'exclusif'
-        "Accès à 3 collections de playlists mixtes premium"
-      when 'premium'
-        "Accès illimité à toutes les collections mixtes"
-      end
-    when 'level'
-      level_name = badge_type.humanize
-      case reward_type
-      when 'challenge'
-        "Accès à des playlists #{level_name} exclusives"
-      when 'exclusif'
-        "Accès à 3 playlists #{level_name} premium"
-      when 'premium'
-        "Accès illimité à toutes les playlists #{level_name}"
-      end
-    when 'rainbow'
-      case reward_type
-      when 'premium'
-        "Accès VIP à toutes les playlists + rencontre avec un artiste"
-      end
+    case reward_type
+    when 'challenge'
+      "Accès anticipé à des playlists + codes promo exclusifs"
+    when 'exclusif'
+      "Photos dédicacées d'artistes + contenu exclusif"
+    when 'premium'
+      "Rencontres avec des artistes + accès backstage virtuel"
+    when 'ultime'
+      "Rencontre privée avec un artiste + accès backstage réel"
     end
   end
 end 
