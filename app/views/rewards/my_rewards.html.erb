@@ -241,9 +241,44 @@
              <div class="mt-6 pt-6 border-t border-gray-600 text-center">
                <div class="text-2xl mb-2">🌈</div>
                <h4 class="text-lg font-bold text-white mb-2">Collection Arc-en-ciel</h4>
-               <p class="text-gray-300 text-sm">
+               <p class="text-gray-300 text-sm mb-3">
                  Collectez 1 Bronze + 1 Silver + 1 Gold pour débloquer la récompense ultime !
                </p>
+               <!-- Progression Arc-en-ciel -->
+               <div class="bg-gradient-to-r from-rainbow-500 to-rainbow-600 rounded-lg p-4">
+                 <div class="grid grid-cols-3 gap-4 text-center">
+                   <div>
+                     <div class="text-2xl mb-1">🥉</div>
+                     <div class="text-white text-sm"><%= @bronze_count %>/1 Bronze</div>
+                     <div class="w-full bg-white/20 rounded-full h-2 mt-1">
+                       <div class="bg-white h-2 rounded-full" style="width: <%= [(@bronze_count.to_f / 1 * 100), 100].min %>%"></div>
+                     </div>
+                   </div>
+                   <div>
+                     <div class="text-2xl mb-1">🥈</div>
+                     <div class="text-white text-sm"><%= @silver_count %>/1 Silver</div>
+                     <div class="w-full bg-white/20 rounded-full h-2 mt-1">
+                       <div class="bg-white h-2 rounded-full" style="width: <%= [(@silver_count.to_f / 1 * 100), 100].min %>%"></div>
+                     </div>
+                   </div>
+                   <div>
+                     <div class="text-2xl mb-1">🥇</div>
+                     <div class="text-white text-sm"><%= @gold_count %>/1 Gold</div>
+                     <div class="w-full bg-white/20 rounded-full h-2 mt-1">
+                       <div class="bg-white h-2 rounded-full" style="width: <%= [(@gold_count.to_f / 1 * 100), 100].min %>%"></div>
+                     </div>
+                   </div>
+                 </div>
+                 <% if @bronze_count >= 1 && @silver_count >= 1 && @gold_count >= 1 %>
+                   <div class="mt-3 text-center">
+                     <span class="bg-green-500 text-white text-sm px-3 py-1 rounded-full">🎉 Collection Arc-en-ciel débloquée !</span>
+                   </div>
+                 <% else %>
+                   <div class="mt-3 text-center">
+                     <span class="text-white/70 text-sm">⏳ Collection en cours...</span>
+                   </div>
+                 <% end %>
+               </div>
              </div>
            </div>
          </div>

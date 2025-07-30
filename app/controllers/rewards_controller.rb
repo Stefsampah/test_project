@@ -87,10 +87,14 @@ class RewardsController < ApplicationController
   end
   
   def unlock
-    # Vérifier et créer les récompenses pour l'utilisateur
-    Reward.check_and_create_rewards_for_user(current_user)
+    # Vérifier et créer les récompenses pour l'utilisateur avec notifications
+    new_rewards = RewardNotificationService.check_and_notify_rewards(current_user)
     
-    redirect_to my_rewards_path, notice: 'Récompenses vérifiées et mises à jour !'
+    if new_rewards.any?
+      redirect_to my_rewards_path, notice: "🎉 #{new_rewards.count} nouvelle(s) récompense(s) débloquée(s) !"
+    else
+      redirect_to my_rewards_path, notice: 'Récompenses vérifiées et mises à jour !'
+    end
   end
   
   private
