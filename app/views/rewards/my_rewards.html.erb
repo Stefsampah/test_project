@@ -163,7 +163,7 @@
             </div>
 
             <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg p-4">
-              <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Badge</h4>
+              <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Récompense</h4>
               <div class="space-y-3">
                 <% ['competitor', 'engager', 'critic', 'challenger'].each do |badge_type| %>
                   <% badge_count = current_user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count %>
@@ -227,7 +227,7 @@
                </div>
 
                <div>
-                 <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Badge</h4>
+                 <h4 class="text-lg font-bold text-white mb-3">🎯 Par Type de Récompense</h4>
                  <p class="text-gray-300 text-sm mb-3">Encourage la spécialisation</p>
                  <div class="space-y-2 text-sm text-gray-300">
                    <p>• <strong>3 badges du même type</strong> = Challenge [Type]</p>

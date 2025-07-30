@@ -12,7 +12,7 @@
         </div>
         <h1 class="text-4xl font-bold text-white ml-4">🏆 Toutes les Récompenses</h1>
       </div>
-      <p class="text-gray-300 text-lg">Découvrez tous les badges et leurs récompenses disponibles</p>
+      <p class="text-gray-300 text-lg">Découvrez tous les types de récompenses disponibles</p>
     </div>
 
     <!-- Navigation moderne -->
@@ -50,7 +50,7 @@
 
     <!-- Toutes les récompenses par type -->
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎯 Toutes les récompenses par type</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">🎯 Toutes les récompenses par type de récompense</h2>
       
       <% Badge.distinct.pluck(:badge_type).each do |badge_type| %>
         <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
@@ -178,23 +178,23 @@
       </div>
       
       <div class="mt-6 p-4 bg-white/5 rounded-lg">
-        <h3 class="text-lg font-bold text-white mb-2">Types de badges disponibles :</h3>
+        <h3 class="text-lg font-bold text-white mb-2">Types de récompenses disponibles :</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
             <span class="text-blue-400 font-semibold">Competitor :</span>
-            <span class="text-gray-300">Badges basés sur les points gagnés</span>
+            <span class="text-gray-300">Récompenses basées sur les points gagnés</span>
           </div>
           <div>
             <span class="text-green-400 font-semibold">Engager :</span>
-            <span class="text-gray-300">Badges basés sur l'engagement (likes/dislikes)</span>
+            <span class="text-gray-300">Récompenses basées sur l'engagement (likes/dislikes)</span>
           </div>
           <div>
             <span class="text-red-400 font-semibold">Critic :</span>
-            <span class="text-gray-300">Badges basés sur les critiques</span>
+            <span class="text-gray-300">Récompenses basées sur les critiques</span>
           </div>
           <div>
             <span class="text-purple-400 font-semibold">Challenger :</span>
-            <span class="text-gray-300">Badges basés sur la performance globale</span>
+            <span class="text-gray-300">Récompenses basées sur la performance globale</span>
           </div>
         </div>
       </div>

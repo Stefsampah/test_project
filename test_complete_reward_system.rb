@@ -63,6 +63,7 @@ User.all.each_with_index do |user, index|
     if badge
       user_badge = user.user_badges.find_or_create_by(badge: badge) do |ub|
         ub.earned_at = Time.current
+        ub.points_at_earned = user.points || 0
       end
       puts "  ✅ Badge #{badge.name} attribué"
     else

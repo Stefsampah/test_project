@@ -1,6 +1,5 @@
 class Reward < ApplicationRecord
   belongs_to :user
-  belongs_to :badge_type, class_name: 'Badge', foreign_key: 'badge_type', primary_key: 'badge_type'
   
   validates :badge_type, presence: true
   validates :quantity_required, presence: true, numericality: { greater_than: 0 }
