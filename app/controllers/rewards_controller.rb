@@ -85,6 +85,11 @@ class RewardsController < ApplicationController
       redirect_to my_rewards_path, notice: 'Récompenses vérifiées et mises à jour !'
     end
   end
+
+  def partners
+    # Page des partenaires et codes promo
+    render 'partners'
+  end
   
   private
   
