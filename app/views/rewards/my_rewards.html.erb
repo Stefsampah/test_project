@@ -37,10 +37,23 @@
           <span class="font-semibold"><%= @total_badges %></span> badges obtenus
         </div>
         <div class="text-sm text-gray-600">
-          <% if @next_level %>
+          <% if @next_level && @next_level != 'completed' %>
             Prochaine récompense : <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-600"><%= @next_level.humanize %></span>
           <% else %>
-            Toutes les récompenses débloquées !
+            <% 
+              # Vérifier si toutes les récompenses sont réellement débloquées
+              challenge_unlocked = @challenge_rewards.any?
+              exclusif_unlocked = @exclusif_rewards.any?
+              premium_unlocked = @premium_rewards.any?
+              ultime_unlocked = @ultime_rewards.any?
+              
+              all_unlocked = challenge_unlocked && exclusif_unlocked && premium_unlocked && ultime_unlocked
+            %>
+            <% if all_unlocked %>
+              Toutes les récompenses débloquées !
+            <% else %>
+              Continuez à collecter des badges !
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -60,153 +73,153 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     
     <!-- Challenge (3 badges) -->
-    <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg shadow-lg p-6">
+    <div class="bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-white">🥉 Challenge</h3>
-        <span class="text-white text-sm">3 badges</span>
+        <span class="text-gray-300 text-sm">3 badges</span>
       </div>
       
       <% if @challenge_rewards.any? %>
                  <% @challenge_rewards.each do |reward| %>
-           <div class="bg-white rounded-lg p-4 mb-3">
+           <div class="bg-gray-800/50 rounded-lg p-4 mb-3 border border-gray-600">
              <div class="flex items-center mb-2">
                <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center mr-3">
                  <span class="text-2xl">🎁</span>
                </div>
                <div>
-                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
-                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+                 <h4 class="font-semibold text-white">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-300">Contenu exclusif débloqué</p>
                </div>
              </div>
-             <div class="text-xs text-gray-500">
+             <div class="text-xs text-gray-400">
                Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
              </div>
            </div>
          <% end %>
       <% else %>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+        <div class="bg-gray-800/50 rounded-lg p-4 text-center border border-gray-600">
           <div class="text-4xl mb-2">🔒</div>
-          <p class="text-white text-sm">Débloqué avec 3 badges</p>
+          <p class="text-gray-300 text-sm">Débloqué avec 3 badges</p>
         </div>
       <% end %>
     </div>
 
     <!-- Exclusif (6 badges) -->
-    <div class="bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg shadow-lg p-6">
+    <div class="bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-white">🥈 Exclusif</h3>
-        <span class="text-white text-sm">6 badges</span>
+        <span class="text-gray-300 text-sm">6 badges</span>
       </div>
       
       <% if @exclusif_rewards.any? %>
                  <% @exclusif_rewards.each do |reward| %>
-           <div class="bg-white rounded-lg p-4 mb-3">
+           <div class="bg-gray-800/50 rounded-lg p-4 mb-3 border border-gray-600">
              <div class="flex items-center mb-2">
                <div class="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center mr-3">
                  <span class="text-2xl">🎁</span>
                </div>
                <div>
-                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
-                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+                 <h4 class="font-semibold text-white">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-300">Contenu exclusif débloqué</p>
                </div>
              </div>
-             <div class="text-xs text-gray-500">
+             <div class="text-xs text-gray-400">
                Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
              </div>
            </div>
          <% end %>
       <% else %>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+        <div class="bg-gray-800/50 rounded-lg p-4 text-center border border-gray-600">
           <div class="text-4xl mb-2">🔒</div>
-          <p class="text-white text-sm">Débloqué avec 6 badges</p>
+          <p class="text-gray-300 text-sm">Débloqué avec 6 badges</p>
         </div>
       <% end %>
     </div>
 
     <!-- Premium (9 badges) -->
-    <div class="bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg shadow-lg p-6">
+    <div class="bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-white">🥇 Premium</h3>
-        <span class="text-white text-sm">9 badges</span>
+        <span class="text-gray-300 text-sm">9 badges</span>
       </div>
       
       <% if @premium_rewards.any? %>
                  <% @premium_rewards.each do |reward| %>
-           <div class="bg-white rounded-lg p-4 mb-3">
+           <div class="bg-gray-800/50 rounded-lg p-4 mb-3 border border-gray-600">
              <div class="flex items-center mb-2">
                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mr-3">
                  <span class="text-2xl">🎁</span>
                </div>
                <div>
-                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
-                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+                 <h4 class="font-semibold text-white">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-300">Contenu exclusif débloqué</p>
                </div>
              </div>
-             <div class="text-xs text-gray-500">
+             <div class="text-xs text-gray-400">
                Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
              </div>
            </div>
          <% end %>
       <% else %>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+        <div class="bg-gray-800/50 rounded-lg p-4 text-center border border-gray-600">
           <div class="text-4xl mb-2">🔒</div>
-          <p class="text-white text-sm">Débloqué avec 9 badges</p>
+          <p class="text-gray-300 text-sm">Débloqué avec 9 badges</p>
         </div>
       <% end %>
     </div>
 
     <!-- Ultime (Collection Arc-en-ciel) -->
-    <div class="bg-gradient-to-br from-pink-400 to-purple-600 rounded-lg shadow-lg p-6">
+    <div class="bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-bold text-white">🌈 Ultime</h3>
-        <span class="text-white text-sm">1 Bronze + 1 Silver + 1 Gold</span>
+        <span class="text-gray-300 text-sm">1 Bronze + 1 Silver + 1 Gold</span>
       </div>
       
       <% if @ultime_rewards.any? %>
                  <% @ultime_rewards.each do |reward| %>
-           <div class="bg-white rounded-lg p-4 mb-3">
+           <div class="bg-gray-800/50 rounded-lg p-4 mb-3 border border-gray-600">
              <div class="flex items-center mb-2">
                <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-600 rounded-lg flex items-center justify-center mr-3">
                  <span class="text-2xl">🎁</span>
                </div>
                <div>
-                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
-                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+                 <h4 class="font-semibold text-white">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-300">Contenu exclusif débloqué</p>
                </div>
              </div>
-             <div class="text-xs text-gray-500">
+             <div class="text-xs text-gray-400">
                Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
              </div>
            </div>
          <% end %>
       <% else %>
-        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+        <div class="bg-gray-800/50 rounded-lg p-4 text-center border border-gray-600">
           <div class="text-4xl mb-2">🔒</div>
-          <p class="text-white text-sm">Collection Arc-en-ciel</p>
+          <p class="text-gray-300 text-sm">Collection Arc-en-ciel</p>
         </div>
       <% end %>
     </div>
   </div>
 
   <!-- Statistiques des badges -->
-  <div class="mt-8 bg-white rounded-lg shadow-md p-6">
-    <h2 class="text-xl font-semibold mb-4">📊 Statistiques des Badges</h2>
+  <div class="mt-8 bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
+    <h2 class="text-xl font-semibold mb-4 text-white">📊 Statistiques des Badges</h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       <div class="text-center">
-        <div class="text-2xl font-bold text-yellow-600"><%= @bronze_count %></div>
-        <div class="text-sm text-gray-600">Bronze</div>
+        <div class="text-2xl font-bold text-yellow-400"><%= @bronze_count %></div>
+        <div class="text-sm text-gray-300">Bronze</div>
       </div>
       <div class="text-center">
-        <div class="text-2xl font-bold text-gray-600"><%= @silver_count %></div>
-        <div class="text-sm text-gray-600">Silver</div>
+        <div class="text-2xl font-bold text-gray-400"><%= @silver_count %></div>
+        <div class="text-sm text-gray-300">Silver</div>
       </div>
       <div class="text-center">
-        <div class="text-2xl font-bold text-yellow-500"><%= @gold_count %></div>
-        <div class="text-sm text-gray-600">Gold</div>
+        <div class="text-2xl font-bold text-yellow-300"><%= @gold_count %></div>
+        <div class="text-sm text-gray-300">Gold</div>
       </div>
       <div class="text-center">
-        <div class="text-2xl font-bold text-purple-600"><%= @total_badges %></div>
-        <div class="text-sm text-gray-600">Total</div>
+        <div class="text-2xl font-bold text-purple-400"><%= @total_badges %></div>
+        <div class="text-sm text-gray-300">Total</div>
       </div>
     </div>
   </div>

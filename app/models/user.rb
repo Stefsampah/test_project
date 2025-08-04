@@ -205,11 +205,17 @@ class User < ApplicationRecord
   def next_digital_reward_level
     badge_count = user_badges.count
     
-    if badge_count >= 9
+    # Vérifier si toutes les récompenses sont débloquées
+    if has_reward_for_level?('challenge') && has_reward_for_level?('exclusif') && 
+       has_reward_for_level?('premium') && has_reward_for_level?('ultime')
+      'completed'
+    elsif badge_count >= 12 && !has_reward_for_level?('ultime')
+      'ultime'
+    elsif badge_count >= 9 && !has_reward_for_level?('premium')
       'premium'
-    elsif badge_count >= 6
+    elsif badge_count >= 6 && !has_reward_for_level?('exclusif')
       'exclusif'
-    elsif badge_count >= 3
+    elsif badge_count >= 3 && !has_reward_for_level?('challenge')
       'challenge'
     else
       nil
