@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :unlocked_playlists, through: :user_playlist_unlocks, source: :playlist
   
   has_many :rewards
+  has_many :digital_rewards
 
   after_save :assign_badges
   after_create :assign_badges
@@ -187,5 +188,63 @@ class User < ApplicationRecord
 
   def assign_badges
     BadgeService.assign_badges(self)
+    # Vérifier et débloquer les récompenses digitales après attribution des badges
+    DigitalReward.check_and_unlock_rewards(self)
+  end
+  
+  # Méthodes pour les récompenses digitales
+  def has_rainbow_collection?
+    # Vérifier si l'utilisateur a au moins 1 badge de chaque niveau
+    bronze_count = user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    silver_count = user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    gold_count = user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+    
+    bronze_count >= 1 && silver_count >= 1 && gold_count >= 1
+  end
+  
+  def digital_rewards_by_level(level)
+    digital_rewards.where(reward_level: level)
+  end
+  
+  def has_digital_reward_for_level?(level)
+    digital_rewards.where(reward_level: level).exists?
+  end
+  
+  def next_digital_reward_level
+    badge_count = user_badges.count
+    
+    if badge_count >= 9
+      'premium'
+    elsif badge_count >= 6
+      'exclusif'
+    elsif badge_count >= 3
+      'challenge'
+    else
+      nil
+    end
+  end
+  
+  def progress_to_next_digital_reward
+    badge_count = user_badges.count
+    
+    case next_digital_reward_level
+    when 'challenge'
+      [badge_count, 3]
+    when 'exclusif'
+      [badge_count, 6]
+    when 'premium'
+      [badge_count, 9]
+    else
+      [badge_count, 3]
+    end
+  end
+  
+  # Méthodes pour les récompenses (intégrées dans le système existant)
+  def rewards_by_level(level)
+    rewards.where(reward_type: level)
+  end
+  
+  def has_reward_for_level?(level)
+    rewards.where(reward_type: level).exists?
   end
 end

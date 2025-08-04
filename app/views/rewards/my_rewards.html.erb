@@ -25,227 +25,221 @@
       </div>
     </div>
 
-    <!-- Bouton pour vérifier les récompenses -->
-    <div class="text-center mb-8">
-      <%= link_to "Vérifier mes récompenses", unlock_rewards_path, method: :post, 
-          class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
-    </div>
-
-    <!-- Statistiques des badges -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total badges -->
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-center">
-        <div class="text-3xl font-bold text-white mb-2"><%= @total_badges %></div>
-        <div class="text-gray-200">Total Badges</div>
-      </div>
-      
-      <!-- Bronze -->
-      <div class="bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl p-6 text-center">
-        <div class="text-3xl font-bold text-white mb-2"><%= @bronze_count %></div>
-        <div class="text-gray-200">Bronze</div>
-      </div>
-      
-      <!-- Silver -->
-      <div class="bg-gradient-to-r from-gray-400 to-gray-600 rounded-xl p-6 text-center">
-        <div class="text-3xl font-bold text-white mb-2"><%= @silver_count %></div>
-        <div class="text-gray-200">Silver</div>
-      </div>
-      
-      <!-- Gold -->
-      <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl p-6 text-center">
-        <div class="text-3xl font-bold text-white mb-2"><%= @gold_count %></div>
-        <div class="text-gray-200">Gold</div>
-      </div>
-    </div>
-
-    <!-- Mes récompenses débloquées -->
-    <div class="mb-12">
-      <div class="bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl p-6 mb-8">
-        <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
-        
-        <% if @unlocked_rewards.any? %>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <% @unlocked_rewards.each do |reward| %>
-              <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
-                <!-- Bannière avec image ou dégradé -->
-                <div class="h-48 relative">
-                  <div class="w-full h-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
-                    <div class="text-white text-4xl">🏆</div>
-                  </div>
-                  <div class="absolute top-3 left-3">
-                    <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
-                  </div>
-                  <div class="absolute top-3 right-3">
-                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
-                  </div>
-                </div>
-                
-                <!-- Contenu de la carte -->
-                <div class="p-4 flex-1 flex flex-col">
-                  <!-- Étiquettes -->
-                  <div class="flex gap-2 mb-3">
-                    <span class="bg-blue-500 text-white text-xs px-3 py-1 rounded-full">
-                      <%= reward.reward_type.humanize %>
-                    </span>
-                    <span class="bg-white text-black text-xs px-3 py-1 rounded-full">
-                      <%= reward.badge_type.humanize %>
-                    </span>
-                  </div>
-                  
-                  <!-- Titre -->
-                  <h3 class="text-xl font-bold text-white mb-2">
-                    <%= reward.reward_type.humanize %> <%= reward.badge_type.humanize %>
-                  </h3>
-                  
-                  <!-- Description -->
-                  <p class="text-gray-300 text-sm mb-4 flex-grow">
-                    <%= reward.reward_description %>
-                  </p>
-                  
-                  <!-- Détails en bas -->
-                  <div class="flex items-center justify-between pt-3 border-t border-gray-600 mt-auto">
-                    <span class="text-white text-sm"><%= reward.quantity_required %> badges</span>
-                    <div class="text-center">
-                      <div class="text-white font-bold"><%= reward.quantity_required * 100 %></div>
-                      <div class="text-gray-400 text-xs">points</div>
-                    </div>
-                    <%= link_to reward_path(reward), class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
-                      Voir détails →
-                    <% end %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
-            <div class="text-6xl mb-4">🎯</div>
-            <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
-            <p class="text-gray-400">Collectez des badges pour débloquer vos premières récompenses !</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-        <!-- Progression vers les récompenses -->
-        <div class="mb-8">
-          <h3 class="text-xl font-bold text-white mb-4">🎯 Progression vers les récompenses</h3>
-          
-          <!-- Système unifié -->
-          <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4">
-            <h4 class="text-lg font-bold text-white mb-3">🏆 Récompenses Unifiées</h4>
-            <div class="space-y-3">
-              <div class="flex justify-between items-center">
-                <span class="text-purple-100 text-sm">3 badges - Challenge</span>
-                <span class="text-purple-100 text-sm"><%= @total_badges %>/3</span>
-              </div>
-              <div class="w-full bg-purple-700 rounded-full h-2">
-                <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 3 * 100), 100].min %>%"></div>
-              </div>
-              
-              <div class="flex justify-between items-center">
-                <span class="text-purple-100 text-sm">6 badges - Exclusif</span>
-                <span class="text-purple-100 text-sm"><%= @total_badges %>/6</span>
-              </div>
-              <div class="w-full bg-purple-700 rounded-full h-2">
-                <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 6 * 100), 100].min %>%"></div>
-              </div>
-              
-              <div class="flex justify-between items-center">
-                <span class="text-purple-100 text-sm">9 badges - Premium</span>
-                <span class="text-purple-100 text-sm"><%= @total_badges %>/9</span>
-              </div>
-              <div class="w-full bg-purple-700 rounded-full h-2">
-                <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 9 * 100), 100].min %>%"></div>
-              </div>
-              
-              <div class="flex justify-between items-center">
-                <span class="text-purple-100 text-sm">12 badges - Ultime</span>
-                <span class="text-purple-100 text-sm"><%= @total_badges %>/12</span>
-              </div>
-              <div class="w-full bg-purple-700 rounded-full h-2">
-                <div class="bg-purple-300 h-2 rounded-full" style="width: <%= [(@total_badges.to_f / 12 * 100), 100].min %>%"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Statistiques par type de badge -->
-          <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg p-4 mt-4">
-            <h4 class="text-lg font-bold text-white mb-3">📊 Vos Badges par Type</h4>
-            <div class="space-y-3">
-              <% ['competitor', 'engager', 'critic', 'challenger'].each do |badge_type| %>
-                <% badge_count = current_user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count %>
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-blue-100 text-sm capitalize"><%= badge_type %></span>
-                    <span class="text-blue-100 text-sm"><%= badge_count %> badges</span>
-                  </div>
-                  <div class="w-full bg-blue-700 rounded-full h-2">
-                    <div class="bg-blue-300 h-2 rounded-full" style="width: <%= [(badge_count.to_f / 3 * 100), 100].min %>%"></div>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
+    <div class="container mx-auto px-4 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-4">🎁 Mes Récompenses</h1>
+    
+    <!-- Progression vers la prochaine récompense -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4">📊 Progression</h2>
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-sm text-gray-600">
+          <span class="font-semibold"><%= @total_badges %></span> badges obtenus
         </div>
+        <div class="text-sm text-gray-600">
+          <% if @next_level %>
+            Prochaine récompense : <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-600"><%= @next_level.humanize %></span>
+          <% else %>
+            Toutes les récompenses débloquées !
+          <% end %>
+        </div>
+      </div>
+      
+      <% if @next_level %>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full" style="width: <%= (@progress[0].to_f / @progress[1] * 100).round %>%"></div>
+        </div>
+        <div class="text-xs text-gray-500 mt-2">
+          <%= @progress[0] %> / <%= @progress[1] %> badges
+        </div>
+      <% end %>
+    </div>
+  </div>
 
-                 <!-- Guide simplifié -->
-         <div class="mb-8">
-           <h3 class="text-xl font-bold text-white mb-4">📖 Guide des récompenses</h3>
-           
-           <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6">
-             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-               <div>
-                 <h4 class="text-lg font-bold text-white mb-3">🎯 Système Unifié</h4>
-                 <p class="text-gray-300 text-sm mb-3">Récompenses basées sur le total de badges</p>
-                 <div class="space-y-2 text-sm text-gray-300">
-                   <p>• <strong>3 badges</strong> = Challenge (Accès anticipé + Codes promo)</p>
-                   <p>• <strong>6 badges</strong> = Exclusif (Photos dédicacées + Contenu exclusif)</p>
-                   <p>• <strong>9 badges</strong> = Premium (Rencontres artistes + Backstage virtuel)</p>
-                   <p>• <strong>12 badges</strong> = Ultime (Rencontre privée + Backstage réel)</p>
-                 </div>
+  <!-- Récompenses par niveau -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    <!-- Challenge (3 badges) -->
+    <div class="bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg shadow-lg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-white">🥉 Challenge</h3>
+        <span class="text-white text-sm">3 badges</span>
+      </div>
+      
+      <% if @challenge_rewards.any? %>
+                 <% @challenge_rewards.each do |reward| %>
+           <div class="bg-white rounded-lg p-4 mb-3">
+             <div class="flex items-center mb-2">
+               <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center mr-3">
+                 <span class="text-2xl">🎁</span>
                </div>
-
                <div>
-                 <h4 class="text-lg font-bold text-white mb-3">🎮 Comment Progresser</h4>
-                 <p class="text-gray-300 text-sm mb-3">Collectez des badges pour débloquer des récompenses</p>
-                 <div class="space-y-2 text-sm text-gray-300">
-                   <p>• <strong>Jouez aux playlists</strong> pour gagner des badges</p>
-                   <p>• <strong>Engagez-vous</strong> avec les contenus</p>
-                   <p>• <strong>Donnez votre avis</strong> sur les musiques</p>
-                   <p>• <strong>Défiez-vous</strong> pour atteindre l'excellence</p>
-                 </div>
+                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
                </div>
              </div>
+             <div class="text-xs text-gray-500">
+               Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
+             </div>
            </div>
-         </div>
+         <% end %>
+      <% else %>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+          <div class="text-4xl mb-2">🔒</div>
+          <p class="text-white text-sm">Débloqué avec 3 badges</p>
+        </div>
+      <% end %>
+    </div>
 
+    <!-- Exclusif (6 badges) -->
+    <div class="bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg shadow-lg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-white">🥈 Exclusif</h3>
+        <span class="text-white text-sm">6 badges</span>
+      </div>
+      
+      <% if @exclusif_rewards.any? %>
+                 <% @exclusif_rewards.each do |reward| %>
+           <div class="bg-white rounded-lg p-4 mb-3">
+             <div class="flex items-center mb-2">
+               <div class="w-12 h-12 bg-gradient-to-br from-gray-400 to-gray-600 rounded-lg flex items-center justify-center mr-3">
+                 <span class="text-2xl">🎁</span>
+               </div>
+               <div>
+                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+               </div>
+             </div>
+             <div class="text-xs text-gray-500">
+               Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
+             </div>
+           </div>
+         <% end %>
+      <% else %>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+          <div class="text-4xl mb-2">🔒</div>
+          <p class="text-white text-sm">Débloqué avec 6 badges</p>
+        </div>
+      <% end %>
+    </div>
 
+    <!-- Premium (9 badges) -->
+    <div class="bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg shadow-lg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-white">🥇 Premium</h3>
+        <span class="text-white text-sm">9 badges</span>
+      </div>
+      
+      <% if @premium_rewards.any? %>
+                 <% @premium_rewards.each do |reward| %>
+           <div class="bg-white rounded-lg p-4 mb-3">
+             <div class="flex items-center mb-2">
+               <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mr-3">
+                 <span class="text-2xl">🎁</span>
+               </div>
+               <div>
+                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+               </div>
+             </div>
+             <div class="text-xs text-gray-500">
+               Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
+             </div>
+           </div>
+         <% end %>
+      <% else %>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+          <div class="text-4xl mb-2">🔒</div>
+          <p class="text-white text-sm">Débloqué avec 9 badges</p>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Ultime (Collection Arc-en-ciel) -->
+    <div class="bg-gradient-to-br from-pink-400 to-purple-600 rounded-lg shadow-lg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl font-bold text-white">🌈 Ultime</h3>
+        <span class="text-white text-sm">1 Bronze + 1 Silver + 1 Gold</span>
+      </div>
+      
+      <% if @ultime_rewards.any? %>
+                 <% @ultime_rewards.each do |reward| %>
+           <div class="bg-white rounded-lg p-4 mb-3">
+             <div class="flex items-center mb-2">
+               <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-purple-600 rounded-lg flex items-center justify-center mr-3">
+                 <span class="text-2xl">🎁</span>
+               </div>
+               <div>
+                 <h4 class="font-semibold text-gray-900">Récompense Surprise</h4>
+                 <p class="text-sm text-gray-600">Contenu exclusif débloqué</p>
+               </div>
+             </div>
+             <div class="text-xs text-gray-500">
+               Débloqué le <%= reward.unlocked_at&.strftime("%d/%m/%Y") %>
+             </div>
+           </div>
+         <% end %>
+      <% else %>
+        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+          <div class="text-4xl mb-2">🔒</div>
+          <p class="text-white text-sm">Collection Arc-en-ciel</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Statistiques des badges -->
+  <div class="mt-8 bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold mb-4">📊 Statistiques des Badges</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="text-center">
+        <div class="text-2xl font-bold text-yellow-600"><%= @bronze_count %></div>
+        <div class="text-sm text-gray-600">Bronze</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-gray-600"><%= @silver_count %></div>
+        <div class="text-sm text-gray-600">Silver</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-yellow-500"><%= @gold_count %></div>
+        <div class="text-sm text-gray-600">Gold</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl font-bold text-purple-600"><%= @total_badges %></div>
+        <div class="text-sm text-gray-600">Total</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton pour vérifier les nouvelles récompenses -->
+  <div class="mt-6 text-center">
+    <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200" %>
   </div>
 </div>
 
-<style>
-  .reward-card {
-    border: 2px solid transparent;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
+<script>
+// Animation pour les nouvelles récompenses
+document.addEventListener('DOMContentLoaded', function() {
+  const rewards = document.querySelectorAll('.bg-white.rounded-lg');
   
-  .reward-card:hover {
-    border-color: #8b5cf6;
-    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.1), 0 10px 10px -5px rgba(139, 92, 246, 0.04);
-    transform: translateY(-5px);
+  rewards.forEach((reward, index) => {
+    reward.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
+  });
+});
+
+// CSS pour l'animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-</style> 
+`;
+document.head.appendChild(style);
+</script> 

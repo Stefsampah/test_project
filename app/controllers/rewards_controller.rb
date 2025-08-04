@@ -7,12 +7,15 @@ class RewardsController < ApplicationController
   
   def my_rewards
     # Récupérer toutes les récompenses de l'utilisateur
-    @rewards = current_user.rewards.includes(:badge_type).order(:badge_type, :quantity_required)
+    @rewards = current_user.rewards.includes(:badge_type).order(:created_at, :desc)
     @unlocked_rewards = @rewards.unlocked
     @locked_rewards = @rewards.where(unlocked: false)
     
-    # Grouper par type de badge pour l'affichage
-    @rewards_by_type = @rewards.group_by(&:badge_type)
+    # Grouper par niveau de récompense pour l'affichage
+    @challenge_rewards = @rewards.where(reward_type: 'challenge')
+    @exclusif_rewards = @rewards.where(reward_type: 'exclusif')
+    @premium_rewards = @rewards.where(reward_type: 'premium')
+    @ultime_rewards = @rewards.where(reward_type: 'ultime')
     
     # Statistiques des badges par type
     @badge_counts = {}
@@ -25,6 +28,10 @@ class RewardsController < ApplicationController
     @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
     @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
     @total_badges = current_user.user_badges.count
+    
+    # Progression vers la prochaine récompense
+    @progress = current_user.progress_to_next_digital_reward
+    @next_level = current_user.next_digital_reward_level
   end
   
   def all_rewards
