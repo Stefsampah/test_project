@@ -184,14 +184,6 @@ class User < ApplicationRecord
     next_badges
   end
 
-  private
-
-  def assign_badges
-    BadgeService.assign_badges(self)
-    # Vérifier et débloquer les récompenses digitales après attribution des badges
-    DigitalReward.check_and_unlock_rewards(self)
-  end
-  
   # Méthodes pour les récompenses digitales
   def has_rainbow_collection?
     # Vérifier si l'utilisateur a au moins 1 badge de chaque niveau
@@ -246,5 +238,13 @@ class User < ApplicationRecord
   
   def has_reward_for_level?(level)
     rewards.where(reward_type: level).exists?
+  end
+
+  private
+
+  def assign_badges
+    BadgeService.assign_badges(self)
+    # Vérifier et débloquer les récompenses digitales après attribution des badges
+    Reward.check_and_create_rewards_for_user(self)
   end
 end

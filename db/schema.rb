@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_24_124535) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_24_133823) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -100,6 +100,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_124535) do
     t.datetime "unlocked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "content_type"
+    t.string "icon"
+    t.boolean "claimed", default: false
+    t.datetime "claimed_at"
+    t.index ["claimed"], name: "index_rewards_on_claimed"
+    t.index ["content_type"], name: "index_rewards_on_content_type"
     t.index ["user_id", "badge_type", "quantity_required"], name: "index_rewards_on_user_badge_quantity", unique: true
     t.index ["user_id"], name: "index_rewards_on_user_id"
   end
@@ -138,6 +144,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_24_124535) do
     t.boolean "reward_claimed", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "claimed_at"
     t.index ["badge_id"], name: "index_user_badges_on_badge_id"
     t.index ["user_id", "badge_id"], name: "index_user_badges_on_user_id_and_badge_id", unique: true
     t.index ["user_id"], name: "index_user_badges_on_user_id"

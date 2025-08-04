@@ -102,11 +102,11 @@
                         end %>
                   </div>
                   <div class="text-xs text-gray-400">
-                    <%= case quantity
-                        when 3 then 'Accès anticipé + Codes promo'
-                        when 6 then 'Photos dédicacées + Contenu exclusif'
-                        when 9 then 'Rencontres artistes + Backstage virtuel'
-                        when 12 then 'Rencontre privée + Backstage réel'
+                    <%= case reward_info[:quantity]
+                        when 3 then 'Récompense Surprise'
+                        when 6 then 'Récompense Surprise'
+                        when 9 then 'Récompense Surprise'
+                        when 12 then 'Récompense Surprise'
                         end %>
                   </div>
                 </div>
@@ -115,7 +115,7 @@
                 <div class="mb-4">
                   <div class="flex justify-between text-xs text-gray-400 mb-2">
                     <span>Progression</span>
-                    <span><%= current_count %>/<%= quantity %></span>
+                    <span><%= current_count %>/<%= reward_info[:quantity] %></span>
                   </div>
                   <div class="w-full bg-gray-600 rounded-full h-2">
                     <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
@@ -126,17 +126,17 @@
                 <!-- Statut et lien détails -->
                 <div class="flex items-center justify-between">
                   <div class="text-center">
-                    <% if current_count >= quantity %>
+                    <% if current_count >= reward_info[:quantity] %>
                       <div class="text-green-400 text-sm font-medium">
                         ✅ Prêt à débloquer !
                       </div>
                     <% else %>
                       <div class="text-gray-500 text-sm">
-                        🔒 Il manque <%= quantity - current_count %> badge(s)
+                        🔒 Il manque <%= reward_info[:quantity] - current_count %> badge(s)
                       </div>
                     <% end %>
                   </div>
-                  <%= link_to reward_details_path(badge_type: 'unified', quantity: quantity), 
+                  <%= link_to reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity]), 
                       class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
                     Détails →
                   <% end %>
