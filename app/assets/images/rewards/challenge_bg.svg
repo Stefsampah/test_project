@@ -1,0 +1,32 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <radialGradient id="challengeGradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:0.8"/>
+      <stop offset="50%" style="stop-color:#f59e0b;stop-opacity:0.6"/>
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:0.4"/>
+    </radialGradient>
+  </defs>
+  
+  <!-- Fond principal -->
+  <rect width="400" height="300" fill="url(#challengeGradient)" filter="url(#blur)"/>
+  
+  <!-- Éléments musicaux floutés -->
+  <g filter="url(#blur)" opacity="0.7">
+    <!-- Notes de musique -->
+    <circle cx="100" cy="80" r="15" fill="#fbbf24"/>
+    <circle cx="300" cy="120" r="12" fill="#f59e0b"/>
+    <circle cx="80" cy="200" r="18" fill="#d97706"/>
+    
+    <!-- Ondes sonores -->
+    <path d="M 50 150 Q 100 120, 150 150 Q 200 180, 250 150" stroke="#fbbf24" stroke-width="3" fill="none" opacity="0.6"/>
+    <path d="M 150 100 Q 200 70, 250 100 Q 300 130, 350 100" stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.5"/>
+    
+    <!-- Éléments de playlist -->
+    <rect x="320" y="60" width="60" height="8" rx="4" fill="#fbbf24" opacity="0.8"/>
+    <rect x="320" y="80" width="40" height="8" rx="4" fill="#f59e0b" opacity="0.6"/>
+    <rect x="320" y="100" width="50" height="8" rx="4" fill="#d97706" opacity="0.7"/>
+  </g>
+</svg> 
