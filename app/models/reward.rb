@@ -29,7 +29,9 @@ class Reward < ApplicationRecord
     concert_footage: 'concert_footage',
     personal_voice_message: 'personal_voice_message',
     dedicated_photo: 'dedicated_photo',
-    concert_invitation: 'concert_invitation'
+    concert_invitation: 'concert_invitation',
+    challenge_reward_playlist_1: 'challenge_reward_playlist_1',
+    challenge_reward_playlist_2: 'challenge_reward_playlist_2'
   }
   
   scope :by_badge_type, ->(badge_type) { where(badge_type: badge_type) }
@@ -79,7 +81,9 @@ class Reward < ApplicationRecord
       [
         { content_type: 'playlist_exclusive', name: 'Playlist Exclusive', description: 'Playlist créée par un artiste partenaire', icon: '🎵' },
         { content_type: 'playlist_acoustic', name: 'Playlist Acoustique', description: 'Versions acoustiques des morceaux', icon: '🎤' },
-        { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
+        { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' },
+        { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
       ]
     when 'exclusif'
       [
@@ -114,7 +118,9 @@ class Reward < ApplicationRecord
         [
           { content_type: 'playlist_exclusive', name: 'Playlist Exclusive', description: 'Playlist créée par un artiste partenaire', icon: '🎵' },
           { content_type: 'playlist_acoustic', name: 'Playlist Acoustique', description: 'Versions acoustiques des morceaux', icon: '🎤' },
-          { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
+          { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' },
+          { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
         ]
       when 'exclusif'
         [
@@ -144,7 +150,7 @@ class Reward < ApplicationRecord
     selected_reward = available_rewards.sample
     
     # Créer la récompense
-    create!(
+    reward = create!(
       user: user,
       reward_type: level,
       content_type: selected_reward[:content_type],
@@ -159,6 +165,29 @@ class Reward < ApplicationRecord
       unlocked: true,
       unlocked_at: Time.current
     )
+    
+    # Débloquer automatiquement les playlists challenge si nécessaire
+    unlock_challenge_playlists(user, selected_reward[:content_type]) if level == 'challenge'
+    
+    reward
+  end
+  
+  # Débloquer les playlists challenge selon la récompense obtenue
+  def self.unlock_challenge_playlists(user, content_type)
+    case content_type
+    when 'challenge_reward_playlist_1'
+      playlist = Playlist.find_by(title: 'Challenge Reward Playlist 1')
+      if playlist
+        UserPlaylistUnlock.find_or_create_by!(user: user, playlist: playlist)
+        puts "🎵 Challenge Reward Playlist 1 débloquée pour #{user.email}"
+      end
+    when 'challenge_reward_playlist_2'
+      playlist = Playlist.find_by(title: 'Challenge Reward Playlist 2')
+      if playlist
+        UserPlaylistUnlock.find_or_create_by!(user: user, playlist: playlist)
+        puts "🎵 Challenge Reward Playlist 2 débloquée pour #{user.email}"
+      end
+    end
   end
   
   # Récompenses unifiées basées sur le total de badges
@@ -254,6 +283,8 @@ class Reward < ApplicationRecord
       '🎪'
     when 'personal_voice_message'
       '🎤'
+    when 'challenge_reward_playlist_1', 'challenge_reward_playlist_2'
+      '🏆'
     else
       '🎁'
     end

@@ -116,7 +116,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     { "title": "Quavo, Lil Baby - Ice Cold", "youtube_id": "4cCzuTQ49V8" },
     { "title": "Skillibeng - Crocodile Teeth", "youtube_id": "m7vsOSIz4ds" },
     { "title": "Didi B - En Haut", "youtube_id": "e0K3OjNHTtA" },
-    { "title": "Toosii - Favorite Song", "youtube_id": "4D89Qr5vH6U" },
+    { "title:": "Toosii - Favorite Song", "youtube_id": "4D89Qr5vH6U" },
     { "title": "YE - Hurricane", "youtube_id": "VRJiK-kdDb4" },
     { "title": "Didi B - Rockstxr", "youtube_id": "YeCRoOnr5vU" }
   ]
@@ -737,3 +737,74 @@ end
 
 # Note: Les badges sont maintenant attribués naturellement via BadgeService
 # Pas de badges forcés pour maintenir la cohérence du gameplay
+
+# Challenge Reward Playlist 1
+challenge_reward_playlist_1 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 1') do |playlist|
+  playlist.description = 'Playlist exclusive débloquée via les récompenses challenge.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+end
+
+challenge_reward_videos_1 = [
+  { title: 'Help Me Find My Drawls · Tonio Armani', youtube_id: 'Qzq45Z95Ass' },
+  { title: 'Joy · Snoop Dogg', youtube_id: 'bQrs57Uc7eY' },
+  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: '7vHA5lqrMMI' },
+  { title: 'Funk Pop Type Beat, Funky Type Beat ("feels") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
+  { title: 'Rapid Fire · Cruel Santino', youtube_id: '40mssPDJodE' },
+  { title: 'White Noise · Joyner Lucas', youtube_id: 'cMPzYnVD0ng' },
+  { title: 'Fuego · Manu Crooks · Anfa Rose', youtube_id: 'u7i9oCgsukE' },
+  { title: 'Mary Jane (All Night Long) · Mary J. Blige', youtube_id: 'XWP9LWeE0-I' },
+  { title: 'Cowgirl Trailride (feat. Tonio Armani) S Dott', youtube_id: '33TIBfNR_bM' },
+  { title: 'Go Anywhere · Sally Green', youtube_id: '2OMK7sQd-Qk' }
+]
+
+challenge_reward_videos_1.each do |video|
+  challenge_reward_playlist_1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist 2
+challenge_reward_playlist_2 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 2') do |playlist|
+  playlist.description = 'Deuxième playlist exclusive débloquée via les récompenses challenge.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+end
+
+challenge_reward_videos_2 = [
+  { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
+  { title: 'Didi B - Big Boss', youtube_id: '_PKbI32lsN8' },
+  { title: 'POPCAAN - Firm and Strong', youtube_id: '0rEBT_Ge3sc' },
+  { title: 'HIMRA - Freestyle Drill Ivoire #5', youtube_id: 'GyIDTBHEOAQ' },
+  { title: 'Travis Scott - Stargazing', youtube_id: '2a8PgqWrc_4' },
+  { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: '4cCzuTQ49V8' },
+  { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'm7vsOSIz4ds' },
+  { title: 'Didi B - En Haut', youtube_id: 'e0K3OjNHTtA' },
+  { title: 'Toosii - Favorite Song', youtube_id: '4D89Qr5vH6U' },
+  { title: 'YE - Hurricane', youtube_id: 'VRJiK-kdDb4' }
+]
+
+challenge_reward_videos_2.each do |video|
+  challenge_reward_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Créer les liaisons entre badges et playlists de récompenses challenge
+# Le badge "Bronze Challenger" débloque la "Challenge Reward Playlist 1"
+bronze_challenger_badge = Badge.find_by(badge_type: 'challenger', level: 'bronze')
+if bronze_challenger_badge && challenge_reward_playlist_1
+  BadgePlaylistUnlock.find_or_create_by!(badge: bronze_challenger_badge, playlist: challenge_reward_playlist_1)
+end
+
+# Le badge "Silver Challenger" débloque la "Challenge Reward Playlist 2"
+silver_challenger_badge = Badge.find_by(badge_type: 'challenger', level: 'silver')
+if silver_challenger_badge && challenge_reward_playlist_2
+  BadgePlaylistUnlock.find_or_create_by!(badge: silver_challenger_badge, playlist: challenge_reward_playlist_2)
+end
+
+# Note: Les Challenge Reward Playlists sont maintenant gérées par le système de récompenses aléatoires
+# Elles seront débloquées de manière aléatoire quand un utilisateur atteint 3 badges (niveau Challenge)
+# et ne seront jamais la même 2 fois de suite grâce au système anti-répétition
