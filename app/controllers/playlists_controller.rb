@@ -2,10 +2,10 @@ class PlaylistsController < ApplicationController
   before_action :authenticate_user!, except: [:index]
 
   def index
-    # Récupérer toutes les playlists et les trier
-    @standard_playlists = Playlist.where(premium: [false, nil]).order(:id)
-    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil]).order(:id)
-    @exclusive_playlists = Playlist.where(exclusive: true).order(:id)
+    # Récupérer toutes les playlists et les trier (exclure les playlists cachées)
+    @standard_playlists = Playlist.where(premium: [false, nil], hidden: [false, nil]).order(:id)
+    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil], hidden: [false, nil]).order(:id)
+    @exclusive_playlists = Playlist.where(exclusive: true, hidden: [false, nil]).order(:id)
     @unlocked_playlists = []
     @unlocked_exclusive_playlists = []
     
@@ -75,6 +75,12 @@ class PlaylistsController < ApplicationController
 
   def show
     @playlist = Playlist.find(params[:id])
+    
+    # Empêcher l'accès aux playlists cachées
+    if @playlist.hidden?
+      redirect_to playlists_path, alert: "Cette playlist n'est pas accessible."
+      return
+    end
     
     # Vérifier si l'utilisateur a accès à cette playlist premium
     if @playlist.premium? && user_signed_in?

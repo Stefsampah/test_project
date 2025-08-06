@@ -744,6 +744,7 @@ challenge_reward_playlist_1 = Playlist.find_or_create_by!(title: 'Challenge Rewa
   playlist.genre = 'Challenge'
   playlist.premium = true
   playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
 end
 
 challenge_reward_videos_1 = [
@@ -771,6 +772,7 @@ challenge_reward_playlist_2 = Playlist.find_or_create_by!(title: 'Challenge Rewa
   playlist.genre = 'Challenge'
   playlist.premium = true
   playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
 end
 
 challenge_reward_videos_2 = [
@@ -792,19 +794,8 @@ challenge_reward_videos_2.each do |video|
   end
 end
 
-# Créer les liaisons entre badges et playlists de récompenses challenge
-# Le badge "Bronze Challenger" débloque la "Challenge Reward Playlist 1"
-bronze_challenger_badge = Badge.find_by(badge_type: 'challenger', level: 'bronze')
-if bronze_challenger_badge && challenge_reward_playlist_1
-  BadgePlaylistUnlock.find_or_create_by!(badge: bronze_challenger_badge, playlist: challenge_reward_playlist_1)
-end
-
-# Le badge "Silver Challenger" débloque la "Challenge Reward Playlist 2"
-silver_challenger_badge = Badge.find_by(badge_type: 'challenger', level: 'silver')
-if silver_challenger_badge && challenge_reward_playlist_2
-  BadgePlaylistUnlock.find_or_create_by!(badge: silver_challenger_badge, playlist: challenge_reward_playlist_2)
-end
-
-# Note: Les Challenge Reward Playlists sont maintenant gérées par le système de récompenses aléatoires
-# Elles seront débloquées de manière aléatoire quand un utilisateur atteint 3 badges (niveau Challenge)
-# et ne seront jamais la même 2 fois de suite grâce au système anti-répétition
+# Note: Les Challenge Reward Playlists sont maintenant gérées uniquement comme des récompenses
+# Elles n'apparaissent pas dans la page des playlists du jeu, mais uniquement dans :
+# - Les récompenses de l'utilisateur
+# - Le profil de l'utilisateur
+# - Le système de récompenses aléatoires (3 badges = Challenge)

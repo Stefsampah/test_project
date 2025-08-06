@@ -246,6 +246,16 @@ class User < ApplicationRecord
     rewards.where(reward_type: level).exists?
   end
 
+  # Récupérer les playlists challenge débloquées via les récompenses
+  def challenge_playlists
+    Reward.challenge_playlists_for_user(self)
+  end
+  
+  # Vérifier si l'utilisateur a une récompense challenge spécifique
+  def has_challenge_reward?(content_type)
+    rewards.exists?(content_type: content_type)
+  end
+
   private
 
   def assign_badges
