@@ -766,9 +766,9 @@ challenge_reward_videos_1.each do |video|
   end
 end
 
-# Challenge Reward Playlist 2
+# Challenge Reward Playlist 2 - Artistes similaires à ceux de la Playlist 1
 challenge_reward_playlist_2 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 2') do |playlist|
-  playlist.description = 'Deuxième playlist exclusive débloquée via les récompenses challenge.'
+  playlist.description = 'Deuxième playlist exclusive débloquée via les récompenses challenge - Artistes similaires.'
   playlist.genre = 'Challenge'
   playlist.premium = true
   playlist.exclusive = true
@@ -776,16 +776,26 @@ challenge_reward_playlist_2 = Playlist.find_or_create_by!(title: 'Challenge Rewa
 end
 
 challenge_reward_videos_2 = [
+  # Similaire à Tonio Armani (Hip Hop/Rap) - Artiste différent
   { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
-  { title: 'Didi B - Big Boss', youtube_id: '_PKbI32lsN8' },
-  { title: 'POPCAAN - Firm and Strong', youtube_id: '0rEBT_Ge3sc' },
-  { title: 'HIMRA - Freestyle Drill Ivoire #5', youtube_id: 'GyIDTBHEOAQ' },
-  { title: 'Travis Scott - Stargazing', youtube_id: '2a8PgqWrc_4' },
-  { title: 'Quavo, Lil Baby - Ice Cold', youtube_id: '4cCzuTQ49V8' },
-  { title: 'Skillibeng - Crocodile Teeth', youtube_id: 'm7vsOSIz4ds' },
-  { title: 'Didi B - En Haut', youtube_id: 'e0K3OjNHTtA' },
-  { title: 'Toosii - Favorite Song', youtube_id: '4D89Qr5vH6U' },
-  { title: 'YE - Hurricane', youtube_id: 'VRJiK-kdDb4' }
+  # Similaire à Snoop Dogg (West Coast Hip Hop) - Artiste différent
+  { title: 'Eminem - Lose Yourself', youtube_id: '_Yhyp-_hX2s' },
+  # Similaire à Geto Boys (Southern Hip Hop) - Artiste différent
+  { title: 'OutKast - Ms. Jackson', youtube_id: 'EUVo8epKwv0' },
+  # Similaire à dannyebtracks (Type Beat) - Beat différent
+  { title: 'Hip Hop Type Beat, Trap Type Beat ("flow") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
+  # Similaire à Cruel Santino (Alternative Hip Hop) - Artiste différent
+  { title: 'Tyler, The Creator - EARFQUAKE', youtube_id: '40mssPDJodE' },
+  # Similaire à Joyner Lucas (Conscious Hip Hop) - Artiste différent
+  { title: 'J. Cole - No Role Modelz', youtube_id: 'Kb-0Eo0Yk0o' },
+  # Similaire à Manu Crooks & Anfa Rose (Afro Hip Hop) - Artiste différent
+  { title: 'Burna Boy - Last Last', youtube_id: '421w1j87fEM' },
+  # Similaire à Mary J. Blige (R&B/Soul) - Artiste différent
+  { title: 'Alicia Keys - No One', youtube_id: 'rywUS-ohqeE' },
+  # Similaire à S Dott (Hip Hop) - Artiste différent
+  { title: 'Kendrick Lamar - HUMBLE.', youtube_id: 'tvTRZJ-4EyI' },
+  # Similaire à Sally Green (Alternative) - Artiste différent
+  { title: 'Lorde - Royals', youtube_id: 'nlcIKh6s9tU' }
 ]
 
 challenge_reward_videos_2.each do |video|
@@ -799,3 +809,200 @@ end
 # - Les récompenses de l'utilisateur
 # - Le profil de l'utilisateur
 # - Le système de récompenses aléatoires (3 badges = Challenge)
+
+# Challenge Reward Playlist 3
+challenge_reward_playlist_3 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 3') do |playlist|
+  playlist.description = 'Troisième playlist exclusive débloquée via les récompenses challenge.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_3 = [
+  { title: 'Teddy Pendergrass - Believe in Love', youtube_id: 'dQw4w9WgXcQ' },
+  { title: 'toni armani- Sooner or Later', youtube_id: '9bZkp7q19f0' },
+  { title: 'odunsi - Alté Cruise', youtube_id: 'kJQP7kiw5Fk' },
+  { title: 'Jackboys 2000excursion ', youtube_id: 'NUsoVlDFqZg' },
+  { title: 'Travis Scott - Dumbo', youtube_id: 'p47fEXGabaY' },
+  { title: 'Adriano - Niska', youtube_id: 'wnJ6LuUFpMo' },
+  { title: 'Coi Leray - No More Parties', youtube_id: 'qGKrc3A6HHM' },
+  { title: 'HIMRA - Nouveau Boss', youtube_id: 't4H_Zoh7G5A' },
+  { title: 'Yimaye - O\'Kennet', youtube_id: 'r9Ey0xD9YO0' },
+  { title: '4batz - WYA', youtube_id: 't_jHrUE5IOk' }
+]
+
+challenge_reward_videos_3.each do |video|
+  challenge_reward_playlist_3.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist 4
+challenge_reward_playlist_4 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 4') do |playlist|
+  playlist.description = 'Quatrième playlist exclusive débloquée via les récompenses challenge.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_4 = [
+  { title: 'Young Thug - i don\'t believe', youtube_id: '2YvMfHKdQgA' },
+  { title: 'Werenoi - Tu connais', youtube_id: '35RQgMvjpLA' },
+  { title: 'Lil wayne - Written History', youtube_id: '5xbjWBwtEQ4' },
+  { title: 'Teddy Pendregrass - I am who i am', youtube_id: 'bE7apZSC2iI' },
+  { title: 'Wiz khalifa - 5 star', youtube_id: 'mLVYwb933ls' },
+  { title: 'Latto - Somebody', youtube_id: 'qB7kLilZWwg' },
+  { title: 'Doja cat - Agora Hills', youtube_id: '0c66ksfigtU' },
+  { title: 'Kameron carter - Rari', youtube_id: 'cGTvegayqgM' },
+  { title: 'Himra - Diamants et de l\'or', youtube_id: 'YzhPpbV_E7U' },
+  { title: 'Travis Scott - Hooch', youtube_id: 'P6PXqRTpTo4' }
+]
+
+challenge_reward_videos_4.each do |video|
+  challenge_reward_playlist_4.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist 5
+challenge_reward_playlist_5 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 5') do |playlist|
+  playlist.description = 'Cinquième playlist exclusive débloquée via les récompenses challenge.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_5 = [
+  { title: 'janet - that\'s the way love goes', youtube_id: '2b_KfAGiglc' },
+  { title: 'Calvin harris - slide', youtube_id: '8Ee4QjCEHHc' },
+  { title: 'Mozzy - never tell em shit', youtube_id: 'OeJ3U0qI_eY' },
+  { title: 'Koxo - Step by step', youtube_id: '0t7WbUz-q9Q' },
+  { title: 'Larry June - on the unda', youtube_id: 'wpX0rzhmskg' },
+  { title: 'Octavian - little', youtube_id: 'AuZxccRqB5M' },
+  { title: 'Aretha Franklin - Every girl', youtube_id: 'wsK4uU_6Ec4' },
+  { title: 'Yesterday - Hamza', youtube_id: '4dKbpBeoVaI' },
+  { title: '4h44 - ZZ et timar', youtube_id: 'QbgdoKDZA0Y' },
+  { title: 'Soleil Bleu - Bleu soleil', youtube_id: 'nd8RD3tjNQE' },
+  { title: 'charger- Triangle des bermudes', youtube_id: '8p7dQGEkHPk' }
+]
+
+challenge_reward_videos_5.each do |video|
+  challenge_reward_playlist_5.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist Alternative 6
+challenge_reward_playlist_6 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 6') do |playlist|
+  playlist.description = 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_6 = [
+  { title: 'Young Thug - Halftime [Acapella - Vocals Only]', youtube_id: '9251S1YusZQ' },
+  { title: 'Tu connais (Instrumental)', youtube_id: 'py6fNZ8vcRs' },
+  { title: 'Got Money (Acapella)', youtube_id: 'DDfTxqdi2WU' },
+  { title: 'Backing Track officiel', youtube_id: 'XfeRVI1uqfM' },
+  { title: 'See You Again (Vocals Only)', youtube_id: 'gFp8ovsgv-w' },
+  { title: 'Somebody (Instrumental)', youtube_id: '41yvBu1kXxI' },
+  { title: 'Agora Hills (Instrumental)', youtube_id: '6x26CVaJulE' },
+  { title: 'Rari - TikTok performances', youtube_id: '9251S1YusZQ' },
+  { title: 'Himra - Diamants et de l\'or (Clip officiel)', youtube_id: '2G2BjeBrjuk' },
+  { title: '90210 Acapella HQ', youtube_id: '6y1XGc_x4UA' }
+]
+
+challenge_reward_videos_6.each do |video|
+  challenge_reward_playlist_6.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist Alternative 7
+challenge_reward_playlist_7 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 7') do |playlist|
+  playlist.description = 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_7 = [
+  { title: 'Janet - That\'s the Way Love Goes (Studio Acapella)', youtube_id: 'BKHei0FZlUk' },
+  { title: 'Slide (Instrumental)', youtube_id: 'ejl5Dh1wEng' },
+  { title: 'Never Tell Em Shit (Instrumental officiel)', youtube_id: 'b1ynGxdIR2g' },
+  { title: 'Step by Step (Extended Version)', youtube_id: 'BhFNnjzic3o' },
+  { title: 'On The Unda Acapella', youtube_id: 'pal4em79IKI' },
+  { title: 'Papi Chulo (Acoustic Karaoke)', youtube_id: 'K_qqnlzChf4' },
+  { title: 'A Natural Woman (Acapella)', youtube_id: '1UxctZwjuv0' },
+  { title: 'Hamza - Yesterday (Clip officiel)', youtube_id: '4dKbpBeoVaI' },
+  { title: '4h44 - ZZ et Timar (Clip officiel)', youtube_id: 'QbgdoKDZA0Y' },
+  { title: 'Bleu Soleil (Karaoké version avec backing vocals)', youtube_id: 'DeyNHOqbeaA' }
+]
+
+challenge_reward_videos_7.each do |video|
+  challenge_reward_playlist_7.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist Alternative 8
+challenge_reward_playlist_8 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 8') do |playlist|
+  playlist.description = 'Huitième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_8 = [
+  { title: 'Teddy Pendergrass Love T.K.O. Acapella Performance', youtube_id: 'wEiJ56GAhQ8' },
+  { title: 'Sooner or Later (Accapella) Performed Live', youtube_id: 'wEiJ56GAhQ8' },
+  { title: 'Boiler Room Lagos – Live Performance', youtube_id: 'njBrMQDBmFk' },
+  { title: 'Instrumental Reproduced', youtube_id: '6tmXNZwLLKQ' },
+  { title: 'Dumbo (Instrumental) Accurate Version', youtube_id: '4hQ3GiQXrJ0' },
+  { title: 'NISKA - 44 (Acapella)', youtube_id: 'zt9RHrGpkBE' },
+  { title: 'No More Parties Acapella', youtube_id: 'xoq82JGVRJ8' },
+  { title: 'Booska Boss (Instrumental)', youtube_id: 'KVf4vV676lg' },
+  { title: 'Yimaye Lyrics Edit', youtube_id: 'J8Lz-1wTMi8' },
+  { title: 'WYA (feat. Sexyy Red)', youtube_id: 'J8Lz-1wTMi8' }
+]
+
+challenge_reward_videos_8.each do |video|
+  challenge_reward_playlist_8.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Challenge Reward Playlist Alternative 9
+challenge_reward_playlist_9 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 9') do |playlist|
+  playlist.description = 'Neuvième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
+  playlist.genre = 'Challenge'
+  playlist.premium = true
+  playlist.exclusive = true
+  playlist.hidden = true  # Ne pas afficher dans la page des playlists
+end
+
+challenge_reward_videos_9 = [
+  { title: 'HIMRA – Ça Glow (Visualizer)', youtube_id: 'y4V56cyd_jU' },
+  { title: 'Lose Yourself Acapella (Vocals Only)', youtube_id: 'cEOKtOd_5iQ' },
+  { title: 'Ms. Jackson (Instrumental)', youtube_id: 'yAZW0AhTyLo' },
+  { title: 'Genesis – Trap Beat (Prod. Danny E.B)', youtube_id: '5sEUXN2-3sM' },
+  { title: 'EARFQUAKE Acapella HQ', youtube_id: 'zcNgoQz7cww' },
+  { title: 'No Role Modelz (Instrumental Beat Only)', youtube_id: '1CbKr7Ni0Ac' },
+  { title: 'Last Last Instrumental', youtube_id: 'q8LLrUGF2NU' },
+  { title: 'No One Acoustic Version', youtube_id: '3V4QyGjqOlk' },
+  { title: 'HUMBLE. Acapella (Vocals Only)', youtube_id: 'AKFreeg_DlQ' },
+  { title: 'Royals – Pentatonix (A cappella Cover)', youtube_id: 'E9XQ2MdNgKY' }
+]
+
+challenge_reward_videos_9.each do |video|
+  challenge_reward_playlist_9.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end

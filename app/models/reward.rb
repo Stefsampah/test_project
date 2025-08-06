@@ -31,7 +31,14 @@ class Reward < ApplicationRecord
     dedicated_photo: 'dedicated_photo',
     concert_invitation: 'concert_invitation',
     challenge_reward_playlist_1: 'challenge_reward_playlist_1',
-    challenge_reward_playlist_2: 'challenge_reward_playlist_2'
+    challenge_reward_playlist_2: 'challenge_reward_playlist_2',
+    challenge_reward_playlist_3: 'challenge_reward_playlist_3',
+    challenge_reward_playlist_4: 'challenge_reward_playlist_4',
+    challenge_reward_playlist_5: 'challenge_reward_playlist_5',
+    challenge_reward_playlist_6: 'challenge_reward_playlist_6',
+    challenge_reward_playlist_7: 'challenge_reward_playlist_7',
+    challenge_reward_playlist_8: 'challenge_reward_playlist_8',
+    challenge_reward_playlist_9: 'challenge_reward_playlist_9'
   }
   
   scope :by_badge_type, ->(badge_type) { where(badge_type: badge_type) }
@@ -81,7 +88,13 @@ class Reward < ApplicationRecord
       [
         { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
         { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'playlist_acoustic', name: 'Playlist Acoustique', description: 'Versions acoustiques des morceaux', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_6', name: 'Challenge Reward Playlist Alternative 6', description: 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_7', name: 'Challenge Reward Playlist Alternative 7', description: 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_8', name: 'Challenge Reward Playlist Alternative 8', description: 'Huitième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎧' },
+        { content_type: 'challenge_reward_playlist_9', name: 'Challenge Reward Playlist Alternative 9', description: 'Neuvième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎧' },
         { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
       ]
     when 'exclusif'
@@ -117,7 +130,11 @@ class Reward < ApplicationRecord
         [
           { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
           { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'playlist_acoustic', name: 'Playlist Acoustique', description: 'Versions acoustiques des morceaux', icon: '🎤' },
+          { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_6', name: 'Challenge Reward Playlist Alternative 6', description: 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
+          { content_type: 'challenge_reward_playlist_7', name: 'Challenge Reward Playlist Alternative 7', description: 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
           { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
         ]
       when 'exclusif'
@@ -181,12 +198,40 @@ class Reward < ApplicationRecord
       # Ne pas débloquer la playlist dans le système de playlists
       # La récompense est gérée uniquement via le système de récompenses
       puts "🏆 Challenge Reward Playlist 2 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_3'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🏆 Challenge Reward Playlist 3 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_4'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🏆 Challenge Reward Playlist 4 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_5'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🏆 Challenge Reward Playlist 5 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_6'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🎤 Challenge Reward Playlist Alternative 6 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_7'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🎤 Challenge Reward Playlist Alternative 7 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_8'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🎧 Challenge Reward Playlist Alternative 8 débloquée comme récompense pour #{user.email}"
+    when 'challenge_reward_playlist_9'
+      # Ne pas débloquer la playlist dans le système de playlists
+      # La récompense est gérée uniquement via le système de récompenses
+      puts "🎧 Challenge Reward Playlist Alternative 9 débloquée comme récompense pour #{user.email}"
     end
   end
   
   # Récupérer les playlists challenge débloquées par un utilisateur
   def self.challenge_playlists_for_user(user)
-    challenge_rewards = user.rewards.where(content_type: ['challenge_reward_playlist_1', 'challenge_reward_playlist_2'])
+    challenge_rewards = user.rewards.where(content_type: ['challenge_reward_playlist_1', 'challenge_reward_playlist_2', 'challenge_reward_playlist_3', 'challenge_reward_playlist_4', 'challenge_reward_playlist_5', 'challenge_reward_playlist_6', 'challenge_reward_playlist_7', 'challenge_reward_playlist_8', 'challenge_reward_playlist_9'])
     
     playlists = []
     challenge_rewards.each do |reward|
@@ -196,6 +241,27 @@ class Reward < ApplicationRecord
         playlists << playlist if playlist
       when 'challenge_reward_playlist_2'
         playlist = Playlist.find_by(title: 'Challenge Reward Playlist 2')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_3'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist 3')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_4'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist 4')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_5'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist 5')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_6'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist Alternative 6')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_7'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist Alternative 7')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_8'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist Alternative 8')
+        playlists << playlist if playlist
+      when 'challenge_reward_playlist_9'
+        playlist = Playlist.find_by(title: 'Challenge Reward Playlist Alternative 9')
         playlists << playlist if playlist
       end
     end
