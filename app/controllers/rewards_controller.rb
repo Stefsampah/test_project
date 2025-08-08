@@ -12,10 +12,10 @@ class RewardsController < ApplicationController
     @locked_rewards = @rewards.where(unlocked: false)
     
     # Grouper par niveau de récompense pour l'affichage
-    @challenge_rewards = @rewards.where(reward_type: 'challenge')
-    @exclusif_rewards = @rewards.where(reward_type: 'exclusif')
-    @premium_rewards = @rewards.where(reward_type: 'premium')
-    @ultime_rewards = @rewards.where(reward_type: 'ultime')
+    @challenge_rewards = @rewards.where(reward_type: 'challenge').unlocked
+    @exclusif_rewards = @rewards.where(reward_type: 'exclusif').unlocked
+    @premium_rewards = @rewards.where(reward_type: 'premium').unlocked
+    @ultime_rewards = @rewards.where(reward_type: 'ultime').unlocked
     
     # Statistiques des badges par type
     @badge_counts = {}
