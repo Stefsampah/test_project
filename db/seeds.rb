@@ -912,7 +912,7 @@ challenge_reward_videos_6 = [
   { title: 'See You Again (Vocals Only)', youtube_id: 'gFp8ovsgv-w' },
   { title: 'Somebody (Instrumental)', youtube_id: '41yvBu1kXxI' },
   { title: 'Agora Hills (Instrumental)', youtube_id: '6x26CVaJulE' },
-  { title: 'Rari - TikTok performances', youtube_id: '9251S1YusZQ' },
+  { title: 'Rari - TikTok performances', youtube_id: '9251S1YusZQ' }, 
   { title: 'Himra - Diamants et de l\'or (Clip officiel)', youtube_id: '2G2BjeBrjuk' },
   { title: '90210 Acapella HQ', youtube_id: '6y1XGc_x4UA' }
 ]
@@ -969,7 +969,7 @@ challenge_reward_videos_8 = [
   { title: 'NISKA - 44 (Acapella)', youtube_id: 'zt9RHrGpkBE' },
   { title: 'No More Parties Acapella', youtube_id: 'xoq82JGVRJ8' },
   { title: 'Booska Boss (Instrumental)', youtube_id: 'KVf4vV676lg' },
-  { title: 'Yimaye Lyrics Edit', youtube_id: 'J8Lz-1wTMi8' },
+  { title: 'Yimaye Lyrics Edit', youtube_id: 'n7tBsh68O6s' },
   { title: 'WYA (feat. Sexyy Red)', youtube_id: 'J8Lz-1wTMi8' }
 ]
 

@@ -25,20 +25,16 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-4">🎁 Mes Récompenses</h1>
-    
     <!-- Progression vers la prochaine récompense -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4">📊 Progression</h2>
+    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-4">📊 Progression</h2>
       <div class="flex items-center justify-between mb-4">
-        <div class="text-sm text-gray-600">
-          <span class="font-semibold"><%= @total_badges %></span> badges obtenus
+        <div class="text-sm text-gray-300">
+          <span class="font-semibold text-white"><%= @total_badges %></span> badges obtenus
         </div>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-gray-300">
           <% if @next_level && @next_level != 'completed' %>
-            Prochaine récompense : <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-600"><%= @next_level.humanize %></span>
+            Prochaine récompense : <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-400"><%= @next_level.humanize %></span>
           <% else %>
             <% 
               # Vérifier si toutes les récompenses sont réellement débloquées
@@ -50,7 +46,7 @@
               all_unlocked = challenge_unlocked && exclusif_unlocked && premium_unlocked && ultime_unlocked
             %>
             <% if all_unlocked %>
-              Toutes les récompenses débloquées !
+              <span class="text-green-400 font-semibold">Toutes les récompenses débloquées !</span>
             <% else %>
               Continuez à collecter des badges !
             <% end %>
@@ -59,245 +55,160 @@
       </div>
       
       <% if @next_level %>
-        <div class="w-full bg-gray-200 rounded-full h-2.5">
+        <div class="w-full bg-gray-700 rounded-full h-2.5">
           <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full" style="width: <%= (@progress[0].to_f / @progress[1] * 100).round %>%"></div>
         </div>
-        <div class="text-xs text-gray-500 mt-2">
+        <div class="text-xs text-gray-400 mt-2">
           <%= @progress[0] %> / <%= @progress[1] %> badges
         </div>
       <% end %>
     </div>
-  </div>
 
-  <!-- Récompenses par niveau -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    
-    <!-- Challenge (3 badges) -->
-    <div class="relative overflow-hidden rounded-xl shadow-lg border border-gray-700 h-64" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);">
-      <!-- Overlay sombre -->
-      <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+    <!-- Récompenses par niveau -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🎯 Mes récompenses par niveau</h2>
       
-      <!-- Contenu principal -->
-      <div class="relative z-10 h-full flex flex-col justify-between p-6">
-        <!-- En-tête -->
-        <div class="flex items-center justify-between">
-          <div class="text-4xl">🥉</div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-white">3</div>
-            <div class="text-xs text-gray-300">badges</div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% [
+          { quantity: 3, level: 'challenge', color: 'from-yellow-400 to-yellow-600', icon: '🥉', rewards: @challenge_rewards },
+          { quantity: 6, level: 'exclusif', color: 'from-gray-400 to-gray-600', icon: '🥈', rewards: @exclusif_rewards },
+          { quantity: 9, level: 'premium', color: 'from-orange-400 to-orange-600', icon: '🥇', rewards: @premium_rewards },
+          { quantity: 12, level: 'ultime', color: 'from-pink-400 to-purple-600', icon: '🌈', rewards: @ultime_rewards }
+        ].each do |reward_info| %>
+          <% current_count = current_user.user_badges.count %>
+          <% progress = [(current_count.to_f / reward_info[:quantity] * 100), 100].min %>
+          <% has_reward = reward_info[:rewards].any? %>
+          
+          <div class="reward-card bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-hidden border border-gray-600 transform hover:scale-105 transition-all duration-200">
+            <!-- Bannière avec image -->
+            <div class="h-48 relative">
+              <div class="w-full h-full bg-gradient-to-r <%= reward_info[:color] %> flex items-center justify-center">
+                <div class="text-white text-4xl">
+                  <% if has_reward %>
+                    🎁
+                  <% else %>
+                    🔒
+                  <% end %>
+                </div>
+              </div>
+              <div class="absolute top-3 left-3">
+                <% if has_reward %>
+                  <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
+                <% else %>
+                  <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">VERROUILLÉ</span>
+                <% end %>
+              </div>
+              <div class="absolute top-3 right-3">
+                <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= reward_info[:quantity] %></span>
+              </div>
+            </div>
+            
+            <!-- Contenu de la carte -->
+            <div class="p-4">
+              <!-- En-tête avec quantité -->
+              <div class="text-center mb-4">
+                <div class="text-3xl font-bold text-white mb-2"><%= reward_info[:quantity] %></div>
+                <div class="text-sm text-gray-300">badges requis</div>
+              </div>
+              
+              <!-- Type de récompense -->
+              <div class="text-center mb-4">
+                <div class="text-lg font-semibold text-white mb-1">
+                  <%= reward_info[:icon] %> <%= reward_info[:level].humanize %>
+                </div>
+                <div class="text-sm text-gray-400">
+                  <% if has_reward %>
+                    Récompense surprise
+                  <% else %>
+                    <%= reward_info[:quantity] %> badges requis
+                  <% end %>
+                </div>
+              </div>
+              
+              <!-- Barre de progression -->
+              <div class="w-full">
+                <div class="flex justify-between text-xs text-gray-300 mb-1">
+                  <span>Progression</span>
+                  <span><%= current_count %>/<%= reward_info[:quantity] %></span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                  <div class="bg-gradient-to-r <%= reward_info[:color] %> h-2 rounded-full transition-all duration-300" 
+                       style="width: <%= progress %>%"></div>
+                </div>
+              </div>
+              
+              <!-- Bouton détails si récompense débloquée -->
+              <% if has_reward %>
+                <div class="mt-4 text-center">
+                  <% 
+                    # Trouver la première récompense de ce niveau
+                    reward = reward_info[:rewards].first
+                    if reward
+                  %>
+                    <%= link_to "Voir détails", reward_path(reward), class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
+                  <% else %>
+                    <%= link_to "Voir détails", reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity]), class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
           </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Statistiques des badges -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-4">📊 Statistiques des Badges</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white"><%= @bronze_count %></div>
+          <div class="text-sm text-gray-200">Bronze</div>
         </div>
-        
-        <!-- Contenu central -->
-        <div class="text-center">
-          <% if @challenge_rewards.any? %>
-            <div class="text-6xl mb-2">🎁</div>
-            <div class="text-white font-bold text-lg mb-1">DÉBLOQUÉ</div>
-            <div class="text-gray-300 text-sm">Récompense surprise</div>
-          <% else %>
-            <div class="text-6xl mb-2">🔒</div>
-            <div class="text-gray-400 font-bold text-lg mb-1">VERROUILLÉ</div>
-            <div class="text-gray-500 text-sm">3 badges requis</div>
-          <% end %>
+        <div class="bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white"><%= @silver_count %></div>
+          <div class="text-sm text-gray-200">Silver</div>
         </div>
-        
-        <!-- Barre de progression -->
-        <div class="w-full">
-          <div class="flex justify-between text-xs text-gray-300 mb-1">
-            <span>Progression</span>
-            <span><%= @total_badges %>/3</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 h-2 rounded-full transition-all duration-300" 
-                 style="width: <%= [(@total_badges.to_f / 3 * 100).round, 100].min %>%"></div>
-          </div>
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white"><%= @gold_count %></div>
+          <div class="text-sm text-gray-200">Gold</div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4 text-center">
+          <div class="text-2xl font-bold text-white"><%= @total_badges %></div>
+          <div class="text-sm text-gray-200">Total</div>
         </div>
       </div>
     </div>
 
-    <!-- Exclusif (6 badges) -->
-    <div class="relative overflow-hidden rounded-xl shadow-lg border border-gray-700 h-64" style="background: linear-gradient(135deg, #6b7280 0%, #4b5563 50%, #374151 100%);">
-      <!-- Overlay sombre -->
-      <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-      
-      <!-- Contenu principal -->
-      <div class="relative z-10 h-full flex flex-col justify-between p-6">
-        <!-- En-tête -->
-        <div class="flex items-center justify-between">
-          <div class="text-4xl">🥈</div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-white">6</div>
-            <div class="text-xs text-gray-300">badges</div>
-          </div>
-        </div>
-        
-        <!-- Contenu central -->
-        <div class="text-center">
-          <% if @exclusif_rewards.any? %>
-            <div class="text-6xl mb-2">🎁</div>
-            <div class="text-white font-bold text-lg mb-1">DÉBLOQUÉ</div>
-            <div class="text-gray-300 text-sm">Récompense surprise</div>
-          <% else %>
-            <div class="text-6xl mb-2">🔒</div>
-            <div class="text-gray-400 font-bold text-lg mb-1">VERROUILLÉ</div>
-            <div class="text-gray-500 text-sm">6 badges requis</div>
-          <% end %>
-        </div>
-        
-        <!-- Barre de progression -->
-        <div class="w-full">
-          <div class="flex justify-between text-xs text-gray-300 mb-1">
-            <span>Progression</span>
-            <span><%= @total_badges %>/6</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-gradient-to-r from-gray-400 to-gray-600 h-2 rounded-full transition-all duration-300" 
-                 style="width: <%= [(@total_badges.to_f / 6 * 100).round, 100].min %>%"></div>
-          </div>
-        </div>
-      </div>
+    <!-- Bouton pour vérifier les nouvelles récompenses -->
+    <div class="text-center">
+      <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200" %>
     </div>
-
-    <!-- Premium (9 badges) -->
-    <div class="relative overflow-hidden rounded-xl shadow-lg border border-gray-700 h-64" style="background: linear-gradient(135deg, #ea580c 0%, #c2410c 50%, #9a3412 100%);">
-      <!-- Overlay sombre -->
-      <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-      
-      <!-- Contenu principal -->
-      <div class="relative z-10 h-full flex flex-col justify-between p-6">
-        <!-- En-tête -->
-        <div class="flex items-center justify-between">
-          <div class="text-4xl">🥇</div>
-          <div class="text-right">
-            <div class="text-2xl font-bold text-white">9</div>
-            <div class="text-xs text-gray-300">badges</div>
-          </div>
-        </div>
-        
-        <!-- Contenu central -->
-        <div class="text-center">
-          <% if @premium_rewards.any? %>
-            <div class="text-6xl mb-2">🎁</div>
-            <div class="text-white font-bold text-lg mb-1">DÉBLOQUÉ</div>
-            <div class="text-gray-300 text-sm">Récompense surprise</div>
-          <% else %>
-            <div class="text-6xl mb-2">🔒</div>
-            <div class="text-gray-400 font-bold text-lg mb-1">VERROUILLÉ</div>
-            <div class="text-gray-500 text-sm">9 badges requis</div>
-          <% end %>
-        </div>
-        
-        <!-- Barre de progression -->
-        <div class="w-full">
-          <div class="flex justify-between text-xs text-gray-300 mb-1">
-            <span>Progression</span>
-            <span><%= @total_badges %>/9</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-gradient-to-r from-orange-400 to-orange-600 h-2 rounded-full transition-all duration-300" 
-                 style="width: <%= [(@total_badges.to_f / 9 * 100).round, 100].min %>%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ultime (Collection Arc-en-ciel) -->
-    <div class="relative overflow-hidden rounded-xl shadow-lg border border-gray-700 h-64" style="background: linear-gradient(135deg, #be185d 0%, #a21caf 50%, #7c3aed 100%);">
-      <!-- Overlay sombre -->
-      <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-      
-      <!-- Contenu principal -->
-      <div class="relative z-10 h-full flex flex-col justify-between p-6">
-        <!-- En-tête -->
-        <div class="flex items-center justify-between">
-          <div class="text-4xl">🌈</div>
-          <div class="text-right">
-            <div class="text-lg font-bold text-white">Arc-en-ciel</div>
-            <div class="text-xs text-gray-300">1B+1S+1G</div>
-          </div>
-        </div>
-        
-        <!-- Contenu central -->
-        <div class="text-center">
-          <% if @ultime_rewards.any? %>
-            <div class="text-6xl mb-2">🎁</div>
-            <div class="text-white font-bold text-lg mb-1">DÉBLOQUÉ</div>
-            <div class="text-gray-300 text-sm">Récompense surprise</div>
-          <% else %>
-            <div class="text-6xl mb-2">🔒</div>
-            <div class="text-gray-400 font-bold text-lg mb-1">VERROUILLÉ</div>
-            <div class="text-gray-500 text-sm">Collection complète</div>
-          <% end %>
-        </div>
-        
-        <!-- Barre de progression -->
-        <div class="w-full">
-          <% rainbow_progress = current_user.has_rainbow_collection? ? 100 : 0 %>
-          <div class="flex justify-between text-xs text-gray-300 mb-1">
-            <span>Progression</span>
-            <span><%= rainbow_progress %>%</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-gradient-to-r from-pink-400 to-purple-600 h-2 rounded-full transition-all duration-300" 
-                 style="width: <%= rainbow_progress %>%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Statistiques des badges -->
-  <div class="mt-8 bg-black/80 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-gray-700">
-    <h2 class="text-xl font-semibold mb-4 text-white">📊 Statistiques des Badges</h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="text-center">
-        <div class="text-2xl font-bold text-yellow-400"><%= @bronze_count %></div>
-        <div class="text-sm text-gray-300">Bronze</div>
-      </div>
-      <div class="text-center">
-        <div class="text-2xl font-bold text-gray-400"><%= @silver_count %></div>
-        <div class="text-sm text-gray-300">Silver</div>
-      </div>
-      <div class="text-center">
-        <div class="text-2xl font-bold text-yellow-300"><%= @gold_count %></div>
-        <div class="text-sm text-gray-300">Gold</div>
-      </div>
-      <div class="text-center">
-        <div class="text-2xl font-bold text-purple-400"><%= @total_badges %></div>
-        <div class="text-sm text-gray-300">Total</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bouton pour vérifier les nouvelles récompenses -->
-  <div class="mt-6 text-center">
-    <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200" %>
   </div>
 </div>
 
-<script>
-// Animation pour les nouvelles récompenses
-document.addEventListener('DOMContentLoaded', function() {
-  const rewards = document.querySelectorAll('.bg-white.rounded-lg');
+<style>
+  .reward-card {
+    border: 2px solid transparent;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
   
-  rewards.forEach((reward, index) => {
-    reward.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
-  });
-});
-
-// CSS pour l'animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
+  .reward-card:hover {
+    border-color: #8b5cf6;
+    box-shadow: 0 20px 25px -5px rgba(139, 92, 246, 0.1), 0 10px 10px -5px rgba(139, 92, 246, 0.04);
+    transform: translateY(-5px);
+  }
+  
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
     }
   }
-`;
-document.head.appendChild(style);
-</script> 
+</style> 
