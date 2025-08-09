@@ -65,13 +65,19 @@ class GamesController < ApplicationController
       @liked_videos = swipes.where(action: "like").map(&:video)
       @not_liked_videos = @playlist.videos - @liked_videos # Toutes les vidéos - vidéos likées
 
-      # Calcul de la position dans le classement
-      scores = Score.where(playlist: @playlist).order(points: :desc)
-      user_score_index = scores.pluck(:user_id).index(current_user.id)
-      @position = user_score_index ? user_score_index + 1 : scores.count + 1
+      # Vérifier si c'est une playlist récompense
+      if reward_playlist?(@playlist)
+        # Pour les playlists récompenses, afficher seulement un message de félicitations
+        render :reward_results
+      else
+        # Calcul de la position dans le classement pour les playlists normales
+        scores = Score.where(playlist: @playlist).order(points: :desc)
+        user_score_index = scores.pluck(:user_id).index(current_user.id)
+        @position = user_score_index ? user_score_index + 1 : scores.count + 1
 
-      # Affiche la vue des résultats
-      render :results
+        # Affiche la vue des résultats normaux
+        render :results
+      end
     else
       # Continuer le jeu (affichez la vue normale du jeu)
       render :show
@@ -102,13 +108,16 @@ class GamesController < ApplicationController
     scores = Score.where(playlist: @playlist).order(points: :desc)
     user_score_index = scores.pluck(:user_id).index(current_user.id)
     @position = user_score_index ? user_score_index + 1 : scores.count + 1
+  end
 
-    # Ajout : scores globaux
-    # @competitor_score = current_user.competitor_score
-    # @engager_score = current_user.engager_score
-    # @critic_score = current_user.critic_score
-    # @challenger_score = current_user.challenger_score
-    # @total_points = current_user.total_points
+  def reward_results
+    # Méthode spécifique pour les résultats des playlists récompenses
+    @playlist = @game.playlist
+    
+    # Calcul des vidéos likées et non likées
+    swipes = @game.swipes.includes(:video)
+    @liked_videos = swipes.where(action: "like").map(&:video)
+    @not_liked_videos = @playlist.videos - @liked_videos
   end
 
   def swipe
@@ -135,16 +144,19 @@ class GamesController < ApplicationController
       playlist: @playlist
     )
 
-    # Calcul des points en fonction de l'action
-    points = action == "like" ? 2 : 1
+    # Ne pas créer de score pour les playlists récompenses
+    unless reward_playlist?(@playlist)
+      # Calcul des points en fonction de l'action (seulement pour les playlists normales)
+      points = action == "like" ? 2 : 1
 
-    # Mettre à jour ou créer le score (seulement pour cette partie)
-    score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
-    
-    # Calculer le score total de cette partie seulement
-    game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
-    score.points = game_score
-    score.save!
+      # Mettre à jour ou créer le score (seulement pour cette partie)
+      score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
+      
+      # Calculer le score total de cette partie seulement
+      game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
+      score.points = game_score
+      score.save!
+    end
 
     @game.reload
 
@@ -159,7 +171,11 @@ class GamesController < ApplicationController
     if next_video
       redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
     else
-      redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+      if reward_playlist?(@playlist)
+        redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist récompense !"
+      else
+        redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+      end
     end
   end
 
@@ -217,5 +233,12 @@ class GamesController < ApplicationController
         redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
       end
     end
+  end
+
+  def reward_playlist?(playlist)
+    # Définir ici les playlists récompenses
+    # Vérifier si le titre contient "reward", "récompense" ou "challenge"
+    title = playlist.title.downcase
+    title.include?("reward") || title.include?("récompense") || title.include?("challenge")
   end
 end

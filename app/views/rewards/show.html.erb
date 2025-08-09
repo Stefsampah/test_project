@@ -23,82 +23,23 @@
       </div>
     </div>
 
-    <!-- Détails de la récompense -->
-    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-      <div class="flex items-center justify-between mb-6">
-        <div>
-          <h2 class="text-2xl font-bold text-white mb-2">
-            <%= @reward.content_type&.humanize || @reward.reward_type&.humanize %>
-          </h2>
-          <p class="text-gray-300"><%= @reward.reward_description %></p>
-        </div>
-        <div class="text-right">
-          <div class="text-4xl">
-            <% case @reward.reward_type %>
-            <% when 'challenge' %>
-              🥉
-            <% when 'exclusif' %>
-              🥈
-            <% when 'premium' %>
-              🥇
-            <% when 'ultime' %>
-              🌈
-            <% end %>
-          </div>
-          <div class="text-sm text-gray-300">Débloqué le <%= @reward.unlocked_at&.strftime('%d/%m/%Y') %></div>
-        </div>
-      </div>
-
-      <!-- Statistiques -->
-      <div class="grid grid-cols-3 gap-4 mb-6">
-        <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-white"><%= @reward.quantity_required %></div>
-          <div class="text-sm text-gray-200">Badges requis</div>
-        </div>
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-white">
-            <% if @reward.unlocked? %>
-              ✅
-            <% else %>
-              🔒
-            <% end %>
-          </div>
-          <div class="text-sm text-gray-200">
-            <% if @reward.unlocked? %>
-              Débloqué
-            <% else %>
-              Verrouillé
-            <% end %>
-          </div>
-        </div>
-        <div class="bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg p-4 text-center">
-          <div class="text-2xl font-bold text-white">
-            <% if @playlist %>
-              <%= @playlist.videos.count %>
-            <% else %>
-              0
-            <% end %>
-          </div>
-          <div class="text-sm text-gray-200">Vidéos</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Playlist associée -->
+    <!-- Carte fusionnée - Récompense et Playlist -->
     <% if @playlist %>
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-        <h3 class="text-xl font-bold text-white mb-4">🎵 Playlist associée</h3>
-        
-        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-hidden border border-gray-600 playlist-card">
-          <!-- Bannière de la playlist avec thumbnail aléatoire (60% de la hauteur) -->
+        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-visible border border-gray-600 playlist-card">
+          <!-- Bannière de la playlist avec thumbnail aléatoire -->
           <div class="playlist-thumbnail relative flex items-center justify-center overflow-hidden">
             <% 
               # Sélectionner une vidéo aléatoire de la playlist pour le thumbnail
               random_video = @playlist.videos.sample
-              if random_video
+              if random_video && random_video.youtube_id.present?
+                # Essayer plusieurs qualités de thumbnail
                 thumbnail_url = "https://img.youtube.com/vi/#{random_video.youtube_id}/maxresdefault.jpg"
+                # Fallback si maxresdefault n'existe pas
+                fallback_url = "https://img.youtube.com/vi/#{random_video.youtube_id}/hqdefault.jpg"
               else
                 thumbnail_url = nil
+                fallback_url = nil
               end
             %>
             
@@ -107,8 +48,11 @@
               <div class="absolute inset-0 w-full h-full">
                 <img src="<%= thumbnail_url %>" 
                      alt="<%= random_video.title %>" 
-                     class="w-full h-full object-cover opacity-40">
-                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/60 to-pink-600/60"></div>
+                     class="w-full h-full object-cover"
+                     style="opacity: 0.7;"
+                     onerror="this.onerror=null; this.src='<%= fallback_url %>'; this.style.opacity='0.7';"
+                     onload="this.style.opacity='0.7';">
+                <div class="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-600/30"></div>
               </div>
             <% else %>
               <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600"></div>
@@ -117,38 +61,68 @@
             <!-- Contenu superposé -->
             <div class="relative z-10 text-center">
               <div class="text-white text-6xl mb-2">🎵</div>
-              <div class="text-white font-semibold text-lg"><%= @playlist.title %></div>
+              <div class="text-white font-semibold text-2xl mb-2"><%= @playlist.title %></div>
             </div>
             
-            <!-- Badges -->
-            <div class="absolute top-3 left-3">
-              <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
-            </div>
+            <!-- Badge nombre de vidéos -->
             <div class="absolute top-3 right-3">
               <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= @playlist.videos.count %> vidéos</span>
             </div>
           </div>
           
-          <!-- Contenu de la playlist (40% de la hauteur) -->
+          <!-- Contenu de la playlist -->
           <div class="playlist-content p-6">
-            <h4 class="text-xl font-bold text-white mb-2"><%= @playlist.title %></h4>
-            <p class="text-gray-300 mb-4"><%= @playlist.description %></p>
+            <!-- Informations de la récompense -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-bold text-white"><%= @reward.content_type&.humanize || @reward.reward_type&.humanize %></h3>
+                <div class="text-2xl">
+                  <% case @reward.reward_type %>
+                  <% when 'challenge' %>
+                    🥉
+                  <% when 'exclusif' %>
+                    🥈
+                  <% when 'premium' %>
+                    🥇
+                  <% when 'ultime' %>
+                    🌈
+                  <% end %>
+                </div>
+              </div>
+              <div class="text-xs text-gray-400">Débloqué le <%= @reward.unlocked_at&.strftime('%d/%m/%Y') %></div>
+            </div>
             
-            <!-- Statistiques de la playlist -->
-            <div class="grid grid-cols-3 gap-4 mb-6">
+            <!-- Statistiques combinées -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
               <div class="text-center">
-                <div class="text-2xl font-bold text-white"><%= @playlist.videos.count %></div>
-                <div class="text-sm text-gray-300">Vidéos</div>
+                <div class="text-lg font-bold text-white"><%= @reward.quantity_required %></div>
+                <div class="text-xs text-gray-300">Badges requis</div>
               </div>
               <div class="text-center">
-                <div class="text-2xl font-bold text-white">
+                <div class="text-lg font-bold text-white">
+                  <% if @reward.unlocked? %>
+                    ✅
+                  <% else %>
+                    🔒
+                  <% end %>
+                </div>
+                <div class="text-xs text-gray-300">
+                  <% if @reward.unlocked? %>
+                    Débloqué
+                  <% else %>
+                    Verrouillé
+                  <% end %>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-white">
                   <% if @playlist.premium? %>
                     ⭐
                   <% else %>
                     🎵
                   <% end %>
                 </div>
-                <div class="text-sm text-gray-300">
+                <div class="text-xs text-gray-300">
                   <% if @playlist.premium? %>
                     Premium
                   <% else %>
@@ -156,26 +130,10 @@
                   <% end %>
                 </div>
               </div>
-              <div class="text-center">
-                <div class="text-2xl font-bold text-white">
-                  <% if @playlist.exclusive? %>
-                    🔒
-                  <% else %>
-                    🌐
-                  <% end %>
-                </div>
-                <div class="text-sm text-gray-300">
-                  <% if @playlist.exclusive? %>
-                    Exclusive
-                  <% else %>
-                    Public
-                  <% end %>
-                </div>
-              </div>
             </div>
             
-            <!-- Bouton pour accéder à la playlist -->
-            <div class="text-center">
+            <!-- Bouton pour accéder à la playlist - Positionné en bas -->
+            <div class="text-center mt-auto pt-4">
               <% 
                 # Vérifier si l'utilisateur a déjà un jeu en cours pour cette playlist
                 existing_game = current_user.games.where(playlist: @playlist, completed_at: nil).last
@@ -188,7 +146,7 @@
                 end
               %>
               <%= link_to "🎵 Écouter la playlist", playlist_game_path, 
-                  class: "bg-gradient-to-r from-purple-500 to-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-700 transition duration-200" %>
+                  class: "playlist-button" %>
             </div>
           </div>
         </div>
@@ -309,21 +267,45 @@
   .playlist-card {
     display: flex;
     flex-direction: column;
-    height: 400px; /* Hauteur fixe de la carte */
+    height: 700px; /* Hauteur augmentée pour s'assurer que le bouton soit visible */
   }
 
   .playlist-thumbnail {
-    flex: 0 0 60%; /* Thumbnail prend 60% de la hauteur de la carte */
+    flex: 0 0 50%; /* Thumbnail prend 50% de la hauteur de la carte */
     position: relative;
-    min-height: 240px; /* 60% de 400px */
+    min-height: 350px; /* 50% de 700px */
   }
 
   .playlist-content {
-    flex: 1; /* Contenu prend les 40% restants */
+    flex: 1; /* Contenu prend les 50% restants */
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    background: rgba(55, 65, 81, 0.95); /* Fond semi-transparent pour le contenu */
+    z-index: 10;
+    position: relative;
+    min-height: 350px; /* Hauteur minimale pour le contenu */
+  }
+
+  /* Style spécifique pour le bouton */
+  .playlist-button {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 2px solid #8b5cf6;
+  }
+
+  .playlist-button:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 </style>
 
