@@ -6,16 +6,18 @@ class RewardsController < ApplicationController
   end
   
   def my_rewards
-    # Récupérer toutes les récompenses de l'utilisateur
-    @rewards = current_user.rewards.includes(:badge_type).order(:created_at, :desc)
-    @unlocked_rewards = @rewards.unlocked
-    @locked_rewards = @rewards.where(unlocked: false)
+    # Récupérer uniquement les récompenses débloquées
+    @rewards = current_user.rewards.includes(:badge_type).where(unlocked: true).order(created_at: :desc)
+    @unlocked_rewards = @rewards
     
-    # Grouper par niveau de récompense pour l'affichage
-    @challenge_rewards = @rewards.where(reward_type: 'challenge').unlocked
-    @exclusif_rewards = @rewards.where(reward_type: 'exclusif').unlocked
-    @premium_rewards = @rewards.where(reward_type: 'premium').unlocked
-    @ultime_rewards = @rewards.where(reward_type: 'ultime').unlocked
+    # Grouper par niveau de récompense pour l'affichage (uniquement débloquées)
+    @challenge_rewards = @rewards.where(reward_type: 'challenge')
+    @exclusif_rewards = @rewards.where(reward_type: 'exclusif')
+    @premium_rewards = @rewards.where(reward_type: 'premium')
+    @ultime_rewards = @rewards.where(reward_type: 'ultime')
+    
+    # Calculer la prochaine récompense accessible
+    @next_accessible_reward = calculate_next_accessible_reward(current_user)
     
     # Statistiques des badges par type
     @badge_counts = {}
@@ -126,13 +128,46 @@ class RewardsController < ApplicationController
   def generate_reward_description(badge_type, quantity, reward_type, category)
     case reward_type
     when 'challenge'
-      "Accès anticipé à des playlists + codes promo exclusifs"
+      "#{quantity} badges - Accès anticipé à des playlists + codes promo exclusifs"
     when 'exclusif'
-      "Photos dédicacées d'artistes + contenu exclusif"
+      "#{quantity} badges - Photos dédicacées d'artistes + contenu exclusif"
     when 'premium'
-      "Rencontres avec des artistes + accès backstage virtuel"
+      "#{quantity} badges - Rencontres avec des artistes + accès backstage virtuel"
     when 'ultime'
-      "Rencontre privée avec un artiste + accès backstage réel"
+      "#{quantity} badges - Rencontre privée avec un artiste + accès backstage réel"
     end
+  end
+  
+  def calculate_next_accessible_reward(user)
+    badge_count = user.user_badges.count
+    
+    # Définir les niveaux de récompenses dans l'ordre
+    reward_levels = [
+      { level: 'challenge', quantity: 3, name: 'Challenge', icon: '🥉' },
+      { level: 'exclusif', quantity: 6, name: 'Exclusif', icon: '🥈' },
+      { level: 'premium', quantity: 9, name: 'Premium', icon: '🥇' },
+      { level: 'ultime', quantity: 12, name: 'Ultime', icon: '🌈' }
+    ]
+    
+    # Trouver la prochaine récompense accessible
+    reward_levels.each do |reward_level|
+      # Vérifier si l'utilisateur a déjà cette récompense
+      existing_reward = user.rewards.where(reward_type: reward_level[:level], unlocked: true).first
+      
+      # Si la récompense n'existe pas et que l'utilisateur a assez de badges
+      if !existing_reward && badge_count >= reward_level[:quantity]
+        return {
+          level: reward_level[:level],
+          quantity: reward_level[:quantity],
+          name: reward_level[:name],
+          icon: reward_level[:icon],
+          current_badges: badge_count,
+          progress_percentage: [(badge_count.to_f / reward_level[:quantity] * 100), 100].min
+        }
+      end
+    end
+    
+    # Si toutes les récompenses sont débloquées, retourner nil
+    nil
   end
 end 

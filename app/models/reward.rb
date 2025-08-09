@@ -5,6 +5,7 @@ class Reward < ApplicationRecord
   validates :quantity_required, presence: true, numericality: { greater_than: 0 }
   validates :reward_type, presence: true
   validates :reward_description, presence: true
+  validates :content_type, presence: true # Nouvelle validation pour content_type obligatoire
   
   enum reward_type: {
     challenge: 'challenge',
@@ -52,7 +53,7 @@ class Reward < ApplicationRecord
   scope :recent, -> { where('created_at >= ?', 30.days.ago) }
   scope :by_reward_type, ->(reward_type) { where(reward_type: reward_type) }
   
-  # Système simplifié : récompenses unifiées basées sur le total de badges
+  # Système unifié : récompenses basées sur le total de badges avec content_type obligatoire
   def self.check_and_create_rewards_for_user(user)
     # Vérifier les récompenses unifiées avec système aléatoire
     check_random_rewards(user)
@@ -65,7 +66,7 @@ class Reward < ApplicationRecord
     # Vérifier si l'utilisateur a la collection arc-en-ciel
     has_rainbow = user.has_rainbow_collection?
     
-    # Débloquer les récompenses selon le nombre de badges
+    # Débloquer les récompenses selon le nombre de badges (une seule par niveau)
     if badge_count >= 3 && !user.rewards.challenge.exists?
       select_random_reward(user, 'challenge')
     end
@@ -106,8 +107,7 @@ class Reward < ApplicationRecord
         { content_type: 'challenge_reward_playlist_12', name: 'Challenge Reward Videos 12', description: 'Playlist exclusive de versions alternatives débloquée via les récompenses challenge', icon: '🎵' },
         { content_type: 'challenge_reward_playlist_13', name: 'Challenge Reward Videos 13', description: 'Playlist exclusive de versions live débloquée via les récompenses challenge', icon: '🎤' },
         { content_type: 'challenge_reward_playlist_14', name: 'Challenge Reward Videos 14', description: 'Playlist exclusive de versions instrumentales débloquée via les récompenses challenge', icon: '🎧' },
-        { content_type: 'challenge_reward_playlist_15', name: 'Challenge Reward Videos 15', description: 'Playlist exclusive de versions exclusives débloquée via les récompenses challenge', icon: '⭐' },
-        { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
+        { content_type: 'challenge_reward_playlist_15', name: 'Challenge Reward Videos 15', description: 'Playlist exclusive de versions exclusives débloquée via les récompenses challenge', icon: '⭐' }
       ]
     when 'exclusif'
       [
@@ -144,31 +144,23 @@ class Reward < ApplicationRecord
           { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
           { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
           { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_6', name: 'Challenge Reward Playlist Alternative 6', description: 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
-          { content_type: 'challenge_reward_playlist_7', name: 'Challenge Reward Playlist Alternative 7', description: 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
-          { content_type: 'playlist_remix', name: 'Remixes Exclusifs', description: 'Playlist de remixes créés spécialement', icon: '🎧' }
+          { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
         ]
       when 'exclusif'
         [
           { content_type: 'podcast_exclusive', name: 'Podcast Exclusif', description: 'Interview exclusive d\'un artiste', icon: '🎙️' },
           { content_type: 'blog_article', name: 'Article Blog', description: 'Article spécialisé sur la musique', icon: '📝' },
-          { content_type: 'documentary', name: 'Documentaire', description: 'Documentaire musical exclusif', icon: '🎬' },
-          { content_type: 'reportage', name: 'Reportage', description: 'Reportage exclusif sur un artiste', icon: '📺' },
-          { content_type: 'audio_comments', name: 'Commentaires Audio', description: 'Artistes commentent leurs chansons', icon: '🎧' },
-          { content_type: 'studio_session', name: 'Session Studio', description: 'Vidéo d\'enregistrement en studio', icon: '🎹' }
+          { content_type: 'documentary', name: 'Documentaire', description: 'Documentaire musical exclusif', icon: '🎬' }
         ]
       when 'premium'
         [
           { content_type: 'exclusive_photos', name: 'Photos Exclusives', description: 'Photos exclusives d\'artistes', icon: '📸' },
-          { content_type: 'backstage_video', name: 'Vidéo Backstage', description: 'Vidéo backstage exclusive', icon: '🎭' },
-          { content_type: 'concert_footage', name: 'Extrait Concert', description: 'Extrait exclusif d\'un concert', icon: '🎪' }
+          { content_type: 'backstage_video', name: 'Vidéo Backstage', description: 'Vidéo backstage exclusive', icon: '🎭' }
         ]
       when 'ultime'
         [
           { content_type: 'personal_voice_message', name: 'Message Vocal Personnalisé', description: 'Message vocal d\'un artiste pour vous', icon: '🎤' },
-          { content_type: 'dedicated_photo', name: 'Photo Dédicacée', description: 'Photo dédicacée d\'un artiste', icon: '📷' },
-          { content_type: 'concert_invitation', name: 'Invitation Concert', description: 'Invitation à un concert près de chez vous', icon: '🎫' }
+          { content_type: 'dedicated_photo', name: 'Photo Dédicacée', description: 'Photo dédicacée d\'un artiste', icon: '📷' }
         ]
       end
     end
@@ -176,7 +168,7 @@ class Reward < ApplicationRecord
     # Sélectionner une récompense aléatoire
     selected_reward = available_rewards.sample
     
-    # Créer la récompense
+    # Créer la récompense avec content_type obligatoire
     reward = create!(
       user: user,
       reward_type: level,
@@ -440,30 +432,67 @@ class Reward < ApplicationRecord
   end
   
   def self.check_reward_condition(user, badge_type, quantity_required, reward_type, category)
-    # Vérifier si la récompense existe déjà
-    existing_reward = user.rewards.find_by(
-      badge_type: badge_type,
-      quantity_required: quantity_required,
-      reward_type: reward_type
-    )
+    # Vérifier si la récompense existe déjà (par reward_type uniquement)
+    existing_reward = user.rewards.find_by(reward_type: reward_type)
     
     return if existing_reward&.unlocked?
     
-    # Créer ou débloquer la récompense
-    reward = user.rewards.find_or_create_by!(
-      badge_type: badge_type,
-      quantity_required: quantity_required,
-      reward_type: reward_type
-    ) do |r|
-      r.reward_description = generate_reward_description(badge_type, quantity_required, reward_type, category)
-      r.unlocked = true
-      r.unlocked_at = Time.current
+    # Si une récompense existe mais n'est pas débloquée, la débloquer
+    if existing_reward && !existing_reward.unlocked?
+      existing_reward.update!(unlocked: true, unlocked_at: Time.current)
+      return existing_reward
     end
     
-    # Si la récompense existait mais n'était pas débloquée, la débloquer
-    if reward.persisted? && !reward.unlocked?
-      reward.update!(unlocked: true, unlocked_at: Time.current)
+    # Créer une nouvelle récompense avec content_type obligatoire
+    reward_data = select_random_reward_data(reward_type)
+    
+    reward = user.rewards.create!(
+      badge_type: badge_type,
+      quantity_required: quantity_required,
+      reward_type: reward_type,
+      content_type: reward_data[:content_type],
+      reward_description: reward_data[:description],
+      unlocked: true,
+      unlocked_at: Time.current
+    )
+    
+    reward
+  end
+  
+  # Nouvelle méthode pour sélectionner les données de récompense
+  def self.select_random_reward_data(reward_type)
+    case reward_type
+    when 'challenge'
+      available_rewards = [
+        { content_type: 'challenge_reward_playlist_1', description: 'Playlist exclusive débloquée via les récompenses challenge' },
+        { content_type: 'challenge_reward_playlist_2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge' },
+        { content_type: 'challenge_reward_playlist_3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge' },
+        { content_type: 'challenge_reward_playlist_4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge' },
+        { content_type: 'challenge_reward_playlist_5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge' }
+      ]
+    when 'exclusif'
+      available_rewards = [
+        { content_type: 'podcast_exclusive', description: 'Interview exclusive d\'un artiste' },
+        { content_type: 'blog_article', description: 'Article spécialisé sur la musique' },
+        { content_type: 'documentary', description: 'Documentaire musical exclusif' }
+      ]
+    when 'premium'
+      available_rewards = [
+        { content_type: 'exclusive_photos', description: 'Photos exclusives d\'artistes' },
+        { content_type: 'backstage_video', description: 'Vidéo backstage exclusive' }
+      ]
+    when 'ultime'
+      available_rewards = [
+        { content_type: 'personal_voice_message', description: 'Message vocal d\'un artiste pour vous' },
+        { content_type: 'dedicated_photo', description: 'Photo dédicacée d\'un artiste' }
+      ]
+    else
+      available_rewards = [
+        { content_type: 'playlist_exclusive', description: 'Playlist exclusive' }
+      ]
     end
+    
+    available_rewards.sample
   end
   
   def self.generate_reward_description(badge_type, quantity, reward_type, category)
