@@ -7,7 +7,7 @@ class RewardsController < ApplicationController
   
   def my_rewards
     # Récupérer uniquement les récompenses débloquées
-    @rewards = current_user.rewards.includes(:badge_type).where(unlocked: true).order(created_at: :desc)
+    @rewards = current_user.rewards.where(unlocked: true).order(created_at: :desc)
     @unlocked_rewards = @rewards
     
     # Grouper par niveau de récompense pour l'affichage (uniquement débloquées)
@@ -38,7 +38,7 @@ class RewardsController < ApplicationController
   
   def all_rewards
     # Récupérer toutes les récompenses de l'utilisateur
-    @user_rewards = current_user.rewards.includes(:badge_type).order(:badge_type, :quantity_required)
+    @user_rewards = current_user.rewards.order(:badge_type, :quantity_required)
     @rewards_by_type = @user_rewards.group_by(&:badge_type)
     
     # Statistiques des badges par type

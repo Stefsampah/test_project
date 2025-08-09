@@ -1,55 +1,103 @@
-feat: unify reward system and fix display issues
+# Commit: Fix YouTube links and improve reward page functionality
 
-## 🎯 Major Changes
+## 🎯 **Objectif**
+Corriger les liens YouTube bloqués et améliorer l'expérience utilisateur sur la page des récompenses.
 
-### Unified Reward System
-- **Removed confusion** between "generic" and "specific" rewards
-- **Added mandatory content_type** for all rewards
-- **Simplified logic** to one reward per level per user
-- **Eliminated duplicates** by checking only reward_type
+## 🔧 **Corrections techniques**
 
-### Code Improvements
-- Added `validates :content_type, presence: true` to Reward model
-- Refactored `check_random_rewards` method for unified approach
-- Created `select_random_reward_data` method for consistent content selection
-- Updated `check_reward_condition` to prevent duplicates
+### 1. **Liens YouTube fonctionnels**
+- **Problème** : `ERR_BLOCKED_BY_RESPONSE` lors du clic sur "Regarder"
+- **Solution** : URL YouTube améliorée avec paramètres anti-blocage
+  ```html
+  <!-- Avant -->
+  <a href="https://www.youtube.com/watch?v=<%= video.youtube_id %>" target="_blank">
+  
+  <!-- Après -->
+  <a href="https://www.youtube.com/watch?v=<%= video.youtube_id %>&t=0s" 
+     target="_blank" 
+     rel="noopener noreferrer"
+     onclick="return openYouTubeVideo('<%= video.youtube_id %>', '<%= video.title %>')">
+  ```
 
-### UI/UX Enhancements
-- **Fixed SQL error** in rewards controller (`order(created_at: :desc)` instead of `order(:created_at, :desc)`)
-- **Updated my_rewards view** to show only unlocked rewards
-- **Added "next accessible reward" card** with orange background for progress tracking
-- **Improved user experience** with clearer reward progression
+### 2. **Modal YouTube de fallback**
+- **Fonctionnalité** : Modal intégrée si le lien externe est bloqué
+- **Interface** : Design moderne avec fond sombre et contrôles
+- **Autoplay** : Lancement automatique de la vidéo
+- **Contrôles** : Fermeture par bouton ou clic extérieur
 
-### Technical Details
-- **Reward structure**: All rewards now have mandatory content_type
-- **Challenge rewards**: 15 playlist types (challenge_reward_playlist_1-15)
-- **Exclusif rewards**: podcast_exclusive, blog_article, documentary
-- **Premium rewards**: exclusive_photos, backstage_video
-- **Ultime rewards**: personal_voice_message, dedicated_photo
+### 3. **Bouton "Écouter la playlist" amélioré**
+- **Navigation** : Redirection vers le mode swipe (like/dislike)
+- **Gestion intelligente** : Continue les parties existantes ou en crée de nouvelles
+- **Expérience** : Lance directement l'expérience de jeu
 
-### Migration
-- Created `clean_generic_rewards.rb` script for data migration
-- **17 generic rewards** identified and processed
-- **6 users** with challenge playlist rewards for testing
-- **Admin user** has 6 challenge playlist rewards (ID: 19-24)
+### 4. **Thumbnails conservés**
+- **Images** : Thumbnails YouTube maintenus et affichés correctement
+- **Design** : Interface cohérente avec gradients et animations
 
-## 🎮 User Impact
-- **Cleaner interface**: Only unlocked rewards displayed
-- **Progress tracking**: Orange card shows next accessible reward
-- **No more confusion**: All rewards have specific content
-- **Better UX**: Consistent reward system across the platform
+## 🎨 **Améliorations UX**
 
-## 🔧 Developer Benefits
-- **Simplified codebase**: Removed complex conditional logic
-- **Better maintainability**: Unified reward creation system
-- **Clearer architecture**: One reward type per level
-- **Easier testing**: Consistent reward structure
+### **Interface utilisateur**
+- ✅ Modal YouTube moderne avec design cohérent
+- ✅ Boutons avec gradients et animations
+- ✅ Navigation fluide entre les sections
+- ✅ Feedback visuel sur les interactions
 
-## 📊 Testing
-- **Test users identified**: admin@example.com, user@example.com, theo@example.com
-- **Challenge playlists**: 6 playlists with 10 videos each
-- **Reward progression**: 3, 6, 9, 12 badges for different levels
-- **Content types**: All rewards have specific, usable content
+### **Accessibilité**
+- ✅ Attributs `rel="noopener noreferrer"` pour la sécurité
+- ✅ Contrôles de fermeture multiples (bouton + clic extérieur)
+- ✅ Messages d'erreur et fallbacks
 
-## 🎯 Result
-**Unified, consistent, and user-friendly reward system** that eliminates confusion and provides a better gaming experience.
+## 📁 **Fichiers modifiés**
+
+### `app/views/rewards/show.html.erb`
+- **Lignes 194-200** : Correction du lien YouTube avec fallback modal
+- **Lignes 95-105** : Amélioration du bouton "Écouter la playlist"
+- **Lignes 216-350** : Ajout des styles CSS et JavaScript pour la modal
+
+### **Nouvelles fonctionnalités**
+- `openYouTubeVideo()` : Gestion intelligente des liens YouTube
+- `showYouTubeModal()` : Affichage modal avec iframe YouTube
+- `closeYouTubeModal()` : Fermeture propre de la modal
+
+## 🧪 **Tests effectués**
+
+### **Scénarios testés**
+1. ✅ Clic sur "Regarder" → Ouverture YouTube (nouvel onglet)
+2. ✅ Blocage YouTube → Affichage modal intégrée
+3. ✅ Clic sur "Écouter la playlist" → Mode swipe
+4. ✅ Navigation entre les sections
+5. ✅ Fermeture modal (bouton + clic extérieur)
+
+### **Compatibilité**
+- ✅ Navigateurs modernes (Chrome, Firefox, Safari)
+- ✅ Mobile responsive
+- ✅ Blocage YouTube contourné
+
+## 🎯 **Résultat final**
+
+**Page des récompenses entièrement fonctionnelle :**
+- 🎬 **Liens YouTube** : Fonctionnels avec fallback modal
+- 🎵 **Mode playlist** : Navigation directe vers le swipe
+- 🖼️ **Thumbnails** : Conservés et affichés correctement
+- 🎨 **Interface** : Moderne et cohérente
+- 🔒 **Sécurité** : Attributs de sécurité ajoutés
+
+## 📊 **Impact utilisateur**
+
+### **Avant**
+- ❌ Liens YouTube bloqués (`ERR_BLOCKED_BY_RESPONSE`)
+- ❌ Navigation limitée vers les playlists
+- ❌ Expérience utilisateur frustrante
+
+### **Après**
+- ✅ Liens YouTube fonctionnels avec modal de fallback
+- ✅ Navigation directe vers le mode swipe
+- ✅ Expérience utilisateur fluide et moderne
+
+---
+
+**Commit type** : `fix`  
+**Scope** : `rewards`  
+**Breaking changes** : `none`  
+**Testing** : `manual`  
+**Documentation** : `updated`
