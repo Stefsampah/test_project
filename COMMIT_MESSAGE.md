@@ -1,102 +1,104 @@
-# Commit: Fix YouTube links and improve reward page functionality
+# Commit: Enhance reward page with modal YouTube and random thumbnail background
 
 ## 🎯 **Objectif**
-Corriger les liens YouTube bloqués et améliorer l'expérience utilisateur sur la page des récompenses.
+Améliorer l'expérience utilisateur sur la page des récompenses avec une modal YouTube intégrée et un thumbnail aléatoire en arrière-plan de la carte de playlist.
 
 ## 🔧 **Corrections techniques**
 
-### 1. **Liens YouTube fonctionnels**
-- **Problème** : `ERR_BLOCKED_BY_RESPONSE` lors du clic sur "Regarder"
-- **Solution** : URL YouTube améliorée avec paramètres anti-blocage
+### 1. **Modal YouTube intégrée**
+- **Problème** : Liens YouTube externes bloqués (`ERR_BLOCKED_BY_RESPONSE`)
+- **Solution** : Modal YouTube intégrée directement dans la page
   ```html
   <!-- Avant -->
-  <a href="https://www.youtube.com/watch?v=<%= video.youtube_id %>" target="_blank">
+  <a href="https://www.youtube.com/watch?v=<%= video.youtube_id %>&t=0s" target="_blank">
   
   <!-- Après -->
-  <a href="https://www.youtube.com/watch?v=<%= video.youtube_id %>&t=0s" 
-     target="_blank" 
-     rel="noopener noreferrer"
-     onclick="return openYouTubeVideo('<%= video.youtube_id %>', '<%= video.title %>')">
+  <button onclick="showYouTubeModal('<%= video.youtube_id %>', '<%= video.title %>')">
   ```
 
-### 2. **Modal YouTube de fallback**
-- **Fonctionnalité** : Modal intégrée si le lien externe est bloqué
-- **Interface** : Design moderne avec fond sombre et contrôles
-- **Autoplay** : Lancement automatique de la vidéo
-- **Contrôles** : Fermeture par bouton ou clic extérieur
+### 2. **Thumbnail aléatoire en arrière-plan**
+- **Fonctionnalité** : Sélection aléatoire d'une vidéo de la playlist
+- **Affichage** : Thumbnail haute qualité (`maxresdefault.jpg`)
+- **Positionnement** : Couvre exactement 60% de la hauteur de la carte
+- **Overlay** : Gradient superposé pour la lisibilité
 
-### 3. **Bouton "Écouter la playlist" amélioré**
-- **Navigation** : Redirection vers le mode swipe (like/dislike)
-- **Gestion intelligente** : Continue les parties existantes ou en crée de nouvelles
-- **Expérience** : Lance directement l'expérience de jeu
-
-### 4. **Thumbnails conservés**
-- **Images** : Thumbnails YouTube maintenus et affichés correctement
-- **Design** : Interface cohérente avec gradients et animations
+### 3. **Structure de carte améliorée**
+- **Hauteur fixe** : Carte de 400px de hauteur totale
+- **Thumbnail** : 60% de la hauteur (240px)
+- **Contenu** : 40% restants avec layout flexbox
+- **Design** : Interface moderne et responsive
 
 ## 🎨 **Améliorations UX**
 
 ### **Interface utilisateur**
 - ✅ Modal YouTube moderne avec design cohérent
+- ✅ Thumbnail aléatoire en arrière-plan de la carte
 - ✅ Boutons avec gradients et animations
 - ✅ Navigation fluide entre les sections
 - ✅ Feedback visuel sur les interactions
 
-### **Accessibilité**
-- ✅ Attributs `rel="noopener noreferrer"` pour la sécurité
-- ✅ Contrôles de fermeture multiples (bouton + clic extérieur)
-- ✅ Messages d'erreur et fallbacks
+### **Expérience utilisateur**
+- ✅ **Pas de redirection** : Modal YouTube intégrée
+- ✅ **Thumbnail dynamique** : Image aléatoire de la playlist
+- ✅ **Proportions exactes** : 60% thumbnail, 40% contenu
+- ✅ **Design cohérent** : Interface moderne et responsive
 
 ## 📁 **Fichiers modifiés**
 
 ### `app/views/rewards/show.html.erb`
-- **Lignes 194-200** : Correction du lien YouTube avec fallback modal
-- **Lignes 95-105** : Amélioration du bouton "Écouter la playlist"
-- **Lignes 216-350** : Ajout des styles CSS et JavaScript pour la modal
+- **Lignes 194-200** : Remplacement du lien YouTube par bouton modal
+- **Lignes 90-115** : Ajout du thumbnail aléatoire en arrière-plan
+- **Lignes 117-120** : Structure de carte avec hauteur 60%/40%
+- **Lignes 295-310** : Styles CSS pour la nouvelle structure
+- **Lignes 320-350** : JavaScript simplifié pour la modal
 
 ### **Nouvelles fonctionnalités**
-- `openYouTubeVideo()` : Gestion intelligente des liens YouTube
 - `showYouTubeModal()` : Affichage modal avec iframe YouTube
 - `closeYouTubeModal()` : Fermeture propre de la modal
+- Thumbnail aléatoire avec `@playlist.videos.sample`
+- Structure flexbox pour les proportions 60%/40%
 
 ## 🧪 **Tests effectués**
 
 ### **Scénarios testés**
-1. ✅ Clic sur "Regarder" → Ouverture YouTube (nouvel onglet)
-2. ✅ Blocage YouTube → Affichage modal intégrée
-3. ✅ Clic sur "Écouter la playlist" → Mode swipe
-4. ✅ Navigation entre les sections
-5. ✅ Fermeture modal (bouton + clic extérieur)
+1. ✅ Clic sur "Regarder" → Modal YouTube intégrée
+2. ✅ Thumbnail aléatoire → Affichage correct en arrière-plan
+3. ✅ Proportions 60%/40% → Respect des dimensions demandées
+4. ✅ Navigation modal → Fermeture par bouton et clic extérieur
+5. ✅ Clic sur "Écouter la playlist" → Mode swipe
 
 ### **Compatibilité**
 - ✅ Navigateurs modernes (Chrome, Firefox, Safari)
 - ✅ Mobile responsive
-- ✅ Blocage YouTube contourné
+- ✅ Modal YouTube fonctionnelle
+- ✅ Thumbnails haute qualité
 
 ## 🎯 **Résultat final**
 
-**Page des récompenses entièrement fonctionnelle :**
-- 🎬 **Liens YouTube** : Fonctionnels avec fallback modal
-- 🎵 **Mode playlist** : Navigation directe vers le swipe
-- 🖼️ **Thumbnails** : Conservés et affichés correctement
-- 🎨 **Interface** : Moderne et cohérente
-- 🔒 **Sécurité** : Attributs de sécurité ajoutés
+**Page des récompenses entièrement améliorée :**
+- 🎬 **Modal YouTube** : Intégrée, pas de redirection externe
+- 🖼️ **Thumbnail aléatoire** : Couvre exactement 60% de la hauteur
+- 🎵 **Interface moderne** : Design cohérent et responsive
+- 🎮 **Navigation** : Accès direct au mode swipe des playlists
+- 🎨 **Proportions** : 60% thumbnail, 40% contenu
 
 ## 📊 **Impact utilisateur**
 
 ### **Avant**
 - ❌ Liens YouTube bloqués (`ERR_BLOCKED_BY_RESPONSE`)
-- ❌ Navigation limitée vers les playlists
+- ❌ Pas de thumbnail en arrière-plan
+- ❌ Proportions non définies
 - ❌ Expérience utilisateur frustrante
 
 ### **Après**
-- ✅ Liens YouTube fonctionnels avec modal de fallback
-- ✅ Navigation directe vers le mode swipe
-- ✅ Expérience utilisateur fluide et moderne
+- ✅ Modal YouTube intégrée et fonctionnelle
+- ✅ Thumbnail aléatoire en arrière-plan (60% de la hauteur)
+- ✅ Proportions exactes et design moderne
+- ✅ Expérience utilisateur fluide et engageante
 
 ---
 
-**Commit type** : `fix`  
+**Commit type** : `feat`  
 **Scope** : `rewards`  
 **Breaking changes** : `none`  
 **Testing** : `manual`  
