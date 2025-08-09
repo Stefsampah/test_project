@@ -33,12 +33,21 @@ class User < ApplicationRecord
 
   def engager_score
     # Points pour l'engagement : likes donnent plus de points que dislikes
-    swipes.where(action: 'like').count * 5 + swipes.where(action: 'dislike').count * 2 || 0
+    # Exclure les playlists récompenses du calcul
+    swipes.joins(:playlist)
+          .where.not(playlists: { id: reward_playlist_ids })
+          .where(action: 'like').count * 5 + 
+    swipes.joins(:playlist)
+          .where.not(playlists: { id: reward_playlist_ids })
+          .where(action: 'dislike').count * 2 || 0
   end
 
   def critic_score
     # Points pour les critiques : dislikes donnent des points pour l'opinion critique
-    swipes.where(action: 'dislike').count * 3 || 0
+    # Exclure les playlists récompenses du calcul
+    swipes.joins(:playlist)
+          .where.not(playlists: { id: reward_playlist_ids })
+          .where(action: 'dislike').count * 3 || 0
   end
 
   def challenger_score
@@ -56,12 +65,13 @@ class User < ApplicationRecord
 
   # Nouvelles méthodes pour les conditions multiples
   def win_ratio
-    total_games = games.count
+    # Exclure les playlists récompenses du calcul
+    total_games = games.joins(:playlist).where.not(playlists: { id: reward_playlist_ids }).count
     return 0 if total_games == 0
     
     # Considérer une "victoire" comme un score dans le top 75% de la playlist
     wins = 0
-    games.includes(:playlist).each do |game|
+    games.includes(:playlist).where.not(playlists: { id: reward_playlist_ids }).each do |game|
       playlist_scores = Score.where(playlist: game.playlist).order(points: :desc)
       user_score = scores.find_by(playlist: game.playlist)&.points || 0
       
@@ -76,8 +86,9 @@ class User < ApplicationRecord
   end
 
   def top_3_finishes_count
+    # Exclure les playlists récompenses du calcul
     count = 0
-    games.includes(:playlist).each do |game|
+    games.includes(:playlist).where.not(playlists: { id: reward_playlist_ids }).each do |game|
       playlist_scores = Score.where(playlist: game.playlist).order(points: :desc).limit(3)
       user_score = scores.find_by(playlist: game.playlist)&.points || 0
       
@@ -89,10 +100,11 @@ class User < ApplicationRecord
   end
 
   def consecutive_wins_count
+    # Exclure les playlists récompenses du calcul
     max_consecutive = 0
     current_consecutive = 0
     
-    games.includes(:playlist).order(created_at: :asc).each do |game|
+    games.includes(:playlist).where.not(playlists: { id: reward_playlist_ids }).order(created_at: :asc).each do |game|
       playlist_scores = Score.where(playlist: game.playlist).order(points: :desc)
       user_score = scores.find_by(playlist: game.playlist)&.points || 0
       
@@ -112,15 +124,18 @@ class User < ApplicationRecord
   end
 
   def unique_playlists_played_count
-    games.joins(:playlist).distinct.count(:playlist_id)
+    # Exclure les playlists récompenses du calcul
+    games.joins(:playlist).where.not(playlists: { id: reward_playlist_ids }).distinct.count(:playlist_id)
   end
 
   def genres_explored_count
-    games.joins(:playlist).where.not(playlists: { genre: [nil, ''] }).distinct.count('playlists.genre')
+    # Exclure les playlists récompenses du calcul
+    games.joins(:playlist).where.not(playlists: { id: reward_playlist_ids }).where.not(playlists: { genre: [nil, ''] }).distinct.count('playlists.genre')
   end
 
   def completed_playlists_count
-    games.where.not(completed_at: nil).distinct.count(:playlist_id)
+    # Exclure les playlists récompenses du calcul
+    games.joins(:playlist).where.not(playlists: { id: reward_playlist_ids }).where.not(completed_at: nil).distinct.count(:playlist_id)
   end
 
   def performance_diversity
@@ -257,6 +272,11 @@ class User < ApplicationRecord
   end
 
   private
+
+  def reward_playlist_ids
+    @reward_playlist_ids ||= Playlist.where("LOWER(title) LIKE ? OR LOWER(title) LIKE ? OR LOWER(title) LIKE ?", 
+                                           "%reward%", "%récompense%", "%challenge%").pluck(:id)
+  end
 
   def assign_badges
     BadgeService.assign_badges(self)
