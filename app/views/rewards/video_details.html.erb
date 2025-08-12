@@ -57,7 +57,7 @@
                      alt="<%= video.title %>" 
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-                  <div class="text-white text-3xl">▶️</div>
+                  <div class="text-white text-3xl">🎵</div>
                 </div>
                 <!-- Numéro de la vidéo -->
                 <div class="absolute top-2 left-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
@@ -78,14 +78,11 @@
                 <% end %>
                 
                 <!-- Bouton pour voir la vidéo -->
-                <div class="mt-4">
+                <div class="mt-4 text-center">
                   <button 
                      onclick="showYouTubeModal('<%= video.youtube_id %>', '<%= video.title %>')"
-                     class="w-full inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105">
-                    <span>Regarder la vidéo</span>
-                    <svg class="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
-                    </svg>
+                     class="w-full inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg">
+                    <span>🎵 Regarder la vidéo</span>
                   </button>
                 </div>
               </div>
