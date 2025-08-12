@@ -17,8 +17,8 @@
     <!-- Carte de félicitations -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 mb-8 transform hover:scale-105 transition-all duration-300">
       <div class="text-center">
-        <h2 class="text-3xl font-light text-white mb-4">Playlist terminée avec succès !</h2>
-        <p class="text-xl text-white/80 mb-8">Vous avez découvert tous les titres de cette playlist récompense.</p>
+        <h2 class="text-3xl font-light text-white mb-4">Playlist récompense terminée !</h2>
+        <p class="text-xl text-white/80 mb-8">Vous avez découvert tous les titres de cette playlist exclusive.</p>
         
         <!-- Photo de l'utilisateur -->
         <div class="flex justify-center mb-8">
@@ -31,22 +31,6 @@
               </svg>
             </div>
           <% end %>
-        </div>
-
-        <!-- Statistiques simples -->
-        <div class="grid grid-cols-2 gap-6 max-w-md mx-auto mb-8">
-          <div class="bg-white/10 rounded-lg p-4">
-            <div class="text-2xl font-bold text-green-400">
-              <%= @liked_videos.count %>
-            </div>
-            <p class="text-white/80 text-sm">Titres aimés</p>
-          </div>
-          <div class="bg-white/10 rounded-lg p-4">
-            <div class="text-2xl font-bold text-blue-400">
-              <%= @not_liked_videos.count %>
-            </div>
-            <p class="text-white/80 text-sm">Titres découverts</p>
-          </div>
         </div>
 
         <!-- Message de félicitations -->

@@ -1,0 +1,244 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header avec logo -->
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center mb-6">
+        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 text-purple-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 8h2v8H5zm7 0H9v8h3zm5 8h2V8h-2zM8 5h8v2H8z"/>
+            </svg>
+          </div>
+        </div>
+        <h1 class="text-4xl font-bold text-white ml-4">📺 Détails des Vidéos</h1>
+      </div>
+      <p class="text-gray-300 text-lg">Contenu détaillé de votre récompense</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="flex space-x-2">
+        <%= link_to "← Retour à la récompense", reward_path(@reward), 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+        <%= link_to "← Retour aux récompenses", my_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+      </div>
+    </div>
+
+    <!-- Informations de la récompense -->
+    <% if @playlist %>
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+        <div class="text-center">
+          <h2 class="text-3xl font-bold text-white mb-4"><%= @playlist.title %></h2>
+          <div class="flex items-center justify-center space-x-4 mb-4">
+            <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full">
+              <%= @playlist.videos.count %> vidéos
+            </span>
+            <span class="bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white text-sm px-3 py-1 rounded-full">
+              <%= @reward.reward_type&.humanize %>
+            </span>
+          </div>
+          <p class="text-gray-300 text-lg">
+            <%= @reward.content_type&.humanize %> - Collection exclusive débloquée via les récompenses
+          </p>
+        </div>
+      </div>
+
+      <!-- Liste des vidéos -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+        <h3 class="text-xl font-bold text-white mb-6 text-center">🎵 Contenu de la Playlist</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% @playlist.videos.each_with_index do |video, index| %>
+            <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-hidden border border-gray-600 hover:border-purple-500 transition-all duration-300 transform hover:scale-105">
+              <!-- Thumbnail YouTube -->
+              <div class="relative h-40 bg-gray-800">
+                <img src="https://img.youtube.com/vi/<%= video.youtube_id %>/mqdefault.jpg" 
+                     alt="<%= video.title %>" 
+                     class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                  <div class="text-white text-3xl">▶️</div>
+                </div>
+                <!-- Numéro de la vidéo -->
+                <div class="absolute top-2 left-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-full font-bold">
+                  #<%= index + 1 %>
+                </div>
+              </div>
+              
+              <!-- Informations de la vidéo -->
+              <div class="p-4">
+                <h4 class="text-white font-semibold text-sm mb-3 line-clamp-2 leading-tight">
+                  <%= video.title %>
+                </h4>
+                
+                <% if video.description.present? %>
+                  <p class="text-gray-300 text-xs mb-3 line-clamp-3 leading-relaxed">
+                    <%= video.description %>
+                  </p>
+                <% end %>
+                
+                <!-- Bouton pour voir la vidéo -->
+                <div class="mt-4">
+                  <button 
+                     onclick="showYouTubeModal('<%= video.youtube_id %>', '<%= video.title %>')"
+                     class="w-full inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-medium rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 transform hover:scale-105">
+                    <span>Regarder la vidéo</span>
+                    <svg class="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Bouton pour lancer la playlist -->
+      <div class="text-center mt-8">
+        <% 
+          # Vérifier si l'utilisateur a déjà un jeu en cours pour cette playlist
+          existing_game = current_user.games.where(playlist: @playlist, completed_at: nil).last
+          if existing_game
+            # Si un jeu existe, continuer la partie
+            playlist_game_path = playlist_game_path(@playlist, existing_game)
+          else
+            # Sinon, créer une nouvelle partie
+            playlist_game_path = new_playlist_game_path(@playlist)
+          end
+        %>
+        <%= link_to "🎵 Lancer la Playlist", playlist_game_path, 
+            class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg" %>
+      </div>
+    <% else %>
+      <!-- Aucune playlist associée -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
+        <div class="text-6xl mb-4">🎁</div>
+        <h3 class="text-xl font-bold text-white mb-2">Récompense surprise</h3>
+        <p class="text-gray-300">Cette récompense ne contient pas de playlist associée.</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Modal styles */
+  .youtube-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+  }
+  
+  .youtube-modal-content {
+    position: relative;
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+  }
+  
+  .youtube-modal-close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  
+  .youtube-modal-close:hover {
+    color: white;
+  }
+  
+  .youtube-iframe-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+  
+  .youtube-iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+function showYouTubeModal(videoId, title) {
+  // Créer la modal si elle n'existe pas
+  let modal = document.getElementById('youtube-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'youtube-modal';
+    modal.className = 'youtube-modal';
+    modal.innerHTML = `
+      <div class="youtube-modal-content">
+        <span class="youtube-modal-close" onclick="closeYouTubeModal()">&times;</span>
+        <h3 style="color: white; margin-bottom: 15px;">${title}</h3>
+        <div class="youtube-iframe-container">
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  } else {
+    // Mettre à jour le contenu de la modal existante
+    const iframe = modal.querySelector('iframe');
+    const titleElement = modal.querySelector('h3');
+    if (iframe) iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    if (titleElement) titleElement.textContent = title;
+  }
+  
+  // Afficher la modal
+  modal.style.display = 'block';
+}
+
+function closeYouTubeModal() {
+  const modal = document.getElementById('youtube-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    // Arrêter la vidéo en vidant la source de l'iframe
+    const iframe = modal.querySelector('iframe');
+    if (iframe) iframe.src = '';
+  }
+}
+
+// Fermer la modal en cliquant en dehors
+window.onclick = function(event) {
+  const modal = document.getElementById('youtube-modal');
+  if (event.target == modal) {
+    closeYouTubeModal();
+  }
+}
+</script>

@@ -40,6 +40,9 @@ Rails.application.routes.draw do
 
   # Routes pour les récompenses
   resources :rewards, only: [:index, :show] do
+    member do
+      get :video_details
+    end
     collection do
       post :unlock
     end

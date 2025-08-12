@@ -5,6 +5,20 @@ class GamesController < ApplicationController
   before_action :check_premium_access, only: [:new, :create]
 
   def new
+    # Pour les playlists récompenses, permettre de relancer même si terminées
+    if reward_playlist?(@playlist)
+      # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+      existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+      
+      if existing_game
+        redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+      else
+        @game = Game.new(playlist: @playlist, user: current_user)
+      end
+      return
+    end
+    
+    # Pour les playlists normales, vérifier si déjà terminée
     # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
     completed_game = current_user.games.where(playlist: @playlist, completed_at: nil).where.not(completed_at: nil).last
     
@@ -24,6 +38,28 @@ class GamesController < ApplicationController
   end
 
   def create
+    # Pour les playlists récompenses, permettre de relancer même si terminées
+    if reward_playlist?(@playlist)
+      # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+      existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+      
+      if existing_game
+        redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+        return
+      end
+      
+      # Créer une nouvelle partie pour les playlists récompenses
+      @game = Game.new(playlist: @playlist, user: current_user)
+      
+      if @game.save
+        redirect_to playlist_game_path(@playlist, @game), notice: "Partie créée avec succès !"
+      else
+        render :new, status: :unprocessable_entity
+      end
+      return
+    end
+    
+    # Pour les playlists normales, vérifier si déjà terminée
     # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
     completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
     
@@ -89,7 +125,14 @@ class GamesController < ApplicationController
     @score = Score.find_by(user: current_user, playlist: @game.playlist)
     @playlist = @game.playlist
     
-    # Si pas de score, créer un score basé sur le jeu
+    # Vérifier si c'est une playlist récompense
+    if reward_playlist?(@playlist)
+      # Pour les playlists récompenses, rediriger vers reward_results
+      render :reward_results
+      return
+    end
+    
+    # Si pas de score, créer un score basé sur le jeu (seulement pour les playlists normales)
     unless @score
       game_score = @game.score
       @score = Score.create!(
@@ -144,7 +187,8 @@ class GamesController < ApplicationController
       playlist: @playlist
     )
 
-    # Ne pas créer de score pour les playlists récompenses
+    # Pour les playlists récompenses, pas de système de points
+    # Pour les playlists normales, calculer et sauvegarder les points
     unless reward_playlist?(@playlist)
       # Calcul des points en fonction de l'action (seulement pour les playlists normales)
       points = action == "like" ? 2 : 1
@@ -182,7 +226,28 @@ class GamesController < ApplicationController
   def play
     @playlist = Playlist.find(params[:playlist_id])
     
-    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
+    # Pour les playlists récompenses, permettre de relancer même si terminées
+    if reward_playlist?(@playlist)
+      # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+      existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+      
+      if existing_game
+        redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+        return
+      end
+      
+      # Créer une nouvelle partie pour les playlists récompenses
+      @game = Game.new(playlist: @playlist, user: current_user)
+      
+      if @game.save
+        redirect_to playlist_game_path(@playlist, @game), notice: "Nouvelle partie lancée !"
+      else
+        redirect_to playlists_path, alert: "Impossible de lancer une nouvelle partie."
+      end
+      return
+    end
+    
+    # Pour les playlists normales, vérifier si déjà terminée
     completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
     
     if completed_game
