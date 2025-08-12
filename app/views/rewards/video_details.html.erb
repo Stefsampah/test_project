@@ -107,13 +107,6 @@
         <%= link_to "🎵 Lancer la Playlist", playlist_game_path, 
             class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg" %>
       </div>
-    <% else %>
-      <!-- Aucune playlist associée -->
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center">
-        <div class="text-6xl mb-4">🎁</div>
-        <h3 class="text-xl font-bold text-white mb-2">Récompense surprise</h3>
-        <p class="text-gray-300">Cette récompense ne contient pas de playlist associée.</p>
-      </div>
     <% end %>
   </div>
 </div>
