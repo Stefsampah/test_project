@@ -25,6 +25,89 @@
 
     <!-- Carte fusionnée - Récompense et Playlist -->
     <% if @playlist %>
+    <% elsif @exclusif_content %>
+      <!-- Carte pour les récompenses exclusives -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-visible border border-gray-600">
+          <!-- Bannière avec thumbnail coloré -->
+          <div class="relative flex items-center justify-center overflow-hidden h-48">
+            <div class="absolute inset-0 bg-gradient-to-br <%= @exclusif_content[:color] %> opacity-80"></div>
+            
+            <!-- Contenu superposé -->
+            <div class="relative z-10 text-center">
+              <div class="text-white text-6xl mb-2"><%= @exclusif_content[:icon] %></div>
+              <div class="text-white font-semibold text-2xl mb-2"><%= @exclusif_content[:title] %></div>
+              <div class="text-white text-sm opacity-90"><%= @exclusif_content[:type] %></div>
+            </div>
+            
+            <!-- Badge type de contenu -->
+            <div class="absolute top-3 right-3">
+              <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= @exclusif_content[:type] %></span>
+            </div>
+          </div>
+          
+          <!-- Contenu de la récompense exclusive -->
+          <div class="p-6">
+            <!-- Informations de la récompense -->
+            <div class="mb-4">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="text-lg font-bold text-white"><%= @exclusif_content[:title] %></h3>
+                <div class="text-2xl">🥈</div>
+              </div>
+              <div class="text-xs text-gray-400">Débloqué le <%= @reward.unlocked_at&.strftime('%d/%m/%Y') %></div>
+            </div>
+            
+            <!-- Description -->
+            <div class="mb-6">
+              <p class="text-gray-300 text-sm leading-relaxed"><%= @exclusif_content[:description] %></p>
+            </div>
+            
+            <!-- Statistiques -->
+            <div class="grid grid-cols-3 gap-3 mb-6">
+              <div class="text-center">
+                <div class="text-lg font-bold text-white"><%= @reward.quantity_required %></div>
+                <div class="text-xs text-gray-300">Badges requis</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-white">✅</div>
+                <div class="text-xs text-gray-300">Débloqué</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-white">⭐</div>
+                <div class="text-xs text-gray-300">Exclusif</div>
+              </div>
+            </div>
+            
+            <!-- Lien vers le contenu ou message -->
+            <div class="text-center">
+              <% if @exclusif_content[:link] %>
+                <a href="<%= @exclusif_content[:link] %>" target="_blank" 
+                   class="inline-block bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200">
+                  <%= @exclusif_content[:link_text] %>
+                </a>
+              <% else %>
+                <div class="bg-gradient-to-r from-gray-600 to-gray-700 text-white font-bold py-3 px-6 rounded-lg">
+                  <%= @exclusif_content[:link_text] %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Carte par défaut pour les autres types de récompenses -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+        <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg p-6 text-center">
+          <div class="text-6xl mb-4">🎁</div>
+          <h3 class="text-xl font-bold text-white mb-2"><%= @reward.reward_type.humanize %></h3>
+          <p class="text-gray-300 mb-4"><%= @reward.reward_description %></p>
+          <div class="text-sm text-gray-400">Débloqué le <%= @reward.unlocked_at&.strftime('%d/%m/%Y') %></div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Carte fusionnée - Récompense et Playlist -->
+    <% if @playlist %>
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
         <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-visible border border-gray-600 playlist-card">
           <!-- Bannière de la playlist avec thumbnail aléatoire -->

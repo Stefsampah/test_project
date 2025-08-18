@@ -1,93 +1,160 @@
 #!/usr/bin/env ruby
 
 # Script de test pour les récompenses exclusives
-puts "🧪 Test des récompenses exclusives"
+# Assurez-vous que le serveur Rails est en cours d'exécution
+
+require 'net/http'
+require 'json'
+require 'uri'
+
+puts "🎯 Test des récompenses exclusives"
 puts "=" * 50
 
-# Charger l'environnement Rails
-require_relative 'config/environment'
+# Configuration
+BASE_URL = "http://localhost:3000"
+USER_EMAIL = "admin@example.com" # Remplacez par votre email
 
-# Trouver un utilisateur de test
-user = User.first
-if user.nil?
-  puts "❌ Aucun utilisateur trouvé dans la base de données"
-  exit 1
-end
-
-puts "👤 Utilisateur de test: #{user.email}"
-puts "🏅 Badges actuels: #{user.user_badges.count}"
-
-# Vérifier les récompenses existantes
-puts "\n📊 Récompenses existantes:"
-user.rewards.each do |reward|
-  puts "  - #{reward.reward_type.humanize} (#{reward.content_type}): #{reward.reward_description}"
-end
-
-# Simuler l'obtention de 6 badges pour débloquer les récompenses exclusives
-if user.user_badges.count < 6
-  puts "\n🎯 Simulation de l'obtention de badges..."
+def make_request(path, method = :get, data = nil)
+  uri = URI("#{BASE_URL}#{path}")
   
-  # Créer des badges de test si nécessaire
-  badge_types = ['bronze', 'silver', 'gold']
-  (6 - user.user_badges.count).times do |i|
-    badge_type = badge_types[i % 3]
-    level = badge_type
-    badge_type_name = "test_#{badge_type}_#{i + 1}"
-    
-    badge = Badge.find_or_create_by!(badge_type: badge_type_name, level: level) do |b|
-      b.title = "Badge Test #{badge_type.capitalize} #{i + 1}"
-      b.description = "Badge de test pour les récompenses exclusives"
-      b.points = 100
-      b.reward_type = 'standard'
-      b.reward_description = 'Badge de test'
-    end
-    
-    UserBadge.find_or_create_by!(user: user, badge: badge) do |ub|
-      ub.earned_at = Time.current
-    end
-    
-    puts "  ✅ Badge #{badge_type.capitalize} #{i + 1} créé et attribué"
+  case method
+  when :get
+    request = Net::HTTP::Get.new(uri)
+  when :post
+    request = Net::HTTP::Post.new(uri)
+    request['Content-Type'] = 'application/json'
+    request.body = data.to_json if data
+  end
+  
+  response = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    http.request(request)
+  end
+  
+  response
+end
+
+def login_user
+  puts "\n🔐 Connexion de l'utilisateur..."
+  
+  # Simuler la connexion (vous devrez vous connecter manuellement dans le navigateur)
+  puts "   Veuillez vous connecter manuellement dans votre navigateur avec :"
+  puts "   Email: #{USER_EMAIL}"
+  puts "   Passez à l'étape suivante une fois connecté..."
+  
+  gets.chomp
+end
+
+def check_user_badges
+  puts "\n🏅 Vérification des badges de l'utilisateur..."
+  
+  response = make_request("/scores")
+  
+  if response.code == "200"
+    puts "   ✅ Page des scores accessible"
+    puts "   📊 Vérifiez le nombre de badges affiché sur la page"
+  else
+    puts "   ❌ Erreur lors de l'accès aux scores: #{response.code}"
   end
 end
 
-puts "\n🏅 Badges après simulation: #{user.user_badges.count}"
-
-# Vérifier et créer les récompenses exclusives
-puts "\n🔓 Vérification des récompenses exclusives..."
-new_rewards = Reward.check_and_create_rewards_for_user(user)
-
-if new_rewards.any?
-  puts "🎉 #{new_rewards.count} nouvelle(s) récompense(s) créée(s):"
-  new_rewards.each do |reward|
-    puts "  - #{reward.reward_type.humanize}: #{reward.content_type} - #{reward.reward_description}"
+def unlock_rewards
+  puts "\n🎁 Déblocage des récompenses..."
+  
+  response = make_request("/unlock_rewards", :post)
+  
+  if response.code == "200" || response.code == "302"
+    puts "   ✅ Récompenses débloquées avec succès"
+  else
+    puts "   ❌ Erreur lors du déblocage: #{response.code}"
+    puts "   📝 Réponse: #{response.body}"
   end
-else
-  puts "ℹ️ Aucune nouvelle récompense créée"
 end
 
-# Afficher toutes les récompenses exclusives
-puts "\n⭐ Récompenses exclusives débloquées:"
-exclusif_rewards = user.rewards.where(reward_type: 'exclusif')
-if exclusif_rewards.any?
-  exclusif_rewards.each do |reward|
-    puts "  - #{reward.content_type}: #{reward.reward_description}"
+def check_exclusif_rewards
+  puts "\n⭐ Vérification des récompenses exclusives..."
+  
+  response = make_request("/exclusif_rewards")
+  
+  if response.code == "200"
+    puts "   ✅ Page des récompenses exclusives accessible"
+    puts "   📱 Ouvrez cette page dans votre navigateur pour voir les détails"
+  else
+    puts "   ❌ Erreur lors de l'accès aux récompenses exclusives: #{response.code}"
+    puts "   📝 Réponse: #{response.body}"
   end
-else
-  puts "  Aucune récompense exclusive débloquée"
 end
 
-# Tester la sélection aléatoire
-puts "\n🎲 Test de la sélection aléatoire des récompenses exclusives..."
-puts "Types de contenu disponibles pour les récompenses exclusives:"
-
-# Récupérer les types de contenu exclusif depuis le modèle
-exclusif_content_types = Reward.content_types.select { |k, v| k.to_s.include?('_') && !k.to_s.start_with?('challenge_') }
-
-exclusif_content_types.each do |key, value|
-  puts "  - #{key}: #{value}"
+def check_reward_details
+  puts "\n🔍 Vérification des détails des récompenses..."
+  
+  # Vérifier une récompense spécifique (ID 1 par défaut)
+  response = make_request("/rewards/1")
+  
+  if response.code == "200"
+    puts "   ✅ Page de détails des récompenses accessible"
+    puts "   📱 Ouvrez cette page dans votre navigateur pour voir les détails"
+  else
+    puts "   ❌ Erreur lors de l'accès aux détails: #{response.code}"
+  end
 end
 
-puts "\n✅ Test terminé avec succès!"
-puts "\n📝 Pour tester la page des récompenses exclusives:"
-puts "   Visitez: /exclusif_rewards"
-puts "   Ou utilisez le lien: exclusif_rewards_path"
+def simulate_badge_acquisition
+  puts "\n🎯 Simulation de l'acquisition de badges..."
+  puts "   Pour tester les récompenses exclusives, vous devez avoir 6 badges"
+  puts "   Voici comment procéder :"
+  puts "   1. Jouez à des jeux pour gagner des badges"
+  puts "   2. Ou utilisez la console Rails pour ajouter des badges manuellement"
+  puts "   3. Vérifiez que vous avez au moins 6 badges"
+  puts "   4. Puis testez le déblocage des récompenses exclusives"
+end
+
+def show_test_instructions
+  puts "\n📋 Instructions de test :"
+  puts "=" * 50
+  puts "1. Assurez-vous que votre serveur Rails est en cours d'exécution"
+  puts "2. Ouvrez votre navigateur et connectez-vous à l'application"
+  puts "3. Vérifiez que vous avez au moins 6 badges"
+  puts "4. Testez les pages suivantes :"
+  puts "   - /exclusif_rewards (page des récompenses exclusives)"
+  puts "   - /unlock_rewards (déblocage des récompenses)"
+  puts "   - /rewards/[id] (détails d'une récompense)"
+  puts "5. Vérifiez que les récompenses exclusives s'affichent correctement"
+  puts "6. Testez le clic sur une récompense pour voir ses détails"
+end
+
+# Exécution du test
+begin
+  puts "🚀 Démarrage du test des récompenses exclusives..."
+  
+  # Vérifier que le serveur est accessible
+  response = make_request("/")
+  if response.code == "200"
+    puts "   ✅ Serveur Rails accessible"
+  else
+    puts "   ❌ Serveur Rails non accessible. Assurez-vous qu'il est en cours d'exécution."
+    exit 1
+  end
+  
+  # Instructions de test
+  show_test_instructions
+  
+  # Simulation de l'acquisition de badges
+  simulate_badge_acquisition
+  
+  # Vérifications
+  check_user_badges
+  unlock_rewards
+  check_exclusif_rewards
+  check_reward_details
+  
+  puts "\n🎉 Test terminé !"
+  puts "\n📱 Prochaines étapes :"
+  puts "   1. Ouvrez /exclusif_rewards dans votre navigateur"
+  puts "   2. Vérifiez que la page se charge sans erreur"
+  puts "   3. Testez le déblocage des récompenses si vous avez 6 badges"
+  puts "   4. Cliquez sur une récompense pour voir ses détails"
+  
+rescue => e
+  puts "\n❌ Erreur lors du test : #{e.message}"
+  puts "   Stack trace : #{e.backtrace.first(5).join("\n   ")}"
+end

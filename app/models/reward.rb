@@ -16,6 +16,7 @@ class Reward < ApplicationRecord
   
   # Types de contenu pour les récompenses digitales
   enum content_type: {
+    # Types de base
     playlist_exclusive: 'playlist_exclusive',
     playlist_acoustic: 'playlist_acoustic',
     playlist_remix: 'playlist_remix',
@@ -31,6 +32,8 @@ class Reward < ApplicationRecord
     personal_voice_message: 'personal_voice_message',
     dedicated_photo: 'dedicated_photo',
     concert_invitation: 'concert_invitation',
+    
+    # Playlists Challenge
     challenge_reward_playlist_1: 'challenge_reward_playlist_1',
     challenge_reward_playlist_2: 'challenge_reward_playlist_2',
     challenge_reward_playlist_3: 'challenge_reward_playlist_3',
@@ -46,27 +49,21 @@ class Reward < ApplicationRecord
     challenge_reward_playlist_13: 'challenge_reward_playlist_13',
     challenge_reward_playlist_14: 'challenge_reward_playlist_14',
     challenge_reward_playlist_15: 'challenge_reward_playlist_15',
-    # Nouveaux types de contenu exclusif
+    
+    # Contenu exclusif spécifié par l'utilisateur
     rapivoire_ci: 'rapivoire_ci',
     my_afro_culture: 'my_afro_culture',
     afrikactus: 'afrikactus',
     baton_rouge_label: 'baton_rouge_label',
-    danslaciudad: 'danslaciudad',
-    culturap: 'culturap',
     pan_african_music: 'pan_african_music',
-    popnews: 'popnews',
-    citemag: 'citemag',
     generation_voyage: 'generation_voyage',
-    okayplayer: 'okayplayer',
     pigeons_planes: 'pigeons_planes',
     bandcamp_daily: 'bandcamp_daily',
     underground_ivoire: 'underground_ivoire',
     le_type: 'le_type',
-    madmoizelle: 'madmoizelle',
     radio_campus_france: 'radio_campus_france',
     la_souterraine: 'la_souterraine',
     le_tournedisque: 'le_tournedisque',
-    # Documentaires exclusifs
     didi_b_interview: 'didi_b_interview',
     himra_legendes_urbaines: 'himra_legendes_urbaines',
     zoh_cataleya_serge_dioman: 'zoh_cataleya_serge_dioman',
@@ -74,7 +71,6 @@ class Reward < ApplicationRecord
     rumble_indians: 'rumble_indians',
     country_music_ken_burns: 'country_music_ken_burns',
     rap_odyssees_france_tv: 'rap_odyssees_france_tv',
-    # Sessions studio exclusives
     himra_number_one_live: 'himra_number_one_live',
     didi_b_nouvelle_generation: 'didi_b_nouvelle_generation',
     zoh_cataleya_live_toura: 'zoh_cataleya_live_toura',
@@ -240,62 +236,46 @@ class Reward < ApplicationRecord
           { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
           { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
         ]
-      when 'exclusif'
-        [
-          # Blogs et Médias Spécialisés
-          { content_type: 'rapivoire_ci', name: 'Rapivoire.ci', description: 'Média influent dédié au rap ivoirien - Artistes émergents', icon: '📝' },
-          { content_type: 'my_afro_culture', name: 'My Afro Culture', description: 'Blog culturel sur les talents émergents', icon: '📝' },
-          { content_type: 'afrikactus', name: 'Afrikactus', description: 'Focus sur le reggae ivoirien', icon: '📝' },
-          { content_type: 'baton_rouge_label', name: 'Baton Rouge Label', description: 'Analyse des tendances musicales ivoiriennes', icon: '📝' },
-          { content_type: 'danslaciudad', name: 'DansLaCiudad', description: 'Média urbain français - Artistes émergents', icon: '📝' },
-          { content_type: 'culturap', name: 'Culturap', description: 'Média rap français - Scènes locales', icon: '📝' },
-          { content_type: 'pan_african_music', name: 'Pan African Music', description: 'Artistes afro, reggae, hip-hop et indé', icon: '📝' },
-          { content_type: 'popnews', name: 'POPnews', description: 'Webzine pop indé européen', icon: '📝' },
-          { content_type: 'citemag', name: 'CiteMag', description: 'Cultures urbaines européennes', icon: '📝' },
-          { content_type: 'generation_voyage', name: 'Generation Voyage', description: 'Guide des festivals urbains', icon: '📝' },
-          { content_type: 'okayplayer', name: 'Okayplayer', description: 'Média américain - Hip-hop, soul, afrobeat', icon: '📝' },
-          { content_type: 'pigeons_planes', name: 'Pigeons & Planes', description: 'Artistes émergents dans tous les genres urbains', icon: '📝' },
-          { content_type: 'bandcamp_daily', name: 'Bandcamp Daily', description: 'Scènes locales et underground', icon: '📝' },
-          { content_type: 'le_type', name: 'Le Type', description: 'Média bordelais indépendant', icon: '📝' },
-          { content_type: 'madmoizelle', name: 'Madmoizelle', description: 'Artistes bordelais', icon: '📝' },
-          { content_type: 'radio_campus_france', name: 'Radio Campus France', description: 'Radios étudiantes - Artistes indés', icon: '📝' },
-          { content_type: 'la_souterraine', name: 'La Souterraine', description: 'Artistes francophones émergents', icon: '📝' },
-          { content_type: 'le_tournedisque', name: 'Le Tournedisque', description: 'Pépites musicales françaises', icon: '📝' },
-          
-          # Podcasts Exclusifs
-          { content_type: 'underground_ivoire', name: 'Underground Ivoire', description: 'Podcast dédié aux artistes émergents du rap ivoirien', icon: '🎙️' },
-          { content_type: 'podcast_exclusive', name: 'Podcast Exclusif', description: 'Interview exclusive d\'un artiste', icon: '🎙️' },
-          
-          # Documentaires Exclusifs
-          { content_type: 'didi_b_interview', name: 'Interview Exclusive: Didi B', description: 'À cœur ouvert - Avant son concert au stade FHB', icon: '🎬' },
-          { content_type: 'himra_legendes_urbaines', name: 'Himra dans Légendes Urbaines', description: 'Portrait complet avec des moments forts de sa carrière', icon: '🎬' },
-          { content_type: 'zoh_cataleya_serge_dioman', name: 'La Télé d\'Ici', description: 'Zoh Cataleya et Serge Dioman', icon: '🎬' },
-          { content_type: 'do_it_together', name: 'Do It Together', description: 'Tour du monde de la scène indé', icon: '🎬' },
-          { content_type: 'rumble_indians', name: 'RUMBLE - The Indians Who Rocked the World', description: 'Documentaire primé à Sundance', icon: '🎬' },
-          { content_type: 'country_music_ken_burns', name: 'Country Music - Ken Burns', description: 'Histoire populaire des États-Unis', icon: '🎬' },
-          { content_type: 'rap_odyssees_france_tv', name: 'Rap Odyssées - France TV', description: 'Portrait de jeunes rappeurs bordelais', icon: '🎬' },
-          { content_type: 'documentary', name: 'Documentaire', description: 'Documentaire musical exclusif', icon: '🎬' },
-          
-          # Commentaires Audio
-          { content_type: 'audio_comments', name: 'Commentaires Audio', description: 'Artistes commentent leurs chansons', icon: '🎧' },
-          
-          # Sessions Studio
-          { content_type: 'himra_number_one_live', name: 'HIMRA - NUMBER ONE (Live Version)', description: 'Version live qui reflète l\'ambiance studio', icon: '🎹' },
-          { content_type: 'didi_b_nouvelle_generation', name: 'DIDI B EN STUDIO AVEC LA NOUVELLE GÉNÉRATION', description: 'Session studio avec Didi B et d\'autres artistes', icon: '🎹' },
-          { content_type: 'zoh_cataleya_live_toura', name: 'ZOH CATALEYA - LIVE TOURA DRILL 1', description: 'Performance live proche d\'une session studio', icon: '🎹' },
-          { content_type: 'bigyne_wiz_abe_sounogola', name: 'Séance studio Bigyne Wiz', description: 'Abé sounôgôla - Session studio disponible', icon: '🎹' },
-          { content_type: 'didi_b_mhd_studio', name: 'Didi B au studio avec MHD', description: 'Extrait studio avec MHD - Une exclu en pétard', icon: '🎹' },
-          { content_type: 'didi_b_naira_marley', name: 'DIDI B FEAT NAIRA MARLEY', description: 'Du nouveau hits - Séance studio exclusif', icon: '🎹' },
-          { content_type: 'didi_b_enregistrement', name: 'VOICI COMMENT DIDI B ENREGISTRE SES SONG', description: 'Session studio générale incluant Rodela', icon: '🎹' },
-          { content_type: 'werenoi_cstar_session', name: 'Werenoi - CSTAR Session (live)', description: 'Location / Solitaire / Chemin d\'or - Session live', icon: '🎹' },
-          { content_type: 'himra_top_boy_live', name: 'HIMRA - TOP BOY LIVE VERSION', description: 'Version live exclusive', icon: '🎹' },
-          { content_type: 'timar_zz_lequel', name: 'Timar feat. ZZ - Lequel', description: 'EXCLU - Session studio exclusive', icon: '🎹' },
-          { content_type: 'octogone_philipayne', name: 'OCTOGONE - PHILIPAYNE', description: 'Avec Enfant Noir, Le Couteau, Slai & BigGodzi', icon: '🎹' },
-          { content_type: 'studio_session', name: 'Session Studio', description: 'Vidéo d\'enregistrement en studio', icon: '🎹' },
-          
-          # Reportages
-          { content_type: 'reportage', name: 'Reportage', description: 'Reportage exclusif sur un artiste', icon: '📺' }
-        ]
+          when 'exclusif'
+      [
+        # Blogs et Médias Spécialisés
+        { content_type: 'rapivoire_ci', name: 'Rapivoire.ci', description: 'Média influent dédié au rap ivoirien - Artistes émergents', icon: '📝' },
+        { content_type: 'my_afro_culture', name: 'My Afro Culture', description: 'Blog culturel sur les talents émergents', icon: '📝' },
+        { content_type: 'baton_rouge_label', name: 'Baton Rouge Label', description: 'Analyse des tendances musicales ivoiriennes', icon: '📝' },
+        { content_type: 'pan_african_music', name: 'Pan African Music', description: 'Artistes afro, reggae, hip-hop et indé', icon: '📝' },
+        { content_type: 'generation_voyage', name: 'Generation Voyage', description: 'Guide des festivals urbains', icon: '📝' },
+        { content_type: 'pigeons_planes', name: 'Pigeons & Planes', description: 'Artistes émergents dans tous les genres urbains', icon: '📝' },
+        { content_type: 'bandcamp_daily', name: 'Bandcamp Daily', description: 'Scènes locales et underground', icon: '📝' },
+        { content_type: 'le_type', name: 'Le Type', description: 'Média bordelais indépendant', icon: '📝' },
+        { content_type: 'radio_campus_france', name: 'Radio Campus France', description: 'Radios étudiantes - Artistes indés', icon: '📝' },
+        { content_type: 'la_souterraine', name: 'La Souterraine', description: 'Artistes francophones émergents', icon: '📝' },
+        { content_type: 'le_tournedisque', name: 'Le Tournedisque', description: 'Pépites musicales françaises', icon: '📝' },
+        
+        # Podcasts Exclusifs
+        { content_type: 'underground_ivoire', name: 'Underground Ivoire', description: 'Podcast dédié aux artistes émergents du rap ivoirien', icon: '🎙️' },
+        
+        # Documentaires Exclusifs
+        { content_type: 'didi_b_interview', name: 'Interview Exclusive: Didi B', description: 'À cœur ouvert - Avant son concert au stade FHB', icon: '🎬' },
+        { content_type: 'himra_legendes_urbaines', name: 'Himra dans Légendes Urbaines', description: 'Portrait complet avec des moments forts de sa carrière', icon: '🎬' },
+        { content_type: 'zoh_cataleya_serge_dioman', name: 'La Télé d\'Ici', description: 'Zoh Cataleya et Serge Dioman', icon: '🎬' },
+        { content_type: 'do_it_together', name: 'Do It Together', description: 'Tour du monde de la scène indé', icon: '🎬' },
+        { content_type: 'rumble_indians', name: 'RUMBLE - The Indians Who Rocked the World', description: 'Documentaire primé à Sundance', icon: '🎬' },
+        { content_type: 'country_music_ken_burns', name: 'Country Music - Ken Burns', description: 'Histoire populaire des États-Unis', icon: '🎬' },
+        { content_type: 'rap_odyssees_france_tv', name: 'Rap Odyssées - France TV', description: 'Portrait de jeunes rappeurs bordelais', icon: '🎬' },
+        
+        # Sessions Studio
+        { content_type: 'himra_number_one_live', name: 'HIMRA - NUMBER ONE (Live Version)', description: 'Version live qui reflète l\'ambiance studio', icon: '🎹' },
+        { content_type: 'didi_b_nouvelle_generation', name: 'DIDI B EN STUDIO AVEC LA NOUVELLE GÉNÉRATION', description: 'Session studio avec Didi B et d\'autres artistes', icon: '🎹' },
+        { content_type: 'zoh_cataleya_live_toura', name: 'ZOH CATALEYA - LIVE TOURA DRILL 1', description: 'Performance live proche d\'une session studio', icon: '🎹' },
+        { content_type: 'bigyne_wiz_abe_sounogola', name: 'Séance studio Bigyne Wiz', description: 'Abé sounôgôla - Session studio disponible', icon: '🎹' },
+        { content_type: 'didi_b_mhd_studio', name: 'Didi B au studio avec MHD', description: 'Extrait studio avec MHD - Une exclu en pétard', icon: '🎹' },
+        { content_type: 'didi_b_naira_marley', name: 'DIDI B FEAT NAIRA MARLEY', description: 'Du nouveau hits - Séance studio exclusif', icon: '🎹' },
+        { content_type: 'didi_b_enregistrement', name: 'VOICI COMMENT DIDI B ENREGISTRE SES SONG', description: 'Session studio générale incluant Rodela', icon: '🎹' },
+        { content_type: 'werenoi_cstar_session', name: 'Werenoi - CSTAR Session (live)', description: 'Location / Solitaire / Chemin d\'or - Session live', icon: '🎹' },
+        { content_type: 'himra_top_boy_live', name: 'HIMRA - TOP BOY LIVE VERSION', description: 'Version live exclusive', icon: '🎹' },
+        { content_type: 'timar_zz_lequel', name: 'Timar feat. ZZ - Lequel', description: 'EXCLU - Session studio exclusive', icon: '🎹' },
+        { content_type: 'octogone_philipayne', name: 'OCTOGONE - PHILIPAYNE', description: 'Avec Enfant Noir, Le Couteau, Slai & BigGodzi', icon: '🎹' }
+      ]
       when 'premium'
         [
           { content_type: 'exclusive_photos', name: 'Photos Exclusives', description: 'Photos exclusives d\'artistes', icon: '📸' },
@@ -417,28 +397,18 @@ class Reward < ApplicationRecord
       puts "📝 Afrikactus débloqué comme récompense exclusive pour #{user.email}"
     when 'baton_rouge_label'
       puts "📝 Baton Rouge Label débloqué comme récompense exclusive pour #{user.email}"
-    when 'danslaciudad'
-      puts "📝 DansLaCiudad débloqué comme récompense exclusive pour #{user.email}"
-    when 'culturap'
-      puts "📝 Culturap débloqué comme récompense exclusive pour #{user.email}"
     when 'pan_african_music'
       puts "📝 Pan African Music débloqué comme récompense exclusive pour #{user.email}"
-    when 'popnews'
-      puts "📝 POPnews débloqué comme récompense exclusive pour #{user.email}"
-    when 'citemag'
-      puts "📝 CiteMag débloqué comme récompense exclusive pour #{user.email}"
     when 'generation_voyage'
       puts "📝 Generation Voyage débloqué comme récompense exclusive pour #{user.email}"
-    when 'okayplayer'
-      puts "📝 Okayplayer débloqué comme récompense exclusive pour #{user.email}"
     when 'pigeons_planes'
       puts "📝 Pigeons & Planes débloqué comme récompense exclusive pour #{user.email}"
     when 'bandcamp_daily'
       puts "📝 Bandcamp Daily débloqué comme récompense exclusive pour #{user.email}"
+    when 'underground_ivoire'
+      puts "🎙️ Underground Ivoire débloqué comme récompense exclusive pour #{user.email}"
     when 'le_type'
       puts "📝 Le Type débloqué comme récompense exclusive pour #{user.email}"
-    when 'madmoizelle'
-      puts "📝 Madmoizelle débloqué comme récompense exclusive pour #{user.email}"
     when 'radio_campus_france'
       puts "📝 Radio Campus France débloqué comme récompense exclusive pour #{user.email}"
     when 'la_souterraine'
@@ -447,8 +417,6 @@ class Reward < ApplicationRecord
       puts "📝 Le Tournedisque débloqué comme récompense exclusive pour #{user.email}"
       
       # Podcasts Exclusifs
-    when 'underground_ivoire'
-      puts "🎙️ Underground Ivoire débloqué comme récompense exclusive pour #{user.email}"
     when 'podcast_exclusive'
       puts "🎙️ Podcast Exclusif débloqué comme récompense exclusive pour #{user.email}"
       
@@ -467,12 +435,6 @@ class Reward < ApplicationRecord
       puts "🎬 Country Music - Ken Burns débloqué comme récompense exclusive pour #{user.email}"
     when 'rap_odyssees_france_tv'
       puts "🎬 Rap Odyssées - France TV débloqué comme récompense exclusive pour #{user.email}"
-    when 'documentary'
-      puts "🎬 Documentaire débloqué comme récompense exclusive pour #{user.email}"
-      
-      # Commentaires Audio
-    when 'audio_comments'
-      puts "🎧 Commentaires Audio débloqués comme récompense exclusive pour #{user.email}"
       
       # Sessions Studio
     when 'himra_number_one_live'
@@ -497,7 +459,6 @@ class Reward < ApplicationRecord
       puts "🎹 Timar feat. ZZ - Lequel débloquée comme récompense exclusive pour #{user.email}"
     when 'octogone_philipayne'
       puts "🎹 OCTOGONE - PHILIPAYNE débloquée comme récompense exclusive pour #{user.email}"
-    when 'studio_session'
       puts "🎹 Session Studio débloquée comme récompense exclusive pour #{user.email}"
       
       # Reportages
