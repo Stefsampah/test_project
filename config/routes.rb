@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   get 'all_rewards', to: 'rewards#all_rewards'
   get 'reward_details', to: 'rewards#details', as: :reward_details
   get 'partners', to: 'rewards#partners', as: :partners
+  get 'exclusif_rewards', to: 'rewards#exclusif', as: :exclusif_rewards
+  get 'challenge_rewards', to: 'rewards#challenge', as: :challenge_rewards
 
 
 

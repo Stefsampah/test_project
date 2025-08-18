@@ -147,6 +147,34 @@ class RewardsController < ApplicationController
     end
   end
 
+  def exclusif
+    # Page des récompenses exclusives (6 badges requis)
+    @unlocked_exclusif_rewards = current_user.rewards.where(reward_type: 'exclusif', unlocked: true).order(created_at: :desc)
+    
+    # Statistiques des badges pour la progression
+    @current_badge_count = current_user.user_badges.count
+    @progress_percentage = [(@current_badge_count.to_f / 6 * 100), 100].min
+    
+    # Statistiques par niveau
+    @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+  end
+  
+  def challenge
+    # Page des récompenses challenge (3 badges requis)
+    @unlocked_challenge_rewards = current_user.rewards.where(reward_type: 'challenge', unlocked: true).order(created_at: :desc)
+    
+    # Statistiques des badges pour la progression
+    @current_badge_count = current_user.user_badges.count
+    @progress_percentage = [(@current_badge_count.to_f / 3 * 100), 100].min
+    
+    # Statistiques par niveau
+    @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+  end
+  
   def partners
     # Page des partenaires et codes promo
     render 'partners'

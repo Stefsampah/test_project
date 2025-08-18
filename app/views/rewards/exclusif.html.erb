@@ -1,0 +1,458 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header avec logo -->
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center mb-6">
+        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 text-purple-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+        </div>
+        <h1 class="text-4xl font-bold text-white ml-4">⭐ Récompenses Exclusives</h1>
+      </div>
+      <p class="text-gray-300 text-lg">Débloquez du contenu exclusif en collectant 6 badges</p>
+    </div>
+
+    <!-- Navigation moderne -->
+    <div class="flex justify-center mb-8">
+      <div class="flex space-x-2">
+        <%= link_to "Mes récompenses", my_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors" %>
+        <%= link_to "Toutes les récompenses", all_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+        <%= link_to "Challenge (3 badges)", challenge_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+      </div>
+    </div>
+
+    <!-- Bouton pour vérifier les récompenses -->
+    <div class="text-center mb-8">
+      <%= link_to "Vérifier mes récompenses exclusives", unlock_rewards_path, method: :post, 
+          class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+    </div>
+
+    <!-- Récompenses exclusives débloquées -->
+    <div class="mb-12">
+      <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 mb-8">
+        <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses exclusives débloquées</h2>
+        
+        <% if @unlocked_exclusif_rewards.any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% @unlocked_exclusif_rewards.each do |reward| %>
+              <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
+                <!-- Bannière avec image ou dégradé -->
+                <div class="h-48 relative">
+                  <div class="w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center">
+                    <div class="text-white text-4xl">⭐</div>
+                  </div>
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">EXCLUSIF!</span>
+                  </div>
+                  <div class="absolute top-3 right-3">
+                    <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
+                  </div>
+                </div>
+                
+                <!-- Contenu de la carte -->
+                <div class="p-4 flex-1 flex flex-col">
+                  <!-- Étiquettes -->
+                  <div class="flex gap-2 mb-3">
+                    <span class="bg-purple-500 text-white text-xs px-3 py-1 rounded-full">
+                      Exclusif
+                    </span>
+                    <span class="bg-white text-black text-xs px-3 py-1 rounded-full">
+                      <%= reward.badge_type.humanize %>
+                    </span>
+                  </div>
+                  
+                  <!-- Titre -->
+                  <h3 class="text-xl font-bold text-white mb-2">
+                    <%= reward.reward_type.humanize %> <%= reward.badge_type.humanize %>
+                  </h3>
+                  
+                  <!-- Description -->
+                  <p class="text-gray-300 text-sm mb-4 flex-grow">
+                    <%= reward.reward_description %>
+                  </p>
+                  
+                  <!-- Détails en bas -->
+                  <div class="flex items-center justify-between pt-3 border-t border-gray-600 mt-auto">
+                    <span class="text-white text-sm">Niveau Exclusif</span>
+                    <div class="text-center">
+                      <div class="text-white font-bold">600</div>
+                      <div class="text-gray-400 text-xs">points</div>
+                    </div>
+                    <%= link_to reward_path(reward), class: "text-purple-400 hover:text-purple-300 text-sm flex items-center" do %>
+                      Voir détails →
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
+            <div class="text-6xl mb-4">🎯</div>
+            <h3 class="text-xl font-bold text-white mb-2">Aucune récompense exclusive débloquée</h3>
+            <p class="text-gray-400">Collectez 6 badges pour débloquer des récompenses exclusives</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Contenu exclusif disponible avec thumbnails et descriptions -->
+    <div class="mb-12">
+      <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 mb-8">
+        <h2 class="text-2xl font-bold text-white mb-6">📚 Contenu Exclusif Disponible</h2>
+        <p class="text-gray-300 mb-6">Découvrez le type de contenu que vous pourrez débloquer avec 6 badges</p>
+        
+        <!-- Grille des types de contenu avec thumbnails -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Blogs et Médias Spécialisés -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">📝</div>
+              <h3 class="text-xl font-bold text-white">Blogs et Médias Spécialisés</h3>
+            </div>
+            <div class="space-y-3">
+              <!-- Rapivoire.ci -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    R
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Rapivoire.ci</h4>
+                    <p class="text-gray-300 text-xs">Média influent dédié au rap ivoirien - Artistes émergents</p>
+                    <a href="https://2024.rapivoire.ci/10-rappeurs-a-suivre-rap-ivoire-2024/" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le contenu →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- My Afro Culture -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    M
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">My Afro Culture</h4>
+                    <p class="text-gray-300 text-xs">Blog culturel sur les talents émergents (Himra, Widgunz, SK07, Ramba Junior, Agato, Mister Christ)</p>
+                    <a href="https://myafroculture.com/les-6-rappeurs-ivoiriens-qui-montent/" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le contenu →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Afrikactus -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    A
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Afrikactus</h4>
+                    <p class="text-gray-300 text-xs">Focus sur le reggae ivoirien (Kajeem, Bonny B, Meiway, Bamba Ami Sarah, Ismaël Isaac)</p>
+                    <a href="https://afrikactus.com/reggae-ivoirien-5-artistes-emergents-qui-revolutionnent-la-scene-musicale-africaine/" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le contenu →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Baton Rouge Label -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    B
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Baton Rouge Label</h4>
+                    <p class="text-gray-300 text-xs">Analyse des tendances musicales ivoiriennes : drill, afro-électro, rock, dancehall</p>
+                    <a href="https://batonrougelabel.com/blogs/conseils-pour-reussir-dans-l-industrie-musicale/la-cote-divoire-une-scene-musicale-en-pleine-mutation" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le contenu →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- DansLaCiudad -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    D
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">DansLaCiudad</h4>
+                    <p class="text-gray-300 text-xs">Média urbain français - Artistes émergents en pop urbaine, rap et afro</p>
+                    <a href="https://danslaciudad.com/" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le contenu →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Podcasts Exclusifs -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">🎙️</div>
+              <h3 class="text-xl font-bold text-white">Podcasts Exclusifs</h3>
+            </div>
+            <div class="space-y-3">
+              <!-- Underground Ivoire -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-red-400 to-pink-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    U
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Underground Ivoire</h4>
+                    <p class="text-gray-300 text-xs">Podcast dédié aux artistes émergents du rap ivoirien - Interviews, freestyles, coulisses</p>
+                    <a href="https://podcasts.apple.com/fr/podcast/underground-ivoire/id1690475959" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Écouter le podcast →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Bruce Springsteen -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    B
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Bruce Springsteen - Le Monde d'Élodie</h4>
+                    <p class="text-gray-300 text-xs">Séries d'interviews exclusives sur son engagement et sa carrière</p>
+                    <a href="https://www.radiofrance.fr/franceinfo/podcasts/le-monde-d-elodie/bruce-springsteen-je-pense-que-nous-sommes-tous-tres-inquiets-a-propos-de-notre-democratie-aux-etats-unis-5638129" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Écouter l'interview →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Documentaires Exclusifs -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">🎬</div>
+              <h3 class="text-xl font-bold text-white">Documentaires Exclusifs</h3>
+            </div>
+            <div class="space-y-3">
+              <!-- Didi B Interview -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    D
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Interview Exclusive: Didi B</h4>
+                    <p class="text-gray-300 text-xs">À cœur ouvert - Avant son concert au stade FHB, il se livre sur sa carrière et ses émotions</p>
+                    <a href="https://www.youtube.com/watch?v=WEfUGQZGDrE" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Regarder le documentaire →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Himra Légendes Urbaines -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    H
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Himra dans Légendes Urbaines</h4>
+                    <p class="text-gray-300 text-xs">Portrait complet avec des moments forts de sa carrière - Tiken Jah Fakoly x SDM</p>
+                    <a href="https://www.youtube.com/watch?v=EDFgyWTYju8" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Regarder le documentaire →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Do It Together -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    D
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Do It Together</h4>
+                    <p class="text-gray-300 text-xs">Tour du monde de la scène indé - Paris, Belgrade, Amsterdam - Évolution du DIY vers la création collective</p>
+                    <a href="https://sourdoreille.net/do-it-together-pose-la-question-quest-ce-que-la-musique-inde/" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Voir le documentaire →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sessions Studio -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">🎹</div>
+              <h3 class="text-xl font-bold text-white">Sessions Studio</h3>
+            </div>
+            <div class="space-y-3">
+              <!-- HIMRA NUMBER ONE -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    H
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">HIMRA - NUMBER ONE (Live Version)</h4>
+                    <p class="text-gray-300 text-xs">Version live qui reflète l'ambiance studio</p>
+                    <a href="https://www.youtube.com/watch?v=hn35k3R9Ja4" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Regarder la session →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Didi B Nouvelle Génération -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    D
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">DIDI B EN STUDIO AVEC LA NOUVELLE GÉNÉRATION</h4>
+                    <p class="text-gray-300 text-xs">Session studio avec Didi B et d'autres artistes</p>
+                    <a href="https://www.youtube.com/watch?v=9ECNWJ1R0fg" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Regarder la session →</a>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Zoh Cataleya -->
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-pink-400 to-red-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    Z
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">ZOH CATALEYA - LIVE TOURA DRILL 1</h4>
+                    <p class="text-gray-300 text-xs">Performance live proche d'une session studio</p>
+                    <a href="https://www.youtube.com/watch?v=e0sVW6DjgbU" target="_blank" class="text-blue-400 hover:text-blue-300 text-xs">Regarder la session →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Commentaires Audio -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">🎧</div>
+              <h3 class="text-xl font-bold text-white">Commentaires Audio</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    🎤
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Commentaires Audio Exclusifs</h4>
+                    <p class="text-gray-300 text-xs">Artistes commentent leurs chansons - Analyses détaillées des paroles et histoires derrière les morceaux</p>
+                    <span class="text-gray-500 text-xs">Contenu exclusif à débloquer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reportages -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <div class="text-center mb-4">
+              <div class="text-4xl mb-2">📺</div>
+              <h3 class="text-xl font-bold text-white">Reportages Exclusifs</h3>
+            </div>
+            <div class="space-y-3">
+              <div class="bg-white/5 rounded-lg p-3 hover:bg-white/10 transition-colors">
+                <div class="flex items-center space-x-3">
+                  <div class="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-lg flex items-center justify-center text-white text-lg font-bold">
+                    📰
+                  </div>
+                  <div class="flex-1">
+                    <h4 class="text-white font-semibold text-sm">Reportages Exclusifs</h4>
+                    <p class="text-gray-300 text-xs">Reportage exclusif sur un artiste - Couverture des événements musicaux, interviews backstage</p>
+                    <span class="text-gray-500 text-xs">Contenu exclusif à débloquer</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Progression vers les récompenses exclusives -->
+    <div class="mb-12">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6">
+        <h2 class="text-2xl font-bold text-white mb-6">📊 Votre progression vers les récompenses exclusives</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Progression actuelle -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-4">🎯 Progression actuelle</h3>
+            <div class="mb-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-300">Badges collectés</span>
+                <span class="text-white font-bold"><%= @current_badge_count || 0 %> / 6</span>
+              </div>
+              <div class="w-full bg-gray-600 rounded-full h-4">
+                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 h-4 rounded-full transition-all duration-300" 
+                     style="width: <%= @progress_percentage || 0 %>%"></div>
+              </div>
+              <div class="text-center mt-2">
+                <span class="text-gray-300"><%= @progress_percentage || 0 %>%</span>
+              </div>
+            </div>
+            
+            <% if @current_badge_count && @current_badge_count >= 6 %>
+              <div class="text-center py-4 bg-green-500/20 rounded-lg">
+                <p class="text-green-400 font-bold">🎉 Vous pouvez débloquer des récompenses exclusives !</p>
+              </div>
+            <% else %>
+              <div class="text-center py-4 bg-yellow-500/20 rounded-lg">
+                <p class="text-yellow-400">
+                  Il vous manque <%= 6 - (@current_badge_count || 0) %> badge(s) pour débloquer les récompenses exclusives
+                </p>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Détails des badges -->
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+            <h3 class="text-xl font-bold text-white mb-4">🏅 Détails de vos badges</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-300">🥉 Bronze</span>
+                <span class="text-white font-bold"><%= @bronze_count || 0 %></span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-300">🥈 Silver</span>
+                <span class="text-white font-bold"><%= @silver_count || 0 %></span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-300">🥇 Gold</span>
+                <span class="text-white font-bold"><%= @gold_count || 0 %></span>
+              </div>
+              <div class="border-t border-gray-600 pt-3 mt-3">
+                <div class="flex justify-between items-center font-semibold">
+                  <span class="text-white">Total</span>
+                  <span class="text-white"><%= @current_badge_count || 0 %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-8 text-center">
+          <% if @current_badge_count && @current_badge_count >= 6 %>
+            <%= link_to "Débloquer mes récompenses exclusives", unlock_rewards_path, method: :post, 
+                class: "inline-block bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+          <% else %>
+            <div class="space-y-4">
+              <p class="text-gray-300">Collectez plus de badges pour débloquer des récompenses exclusives</p>
+              <%= link_to "Jouer pour gagner des badges", playlists_path, 
+                  class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
