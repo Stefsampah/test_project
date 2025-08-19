@@ -50,10 +50,9 @@ Rails.application.routes.draw do
   get 'my_rewards', to: 'rewards#my_rewards'
   get 'all_rewards', to: 'rewards#all_rewards'
   get 'reward_details', to: 'rewards#details', as: :reward_details
+  get 'challenge_rewards', to: 'rewards#challenge', as: :challenge_rewards
   get 'partners', to: 'rewards#partners', as: :partners
   get 'exclusif_rewards', to: 'rewards#exclusif', as: :exclusif_rewards
-  get 'challenge_rewards', to: 'rewards#challenge', as: :challenge_rewards
-
 
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
