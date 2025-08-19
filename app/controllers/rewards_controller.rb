@@ -505,7 +505,7 @@ class RewardsController < ApplicationController
 
   def exclusif
     # Page des récompenses exclusives (6 badges requis)
-    @unlocked_exclusif_rewards = current_user.rewards.where(reward_type: 'exclusif', unlocked: true).order(created_at: :desc) || []
+    @unlocked_exclusif_rewards = current_user.rewards.where(reward_type: 'exclusif', unlocked: true).order(created_at: :desc)
     
     # Statistiques des badges pour la progression
     @current_badge_count = current_user.user_badges.count

@@ -22,8 +22,6 @@
             class: "px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors" %>
         <%= link_to "Toutes les récompenses", all_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
-        <%= link_to "Challenge (3 badges)", challenge_rewards_path, 
-            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
       </div>
     </div>
 
@@ -38,15 +36,126 @@
       <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 mb-8">
         <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses exclusives débloquées</h2>
         
-        <% if @unlocked_exclusif_rewards.any? %>
+        <% if @unlocked_exclusif_rewards&.any? %>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <% @unlocked_exclusif_rewards.each do |reward| %>
               <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
-                <!-- Bannière avec image ou dégradé -->
+                <!-- Bannière avec thumbnail vidéo dynamique -->
                 <div class="h-48 relative">
-                  <div class="w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center">
-                    <div class="text-white text-4xl">⭐</div>
-                  </div>
+                  <% if reward.content_type&.start_with?('podcast_exclusive') %>
+                    <!-- Thumbnail pour les podcasts -->
+                    <div class="w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">🎙️</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% elsif reward.content_type&.start_with?('blog_exclusive') %>
+                    <!-- Thumbnail pour les blogs -->
+                    <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">📝</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% elsif reward.content_type&.start_with?('documentary_exclusive') %>
+                    <!-- Thumbnail pour les documentaires -->
+                    <div class="w-full h-full bg-gradient-to-r from-green-500 to-blue-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">🎬</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% elsif reward.content_type&.start_with?('studio_session_exclusive') %>
+                    <!-- Thumbnail pour les sessions studio -->
+                    <div class="w-full h-full bg-gradient-to-r from-orange-500 to-red-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">🎤</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% elsif reward.content_type&.start_with?('voice_message_exclusive') %>
+                    <!-- Thumbnail pour les messages vocaux -->
+                    <div class="w-full h-full bg-gradient-to-r from-pink-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">🎧</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% elsif reward.content_type&.start_with?('dedicated_photo_exclusive') %>
+                    <!-- Thumbnail pour les photos dédicacées -->
+                    <div class="w-full h-full bg-gradient-to-r from-yellow-500 to-orange-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">📸</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% else %>
+                    <!-- Thumbnail par défaut -->
+                    <div class="w-full h-full bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center relative overflow-hidden">
+                      <div class="absolute inset-0 bg-black/20"></div>
+                      <div class="relative z-10 text-white text-4xl">⭐</div>
+                      <!-- Overlay play button -->
+                      <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                          <div class="w-8 h-8 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M8 5v14l11-7z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <% end %>
+                  
                   <div class="absolute top-3 left-3">
                     <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">EXCLUSIF!</span>
                   </div>
@@ -86,6 +195,15 @@
                     </div>
                     <%= link_to reward_path(reward), class: "text-purple-400 hover:text-purple-300 text-sm flex items-center" do %>
                       Voir détails →
+                    <% end %>
+                  </div>
+                  
+                  <!-- Bouton Regarder la vidéo -->
+                  <div class="mt-4">
+                    <%= link_to reward_path(reward), 
+                        class: "w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 text-center flex items-center justify-center" do %>
+                      <span class="mr-2">🎬</span>
+                      Regarder la vidéo
                     <% end %>
                   </div>
                 </div>
