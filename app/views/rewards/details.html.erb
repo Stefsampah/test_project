@@ -24,8 +24,21 @@
     </div>
 
     <!-- Carte fusionnée - Récompense et Contenu -->
+    
     <% 
-      # Récupérer une récompense débloquée aléatoire du bon niveau
+      # Calculer les variables directement dans la vue (contournement du contrôleur défaillant)
+      @quantity = (params[:quantity] || 0).to_i
+      @reward_type = case @quantity
+                     when 3 then 'challenge'
+                     when 6 then 'exclusif'
+                     when 9 then 'premium'
+                     when 12 then 'ultime'
+                     end
+      @sample_reward = current_user.rewards.where(reward_type: @reward_type, unlocked: true).first
+    %>
+    
+    <% 
+      # Utiliser la logique qui fonctionne dans la vue
       if @sample_reward
         content_type = @sample_reward.content_type
         
@@ -248,7 +261,7 @@
               <% end %>
             <% else %>
               <div class="text-center py-3 bg-gray-600/20 rounded-lg">
-                <p class="text-gray-400 text-sm">Collectez <%= @quantity - (@current_count || 0) %> badge(s) supplémentaires pour débloquer ce contenu</p>
+                <p class="text-gray-400 text-sm">Collectez <%= test_quantity - (@current_count || 0) %> badge(s) supplémentaires pour débloquer ce contenu</p>
               </div>
             <% end %>
           </div>

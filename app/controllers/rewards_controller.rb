@@ -449,9 +449,19 @@ class RewardsController < ApplicationController
   end
   
   def details
+    # DEBUG: Afficher les paramètres reçus
+    puts "DEBUG details: params = #{params.inspect}"
+    puts "DEBUG details: badge_type = #{params[:badge_type]}"
+    puts "DEBUG details: quantity = #{params[:quantity]}"
+    
     @badge_type = params[:badge_type] || 'unified'
-    @quantity = params[:quantity].to_i
+    @quantity = (params[:quantity] || 0).to_i
     @category = 'unified'
+    
+    # DEBUG: Vérifier les valeurs
+    puts "DEBUG: @badge_type = #{@badge_type.inspect}"
+    puts "DEBUG: @quantity = #{@quantity.inspect}"
+    puts "DEBUG: params[:quantity] = #{params[:quantity].inspect}"
     
     # Calculer la progression pour le système unifié
     @current_count = current_user.user_badges.count
