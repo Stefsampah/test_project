@@ -1,145 +1,324 @@
-<div class="min-h-screen bg-gray-900 py-4 sm:py-8">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- En-tête -->
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header avec logo -->
     <div class="text-center mb-8">
       <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
+        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 text-purple-400">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
             </svg>
           </div>
         </div>
-        <h1 class="text-4xl font-bold text-white ml-4"><%= @reward_name %></h1>
+        <h1 class="text-4xl font-bold text-white ml-4">🎁 Détails de la Récompense</h1>
+      </div>
+      <p class="text-gray-300 text-lg">Découvrez le contenu de votre récompense</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="flex space-x-2">
+        <%= link_to "← Retour aux récompenses", all_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
       </div>
     </div>
 
-    <!-- Bouton retour -->
-    <div class="mb-8">
-      <%= link_to "← Retour aux récompenses", all_rewards_path, 
-          class: "text-blue-400 hover:text-blue-300 font-medium" %>
-    </div>
-
-    <!-- Détails de la récompense -->
-    <div class="max-w-2xl mx-auto">
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-8 shadow-lg">
-        <div class="flex items-center justify-between mb-6">
-          <div class="text-4xl">
-            <%= case @quantity
-                when 3 then '🎯'
-                when 6 then '⭐'
-                when 9 then '👑'
-                when 12 then '🏆'
-                end %>
+    <!-- Carte fusionnée - Récompense et Contenu -->
+    <% 
+      # Récupérer une récompense débloquée aléatoire du bon niveau
+      if @sample_reward
+        content_type = @sample_reward.content_type
+        
+        # Définir le contenu selon le type de récompense
+        case @quantity
+        when 3 # Challenge
+          content_title = case content_type
+            when 'challenge_reward_playlist_1' then 'Challenge Reward Playlist 1'
+            when 'challenge_reward_playlist_2' then 'Challenge Reward Playlist 2'
+            when 'challenge_reward_playlist_3' then 'Challenge Reward Playlist 3'
+            when 'challenge_reward_playlist_4' then 'Challenge Reward Playlist 4'
+            when 'challenge_reward_playlist_5' then 'Challenge Reward Playlist 5'
+            when 'challenge_reward_playlist_6' then 'Challenge Reward Playlist 6'
+            when 'challenge_reward_playlist_7' then 'Challenge Reward Playlist 7'
+            when 'challenge_reward_playlist_8' then 'Challenge Reward Playlist 8'
+            when 'challenge_reward_playlist_9' then 'Challenge Reward Playlist 9'
+            when 'challenge_reward_playlist_10' then 'Challenge Reward Playlist 10'
+            when 'challenge_reward_playlist_11' then 'Challenge Reward Playlist 11'
+            when 'challenge_reward_playlist_12' then 'Challenge Reward Playlist 12'
+            when 'challenge_reward_playlist_13' then 'Challenge Reward Playlist 13'
+            when 'challenge_reward_playlist_14' then 'Challenge Reward Playlist 14'
+            when 'challenge_reward_playlist_15' then 'Challenge Reward Playlist 15'
+            else 'Challenge Reward Playlist'
+            end
+          content_subtitle = 'Playlist Challenge'
+          content_icon = '🎵'
+          content_description = 'Playlist exclusive débloquée via les récompenses challenge'
+          video_count = '10 vidéos'
+          badge_icon = '🥉'
+          reward_level = 'Challenge'
+          
+        when 6 # Exclusif
+          content_title = case content_type
+            when 'didi_b_nouvelle_generation' then 'DIDI B EN STUDIO AVEC LA NOUVELLE GÉNÉRATION'
+            when 'didi_b_interview' then 'DIDI B - INTERVIEW EXCLUSIVE'
+            when 'himra_legendes_urbaines' then 'HIMRA - LÉGENDES URBAINES'
+            when 'zoh_cataleya_serge_dioman' then 'ZOH CATALEYA & SERGE DIOMAN'
+            when 'do_it_together' then 'DO IT TOGETHER - COLLABORATION'
+            when 'rumble_indians' then 'RUMBLE INDIANS - LIVE SESSION'
+            when 'country_music_ken_burns' then 'COUNTRY MUSIC - KEN BURNS'
+            when 'rap_odyssees_france_tv' then 'RAP ODYSSEES - FRANCE TV'
+            when 'himra_number_one_live' then 'HIMRA - NUMBER ONE LIVE'
+            when 'zoh_cataleya_live_toura' then 'ZOH CATALEYA - LIVE TOURA'
+            when 'bigyne_wiz_abe_sounogola' then 'BIGYNE, WIZ & ABE SOUNOGOLA'
+            when 'didi_b_mhd_studio' then 'DIDI B & MHD - STUDIO SESSION'
+            when 'didi_b_naira_marley' then 'DIDI B & NAIRA MARLEY'
+            when 'didi_b_enregistrement' then 'DIDI B - ENREGISTREMENT STUDIO'
+            when 'werenoi_cstar_session' then 'WERENOI - CSTAR SESSION'
+            when 'himra_top_boy_live' then 'HIMRA - TOP BOY LIVE'
+            when 'timar_zz_lequel' then 'TIMAR ZZ & LEQUEL'
+            when 'octogone_philipayne' then 'OCTOGONE - PHILIP AYNE'
+            else 'Contenu Exclusif'
+            end
+          content_subtitle = case content_type
+            when /didi_b/ then 'Session Studio'
+            when /himra/ then 'Live Performance'
+            when /zoh_cataleya/ then 'Collaboration'
+            when /studio/ then 'Studio Session'
+            when /live/ then 'Live Session'
+            when /interview/ then 'Interview Exclusive'
+            when /documentary/ then 'Documentary'
+            else 'Contenu Exclusif'
+            end
+          content_icon = case content_type
+            when /didi_b/ then '🎹'
+            when /himra/ then '🎤'
+            when /zoh_cataleya/ then '🎵'
+            when /studio/ then '🎹'
+            when /live/ then '🎤'
+            when /interview/ then '🎙️'
+            when /documentary/ then '📹'
+            else '⭐'
+            end
+          content_description = case content_type
+            when 'didi_b_nouvelle_generation' then 'Session studio avec Didi B et d\'autres artistes'
+            when 'didi_b_interview' then 'Interview exclusive avec Didi B sur sa carrière'
+            when 'himra_legendes_urbaines' then 'Performance live de Himra en concert'
+            when 'zoh_cataleya_serge_dioman' then 'Collaboration entre Zoh Cataleya et Serge Dioman'
+            when 'do_it_together' then 'Session studio collaborative entre artistes'
+            when 'rumble_indians' then 'Session live des Rumble Indians'
+            when 'country_music_ken_burns' then 'Documentaire sur la musique country'
+            when 'rap_odyssees_france_tv' then 'Émission TV sur le rap français'
+            when 'himra_number_one_live' then 'Performance live de Himra'
+            when 'zoh_cataleya_live_toura' then 'Extrait live de la tournée de Zoh Cataleya'
+            when 'bigyne_wiz_abe_sounogola' then 'Session studio avec Bigyne, Wiz et Abe Sounogola'
+            when 'didi_b_mhd_studio' then 'Session studio avec Didi B et MHD'
+            when 'didi_b_naira_marley' then 'Session studio avec Didi B et Naira Marley'
+            when 'didi_b_enregistrement' then 'Session d\'enregistrement studio avec Didi B'
+            when 'werenoi_cstar_session' then 'Session CSTAR avec Werenoi'
+            when 'himra_top_boy_live' then 'Performance live de Himra'
+            when 'timar_zz_lequel' then 'Collaboration entre Timar ZZ et Lequel'
+            when 'octogone_philipayne' then 'Performance live de Philip Ayne'
+            else 'Contenu exclusif et surprise - le détail exact reste mystérieux jusqu\'à l\'accès !'
+            end
+          video_count = 'Session exclusive'
+          badge_icon = '🥈'
+          reward_level = 'Exclusif'
+          
+        when 9 # Premium
+          content_title = 'Contenu Premium Exclusif'
+          content_subtitle = 'Session Premium'
+          content_icon = '👑'
+          content_description = 'Contenu premium exclusif débloqué via les récompenses premium'
+          video_count = 'Contenu premium'
+          badge_icon = '🥇'
+          reward_level = 'Premium'
+          
+        when 12 # Ultime
+          content_title = 'Contenu Ultime Exclusif'
+          content_subtitle = 'Session Ultime'
+          content_icon = '🏆'
+          content_description = 'Contenu ultime exclusif débloqué via les récompenses ultimes'
+          video_count = 'Contenu ultime'
+          badge_icon = '🌈'
+          reward_level = 'Ultime'
+          
+        else
+          content_title = 'Contenu Exclusif'
+          content_subtitle = 'Session Exclusive'
+          content_icon = '⭐'
+          content_description = 'Contenu exclusif débloqué via les récompenses'
+          video_count = 'Contenu exclusif'
+          badge_icon = '⭐'
+          reward_level = 'Exclusif'
+        end
+        
+        # Image de fond selon le type de contenu
+        background_image = case content_type
+          when 'didi_b_nouvelle_generation' then 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
+          when 'himra_legendes_urbaines' then 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
+          when /challenge_reward_playlist_/ then 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
+          else 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
+        end
+        
+        fallback_image = case content_type
+          when 'didi_b_nouvelle_generation' then 'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
+          when 'himra_legendes_urbaines' then 'https://img.youtube.com/vi/qB7kLilZWwg/hqdefault.jpg'
+          when /challenge_reward_playlist_/ then 'https://img.youtube.com/vi/qB7kLilZWwg/hqdefault.jpg'
+          else 'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
+        end
+    %>
+    
+    <!-- Carte fusionnée - Récompense et Contenu -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+      <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-visible border border-gray-600 playlist-card">
+        <!-- Bannière avec thumbnail dynamique -->
+        <div class="playlist-thumbnail relative flex items-center justify-center overflow-hidden">
+          
+          <!-- Thumbnail en arrière-plan -->
+          <div class="absolute inset-0 w-full h-full">
+            <img src="<%= background_image %>" alt="<%= content_title %>" class="w-full h-full object-cover" style="opacity: 0.7;" onerror="this.onerror=null; this.src='<%= fallback_image %>'; this.style.opacity='0.7';" onload="this.style.opacity='0.7';">
+            <div class="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-600/30"></div>
           </div>
-          <div class="text-right">
-            <% if @current_count && @current_count >= @quantity %>
-              <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-green-500 text-white">
-                DÉBLOQUÉ
-              </span>
-            <% else %>
-              <span class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-gray-500 text-white">
-                VERROUILLÉ
-              </span>
+          
+          <!-- Contenu superposé -->
+          <div class="relative z-10 text-center">
+            <div class="text-white text-6xl mb-2"><%= content_icon %></div>
+            <div class="text-white font-semibold text-2xl mb-2"><%= content_title %></div>
+            <% if @quantity == 3 %>
+              <div class="text-white text-lg"><%= content_subtitle %></div>
             <% end %>
           </div>
+          
+          <!-- Badge nombre de vidéos ou type de contenu -->
+          <div class="absolute top-3 right-3">
+            <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= video_count %></span>
+          </div>
         </div>
-
-        <!-- Image du badge -->
-        <% example_badge = Badge.where(badge_type: @badge_type).first %>
-        <% if example_badge&.image.present? %>
-          <div class="text-center mb-6">
-            <%= image_tag "badges/#{example_badge.image}", 
-                class: "w-48 h-48 object-cover rounded-lg shadow-lg",
-                alt: "#{@badge_type.humanize} badge" %>
-          </div>
-        <% end %>
-
-        <h2 class="text-2xl font-bold text-white mb-4">
-          <%= @reward_name %>
-        </h2>
-
-        <div class="space-y-4">
-          <div>
-            <h3 class="text-lg font-semibold text-white mb-2">Description</h3>
-            <p class="text-gray-300">Contenu exclusif et surprise - le détail exact reste mystérieux jusqu'à l'accès !</p>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <h3 class="text-lg font-semibold text-white mb-2">Type de Récompense</h3>
-              <p class="text-gray-300">Unifiée</p>
+        
+        <!-- Contenu de la récompense -->
+        <div class="playlist-content p-6">
+          <!-- Informations de la récompense -->
+          <div class="mb-4">
+            <div class="mb-2">
+              <h3 class="text-lg font-bold text-white"><%= content_title %></h3>
             </div>
-            <div>
-              <h3 class="text-lg font-semibold text-white mb-2">Quantité requise</h3>
-              <p class="text-gray-300"><%= @quantity %> badges</p>
+            <div class="text-xs text-gray-400">Débloqué le <%= Date.current.strftime('%d/%m/%Y') %></div>
+          </div>
+          
+          <!-- Statistiques combinées -->
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="text-center">
+              <div class="text-lg font-bold text-white"><%= @quantity %></div>
+              <div class="text-xs text-gray-300">Badges requis</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-white">
+                ✅
+              </div>
+              <div class="text-xs text-gray-300">
+                Débloqué
+              </div>
             </div>
           </div>
-
-          <!-- Progression actuelle -->
-          <div>
-            <h3 class="text-lg font-semibold text-white mb-2">Votre progression</h3>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-gray-300">
-                <%= @current_count || 0 %> / <%= @quantity %>
-              </span>
-              <span class="text-gray-300">
-                <%= @progress.to_i %>%
-              </span>
-            </div>
-            
-            <div class="w-full bg-gray-600 rounded-full h-3">
-              <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300" 
-                   style="width: <%= @progress %>%"></div>
-            </div>
-            
-            <!-- Détails par niveau -->
-            <div class="mt-4 space-y-2">
-              <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥉 Bronze</span>
-                <span class="text-gray-300"><%= @bronze_count %> badge(s)</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥈 Silver</span>
-                <span class="text-gray-300"><%= @silver_count %> badge(s)</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-gray-300">🥇 Gold</span>
-                <span class="text-gray-300"><%= @gold_count %> badge(s)</span>
-              </div>
-              <div class="border-t border-gray-600 pt-2 mt-2">
-                <div class="flex justify-between items-center font-semibold">
-                  <span class="text-white">Total badges</span>
-                  <span class="text-white"><%= @current_count || 0 %></span>
-                </div>
-              </div>
-            </div>
-            
+          
+          <!-- Description -->
+          <div class="mb-6">
+            <p class="text-gray-300 text-sm text-center"><%= content_description %></p>
+          </div>
+          
+          <!-- Bouton d'action -->
+          <div class="text-center mt-auto space-y-4">
             <% if @current_count && @current_count >= @quantity %>
-              <p class="text-green-400 text-sm mt-2">✅ Vous avez assez de badges pour débloquer cette récompense !</p>
+              <% if @quantity == 3 %>
+                <!-- Pour les playlists challenge -->
+                <a class="playlist-button" href="/playlists/31/games/new">🎵 Écouter la playlist</a>
+                <a class="playlist-button" href="/rewards/32/video_details">🎵 Détails des vidéos</a>
+              <% else %>
+                <!-- Pour les autres types de récompenses -->
+                <a class="playlist-button" href="#">
+                  <%= case content_type
+                      when /challenge_reward_playlist_/ then '🎵 Écouter la playlist'
+                      when /studio/ then '🎹 Regarder la session'
+                      when /live/ then '🎤 Regarder le live'
+                      when /interview/ then '🎙️ Écouter l\'interview'
+                      when /documentary/ then '📹 Regarder le documentaire'
+                      else '🎬 Regarder le contenu'
+                      end %>
+                </a>
+              <% end %>
             <% else %>
-              <p class="text-gray-400 text-sm mt-2">
-                Il vous manque <%= @quantity - (@current_count || 0) %> badge(s) pour débloquer cette récompense
-              </p>
+              <div class="text-center py-3 bg-gray-600/20 rounded-lg">
+                <p class="text-gray-400 text-sm">Collectez <%= @quantity - (@current_count || 0) %> badge(s) supplémentaires pour débloquer ce contenu</p>
+              </div>
             <% end %>
           </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="mt-8 pt-6 border-t border-gray-600">
-          <% if @current_count && @current_count >= @quantity %>
-            <div class="text-center">
-              <p class="text-green-400 font-medium">🎉 Cette récompense est prête à être débloquée !</p>
-            </div>
-          <% else %>
-            <div class="text-center">
-              <p class="text-gray-400 mb-4">Collectez plus de badges pour débloquer cette récompense</p>
-              <%= link_to "Jouer pour gagner des badges", playlists_path, 
-                  class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
-            </div>
-          <% end %>
         </div>
       </div>
     </div>
+    
+    <% else %>
+    <!-- Message si aucune récompense n'est trouvée -->
+    <div class="text-center py-12">
+      <div class="text-6xl mb-4">🎁</div>
+      <h2 class="text-2xl font-bold text-white mb-4">Aucune récompense trouvée</h2>
+      <p class="text-gray-300 mb-6">Collectez plus de badges pour débloquer des récompenses</p>
+      <%= link_to "Jouer pour gagner des badges", playlists_path, 
+          class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+    </div>
+    <% end %>
   </div>
-</div> 
+</div>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .playlist-card {
+    display: flex;
+    flex-direction: column;
+    height: 800px; /* Hauteur augmentée pour accommoder les deux boutons */
+  }
+
+  .playlist-thumbnail {
+    flex: 0 0 45%; /* Thumbnail prend 45% de la hauteur de la carte */
+    position: relative;
+    min-height: 360px; /* 45% de 800px */
+  }
+
+  .playlist-content {
+    flex: 1; /* Contenu prend les 55% restants */
+    padding: 2rem; /* Padding augmenté pour plus d'espace */
+    display: flex;
+    flex-direction: column;
+    background: rgba(55, 65, 81, 0.95); /* Fond semi-transparent pour le contenu */
+    z-index: 10;
+    position: relative;
+    min-height: 440px; /* Hauteur minimale pour le contenu */
+    justify-content: space-between; /* Espacement optimal entre les éléments */
+  }
+
+  /* Style spécifique pour le bouton */
+  .playlist-button {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 2px solid #8b5cf6;
+  }
+
+  .playlist-button:hover {
+    background: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+</style> 

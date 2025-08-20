@@ -473,6 +473,14 @@ class RewardsController < ApplicationController
                    end
     
     @reward_description = generate_reward_description(@badge_type, @quantity, @reward_type, @category)
+    
+    # Récupérer une récompense débloquée réelle pour afficher le contenu
+    @sample_reward = current_user.rewards.where(reward_type: @reward_type, unlocked: true).first
+    
+    # Statistiques par niveau pour l'affichage
+    @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
   end
   
   def challenge

@@ -143,4 +143,22 @@ body {
 .flash-alert {
   background-color: #fef2f2;
   color: #991b1b;
+}
+
+/* Styles pour les cartes de playlist */
+.playlist-card {
+  transition: all 0.3s ease;
+}
+
+.playlist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Utilitaire pour limiter le texte à 2 lignes */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 } 
