@@ -236,8 +236,8 @@ class Reward < ApplicationRecord
           { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
           { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
         ]
-          when 'exclusif'
-      [
+      when 'exclusif'
+        [
         # Blogs et Médias Spécialisés
         { content_type: 'rapivoire_ci', name: 'Rapivoire.ci', description: 'Média influent dédié au rap ivoirien - Artistes émergents', icon: '📝' },
         { content_type: 'my_afro_culture', name: 'My Afro Culture', description: 'Blog culturel sur les talents émergents', icon: '📝' },
@@ -275,7 +275,7 @@ class Reward < ApplicationRecord
         { content_type: 'himra_top_boy_live', name: 'HIMRA - TOP BOY LIVE VERSION', description: 'Version live exclusive', icon: '🎹' },
         { content_type: 'timar_zz_lequel', name: 'Timar feat. ZZ - Lequel', description: 'EXCLU - Session studio exclusive', icon: '🎹' },
         { content_type: 'octogone_philipayne', name: 'OCTOGONE - PHILIPAYNE', description: 'Avec Enfant Noir, Le Couteau, Slai & BigGodzi', icon: '🎹' }
-      ]
+        ]
       when 'premium'
         [
           { content_type: 'exclusive_photos', name: 'Photos Exclusives', description: 'Photos exclusives d\'artistes', icon: '📸' },

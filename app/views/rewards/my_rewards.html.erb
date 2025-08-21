@@ -25,6 +25,29 @@
       </div>
     </div>
 
+    <!-- Mes Accomplissements -->
+    <div class="bg-gradient-to-r from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-xl p-6 mb-8 border border-green-400/30">
+      <h2 class="text-2xl font-bold text-white mb-4">🎉 Mes Accomplissements</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-white"><%= current_user.user_badges.count %></div>
+          <div class="text-sm text-gray-200">Badges collectés</div>
+        </div>
+        <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-white"><%= current_user.rewards.where(unlocked: true).count %></div>
+          <div class="text-sm text-gray-200">Récompenses débloquées</div>
+        </div>
+        <div class="bg-gradient-to-r from-yellow-500 to-orange-600 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-white"><%= current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count %></div>
+          <div class="text-sm text-gray-200">Badges Gold</div>
+        </div>
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4 text-center">
+          <div class="text-3xl font-bold text-white"><%= (current_user.user_badges.count.to_f / 12 * 100).round %>%</div>
+          <div class="text-sm text-gray-200">Progression globale</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Progression vers la prochaine récompense -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
       <h2 class="text-2xl font-bold text-white mb-4">📊 Progression</h2>

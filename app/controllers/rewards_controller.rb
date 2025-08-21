@@ -448,11 +448,11 @@ class RewardsController < ApplicationController
     render 'video_details'
   end
   
-  def details
+  def reward_details
     # DEBUG: Afficher les paramètres reçus
-    puts "DEBUG details: params = #{params.inspect}"
-    puts "DEBUG details: badge_type = #{params[:badge_type]}"
-    puts "DEBUG details: quantity = #{params[:quantity]}"
+    puts "DEBUG reward_details: params = #{params.inspect}"
+    puts "DEBUG reward_details: badge_type = #{params[:badge_type]}"
+    puts "DEBUG reward_details: quantity = #{params[:quantity]}"
     
     @badge_type = params[:badge_type] || 'unified'
     @quantity = (params[:quantity] || 0).to_i
@@ -491,6 +491,9 @@ class RewardsController < ApplicationController
     @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
     @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
     @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+    
+    # Rendre explicitement la vue details
+    render 'details'
   end
   
   def challenge

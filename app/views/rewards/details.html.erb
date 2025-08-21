@@ -18,7 +18,7 @@
     <!-- Navigation -->
     <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
-        <%= link_to "← Retour aux récompenses", all_rewards_path, 
+      <%= link_to "← Retour aux récompenses", all_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
       </div>
     </div>
@@ -26,15 +26,15 @@
     <!-- Carte fusionnée - Récompense et Contenu -->
     
     <% 
-      # Calculer les variables directement dans la vue (contournement du contrôleur défaillant)
-      @quantity = (params[:quantity] || 0).to_i
-      @reward_type = case @quantity
-                     when 3 then 'challenge'
-                     when 6 then 'exclusif'
-                     when 9 then 'premium'
-                     when 12 then 'ultime'
-                     end
+      # Utiliser les variables définies par le contrôleur
+      # @quantity et @reward_type sont déjà définis dans l'action details
       @sample_reward = current_user.rewards.where(reward_type: @reward_type, unlocked: true).first
+      
+      # Debug pour comprendre pourquoi @sample_reward est nil
+      puts "DEBUG VIEW: @quantity = #{@quantity.inspect}"
+      puts "DEBUG VIEW: @reward_type = #{@reward_type.inspect}"
+      puts "DEBUG VIEW: @sample_reward = #{@sample_reward.inspect}"
+      puts "DEBUG VIEW: current_user.rewards.where(reward_type: #{@reward_type}, unlocked: true).count = #{current_user.rewards.where(reward_type: @reward_type, unlocked: true).count}"
     %>
     
     <% 
@@ -200,14 +200,14 @@
             <% if @quantity == 3 %>
               <div class="text-white text-lg"><%= content_subtitle %></div>
             <% end %>
-          </div>
-          
+        </div>
+
           <!-- Badge nombre de vidéos ou type de contenu -->
           <div class="absolute top-3 right-3">
             <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= video_count %></span>
           </div>
-        </div>
-        
+          </div>
+
         <!-- Contenu de la récompense -->
         <div class="playlist-content p-6">
           <!-- Informations de la récompense -->
@@ -217,7 +217,7 @@
             </div>
             <div class="text-xs text-gray-400">Débloqué le <%= Date.current.strftime('%d/%m/%Y') %></div>
           </div>
-          
+
           <!-- Statistiques combinées -->
           <div class="grid grid-cols-2 gap-3 mb-6">
             <div class="text-center">
@@ -231,7 +231,7 @@
               <div class="text-xs text-gray-300">
                 Débloqué
               </div>
-            </div>
+                </div>
           </div>
           
           <!-- Description -->
@@ -239,6 +239,16 @@
             <p class="text-gray-300 text-sm text-center"><%= content_description %></p>
           </div>
           
+          <!-- Debug des valeurs -->
+          <div class="text-center mb-4 p-3 bg-gray-800/50 rounded-lg">
+            <div class="text-xs text-gray-400">
+              DEBUG: @current_count = <%= @current_count.inspect %>, @quantity = <%= @quantity.inspect %><br>
+              DEBUG: @reward_type = <%= @reward_type.inspect %>, @sample_reward = <%= @sample_reward.inspect %><br>
+              DEBUG: Rewards count = <%= current_user.rewards.where(reward_type: @reward_type, unlocked: true).count %><br>
+              Condition: <%= (@current_count && @current_count >= @quantity).inspect %>
+              </div>
+            </div>
+            
           <!-- Bouton d'action -->
           <div class="text-center mt-auto space-y-4">
             <% if @current_count && @current_count >= @quantity %>
@@ -266,21 +276,21 @@
             <% end %>
           </div>
         </div>
-      </div>
-    </div>
-    
-    <% else %>
+          </div>
+        </div>
+
+          <% else %>
     <!-- Message si aucune récompense n'est trouvée -->
     <div class="text-center py-12">
       <div class="text-6xl mb-4">🎁</div>
       <h2 class="text-2xl font-bold text-white mb-4">Aucune récompense trouvée</h2>
       <p class="text-gray-300 mb-6">Collectez plus de badges pour débloquer des récompenses</p>
-      <%= link_to "Jouer pour gagner des badges", playlists_path, 
-          class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
-    </div>
-    <% end %>
-  </div>
-</div>
+              <%= link_to "Jouer pour gagner des badges", playlists_path, 
+                  class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
 
 <style>
   .line-clamp-2 {
