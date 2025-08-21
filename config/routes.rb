@@ -49,7 +49,10 @@ Rails.application.routes.draw do
   end
   get 'my_rewards', to: 'rewards#my_rewards'
   get 'all_rewards', to: 'rewards#all_rewards'
-  get 'reward_details', to: 'rewards#details', as: :reward_details
+  get 'reward_details', to: 'rewards#reward_details', as: :reward_details
+  get 'test_details', to: 'rewards#test_details', as: :test_details
+  get 'test_action', to: 'test#test_action', as: :test_action
+  get 'test_rewards', to: 'test#test_rewards', as: :test_rewards
   get 'challenge_rewards', to: 'rewards#challenge', as: :challenge_rewards
   get 'partners', to: 'rewards#partners', as: :partners
   get 'exclusif_rewards', to: 'rewards#exclusif', as: :exclusif_rewards

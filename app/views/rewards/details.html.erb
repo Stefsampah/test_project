@@ -27,18 +27,7 @@
     
     <% 
       # Utiliser les variables définies par le contrôleur
-      # @quantity et @reward_type sont déjà définis dans l'action details
-      @sample_reward = current_user.rewards.where(reward_type: @reward_type, unlocked: true).first
-      
-      # Debug pour comprendre pourquoi @sample_reward est nil
-      puts "DEBUG VIEW: @quantity = #{@quantity.inspect}"
-      puts "DEBUG VIEW: @reward_type = #{@reward_type.inspect}"
-      puts "DEBUG VIEW: @sample_reward = #{@sample_reward.inspect}"
-      puts "DEBUG VIEW: current_user.rewards.where(reward_type: #{@reward_type}, unlocked: true).count = #{current_user.rewards.where(reward_type: @reward_type, unlocked: true).count}"
-    %>
-    
-    <% 
-      # Utiliser la logique qui fonctionne dans la vue
+      # @quantity et @reward_type sont déjà définis dans l'action reward_details
       if @sample_reward
         content_type = @sample_reward.content_type
         
