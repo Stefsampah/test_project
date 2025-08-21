@@ -134,7 +134,17 @@
                       </div>
                     <% end %>
                   </div>
-                  <%= link_to reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity]), 
+                  <% 
+                    # Utiliser des routes spécifiques selon le type de récompense
+                    details_path = case reward_info[:quantity]
+                    when 3 then reward_details_path(badge_type: 'unified', quantity: 3)
+                    when 6 then reward_details_path(badge_type: 'unified', quantity: 6)
+                    when 9 then reward_details_path(badge_type: 'unified', quantity: 9)
+                    when 12 then reward_details_path(badge_type: 'unified', quantity: 12)
+                    else reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity])
+                    end
+                  %>
+                  <%= link_to details_path, 
                       class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
                     Détails →
                   <% end %>

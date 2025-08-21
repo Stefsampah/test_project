@@ -137,20 +137,20 @@
                 </div>
               </div>
               
-              <!-- Bouton détails si récompense débloquée -->
-              <% if has_reward %>
-                <div class="mt-4 text-center">
-                  <% 
-                    # Trouver la première récompense de ce niveau
-                    reward = reward_info[:rewards].first
-                    if reward
-                  %>
-                    <%= link_to "Voir détails", reward_path(reward), class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
-                  <% else %>
-                    <%= link_to "Voir détails", reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity]), class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
-                  <% end %>
-                </div>
-              <% end %>
+              <!-- Bouton détails -->
+              <div class="mt-4 text-center">
+                <% 
+                  # Utiliser des routes spécifiques selon le type de récompense
+                  details_path = case reward_info[:quantity]
+                  when 3 then reward_details_path(badge_type: 'unified', quantity: 3)
+                  when 6 then reward_details_path(badge_type: 'unified', quantity: 6)
+                  when 9 then reward_details_path(badge_type: 'unified', quantity: 9)
+                  when 12 then reward_details_path(badge_type: 'unified', quantity: 12)
+                  else reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity])
+                  end
+                %>
+                <%= link_to "Voir détails", details_path, class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
+              </div>
             </div>
           </div>
         <% end %>
