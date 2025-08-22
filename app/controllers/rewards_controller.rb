@@ -203,19 +203,8 @@ class RewardsController < ApplicationController
     
     render 'exclusif_content'
   end
-  
-  def get_exclusif_video_id(content_type)
-    case content_type
-    when 'didi_b_nouvelle_generation'
-      '9ECNWJ1R0fg'
-    when 'didi_b_interview'
-      'dQw4w9WgXcQ'
-    when 'himra_legendes_urbaines'
-      'qB7kLilZWwg'
-    else
-      nil
-    end
-  end
+
+
 
   private
   
@@ -265,19 +254,6 @@ class RewardsController < ApplicationController
         type: 'Contenu Exclusif',
         video_id: nil
       }
-    end
-  end
-
-  def get_exclusif_video_id(content_type)
-    case content_type
-    when 'didi_b_nouvelle_generation'
-      '9ECNWJ1R0fg'
-    when 'didi_b_interview'
-      'dQw4w9WgXcQ'
-    when 'himra_legendes_urbaines'
-      'qB7kLilZWwg'
-    else
-      nil
     end
   end
   

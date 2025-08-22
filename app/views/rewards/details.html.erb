@@ -240,7 +240,15 @@
               <% else %>
                 <!-- Pour les autres types de récompenses -->
                 <% if @sample_reward && @sample_reward.reward_type == 'exclusif' %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= get_exclusif_video_id(@sample_reward.content_type) %>', '<%= content_title %>')">
+                  <%
+                    video_id = case @sample_reward.content_type
+                               when 'didi_b_nouvelle_generation' then '9ECNWJ1R0fg'
+                               when 'didi_b_interview' then 'dQw4w9WgXcQ'
+                               when 'himra_legendes_urbaines' then 'qB7kLilZWwg'
+                               else nil
+                               end
+                  %>
+                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
                     <%= case content_type
                         when /challenge_reward_playlist_/ then '🎵 Écouter la playlist'
                         when /studio/ then '🎹 Regarder la session'
@@ -272,7 +280,15 @@
               <% else %>
                 <!-- Pour les autres types de récompenses -->
                 <% if @sample_reward && @sample_reward.reward_type == 'exclusif' %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= get_exclusif_video_id(@sample_reward.content_type) %>', '<%= content_title %>')">
+                  <%
+                    video_id = case @sample_reward.content_type
+                               when 'didi_b_nouvelle_generation' then '9ECNWJ1R0fg'
+                               when 'didi_b_interview' then 'dQw4w9WgXcQ'
+                               when 'himra_legendes_urbaines' then 'qB7kLilZWwg'
+                               else nil
+                               end
+                  %>
+                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
                     <%= case content_type
                         when /challenge_reward_playlist_/ then '🎵 Écouter la playlist'
                         when /studio/ then '🎹 Regarder la session'
