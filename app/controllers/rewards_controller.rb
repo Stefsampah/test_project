@@ -162,9 +162,61 @@ class RewardsController < ApplicationController
   
   def video_details
     @reward = current_user.rewards.find(params[:id])
+    
+    # Récupérer la playlist associée à la récompense
+    if @reward.content_type&.start_with?('challenge_reward_playlist')
+      playlist_title = case @reward.content_type
+                      when 'challenge_reward_playlist_1' then 'Challenge Reward Playlist 1'
+                      when 'challenge_reward_playlist_2' then 'Challenge Reward Playlist 2'
+                      when 'challenge_reward_playlist_3' then 'Challenge Reward Playlist 3'
+                      when 'challenge_reward_playlist_4' then 'Challenge Reward Playlist 4'
+                      when 'challenge_reward_playlist_5' then 'Challenge Reward Playlist 5'
+                      when 'challenge_reward_playlist_6' then 'Challenge Reward Playlist 6'
+                      when 'challenge_reward_playlist_7' then 'Challenge Reward Playlist 7'
+                      when 'challenge_reward_playlist_8' then 'Challenge Reward Playlist 8'
+                      when 'challenge_reward_playlist_9' then 'Challenge Reward Playlist 9'
+                      when 'challenge_reward_playlist_10' then 'Challenge Reward Playlist 10'
+                      when 'challenge_reward_playlist_11' then 'Challenge Reward Playlist 11'
+                      when 'challenge_reward_playlist_12' then 'Challenge Reward Playlist 12'
+                      when 'challenge_reward_playlist_13' then 'Challenge Reward Playlist 13'
+                      when 'challenge_reward_playlist_14' then 'Challenge Reward Playlist 14'
+                      when 'challenge_reward_playlist_15' then 'Challenge Reward Playlist 15'
+                      end
+      
+      @playlist = Playlist.find_by(title: playlist_title) if playlist_title
+    end
+    
     render 'video_details'
   end
+
+  def exclusif_content
+    @reward = current_user.rewards.find(params[:id])
+    
+    # Vérifier que l'utilisateur a accès à ce contenu exclusif
+    unless @reward.unlocked && @reward.reward_type == 'exclusif'
+      redirect_to my_rewards_path, alert: 'Vous n\'avez pas accès à ce contenu exclusif.'
+      return
+    end
+    
+    # Récupérer les détails du contenu exclusif
+    @exclusif_content = get_exclusif_content_details(@reward.content_type)
+    
+    render 'exclusif_content'
+  end
   
+  def get_exclusif_video_id(content_type)
+    case content_type
+    when 'didi_b_nouvelle_generation'
+      '9ECNWJ1R0fg'
+    when 'didi_b_interview'
+      'dQw4w9WgXcQ'
+    when 'himra_legendes_urbaines'
+      'qB7kLilZWwg'
+    else
+      nil
+    end
+  end
+
   private
   
   def get_exclusif_content_details(content_type)
@@ -175,9 +227,32 @@ class RewardsController < ApplicationController
         description: 'Session studio avec Didi B et d\'autres artistes',
         icon: '🎹',
         color: 'from-purple-400 to-pink-500',
-        link: '#',
+        link: 'https://www.youtube.com/watch?v=9ECNWJ1R0fg',
         link_text: 'Regarder la session',
-        type: 'Session Studio'
+        type: 'Session Studio',
+        video_id: '9ECNWJ1R0fg'
+      }
+    when 'didi_b_interview'
+      {
+        title: 'DIDI B - INTERVIEW EXCLUSIVE',
+        description: 'Interview exclusive avec Didi B sur sa carrière',
+        icon: '🎙️',
+        color: 'from-blue-400 to-purple-500',
+        link: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        link_text: 'Écouter l\'interview',
+        type: 'Interview Exclusive',
+        video_id: 'dQw4w9WgXcQ'
+      }
+    when 'himra_legendes_urbaines'
+      {
+        title: 'HIMRA - LÉGENDES URBAINES',
+        description: 'Performance live de Himra en concert',
+        icon: '🎤',
+        color: 'from-red-400 to-pink-500',
+        link: 'https://www.youtube.com/watch?v=qB7kLilZWwg',
+        link_text: 'Regarder le live',
+        type: 'Live Performance',
+        video_id: 'qB7kLilZWwg'
       }
     else
       {
@@ -187,8 +262,22 @@ class RewardsController < ApplicationController
         color: 'from-blue-400 to-purple-500',
         link: '#',
         link_text: 'Voir le contenu',
-        type: 'Contenu Exclusif'
+        type: 'Contenu Exclusif',
+        video_id: nil
       }
+    end
+  end
+
+  def get_exclusif_video_id(content_type)
+    case content_type
+    when 'didi_b_nouvelle_generation'
+      '9ECNWJ1R0fg'
+    when 'didi_b_interview'
+      'dQw4w9WgXcQ'
+    when 'himra_legendes_urbaines'
+      'qB7kLilZWwg'
+    else
+      nil
     end
   end
   

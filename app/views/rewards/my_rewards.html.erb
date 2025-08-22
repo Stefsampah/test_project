@@ -12,7 +12,7 @@
         </div>
         <h1 class="text-4xl font-bold text-white ml-4">🏆 Mes Récompenses</h1>
       </div>
-      <p class="text-gray-300 text-lg">Débloquez des récompenses en combinant vos badges</p>
+      <p class="text-gray-300 text-lg">Vos récompenses débloquées et leur contenu exclusif</p>
     </div>
 
     <!-- Navigation moderne -->
@@ -45,6 +45,153 @@
           <div class="text-3xl font-bold text-white"><%= (current_user.user_badges.count.to_f / 12 * 100).round %>%</div>
           <div class="text-sm text-gray-200">Progression globale</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Mes récompenses débloquées -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🎁 Mes Récompenses Débloquées</h2>
+      
+      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
+        <h3 class="text-xl font-bold text-white mb-4">
+          Récompenses que vous avez gagnées
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <% 
+            reward_types = [
+              { 
+                quantity: 3, 
+                level: 'challenge', 
+                color: 'from-yellow-400 to-yellow-600', 
+                icon: '🥉',
+                content: 'Playlists Spéciales, Versions acoustiques, Remix spéciaux',
+                visual: 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
+              },
+              { 
+                quantity: 6, 
+                level: 'exclusif', 
+                color: 'from-gray-400 to-gray-600', 
+                icon: '🥈',
+                content: 'Contenu exclusif des blogs et médias spécialisés, podcasts, documentaires, reportages, commentaires audio, vidéo session studio',
+                visual: 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
+              },
+              { 
+                quantity: 9, 
+                level: 'premium', 
+                color: 'from-orange-400 to-orange-600', 
+                icon: '🥇',
+                content: 'Rencontres artistes, Backstage virtuel, Sessions privées, Contenu premium exclusif',
+                visual: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg'
+              },
+              { 
+                quantity: 12, 
+                level: 'ultime', 
+                color: 'from-pink-400 to-purple-600', 
+                icon: '🌈',
+                content: 'Rencontre privée, Backstage réel, Expériences VIP, Accès exclusif total',
+                visual: 'https://img.youtube.com/vi/jNQXAC9IVRw/maxresdefault.jpg'
+              }
+            ]
+          %>
+          
+          <% reward_types.each do |reward_info| %>
+            <% current_count = current_user.user_badges.count %>
+            <% progress = [(current_count.to_f / reward_info[:quantity] * 100), 100].min %>
+            <% has_reward = current_user.has_reward_for_level?(reward_info[:level]) %>
+            
+            <% if has_reward %>
+              <div class="reward-card bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-hidden border border-gray-600 transform hover:scale-105 transition-all duration-200">
+                <!-- Bannière avec image -->
+                <div class="h-48 relative overflow-hidden">
+                  <!-- Image claire pour les récompenses débloquées -->
+                  <img src="<%= reward_info[:visual] %>" 
+                       alt="<%= reward_info[:level].humanize %>" 
+                       class="w-full h-full object-cover"
+                       onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/4F46E5/FFFFFF?text=<%= reward_info[:level].humanize %>';">
+                  
+                  <div class="absolute top-3 left-3">
+                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
+                  </div>
+                </div>
+                
+                <!-- Contenu de la carte -->
+                <div class="p-4">
+                  <!-- En-tête avec quantité -->
+                  <div class="text-center mb-4">
+                    <div class="text-3xl font-bold text-white mb-2"><%= reward_info[:quantity] %></div>
+                    <div class="text-sm text-gray-300">badges requis</div>
+                  </div>
+                  
+                  <!-- Type de récompense -->
+                  <div class="text-center mb-4">
+                    <div class="text-lg font-semibold text-white mb-1">
+                      <%= reward_info[:icon] %> <%= reward_info[:level].humanize %>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      Contenu débloqué
+                    </div>
+                  </div>
+                  
+                  <!-- Détails du contenu -->
+                  <div class="mb-4">
+                    <!-- Contenu révélé pour les récompenses débloquées -->
+                    <div class="text-center">
+                      <div class="text-sm text-gray-300 mb-2">🎁 Contenu gagné :</div>
+                      <div class="text-xs text-gray-400 leading-relaxed">
+                        <%= reward_info[:content] %>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Progression simplifiée -->
+                  <div class="mb-4">
+                    <div class="text-center">
+                      <div class="text-xs text-gray-400 mb-2">
+                        <%= current_count %> / <%= reward_info[:quantity] %> badges
+                      </div>
+                      <div class="w-full bg-gray-600 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-300" 
+                             style="width: <%= progress %>%"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Statut et lien détails -->
+                  <div class="text-center">
+                    <div class="text-green-400 text-sm font-medium mb-2">
+                      ✅ Récompense débloquée !
+                    </div>
+                    <% 
+                      details_path = case reward_info[:quantity]
+                      when 3 then reward_details_path(badge_type: 'unified', quantity: 3)
+                      when 6 then reward_details_path(badge_type: 'unified', quantity: 6)
+                      when 9 then reward_details_path(badge_type: 'unified', quantity: 9)
+                      when 12 then reward_details_path(badge_type: 'unified', quantity: 12)
+                      else reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity])
+                      end
+                    %>
+                    <%= link_to details_path, 
+                        class: "bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors" do %>
+                      Voir le contenu →
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+        
+        <!-- Message si aucune récompense débloquée -->
+        <% if current_user.rewards.where(unlocked: true).count == 0 %>
+          <div class="text-center py-12">
+            <div class="text-6xl mb-4">🔒</div>
+            <h3 class="text-xl font-bold text-white mb-4">Aucune récompense débloquée</h3>
+            <p class="text-gray-300 mb-6">Collectez des badges en jouant aux playlists pour débloquer vos premières récompenses !</p>
+            <%= link_to "Jouer pour gagner des badges", playlists_path, 
+                class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
+          </div>
+        <% end %>
       </div>
     </div>
 
@@ -87,140 +234,47 @@
       <% end %>
     </div>
 
-    <!-- Récompenses par niveau -->
-    <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎯 Mes récompenses par niveau</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <% [
-          { quantity: 3, level: 'challenge', color: 'from-yellow-400 to-yellow-600', icon: '🥉', rewards: @challenge_rewards },
-          { quantity: 6, level: 'exclusif', color: 'from-gray-400 to-gray-600', icon: '🥈', rewards: @exclusif_rewards },
-          { quantity: 9, level: 'premium', color: 'from-orange-400 to-orange-600', icon: '🥇', rewards: @premium_rewards },
-          { quantity: 12, level: 'ultime', color: 'from-pink-400 to-purple-600', icon: '🌈', rewards: @ultime_rewards }
-        ].each do |reward_info| %>
-          <% current_count = current_user.user_badges.count %>
-          <% progress = [(current_count.to_f / reward_info[:quantity] * 100), 100].min %>
-          <% has_reward = reward_info[:rewards].present? && reward_info[:rewards].any? %>
-          
-          <div class="reward-card bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-hidden border border-gray-600 transform hover:scale-105 transition-all duration-200">
-            <!-- Bannière avec image -->
-            <div class="h-48 relative">
-              <div class="w-full h-full bg-gradient-to-r <%= reward_info[:color] %> flex items-center justify-center">
-                <div class="text-white text-4xl">
-                  <% if has_reward %>
-                    🎁
-                  <% else %>
-                    🔒
-                  <% end %>
+    <!-- Prochaine récompense accessible -->
+    <% if @next_accessible_reward %>
+      <div class="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl p-6 mb-8 border border-orange-400/30">
+        <h3 class="text-xl font-bold text-white mb-4">🎯 Prochaine récompense accessible</h3>
+        <div class="reward-card bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg overflow-hidden border border-orange-400 transform hover:scale-105 transition-all duration-200">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center">
+                <div class="text-4xl mr-4"><%= @next_accessible_reward[:icon] %></div>
+                <div>
+                  <h4 class="text-2xl font-bold text-white"><%= @next_accessible_reward[:name] %></h4>
+                  <p class="text-orange-100">Récompense en cours d'acquisition</p>
                 </div>
               </div>
-              <div class="absolute top-3 left-3">
-                <% if has_reward %>
-                  <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
-                <% else %>
-                  <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">VERROUILLÉ</span>
-                <% end %>
-              </div>
-              <div class="absolute top-3 right-3">
-                <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full"><%= reward_info[:quantity] %></span>
+              <div class="text-right">
+                <div class="text-3xl font-bold text-white"><%= @next_accessible_reward[:current_badges] %>/<%= @next_accessible_reward[:quantity] %></div>
+                <div class="text-sm text-orange-100">badges</div>
               </div>
             </div>
             
-            <!-- Contenu de la carte -->
-            <div class="p-4">
-              <!-- En-tête avec quantité -->
-              <div class="text-center mb-4">
-                <div class="text-3xl font-bold text-white mb-2"><%= reward_info[:quantity] %></div>
-                <div class="text-sm text-gray-300">badges requis</div>
+            <!-- Barre de progression -->
+            <div class="w-full">
+              <div class="flex justify-between text-xs text-orange-100 mb-1">
+                <span>Progression</span>
+                <span><%= @next_accessible_reward[:progress_percentage].round %>%</span>
               </div>
-              
-              <!-- Type de récompense -->
-              <div class="text-center mb-4">
-                <div class="text-lg font-semibold text-white mb-1">
-                  <%= reward_info[:icon] %> <%= reward_info[:level].humanize %>
-                </div>
-                <div class="text-sm text-gray-400">
-                  <% if has_reward %>
-                    Récompense surprise
-                  <% else %>
-                    <%= reward_info[:quantity] %> badges requis
-                  <% end %>
-                </div>
-              </div>
-              
-              <!-- Barre de progression -->
-              <div class="w-full">
-                <div class="flex justify-between text-xs text-gray-300 mb-1">
-                  <span>Progression</span>
-                  <span><%= current_count %>/<%= reward_info[:quantity] %></span>
-                </div>
-                <div class="w-full bg-gray-700 rounded-full h-2">
-                  <div class="bg-gradient-to-r <%= reward_info[:color] %> h-2 rounded-full transition-all duration-300" 
-                       style="width: <%= progress %>%"></div>
-                </div>
-              </div>
-              
-              <!-- Bouton détails -->
-              <div class="mt-4 text-center">
-                <% 
-                  # Utiliser des routes spécifiques selon le type de récompense
-                  details_path = case reward_info[:quantity]
-                  when 3 then reward_details_path(badge_type: 'unified', quantity: 3)
-                  when 6 then reward_details_path(badge_type: 'unified', quantity: 6)
-                  when 9 then reward_details_path(badge_type: 'unified', quantity: 9)
-                  when 12 then reward_details_path(badge_type: 'unified', quantity: 12)
-                  else reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity])
-                  end
-                %>
-                <%= link_to "Voir détails", details_path, class: "bg-gradient-to-r #{reward_info[:color]} text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity" %>
+              <div class="w-full bg-orange-300 rounded-full h-3">
+                <div class="bg-white h-3 rounded-full transition-all duration-300" 
+                     style="width: <%= @next_accessible_reward[:progress_percentage] %>%"></div>
               </div>
             </div>
-          </div>
-        <% end %>
-      </div>
-      
-      <!-- Prochaine récompense accessible -->
-      <% if @next_accessible_reward %>
-        <div class="mt-8">
-          <h3 class="text-xl font-bold text-white mb-4">🎯 Prochaine récompense accessible</h3>
-          <div class="reward-card bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg overflow-hidden border border-orange-400 transform hover:scale-105 transition-all duration-200">
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center">
-                  <div class="text-4xl mr-4"><%= @next_accessible_reward[:icon] %></div>
-                  <div>
-                    <h4 class="text-2xl font-bold text-white"><%= @next_accessible_reward[:name] %></h4>
-                    <p class="text-orange-100">Récompense en cours d'acquisition</p>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <div class="text-3xl font-bold text-white"><%= @next_accessible_reward[:current_badges] %>/<%= @next_accessible_reward[:quantity] %></div>
-                  <div class="text-sm text-orange-100">badges</div>
-                </div>
-              </div>
-              
-              <!-- Barre de progression -->
-              <div class="w-full">
-                <div class="flex justify-between text-xs text-orange-100 mb-1">
-                  <span>Progression</span>
-                  <span><%= @next_accessible_reward[:progress_percentage].round %>%</span>
-                </div>
-                <div class="w-full bg-orange-300 rounded-full h-3">
-                  <div class="bg-white h-3 rounded-full transition-all duration-300" 
-                       style="width: <%= @next_accessible_reward[:progress_percentage] %>%"></div>
-                </div>
-              </div>
-              
-              <div class="mt-4 text-center">
-                <span class="bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                  Continuez à collecter des badges pour débloquer cette récompense !
-                </span>
-              </div>
+            
+            <div class="mt-4 text-center">
+              <span class="bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                Continuez à collecter des badges pour débloquer cette récompense !
+              </span>
             </div>
           </div>
         </div>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <!-- Statistiques des badges -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">

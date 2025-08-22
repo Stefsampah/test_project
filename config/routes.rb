@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   resources :rewards, only: [:index, :show] do
     member do
       get :video_details
+      get :exclusif_content
     end
     collection do
       post :unlock

@@ -1,0 +1,230 @@
+<div class="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header avec logo -->
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center mb-6">
+        <div class="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+          <div class="w-8 h-8 text-purple-400">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M5 8h2v8H5zm7 0H9v8h3zm5 8h2V8h-2zM8 5h8v2H8z"/>
+            </svg>
+          </div>
+        </div>
+        <h1 class="text-4xl font-bold text-white ml-4">⭐ Contenu Exclusif</h1>
+      </div>
+      <p class="text-gray-300 text-lg">Contenu exclusif débloqué via vos récompenses</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-center mb-8">
+      <div class="flex space-x-2">
+        <%= link_to "← Retour à la récompense", reward_path(@reward), 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+        <%= link_to "← Retour aux récompenses", my_rewards_path, 
+            class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
+      </div>
+    </div>
+
+    <!-- Carte du contenu exclusif -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
+      <div class="bg-gradient-to-r from-gray-700 to-gray-800 rounded-lg overflow-visible border border-gray-600">
+        <!-- Bannière avec thumbnail YouTube -->
+        <div class="relative flex items-center justify-center overflow-hidden">
+          <% if @exclusif_content[:video_id] %>
+            <!-- Thumbnail en arrière-plan -->
+            <div class="absolute inset-0 w-full h-full">
+              <img src="https://img.youtube.com/vi/<%= @exclusif_content[:video_id] %>/maxresdefault.jpg" 
+                   alt="<%= @exclusif_content[:title] %>" 
+                   class="w-full h-full object-cover" 
+                   style="opacity: 0.7;"
+                   onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= @exclusif_content[:video_id] %>/hqdefault.jpg'; this.style.opacity='0.7';">
+              <div class="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-600/30"></div>
+            </div>
+          <% end %>
+          
+          <!-- Contenu superposé -->
+          <div class="relative z-10 text-center">
+            <div class="text-white text-6xl mb-2"><%= @exclusif_content[:icon] %></div>
+            <div class="text-white font-semibold text-2xl mb-2"><%= @exclusif_content[:title] %></div>
+            <div class="text-white text-lg"><%= @exclusif_content[:type] %></div>
+          </div>
+
+          <!-- Badge type de contenu -->
+          <div class="absolute top-3 right-3">
+            <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">Contenu Exclusif</span>
+          </div>
+        </div>
+
+        <!-- Contenu de la récompense -->
+        <div class="p-6">
+          <!-- Informations de la récompense -->
+          <div class="mb-4">
+            <div class="mb-2">
+              <h3 class="text-lg font-bold text-white"><%= @exclusif_content[:title] %></h3>
+            </div>
+            <div class="text-xs text-gray-400">Débloqué le <%= Date.current.strftime('%d/%m/%Y') %></div>
+          </div>
+
+          <!-- Statistiques -->
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <div class="text-center">
+              <div class="text-lg font-bold text-white">6</div>
+              <div class="text-xs text-gray-300">Badges requis</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-white">
+                ✅
+              </div>
+              <div class="text-xs text-gray-300">
+                Débloqué
+              </div>
+            </div>
+          </div>
+          
+          <!-- Description -->
+          <div class="mb-6">
+            <p class="text-gray-300 text-sm text-center"><%= @exclusif_content[:description] %></p>
+          </div>
+          
+          <!-- Bouton d'action -->
+          <div class="text-center mt-auto space-y-4">
+            <% if @exclusif_content[:video_id] %>
+              <!-- Bouton pour regarder la vidéo -->
+              <button 
+                 onclick="showYouTubeModal('<%= @exclusif_content[:video_id] %>', '<%= @exclusif_content[:title] %>')"
+                 class="w-full inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg">
+                <span>🎬 Regarder le contenu</span>
+              </button>
+              
+              <!-- Lien direct vers YouTube -->
+              <a href="<%= @exclusif_content[:link] %>" 
+                 target="_blank" 
+                 class="w-full inline-flex items-center justify-center px-8 py-3 text-base font-medium rounded-lg text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors">
+                <span>🔗 Ouvrir sur YouTube</span>
+              </a>
+            <% else %>
+              <div class="text-center py-3 bg-gray-600/20 rounded-lg">
+                <p class="text-gray-400 text-sm">Contenu en cours de préparation</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Modal styles */
+  .youtube-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+  }
+  
+  .youtube-modal-content {
+    position: relative;
+    margin: 5% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 800px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+  }
+  
+  .youtube-modal-close {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+  }
+  
+  .youtube-modal-close:hover {
+    color: white;
+  }
+  
+  .youtube-iframe-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  }
+  
+  .youtube-iframe-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+  }
+</style>
+
+<script>
+function showYouTubeModal(videoId, title) {
+  // Créer la modal si elle n'existe pas
+  let modal = document.getElementById('youtube-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'youtube-modal';
+    modal.className = 'youtube-modal';
+    modal.innerHTML = `
+      <div class="youtube-modal-content">
+        <span class="youtube-modal-close" onclick="closeYouTubeModal()">&times;</span>
+        <h3 style="color: white; margin-bottom: 15px;">${title}</h3>
+        <div class="youtube-iframe-container">
+          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  } else {
+    // Mettre à jour le contenu de la modal existante
+    const iframe = modal.querySelector('iframe');
+    const titleElement = modal.querySelector('h3');
+    if (iframe) iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    if (titleElement) titleElement.textContent = title;
+  }
+  
+  // Afficher la modal
+  modal.style.display = 'block';
+}
+
+function closeYouTubeModal() {
+  const modal = document.getElementById('youtube-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    // Arrêter la vidéo en vidant la source de l'iframe
+    const iframe = modal.querySelector('iframe');
+    if (iframe) iframe.src = '';
+  }
+}
+
+// Fermer la modal en cliquant en dehors
+window.onclick = function(event) {
+  const modal = document.getElementById('youtube-modal');
+  if (event.target == modal) {
+    closeYouTubeModal();
+  }
+}
+</script>
