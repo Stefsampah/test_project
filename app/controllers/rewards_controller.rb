@@ -71,6 +71,8 @@ class RewardsController < ApplicationController
     
     if @reward.reward_type == 'exclusif'
       @exclusif_content = get_exclusif_content_details(@reward.content_type)
+    elsif @reward.reward_type == 'premium'
+      @premium_content = get_premium_content_details(@reward.content_type)
     end
   end
   
@@ -252,6 +254,281 @@ class RewardsController < ApplicationController
         link: '#',
         link_text: 'Voir le contenu',
         type: 'Contenu Exclusif',
+        video_id: nil
+      }
+    end
+  end
+
+  def get_premium_content_details(content_type)
+    case content_type
+    # Backstage exclusifs
+    when 'charles_dore_backstage'
+      {
+        title: 'CHARLES DORÉ - SESSION ACOUSTIQUE EXCLUSIVE',
+        description: 'Session acoustique intimiste qui dévoile les émotions derrière "Je pars mais je reste"',
+        icon: '🎸',
+        color: 'from-orange-400 to-red-500',
+        link: 'https://www.youtube.com/watch?v=JWrIfPCyedU',
+        link_text: 'Regarder la session acoustique',
+        type: 'Backstage Acoustique',
+        video_id: 'JWrIfPCyedU'
+      }
+    when 'carbonne_backstage'
+      {
+        title: 'CARBONNE - BACKSTAGE FESTIVAL',
+        description: 'Backstage festival avec ambiance détendue et version alternative de "Falbala"',
+        icon: '🎪',
+        color: 'from-green-400 to-blue-500',
+        link: 'https://www.tiktok.com/@dubsilence/video/7374726614250278177',
+        link_text: 'Voir le backstage',
+        type: 'Backstage Festival',
+        video_id: nil
+      }
+    when 'fredz_backstage'
+      {
+        title: 'FREDZ - SOIRÉE VIP EN COULISSES',
+        description: 'Soirée VIP en coulisses avec Fredz, émotions et confidences sur "Extraordinaire"',
+        icon: '🌟',
+        color: 'from-purple-400 to-pink-500',
+        link: 'https://www.tiktok.com/@fredz_musicc/video/7520325137250503941',
+        link_text: 'Voir la soirée VIP',
+        type: 'Backstage VIP',
+        video_id: nil
+      }
+    when 'adele_robin_backstage'
+      {
+        title: 'ADÈLE & ROBIN - BACKSTAGE COMPLICE',
+        description: 'Backstage musical avec Adèle & Robin en mode complice sur "Avec toi"',
+        icon: '🎭',
+        color: 'from-blue-400 to-purple-500',
+        link: 'https://www.tiktok.com/@adeleetrobin/video/7497310969584946454',
+        link_text: 'Voir le backstage',
+        type: 'Backstage Musical',
+        video_id: nil
+      }
+    when 'victorien_backstage'
+      {
+        title: 'VICTORIEN - MOMENTS BACKSTAGE PARIS',
+        description: 'Moments backstage et scène au Café de la Danse sur "Danse dans Paris"',
+        icon: '🗼',
+        color: 'from-yellow-400 to-orange-500',
+        link: 'https://www.tiktok.com/@emiliebault/video/7515687097903222038',
+        link_text: 'Voir le backstage Paris',
+        type: 'Backstage Paris',
+        video_id: nil
+      }
+    when 'miki_backstage'
+      {
+        title: 'MIKI - LIVE ACCOR ARENA',
+        description: 'Performance live avec ambiance immersive de "Particule" à l\'Accor Arena',
+        icon: '🎤',
+        color: 'from-red-400 to-pink-500',
+        link: 'https://www.youtube.com/watch?v=ICvSOFEKbgs',
+        link_text: 'Regarder le live',
+        type: 'Live Arena',
+        video_id: 'ICvSOFEKbgs'
+      }
+    when 'marguerite_backstage'
+      {
+        title: 'MARGUERITE - VERSION LIVE ENGAGÉE',
+        description: 'Version live avec émotions et engagement sur "Les filles, les meufs"',
+        icon: '🎭',
+        color: 'from-pink-400 to-purple-500',
+        link: 'https://www.dailymotion.com/video/x9jtr7c',
+        link_text: 'Voir la version live',
+        type: 'Live Engagé',
+        video_id: nil
+      }
+    when 'timeo_backstage'
+      {
+        title: 'TIMEO - CLIP COMPLET AVEC STORYTELLING',
+        description: 'Clip complet avec scènes de tournage et storytelling de "Si je m\'en vais"',
+        icon: '🎬',
+        color: 'from-blue-400 to-green-500',
+        link: 'https://www.youtube.com/watch?v=ORfP-QudA1A',
+        link_text: 'Regarder le clip',
+        type: 'Clip Officiel',
+        video_id: 'ORfP-QudA1A'
+      }
+    when 'marine_backstage'
+      {
+        title: 'MARINE - CLIP COMPLET AMBIANCE VISUELLE',
+        description: 'Clip complet avec ambiance visuelle et émotionnelle de "Cœur maladroit"',
+        icon: '💝',
+        color: 'from-pink-400 to-red-500',
+        link: 'https://www.youtube.com/watch?v=VFvDwn2r5RI',
+        link_text: 'Regarder le clip',
+        type: 'Clip Officiel',
+        video_id: 'VFvDwn2r5RI'
+      }
+    
+    # Documentaires
+    when 'oasis_supersonic'
+      {
+        title: 'OASIS: SUPERSONIC - DOCUMENTAIRE COMPLET',
+        description: 'Retour sur le parcours du dernier groupe de rock superstar, amené au sommet et anéanti par ses fondateurs',
+        icon: '🎸',
+        color: 'from-yellow-400 to-orange-500',
+        link: 'https://www.youtube.com/watch?v=lx-0uom3Tbk',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Rock',
+        video_id: 'lx-0uom3Tbk'
+      }
+    when 'dj_mehdi_made_in_france'
+      {
+        title: 'DJ MEHDI : MADE IN FRANCE - LES ENFANTS DU RAP',
+        description: 'Quand DJ Mehdi rencontre Kery James, le son d\'une chambre d\'ado devient l\'avant-garde du hip-hop français',
+        icon: '🎧',
+        color: 'from-blue-400 to-purple-500',
+        link: 'https://www.youtube.com/watch?v=6TNCoRqzjvQ',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Rap',
+        video_id: '6TNCoRqzjvQ'
+      }
+    when 'rap_francais_techno'
+      {
+        title: 'L\'AVENIR DU RAP FRANÇAIS EST-IL DANS LA TECHNO HARDCORE ?',
+        description: 'Ou l\'inverse ? Enquête sur l\'évolution du rap français et ses influences techno',
+        icon: '⚡',
+        color: 'from-purple-400 to-pink-500',
+        link: 'https://www.youtube.com/watch?v=MSsUrSnURSI&t=1330s',
+        link_text: 'Regarder l\'enquête',
+        type: 'Documentaire Techno',
+        video_id: 'MSsUrSnURSI'
+      }
+    when 'madness_prince_du_ska'
+      {
+        title: 'MADNESS - PRINCE DU SKA, ROI DE LA POP',
+        description: 'Cuivres éclatants, rythmes bondissants, synthétiseurs fous : retour sur la déferlante britannique Madness',
+        icon: '🎺',
+        color: 'from-green-400 to-blue-500',
+        link: 'https://www.youtube.com/watch?v=qqNfk_xR1I0',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Ska',
+        video_id: 'qqNfk_xR1I0'
+      }
+    when 'paname_grand_paris_rap'
+      {
+        title: 'PANAME, LE GRAND PARIS DU RAP - DOCUMENTAIRE COMPLET',
+        description: 'Et si le rap avait été la première manifestation du Grand Paris ? Retour sur une décennie hors normes',
+        icon: '🗼',
+        color: 'from-blue-400 to-purple-500',
+        link: 'https://www.youtube.com/watch?v=vCjo4saMVMg',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Paris',
+        video_id: 'vCjo4saMVMg'
+      }
+    when 'gims_face_a_face'
+      {
+        title: 'LE FACE À FACE DE GIMS : LES SECRETS DE SA LONGÉVITÉ',
+        description: 'Secrets de longévité, Booba, Sexion d\'Assaut - l\'histoire complète du rap français',
+        icon: '🎤',
+        color: 'from-red-400 to-orange-500',
+        link: 'https://www.youtube.com/watch?v=IwEs-1Uyhx4',
+        link_text: 'Regarder le face à face',
+        type: 'Documentaire Gims',
+        video_id: 'IwEs-1Uyhx4'
+      }
+    when 'afrobeats_phenomene'
+      {
+        title: 'AFROBEATS : LE PHÉNOMÈNE MUSICAL QUI SECOUE LE MONDE',
+        description: 'Comment expliquer que ce son né au Nigéria ait réussi à conquérir le monde en à peine dix ans ?',
+        icon: '🌍',
+        color: 'from-green-400 to-yellow-500',
+        link: 'https://www.youtube.com/watch?v=FhKwzAY_S_g',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Afrobeats',
+        video_id: 'FhKwzAY_S_g'
+      }
+    when 'taylor_swift_phenomene'
+      {
+        title: 'LE PHÉNOMÈNE TAYLOR SWIFT – ENVOYÉ SPÉCIAL',
+        description: 'Elle est devenue la plus grande star de la planète ! Enquête sur ce phénomène qui dépasse la musique',
+        icon: '👑',
+        color: 'from-pink-400 to-purple-500',
+        link: 'https://www.youtube.com/watch?v=5d0HmGOgQ3M',
+        link_text: 'Regarder le reportage',
+        type: 'Reportage Swift',
+        video_id: '5d0HmGOgQ3M'
+      }
+    when 'billie_eilish_world_blurry'
+      {
+        title: 'BILLIE EILISH: THE WORLD\'S A LITTLE BLURRY',
+        description: 'Documentaire musical sur Billie Eilish, le plus beau documentaire de musique jamais vu',
+        icon: '🎵',
+        color: 'from-blue-400 to-green-500',
+        link: 'https://www.youtube.com/watch?v=lx-0uom3Tbk',
+        link_text: 'Regarder le documentaire',
+        type: 'Documentaire Billie',
+        video_id: 'lx-0uom3Tbk'
+      }
+    
+    # Photos exclusives NFT
+    when 'didi_b_nft'
+      {
+        title: 'DIDI B - PHOTO EXCLUSIVE NFT',
+        description: 'Rapper, songwriter, performer, entrepreneur, Afro-urban visionary, leader of Africa Mindset',
+        icon: '🖼️',
+        color: 'from-purple-400 to-pink-500',
+        link: '#',
+        link_text: 'Voir la photo NFT',
+        type: 'Photo NFT',
+        video_id: nil
+      }
+    when 'okenneth_nft'
+      {
+        title: 'O\'KENNETH - PHOTO EXCLUSIVE NFT',
+        description: 'Ghanaian rapper, raw voice of Kumasi, Asakaa drill pioneer, "Yimaye" – street soul meets introspection',
+        icon: '🖼️',
+        color: 'from-green-400 to-blue-500',
+        link: '#',
+        link_text: 'Voir la photo NFT',
+        type: 'Photo NFT',
+        video_id: nil
+      }
+    when 'chuwi_nft'
+      {
+        title: 'CHUWI - PHOTO EXCLUSIVE NFT',
+        description: 'Indie tropical band from Isabela, Puerto Rico, "Weltita" (2025) – collab with Bad Bunny',
+        icon: '🖼️',
+        color: 'from-orange-400 to-red-500',
+        link: '#',
+        link_text: 'Voir la photo NFT',
+        type: 'Photo NFT',
+        video_id: nil
+      }
+    when 'punk_duo_nft'
+      {
+        title: 'PUNK DUO - PHOTO EXCLUSIVE NFT',
+        description: 'Punk duo from Brighton, UK, queer, neurodivergent, loud & unapologetic',
+        icon: '🖼️',
+        color: 'from-red-400 to-purple-500',
+        link: '#',
+        link_text: 'Voir la photo NFT',
+        type: 'Photo NFT',
+        video_id: nil
+      }
+    when 'koffee_nft'
+      {
+        title: 'KOFFEE - PHOTO EXCLUSIVE NFT',
+        description: 'KOFFEE #1 Reggae artist from Spanish Town, empowering, radiant, and unapologetically uplifting',
+        icon: '🖼️',
+        color: 'from-yellow-400 to-green-500',
+        link: '#',
+        link_text: 'Voir la photo NFT',
+        type: 'Photo NFT',
+        video_id: nil
+      }
+    
+    else
+      {
+        title: 'Contenu Premium Exclusif',
+        description: 'Contenu premium exclusif à découvrir',
+        icon: '👑',
+        color: 'from-orange-400 to-red-500',
+        link: '#',
+        link_text: 'Voir le contenu',
+        type: 'Contenu Premium',
         video_id: nil
       }
     end

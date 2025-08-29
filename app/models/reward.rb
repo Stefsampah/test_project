@@ -33,6 +33,35 @@ class Reward < ApplicationRecord
     dedicated_photo: 'dedicated_photo',
     concert_invitation: 'concert_invitation',
     
+    # Contenu Premium - Backstage exclusifs
+    charles_dore_backstage: 'charles_dore_backstage',
+    carbonne_backstage: 'carbonne_backstage',
+    fredz_backstage: 'fredz_backstage',
+    adele_robin_backstage: 'adele_robin_backstage',
+    victorien_backstage: 'victorien_backstage',
+    miki_backstage: 'miki_backstage',
+    marguerite_backstage: 'marguerite_backstage',
+    timeo_backstage: 'timeo_backstage',
+    marine_backstage: 'marine_backstage',
+    
+    # Contenu Premium - Documentaires
+    oasis_supersonic: 'oasis_supersonic',
+    dj_mehdi_made_in_france: 'dj_mehdi_made_in_france',
+    rap_francais_techno: 'rap_francais_techno',
+    madness_prince_du_ska: 'madness_prince_du_ska',
+    paname_grand_paris_rap: 'paname_grand_paris_rap',
+    gims_face_a_face: 'gims_face_a_face',
+    afrobeats_phenomene: 'afrobeats_phenomene',
+    taylor_swift_phenomene: 'taylor_swift_phenomene',
+    billie_eilish_world_blurry: 'billie_eilish_world_blurry',
+    
+    # Contenu Premium - Photos exclusives NFT
+    didi_b_nft: 'didi_b_nft',
+    okenneth_nft: 'okenneth_nft',
+    chuwi_nft: 'chuwi_nft',
+    punk_duo_nft: 'punk_duo_nft',
+    koffee_nft: 'koffee_nft',
+    
     # Playlists Challenge
     challenge_reward_playlist_1: 'challenge_reward_playlist_1',
     challenge_reward_playlist_2: 'challenge_reward_playlist_2',
