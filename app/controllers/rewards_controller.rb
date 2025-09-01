@@ -28,6 +28,12 @@ class RewardsController < ApplicationController
     
     @progress = current_user.progress_to_next_digital_reward
     @next_level = current_user.next_digital_reward_level
+    
+    # Récupérer les images aléatoires pour les récompenses premium
+    @premium_reward_images = get_premium_reward_images
+    
+    # Récupérer les images pour les récompenses ultimes
+    @ultime_reward_images = get_ultime_reward_images
   end
   
   def all_rewards
@@ -573,5 +579,104 @@ class RewardsController < ApplicationController
     end
     
     nil
+  end
+
+  # Nouvelle méthode pour obtenir des images aléatoires pour les récompenses premium
+  def get_premium_reward_images
+    premium_rewards = current_user.rewards.where(reward_type: 'premium', unlocked: true)
+    images = {}
+    
+    premium_rewards.each do |reward|
+      case reward.content_type
+      when 'exclusive_photos'
+        # Images aléatoires pour les photos exclusives
+        available_images = [
+          'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+          'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+          'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+          'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+          'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+          'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+        ]
+        images[reward.id] = available_images.sample
+      when 'backstage_video'
+        # Images aléatoires pour les vidéos backstage
+        available_images = [
+          'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
+          'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+          'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+          'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki Accor Arena
+          'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+          'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+        ]
+        images[reward.id] = available_images.sample
+      when 'concert_footage'
+        # Images aléatoires pour les extraits de concert
+        available_images = [
+          'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+          'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B
+          'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+          'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+          'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+        ]
+        images[reward.id] = available_images.sample
+      else
+        # Images par défaut pour les autres types de contenu premium
+        default_images = [
+          'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+          'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B
+          'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+          'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+          'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+          'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+        ]
+        images[reward.id] = default_images.sample
+      end
+    end
+    
+    images
+  end
+  
+  # Nouvelle méthode pour obtenir des images pour les récompenses ultimes
+  def get_ultime_reward_images
+    ultime_rewards = current_user.rewards.where(reward_type: 'ultime', unlocked: true)
+    images = {}
+    
+    ultime_rewards.each do |reward|
+      case reward.content_type
+      when 'backstage_real'
+        # Images pour l'expérience backstage réelle
+        available_images = [
+          '/assets/images/rewards/ultime/backstage_real/backstage_concert_1.jpg',
+          '/assets/images/rewards/ultime/backstage_real/backstage_concert_2.jpg',
+          '/assets/images/rewards/ultime/backstage_real/backstage_concert_3.jpg',
+          '/assets/images/rewards/ultime/backstage_real/backstage_concert_4.jpg'
+        ]
+        images[reward.id] = available_images.sample
+      when 'concert_invitation'
+        # Images pour l'invitation au concert
+        available_images = [
+          '/assets/images/rewards/ultime/concert_invitation/concert_stage_1.jpg',
+          '/assets/images/rewards/ultime/concert_invitation/concert_stage_2.jpg',
+          '/assets/images/rewards/ultime/concert_invitation/concert_stage_3.jpg',
+          '/assets/images/rewards/ultime/concert_invitation/concert_stage_4.jpg'
+        ]
+        images[reward.id] = available_images.sample
+      when 'vip_experience'
+        # Images pour l'expérience VIP
+        available_images = [
+          '/assets/images/rewards/ultime/vip_experience/vip_meeting_1.jpg',
+          '/assets/images/rewards/ultime/vip_experience/vip_meeting_2.jpg',
+          '/assets/images/rewards/ultime/vip_experience/vip_meeting_3.jpg',
+          '/assets/images/rewards/ultime/vip_experience/vip_meeting_4.jpg'
+        ]
+        images[reward.id] = available_images.sample
+      else
+        # Image par défaut pour les autres types
+        images[reward.id] = '/assets/images/rewards/ultime/default_ultime.jpg'
+      end
+    end
+    
+    images
   end
 end 

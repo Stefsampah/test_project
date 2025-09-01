@@ -31,9 +31,58 @@
       <!-- Carte pour les récompenses premium -->
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
         <div class="bg-gradient-to-r from-orange-700 to-red-800 rounded-lg overflow-visible border border-orange-600">
-          <!-- Bannière avec thumbnail coloré -->
+          <!-- Bannière avec thumbnail et image de fond -->
           <div class="relative flex items-center justify-center overflow-hidden h-48">
-            <div class="absolute inset-0 bg-gradient-to-br <%= @premium_content[:color] %> opacity-80"></div>
+            <!-- Image de fond aléatoire selon le content_type -->
+            <% 
+              background_image = case @reward.content_type
+              when 'exclusive_photos'
+                [
+                  'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+                  'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+                  'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+                  'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+                  'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+                  'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+                ].sample
+              when 'backstage_video'
+                [
+                  'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
+                  'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+                  'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+                  'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki Accor Arena
+                  'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+                  'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+                ].sample
+              when 'concert_footage'
+                [
+                  'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+                  'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B
+                  'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+                  'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+                  'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+                ].sample
+              else
+                [
+                  'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
+                  'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B
+                  'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+                  'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
+                  'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+                  'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+                ].sample
+              end
+            %>
+            
+            <!-- Image de fond -->
+            <div class="absolute inset-0 w-full h-full">
+              <img src="<%= background_image %>" 
+                   alt="<%= @premium_content[:title] %>" 
+                   class="w-full h-full object-cover"
+                   style="opacity: 0.6;"
+                   onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300/FF6B35/FFFFFF?text=Premium'; this.style.opacity='0.6';">
+              <div class="absolute inset-0 bg-gradient-to-br <%= @premium_content[:color] %> opacity-60"></div>
+            </div>
             
             <!-- Contenu superposé -->
             <div class="relative z-10 text-center">

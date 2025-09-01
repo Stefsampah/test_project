@@ -29,9 +29,11 @@ class Reward < ApplicationRecord
     exclusive_photos: 'exclusive_photos',
     backstage_video: 'backstage_video',
     concert_footage: 'concert_footage',
-    personal_voice_message: 'personal_voice_message',
-    dedicated_photo: 'dedicated_photo',
+    
+    # Contenu Ultime - Expériences exclusives (sans vidéos)
+    backstage_real: 'backstage_real',
     concert_invitation: 'concert_invitation',
+    vip_experience: 'vip_experience',
     
     # Contenu Premium - Backstage exclusifs
     charles_dore_backstage: 'charles_dore_backstage',
@@ -245,9 +247,9 @@ class Reward < ApplicationRecord
       ]
     when 'ultime'
       [
-        { content_type: 'personal_voice_message', name: 'Message Vocal Personnalisé', description: 'Message vocal d\'un artiste pour vous', icon: '🎤' },
-        { content_type: 'dedicated_photo', name: 'Photo Dédicacée', description: 'Photo dédicacée d\'un artiste', icon: '📷' },
-        { content_type: 'concert_invitation', name: 'Invitation Concert', description: 'Invitation à un concert près de chez vous', icon: '🎫' }
+        { content_type: 'backstage_real', name: 'Backstage Réel', description: 'Expérience exclusive de backstage', icon: '🎭' },
+        { content_type: 'concert_invitation', name: 'Invitation Concert', description: 'Invitation à un concert près de chez vous', icon: '🎫' },
+        { content_type: 'vip_experience', name: 'Expérience VIP', description: 'Expérience exclusive de rencontre avec un artiste', icon: '👑' }
       ]
     end
     
@@ -312,8 +314,9 @@ class Reward < ApplicationRecord
         ]
       when 'ultime'
         [
-          { content_type: 'personal_voice_message', name: 'Message Vocal Personnalisé', description: 'Message vocal d\'un artiste pour vous', icon: '🎤' },
-          { content_type: 'dedicated_photo', name: 'Photo Dédicacée', description: 'Photo dédicacée d\'un artiste', icon: '📷' }
+          { content_type: 'backstage_real', name: 'Backstage Réel', description: 'Expérience exclusive de backstage', icon: '🎭' },
+          { content_type: 'concert_invitation', name: 'Invitation Concert', description: 'Invitation à un concert près de chez vous', icon: '🎫' },
+          { content_type: 'vip_experience', name: 'Expérience VIP', description: 'Expérience exclusive de rencontre avec un artiste', icon: '👑' }
         ]
       end
     end
@@ -639,14 +642,18 @@ class Reward < ApplicationRecord
       '🎧'
     when 'studio_session'
       '🎹'
-    when 'exclusive_photos', 'dedicated_photo'
+    when 'exclusive_photos'
       '📸'
     when 'backstage_video'
       '🎭'
-    when 'concert_footage', 'concert_invitation'
+    when 'concert_footage'
       '🎪'
-    when 'personal_voice_message'
-      '🎤'
+    when 'backstage_real'
+      '🎭'
+    when 'concert_invitation'
+      '🎫'
+    when 'vip_experience'
+      '👑'
     when 'challenge_reward_playlist_1', 'challenge_reward_playlist_2'
       '🏆'
     else
@@ -722,8 +729,9 @@ class Reward < ApplicationRecord
       ]
     when 'ultime'
       available_rewards = [
-        { content_type: 'personal_voice_message', description: 'Message vocal d\'un artiste pour vous' },
-        { content_type: 'dedicated_photo', description: 'Photo dédicacée d\'un artiste' }
+        { content_type: 'backstage_real', description: 'Expérience exclusive de backstage' },
+        { content_type: 'concert_invitation', description: 'Invitation à un concert près de chez vous' },
+        { content_type: 'vip_experience', description: 'Expérience exclusive de rencontre avec un artiste' }
       ]
     else
       available_rewards = [
