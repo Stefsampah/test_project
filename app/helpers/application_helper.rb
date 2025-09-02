@@ -18,14 +18,25 @@ module ApplicationHelper
   end
   
   def get_ultime_preview_image
-    # Images pour les récompenses ultimes (12 badges) - temporaire en attendant vos images
+    # Images pour les récompenses ultimes (12 badges) - utiliser asset_path pour Rails
     ultime_images = [
-      '/assets/images/rewards/ultime/backstage_real/backstage_concert_1.jpg',
-      '/assets/images/rewards/ultime/concert_invitation/concert_stage_1.jpg',
-      '/assets/images/rewards/ultime/vip_experience/vip_meeting_1.jpg'
+      # Backstage réel
+      asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg'),
+      asset_path('rewards/ultime/backstage_real/backstage_concert_2.jpg'),
+      asset_path('rewards/ultime/backstage_real/backstage_concert_3.jpg'),
+      asset_path('rewards/ultime/backstage_real/backstage_concert_4.jpg'),
+      # Invitation concert
+      asset_path('rewards/ultime/concert_invitation/concert_stage_1.jpg'),
+      asset_path('rewards/ultime/concert_invitation/concert_stage_2.jpg'),
+      asset_path('rewards/ultime/concert_invitation/concert_stage_3.jpg'),
+      asset_path('rewards/ultime/concert_invitation/concert_stage_4.jpg'),
+      # Expérience VIP
+      asset_path('rewards/ultime/vip_experience/vip_meeting_1.jpg'),
+      asset_path('rewards/ultime/vip_experience/vip_meeting_2.jpg'),
+      asset_path('rewards/ultime/vip_experience/vip_meeting_3.jpg'),
+      asset_path('rewards/ultime/vip_experience/vip_meeting_4.jpg')
     ]
     
-    # Pour l'instant, utiliser une image de placeholder en attendant vos vraies images
-    ultime_images.sample || 'https://via.placeholder.com/400x300/FF69B4/FFFFFF?text=Ultime+Experience'
+    ultime_images.sample
   end
 end

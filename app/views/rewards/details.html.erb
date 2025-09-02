@@ -298,6 +298,38 @@
               else
                 'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg' # Fallback par défaut
               end
+            # Pour les récompenses ultimes (12 badges), utiliser les images locales
+            elsif @quantity == 12
+              ultime_reward = current_user.rewards.where(reward_type: 'ultime', unlocked: true).first
+              if ultime_reward
+                case ultime_reward.content_type
+                when 'backstage_real'
+                  [
+                    asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg'),
+                    asset_path('rewards/ultime/backstage_real/backstage_concert_2.jpg'),
+                    asset_path('rewards/ultime/backstage_real/backstage_concert_3.jpg'),
+                    asset_path('rewards/ultime/backstage_real/backstage_concert_4.jpg')
+                  ].sample
+                when 'concert_invitation'
+                  [
+                    asset_path('rewards/ultime/concert_invitation/concert_stage_1.jpg'),
+                    asset_path('rewards/ultime/concert_invitation/concert_stage_2.jpg'),
+                    asset_path('rewards/ultime/concert_invitation/concert_stage_3.jpg'),
+                    asset_path('rewards/ultime/concert_invitation/concert_stage_4.jpg')
+                  ].sample
+                when 'vip_experience'
+                  [
+                    asset_path('rewards/ultime/vip_experience/vip_meeting_1.jpg'),
+                    asset_path('rewards/ultime/vip_experience/vip_meeting_2.jpg'),
+                    asset_path('rewards/ultime/vip_experience/vip_meeting_3.jpg'),
+                    asset_path('rewards/ultime/vip_experience/vip_meeting_4.jpg')
+                  ].sample
+                else
+                  asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg') # Fallback
+                end
+              else
+                asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg') # Fallback par défaut
+              end
             else
               'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
             end
@@ -307,8 +339,14 @@
           when 'didi_b_nouvelle_generation' then 'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
           when 'himra_legendes_urbaines' then 'https://img.youtube.com/vi/qB7kLilZWwg/hqdefault.jpg'
           when /challenge_reward_playlist_/ then 'https://img.youtube.com/vi/qB7kLilZWwg/hqdefault.jpg'
-          else 'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
-        end
+          else 
+            # Pour les récompenses ultimes, utiliser une image locale comme fallback
+            if @quantity == 12
+              asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg')
+            else
+              'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
+            end
+          end
     %>
     
     <!-- Carte fusionnée - Récompense et Contenu -->
@@ -669,6 +707,28 @@
 </style>
 
 <script>
+// Variables ERB pour les chemins d'assets ultimes
+const ULTIME_IMAGES = {
+  backstage_real: [
+    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_1.jpg") %>',
+    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_2.jpg") %>',
+    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_3.jpg") %>',
+    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_4.jpg") %>'
+  ],
+  concert_invitation: [
+    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_1.jpg") %>',
+    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_2.jpg") %>',
+    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_3.jpg") %>',
+    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_4.jpg") %>'
+  ],
+  vip_experience: [
+    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_1.jpg") %>',
+    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_2.jpg") %>',
+    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_3.jpg") %>',
+    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_4.jpg") %>'
+  ]
+};
+
 function showExclusifVideo(videoId, title) {
   if (!videoId) {
     alert('Vidéo non disponible pour le moment');
@@ -708,40 +768,21 @@ function showExclusifVideo(videoId, title) {
 }
 
 function showUltimeGallery(contentType, title) {
-  // Définir les images selon le type de contenu ultime
-  let images = [];
+  // Utiliser les variables ERB pour les chemins d'assets
+  let images = ULTIME_IMAGES[contentType] || ULTIME_IMAGES.backstage_real;
   let galleryTitle = '';
   
   switch(contentType) {
     case 'backstage_real':
-      images = [
-        '/assets/images/rewards/ultime/backstage_real/backstage_concert_1.jpg',
-        '/assets/images/rewards/ultime/backstage_real/backstage_concert_2.jpg',
-        '/assets/images/rewards/ultime/backstage_real/backstage_concert_3.jpg',
-        '/assets/images/rewards/ultime/backstage_real/backstage_concert_4.jpg'
-      ];
       galleryTitle = 'Galerie Backstage Réel';
       break;
     case 'concert_invitation':
-      images = [
-        '/assets/images/rewards/ultime/concert_invitation/concert_stage_1.jpg',
-        '/assets/images/rewards/ultime/concert_invitation/concert_stage_2.jpg',
-        '/assets/images/rewards/ultime/concert_invitation/concert_stage_3.jpg',
-        '/assets/images/rewards/ultime/concert_invitation/concert_stage_4.jpg'
-      ];
       galleryTitle = 'Galerie Invitation Concert';
       break;
     case 'vip_experience':
-      images = [
-        '/assets/images/rewards/ultime/vip_experience/vip_meeting_1.jpg',
-        '/assets/images/rewards/ultime/vip_experience/vip_meeting_2.jpg',
-        '/assets/images/rewards/ultime/vip_experience/vip_meeting_3.jpg',
-        '/assets/images/rewards/ultime/vip_experience/vip_meeting_4.jpg'
-      ];
       galleryTitle = 'Galerie Expérience VIP';
       break;
     default:
-      images = ['/assets/images/rewards/ultime/default_ultime.jpg'];
       galleryTitle = 'Galerie Ultime';
   }
 
