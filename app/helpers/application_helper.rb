@@ -5,6 +5,8 @@ module ApplicationHelper
   
   def get_premium_preview_image
     # Images aléatoires pour les récompenses premium (9 badges)
+    # Utiliser l'ID de l'utilisateur pour une sélection cohérente
+    user_id = defined?(current_user) ? current_user.id : 1
     premium_images = [
       'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
       'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
@@ -14,29 +16,33 @@ module ApplicationHelper
       'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
     ]
     
-    premium_images.sample
+    # Sélection basée sur l'ID utilisateur pour la cohérence
+    premium_images[user_id % premium_images.length]
   end
   
   def get_ultime_preview_image
-    # Images pour les récompenses ultimes (12 badges) - utiliser asset_path pour Rails
+    # Images pour les récompenses ultimes (12 badges) - sélection cohérente
+    # Utiliser l'ID de l'utilisateur pour une sélection cohérente
+    user_id = defined?(current_user) ? current_user.id : 1
     ultime_images = [
       # Backstage réel
-      asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg'),
-      asset_path('rewards/ultime/backstage_real/backstage_concert_2.jpg'),
-      asset_path('rewards/ultime/backstage_real/backstage_concert_3.jpg'),
-      asset_path('rewards/ultime/backstage_real/backstage_concert_4.jpg'),
+      '/assets/rewards/ultime/backstage_real/backstage_concert_1.jpg',
+      '/assets/rewards/ultime/backstage_real/backstage_concert_2.jpg',
+      '/assets/rewards/ultime/backstage_real/backstage_concert_3.jpg',
+      '/assets/rewards/ultime/backstage_real/backstage_concert_4.jpg',
       # Invitation concert
-      asset_path('rewards/ultime/concert_invitation/concert_stage_1.jpg'),
-      asset_path('rewards/ultime/concert_invitation/concert_stage_2.jpg'),
-      asset_path('rewards/ultime/concert_invitation/concert_stage_3.jpg'),
-      asset_path('rewards/ultime/concert_invitation/concert_stage_4.jpg'),
+      '/assets/rewards/ultime/concert_invitation/concert_stage_1.jpg',
+      '/assets/rewards/ultime/concert_invitation/concert_stage_2.jpg',
+      '/assets/rewards/ultime/concert_invitation/concert_stage_3.jpg',
+      '/assets/rewards/ultime/concert_invitation/concert_stage_4.jpg',
       # Expérience VIP
-      asset_path('rewards/ultime/vip_experience/vip_meeting_1.jpg'),
-      asset_path('rewards/ultime/vip_experience/vip_meeting_2.jpg'),
-      asset_path('rewards/ultime/vip_experience/vip_meeting_3.jpg'),
-      asset_path('rewards/ultime/vip_experience/vip_meeting_4.jpg')
+      '/assets/rewards/ultime/vip_experience/vip_meeting_1.jpg',
+      '/assets/rewards/ultime/vip_experience/vip_meeting_2.jpg',
+      '/assets/rewards/ultime/vip_experience/vip_meeting_3.jpg',
+      '/assets/rewards/ultime/vip_experience/vip_meeting_4.jpg'
     ]
     
-    ultime_images.sample
+    # Sélection basée sur l'ID utilisateur pour la cohérence
+    ultime_images[user_id % ultime_images.length]
   end
 end

@@ -28,6 +28,22 @@
     <% 
       # Utiliser les variables définies par le contrôleur
       # @quantity et @reward_type sont déjà définis dans l'action reward_details
+      
+      # Définir la vidéo Premium de manière cohérente
+      premium_video_id = nil
+      if @quantity == 9
+        user_id = current_user.id
+        premium_videos = [
+          '0tJz8JjPbHU', # Didi B Félicia
+          'QVvfSQP3JLM', # Didi B Bouaké
+          'JWrIfPCyedU', # Charles Doré
+          'ICvSOFEKbgs', # Miki Accor Arena
+          'ORfP-QudA1A', # Timeo
+          'VFvDwn2r5RI'  # Marine
+        ]
+        premium_video_id = premium_videos[user_id % premium_videos.length]
+      end
+      
       if @sample_reward
         content_type = @sample_reward.content_type
         
@@ -127,68 +143,56 @@
           reward_level = 'Exclusif'
           
         when 9 # Premium
-          content_title = 'Contenu Premium Exclusif'
+          # Utiliser la même logique que get_premium_preview_image pour la cohérence
+          user_id = current_user.id
+          premium_images = [
+            'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
+            'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+            'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+            'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki Accor Arena
+            'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+            'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+          ]
+          
+          selected_image_index = user_id % premium_images.length
+          selected_image = premium_images[selected_image_index]
+          
+          # Définir le contenu selon l'image sélectionnée
+          case selected_image
+          when 'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg' # Didi B Félicia
+            content_title = 'DIDI B - FÉLICIA (CLIP OFFICIEL)'
+            content_description = 'Clip officiel de "Félicia" avec Didi B - Contenu premium exclusif'
+            video_count = 'Clip Officiel'
+          when 'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg' # Didi B Bouaké
+            content_title = 'DIDI B - BOUAKÉ (CLIP OFFICIEL)'
+            content_description = 'Clip officiel de "Bouaké" avec Didi B - Contenu premium exclusif'
+            video_count = 'Clip Officiel'
+          when 'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg' # Charles Doré
+            content_title = 'CHARLES DORÉ - JE PARS MAIS JE RESTE'
+            content_description = 'Session acoustique intimiste avec Charles Doré - Contenu premium exclusif'
+            video_count = 'Session Acoustique'
+          when 'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg' # Miki Accor Arena
+            content_title = 'MIKI - PARTICULE (LIVE ACCOR ARENA)'
+            content_description = 'Performance live de "Particule" à l\'Accor Arena - Contenu premium exclusif'
+            video_count = 'Live Arena'
+          when 'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg' # Timeo
+            content_title = 'TIMEO - SI JE M\'EN VAIS (CLIP OFFICIEL)'
+            content_description = 'Clip officiel de "Si je m\'en vais" avec Timeo - Contenu premium exclusif'
+            video_count = 'Clip Officiel'
+          when 'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg' # Marine
+            content_title = 'MARINE - CŒUR MALADROIT (CLIP OFFICIEL)'
+            content_description = 'Clip officiel de "Cœur maladroit" avec Marine - Contenu premium exclusif'
+            video_count = 'Clip Officiel'
+          else
+            content_title = 'Contenu Premium Exclusif'
+            content_description = 'Contenu premium exclusif débloqué via les récompenses premium'
+            video_count = 'Contenu premium'
+          end
+          
           content_subtitle = 'Session Premium'
           content_icon = '👑'
-          content_description = 'Contenu premium exclusif débloqué via les récompenses premium'
-          video_count = 'Contenu premium'
           badge_icon = '🥇'
           reward_level = 'Premium'
-          
-          # Déterminer le content_type de la récompense premium de l'utilisateur
-          premium_reward = current_user.rewards.where(reward_type: 'premium', unlocked: true).first
-          if premium_reward
-            case premium_reward.content_type
-            when 'exclusive_photos'
-              content_description = 'Photos exclusives d\'artistes débloquées via les récompenses premium'
-              video_count = 'Photos exclusives'
-            when 'backstage_video'
-              content_description = 'Vidéo backstage exclusive débloquée via les récompenses premium'
-              video_count = 'Vidéo backstage'
-            when 'concert_footage'
-              content_description = 'Extrait de concert exclusif débloqué via les récompenses premium'
-              video_count = 'Extrait concert'
-            when 'charles_dore_backstage'
-              content_title = 'CHARLES DORÉ - SESSION ACOUSTIQUE EXCLUSIVE'
-              content_description = 'Session acoustique intimiste qui dévoile les émotions derrière "Je pars mais je reste"'
-              video_count = 'Session Acoustique'
-            when 'carbonne_backstage'
-              content_title = 'CARBONNE - BACKSTAGE FESTIVAL'
-              content_description = 'Backstage festival avec ambiance détendue et version alternative de "Falbala"'
-              video_count = 'Backstage Festival'
-            when 'fredz_backstage'
-              content_title = 'FREDZ - SOIRÉE VIP EN COULISSES'
-              content_description = 'Soirée VIP en coulisses avec Fredz, émotions et confidences sur "Extraordinaire"'
-              video_count = 'Backstage VIP'
-            when 'adele_robin_backstage'
-              content_title = 'ADÈLE & ROBIN - BACKSTAGE COMPLICE'
-              content_description = 'Backstage musical avec Adèle & Robin en mode complice sur "Avec toi"'
-              video_count = 'Backstage Musical'
-            when 'victorien_backstage'
-              content_title = 'VICTORIEN - MOMENTS BACKSTAGE PARIS'
-              content_description = 'Moments backstage et scène au Café de la Danse sur "Danse dans Paris"'
-              video_count = 'Backstage Paris'
-            when 'miki_backstage'
-              content_title = 'MIKI - LIVE ACCOR ARENA'
-              content_description = 'Performance live avec ambiance immersive de "Particule" à l\'Accor Arena'
-              video_count = 'Live Arena'
-            when 'marguerite_backstage'
-              content_title = 'MARGUERITE - VERSION LIVE ENGAGÉE'
-              content_description = 'Version live avec émotions et engagement sur "Les filles, les meufs"'
-              video_count = 'Live Engagé'
-            when 'timeo_backstage'
-              content_title = 'TIMEO - CLIP COMPLET AVEC STORYTELLING'
-              content_description = 'Clip complet avec scènes de tournage et storytelling de "Si je m\'en vais"'
-              video_count = 'Clip Officiel'
-            when 'marine_backstage'
-              content_title = 'MARINE - CLIP COMPLET AMBIANCE VISUELLE'
-              content_description = 'Clip complet avec ambiance visuelle et émotionnelle de "Cœur maladroit"'
-              video_count = 'Clip Officiel'
-            else
-              content_description = 'Contenu premium exclusif débloqué via les récompenses premium'
-              video_count = 'Contenu premium'
-            end
-          end
           
         when 12 # Ultime
           content_title = 'Contenu Ultime Exclusif'
@@ -237,99 +241,45 @@
           when 'himra_legendes_urbaines' then 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
           when /challenge_reward_playlist_/ then 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
           else
-            # Pour les récompenses premium (9 badges), utiliser des images aléatoires appropriées
+            # Pour les récompenses premium (9 badges), utiliser la même logique que le helper
             if @quantity == 9
-              premium_reward = current_user.rewards.where(reward_type: 'premium', unlocked: true).first
-              if premium_reward
-                case premium_reward.content_type
-                when 'exclusive_photos'
-                  [
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
-                    'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
-                    'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
-                    'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
-                    'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
-                    'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
-                  ].sample
-                when 'backstage_video'
-                  [
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
-                    'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
-                    'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
-                    'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki Accor Arena
-                    'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
-                    'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
-                  ].sample
-                when 'concert_footage'
-                  [
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
-                    'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B
-                    'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
-                    'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
-                    'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
-                  ].sample
-                when 'charles_dore_backstage'
-                  [
-                    'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
-                    'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg'  # Didi B Bouaké
-                  ].sample
-                when 'carbonne_backstage', 'fredz_backstage', 'adele_robin_backstage'
-                  [
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B
-                    'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
-                    'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg'  # Miki
-                  ].sample
-                when 'victorien_backstage', 'miki_backstage', 'marguerite_backstage'
-                  [
-                    'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki
-                    'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
-                    'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
-                  ].sample
-                when 'timeo_backstage', 'marine_backstage'
-                  [
-                    'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
-                    'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg', # Marine
-                    'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg'  # Didi B
-                  ].sample
-                else
-                  'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg' # Fallback Didi B
-                end
-              else
-                'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg' # Fallback par défaut
-              end
-            # Pour les récompenses ultimes (12 badges), utiliser les images locales
+              # Utiliser la même logique que get_premium_preview_image pour la cohérence
+              user_id = current_user.id
+              premium_images = [
+                'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
+                'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
+                'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg', # Charles Doré
+                'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg', # Miki Accor Arena
+                'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg', # Timeo
+                'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'  # Marine
+              ]
+              
+              # Sélection basée sur l'ID utilisateur pour la cohérence
+              premium_images[user_id % premium_images.length]
+            # Pour les récompenses ultimes (12 badges), utiliser la même logique que le helper
             elsif @quantity == 12
-              ultime_reward = current_user.rewards.where(reward_type: 'ultime', unlocked: true).first
-              if ultime_reward
-                case ultime_reward.content_type
-                when 'backstage_real'
-                  [
-                    asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg'),
-                    asset_path('rewards/ultime/backstage_real/backstage_concert_2.jpg'),
-                    asset_path('rewards/ultime/backstage_real/backstage_concert_3.jpg'),
-                    asset_path('rewards/ultime/backstage_real/backstage_concert_4.jpg')
-                  ].sample
-                when 'concert_invitation'
-                  [
-                    asset_path('rewards/ultime/concert_invitation/concert_stage_1.jpg'),
-                    asset_path('rewards/ultime/concert_invitation/concert_stage_2.jpg'),
-                    asset_path('rewards/ultime/concert_invitation/concert_stage_3.jpg'),
-                    asset_path('rewards/ultime/concert_invitation/concert_stage_4.jpg')
-                  ].sample
-                when 'vip_experience'
-                  [
-                    asset_path('rewards/ultime/vip_experience/vip_meeting_1.jpg'),
-                    asset_path('rewards/ultime/vip_experience/vip_meeting_2.jpg'),
-                    asset_path('rewards/ultime/vip_experience/vip_meeting_3.jpg'),
-                    asset_path('rewards/ultime/vip_experience/vip_meeting_4.jpg')
-                  ].sample
-                else
-                  asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg') # Fallback
-                end
-              else
-                asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg') # Fallback par défaut
-              end
+              # Utiliser la même logique que get_ultime_preview_image pour la cohérence
+              user_id = current_user.id
+              ultime_images = [
+                # Backstage réel
+                '/assets/rewards/ultime/backstage_real/backstage_concert_1.jpg',
+                '/assets/rewards/ultime/backstage_real/backstage_concert_2.jpg',
+                '/assets/rewards/ultime/backstage_real/backstage_concert_3.jpg',
+                '/assets/rewards/ultime/backstage_real/backstage_concert_4.jpg',
+                # Invitation concert
+                '/assets/rewards/ultime/concert_invitation/concert_stage_1.jpg',
+                '/assets/rewards/ultime/concert_invitation/concert_stage_2.jpg',
+                '/assets/rewards/ultime/concert_invitation/concert_stage_3.jpg',
+                '/assets/rewards/ultime/concert_invitation/concert_stage_4.jpg',
+                # Expérience VIP
+                '/assets/rewards/ultime/vip_experience/vip_meeting_1.jpg',
+                '/assets/rewards/ultime/vip_experience/vip_meeting_2.jpg',
+                '/assets/rewards/ultime/vip_experience/vip_meeting_3.jpg',
+                '/assets/rewards/ultime/vip_experience/vip_meeting_4.jpg'
+              ]
+              
+              # Sélection basée sur l'ID utilisateur pour la cohérence
+              ultime_images[user_id % ultime_images.length]
             else
               'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
             end
@@ -342,7 +292,7 @@
           else 
             # Pour les récompenses ultimes, utiliser une image locale comme fallback
             if @quantity == 12
-              asset_path('rewards/ultime/backstage_real/backstage_concert_1.jpg')
+              '/assets/rewards/ultime/backstage_real/backstage_concert_1.jpg'
             else
               'https://img.youtube.com/vi/9ECNWJ1R0fg/hqdefault.jpg'
             end
@@ -439,24 +389,7 @@
                   </button>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'premium' %>
                   <!-- Pour les récompenses premium -->
-                  <%
-                    video_id = case @sample_reward.content_type
-                               when 'exclusive_photos' then '0tJz8JjPbHU' # Didi B
-                               when 'backstage_video' then 'QVvfSQP3JLM' # Didi B Bouaké
-                               when 'concert_footage' then 'ICvSOFEKbgs' # Miki
-                               when 'charles_dore_backstage' then 'JWrIfPCyedU' # Charles Doré
-                               when 'carbonne_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'fredz_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'adele_robin_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'victorien_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'miki_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'marguerite_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'timeo_backstage' then 'ORfP-QudA1A' # Timeo
-                               when 'marine_backstage' then 'VFvDwn2r5RI' # Marine
-                               else '0tJz8JjPbHU' # Fallback Didi B
-                               end
-                  %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
+                  <button class="playlist-button" onclick="showExclusifVideo('<%= premium_video_id %>', '<%= content_title %>')">
                     🎬 Regarder le contenu
                   </button>
                 <% else %>
@@ -501,24 +434,7 @@
                   </button>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'premium' %>
                   <!-- Pour les récompenses premium -->
-                  <%
-                    video_id = case @sample_reward.content_type
-                               when 'exclusive_photos' then '0tJz8JjPbHU' # Didi B
-                               when 'backstage_video' then 'QVvfSQP3JLM' # Didi B Bouaké
-                               when 'concert_footage' then 'ICvSOFEKbgs' # Miki
-                               when 'charles_dore_backstage' then 'JWrIfPCyedU' # Charles Doré
-                               when 'carbonne_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'fredz_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'adele_robin_backstage' then '0tJz8JjPbHU' # Didi B (fallback)
-                               when 'victorien_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'miki_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'marguerite_backstage' then 'ICvSOFEKbgs' # Miki
-                               when 'timeo_backstage' then 'ORfP-QudA1A' # Timeo
-                               when 'marine_backstage' then 'VFvDwn2r5RI' # Marine
-                               else '0tJz8JjPbHU' # Fallback Didi B
-                               end
-                  %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
+                  <button class="playlist-button" onclick="showExclusifVideo('<%= premium_video_id %>', '<%= content_title %>')">
                     🎬 Regarder le contenu
                   </button>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'ultime' %>
@@ -710,22 +626,22 @@
 // Variables ERB pour les chemins d'assets ultimes
 const ULTIME_IMAGES = {
   backstage_real: [
-    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_1.jpg") %>',
-    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_2.jpg") %>',
-    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_3.jpg") %>',
-    '<%= asset_path("rewards/ultime/backstage_real/backstage_concert_4.jpg") %>'
+    '/assets/rewards/ultime/backstage_real/backstage_concert_1.jpg',
+    '/assets/rewards/ultime/backstage_real/backstage_concert_2.jpg',
+    '/assets/rewards/ultime/backstage_real/backstage_concert_3.jpg',
+    '/assets/rewards/ultime/backstage_real/backstage_concert_4.jpg'
   ],
   concert_invitation: [
-    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_1.jpg") %>',
-    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_2.jpg") %>',
-    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_3.jpg") %>',
-    '<%= asset_path("rewards/ultime/concert_invitation/concert_stage_4.jpg") %>'
+    '/assets/rewards/ultime/concert_invitation/concert_stage_1.jpg',
+    '/assets/rewards/ultime/concert_invitation/concert_stage_2.jpg',
+    '/assets/rewards/ultime/concert_invitation/concert_stage_3.jpg',
+    '/assets/rewards/ultime/concert_invitation/concert_stage_4.jpg'
   ],
   vip_experience: [
-    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_1.jpg") %>',
-    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_2.jpg") %>',
-    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_3.jpg") %>',
-    '<%= asset_path("rewards/ultime/vip_experience/vip_meeting_4.jpg") %>'
+    '/assets/rewards/ultime/vip_experience/vip_meeting_1.jpg',
+    '/assets/rewards/ultime/vip_experience/vip_meeting_2.jpg',
+    '/assets/rewards/ultime/vip_experience/vip_meeting_3.jpg',
+    '/assets/rewards/ultime/vip_experience/vip_meeting_4.jpg'
   ]
 };
 
