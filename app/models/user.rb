@@ -271,6 +271,97 @@ class User < ApplicationRecord
     rewards.exists?(content_type: content_type)
   end
 
+  # === SYSTÈME SIMPLIFIÉ AVEC PRIORITÉS ===
+  
+  # 1. 🎮 Régularité (PRIORITÉ 1) - Points élevés
+  def regularity_points
+    (playlists_per_day * 20).round
+  end
+  
+  def playlists_per_day
+    # Calculer la moyenne des playlists jouées par jour sur les 7 derniers jours
+    last_7_days = 7.days.ago..Time.current
+    
+    # Compter les jeux uniques par jour (exclure les playlists récompenses)
+    daily_playlists = games.joins(:playlist)
+                          .where.not(playlists: { id: reward_playlist_ids })
+                          .where(games: { created_at: last_7_days })
+                          .group("DATE(games.created_at)")
+                          .count
+    
+    return 0 if daily_playlists.empty?
+    
+    # Moyenne sur 7 jours
+    total_playlists = daily_playlists.values.sum
+    (total_playlists.to_f / 7).round(1)
+  end
+  
+  # 2. ⏱️ Temps d'écoute (PRIORITÉ 2) - Points moyens
+  def listening_points
+    (watch_time_minutes * 3).round
+  end
+  
+  def watch_time_minutes
+    # Estimer le temps de visionnage basé sur les swipes
+    # Chaque swipe = ~30 secondes de visionnage (vidéo courte)
+    total_swipes = swipes.joins(:playlist)
+                        .where.not(playlists: { id: reward_playlist_ids })
+                        .count
+    
+    # 30 secondes par swipe = 0.5 minutes
+    (total_swipes * 0.5).round
+  end
+  
+  # 3. 🧠 Critique constructive (PRIORITÉ 3) - Points modérés
+  def critical_opinions_points
+    total_actions = likes_count + dislikes_count
+    return 0 if total_actions == 0
+    
+    # Points de base : 1 point par action
+    base_points = total_actions * 1
+    
+    # Bonus pour critique constructive (pas excessive)
+    if dislikes_count <= 5  # Critique modérée
+      bonus = 2  # Bonus pour critique réfléchie
+    elsif dislikes_count <= 10  # Critique moyenne
+      bonus = 1  # Bonus léger
+    else  # Critique excessive
+      bonus = 0  # Pas de bonus
+    end
+    
+    bonus_points = dislikes_count * bonus
+    base_points + bonus_points
+  end
+  
+  def likes_count
+    swipes.joins(:playlist)
+         .where.not(playlists: { id: reward_playlist_ids })
+         .where(action: 'like')
+         .count
+  end
+  
+  def dislikes_count
+    swipes.joins(:playlist)
+         .where.not(playlists: { id: reward_playlist_ids })
+         .where(action: 'dislike')
+         .count
+  end
+  
+  # 4. Points de jeu (pour les badges et récompenses)
+  def game_points
+    regularity_points + listening_points + critical_opinions_points
+  end
+  
+  # 5. Total des points (seulement les points gagnés pour les badges)
+  def total_points
+    game_points  # Pas de cumul avec les points achetés
+  end
+  
+  # 6. Points achetés (pour débloquer du contenu uniquement)
+  def purchased_points
+    self.points || 0
+  end
+
   private
 
   def reward_playlist_ids

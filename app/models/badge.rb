@@ -11,10 +11,10 @@ class Badge < ApplicationRecord
   validates :badge_type, uniqueness: { scope: :level }
   validates :reward_description, presence: true, if: -> { reward_type.present? }
   
-  # Nouvelles validations pour les conditions multiples
-  validates :condition_1_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
-  validates :condition_2_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
-  validates :condition_3_type, inclusion: { in: %w[points_earned games_played win_ratio top_3_count consecutive_wins unique_playlists genres_explored completed_playlists performance_diversity] }, allow_nil: true
+  # Conditions simplifiées : 4 types au lieu de 9
+  validates :condition_1_type, inclusion: { in: %w[regularity_points listening_points critical_opinions total_points] }, allow_nil: true
+  validates :condition_2_type, inclusion: { in: %w[regularity_points listening_points critical_opinions total_points] }, allow_nil: true
+  validates :condition_3_type, inclusion: { in: %w[regularity_points listening_points critical_opinions total_points] }, allow_nil: true
 
   has_many :user_badges
   has_many :users, through: :user_badges
@@ -62,7 +62,7 @@ class Badge < ApplicationRecord
     end
   end
 
-  # Méthodes pour vérifier les conditions multiples
+  # Méthodes pour vérifier les conditions simplifiées
   def conditions_met?(user)
     return true if condition_1_type.blank? # Fallback vers l'ancien système
     
@@ -78,24 +78,14 @@ class Badge < ApplicationRecord
     return false if required_value.blank?
     
     actual_value = case condition_type
-                   when 'points_earned'
-                     user.total_points  # Utiliser total_points au lieu de competitor_score
-                   when 'games_played'
-                     user.games.count
-                   when 'win_ratio'
-                     user.win_ratio
-                   when 'top_3_count'
-                     user.top_3_finishes_count
-                   when 'consecutive_wins'
-                     user.consecutive_wins_count
-                   when 'unique_playlists'
-                     user.unique_playlists_played_count
-                   when 'genres_explored'
-                     user.genres_explored_count
-                   when 'completed_playlists'
-                     user.completed_playlists_count
-                   when 'performance_diversity'
-                     user.performance_diversity
+                   when 'regularity_points'
+                     user.regularity_points
+                   when 'listening_points'
+                     user.listening_points
+                   when 'critical_opinions'
+                     user.critical_opinions_points
+                   when 'total_points'
+                     user.total_points
                    else
                      0
                    end

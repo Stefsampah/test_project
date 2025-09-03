@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   # Routes pour le profil
   resource :profile, only: [:show, :edit, :update]
+  get 'simplified_stats', to: 'users#simplified_stats', as: :simplified_stats
 
   # Routes pour les badges
   resources :badges, only: [:index, :show]
