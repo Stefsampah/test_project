@@ -188,10 +188,10 @@
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Meilleurs Engagements -->
+                    <!-- Meilleurs Engagements -->
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">💬</span>
+              <span class="mr-2">⏱️</span>
               Meilleurs Engagements
             </h3>
             <div class="space-y-3">
@@ -215,11 +215,11 @@
             </div>
           </div>
 
-          <!-- Meilleurs Ratios -->
+          <!-- Meilleurs Régularités -->
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">📈</span>
-              Meilleurs Ratios
+              <span class="mr-2">🎮</span>
+              Meilleurs Régularités
             </h3>
             <div class="space-y-3">
               <% if @best_ratio_scores.present? %>
@@ -233,11 +233,11 @@
                       </div>
                       <span class="text-white text-sm"><%= user.email.split('@').first %></span>
                     </div>
-                    <span class="text-yellow-400 font-bold"><%= score[:points] %>%</span>
+                    <span class="text-yellow-400 font-bold"><%= score[:points] %></span>
                   </div>
                 <% end %>
               <% else %>
-                <p class="text-gray-400 text-sm">Aucun ratio disponible</p>
+                <p class="text-gray-400 text-sm">Aucune régularité disponible</p>
               <% end %>
             </div>
           </div>
@@ -245,7 +245,7 @@
           <!-- Meilleurs Critiques -->
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">⭐</span>
+              <span class="mr-2">🧠</span>
               Meilleurs Critiques
             </h3>
             <div class="space-y-3">

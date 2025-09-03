@@ -6,35 +6,35 @@ class Score < ApplicationRecord
   validates :user_id, presence: true
   validates :playlist_id, presence: true
 
-  # Méthodes pour calculer les différents types de scores
+  # Méthodes pour calculer les différents types de scores (SYSTÈME SIMPLIFIÉ)
   def self.calculate_top_engager_scores
-    # Utiliser la même logique que les badges permanents
+    # Utiliser le nouveau système simplifié
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.engager_score,
+        points: user.listening_points + user.critical_opinions_points,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_best_ratio_scores
-    # Utiliser la même logique que les badges permanents
+    # Utiliser le nouveau système simplifié (régularité)
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.competitor_score,
+        points: user.regularity_points,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_wise_critic_scores
-    # Utiliser la même logique que les badges permanents
+    # Utiliser le nouveau système simplifié
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.critic_score,
+        points: user.critical_opinions_points,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
@@ -45,7 +45,7 @@ class Score < ApplicationRecord
     best_ratio = calculate_best_ratio_scores
     wise_critic = calculate_wise_critic_scores
 
-    # Combiner tous les scores
+    # Combiner tous les scores avec le nouveau système
     combined_scores = {}
     
     [top_engager, best_ratio, wise_critic].each do |scores|
@@ -61,13 +61,13 @@ class Score < ApplicationRecord
     if top_engager.any?
       top_engager_user_id = top_engager.first[:user_id]
       combined_scores[top_engager_user_id] ||= { points: 0, badges: [] }
-      combined_scores[top_engager_user_id][:badges] << "Top engager du jour"
+      combined_scores[top_engager_user_id][:badges] << "Top Engager du jour"
     end
 
     if best_ratio.any?
       best_ratio_user_id = best_ratio.first[:user_id]
       combined_scores[best_ratio_user_id] ||= { points: 0, badges: [] }
-      combined_scores[best_ratio_user_id][:badges] << "Top Ratio du jour"
+      combined_scores[best_ratio_user_id][:badges] << "Top Régularité du jour"
     end
 
     if wise_critic.any?
