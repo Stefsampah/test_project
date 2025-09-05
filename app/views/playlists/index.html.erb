@@ -89,19 +89,41 @@
                 <% end %>
                 
                 <% 
-                  # Différentes façons d'écrire le nom de fichier
-                  image_variations = [
-                    playlist.title + '.jpg',
-                    playlist.title.parameterize.underscore + '.jpg',
-                    playlist.title.downcase.gsub(' ', '_') + '.jpg',
-                    playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
-                    playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
-                  ]
+                  # Système de correspondance intelligent par genre/mots-clés
                   found_image = nil
-                  image_variations.each do |img_name|
-                    if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
-                      found_image = img_name
-                      break
+                  title_lower = playlist.title.downcase
+                  
+                  # Correspondances spécifiques par genre
+                  if title_lower.include?('hip hop') || title_lower.include?('hip-hop')
+                    found_image = 'this_is_hip_hop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'this_is_hip_hop.jpg'))
+                    found_image ||= 'hip_hop_essentials.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'hip_hop_essentials.jpg'))
+                  elsif title_lower.include?('reggae')
+                    found_image = 'best_reggae.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'best_reggae.jpg'))
+                    found_image ||= 'reggae_vibes.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'reggae_vibes.jpg'))
+                  elsif title_lower.include?('afro') || title_lower.include?('afropop')
+                    found_image = 'this_is_afro_pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'this_is_afro_pop.jpg'))
+                    found_image ||= 'afro_pop_hits.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'afro_pop_hits.jpg'))
+                  elsif title_lower.include?('electronic') || title_lower.include?('dance')
+                    found_image = 'electronic_dance.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'electronic_dance.jpg'))
+                  elsif title_lower.include?('latin')
+                    found_image = 'latin_pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'latin_pop.jpg'))
+                  elsif title_lower.include?('pop')
+                    found_image = 'This is Pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'This is Pop.jpg'))
+                    found_image ||= 'pop_play.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'pop_play.jpg'))
+                  end
+                  
+                  # Fallback vers l'ancien système si pas de correspondance
+                  unless found_image
+                    image_variations = [
+                      playlist.title + '.jpg',
+                      playlist.title.parameterize.underscore + '.jpg',
+                      playlist.title.downcase.gsub(' ', '_') + '.jpg'
+                    ]
+                    image_variations.each do |img_name|
+                      if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                        found_image = img_name
+                        break
+                      end
                     end
                   end
                 %>
@@ -223,19 +245,41 @@
                 <% end %>
                 
                 <% 
-                  # Différentes façons d'écrire le nom de fichier
-                  image_variations = [
-                    playlist.title + '.jpg',
-                    playlist.title.parameterize.underscore + '.jpg',
-                    playlist.title.downcase.gsub(' ', '_') + '.jpg',
-                    playlist.title.parameterize.underscore.gsub('afropop', 'afro_pop') + '.jpg',
-                    playlist.title.parameterize.underscore.gsub('of_', '') + '.jpg'
-                  ]
+                  # Système de correspondance intelligent par genre/mots-clés
                   found_image = nil
-                  image_variations.each do |img_name|
-                    if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
-                      found_image = img_name
-                      break
+                  title_lower = playlist.title.downcase
+                  
+                  # Correspondances spécifiques par genre
+                  if title_lower.include?('hip hop') || title_lower.include?('hip-hop')
+                    found_image = 'this_is_hip_hop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'this_is_hip_hop.jpg'))
+                    found_image ||= 'hip_hop_essentials.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'hip_hop_essentials.jpg'))
+                  elsif title_lower.include?('reggae')
+                    found_image = 'best_reggae.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'best_reggae.jpg'))
+                    found_image ||= 'reggae_vibes.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'reggae_vibes.jpg'))
+                  elsif title_lower.include?('afro') || title_lower.include?('afropop')
+                    found_image = 'this_is_afro_pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'this_is_afro_pop.jpg'))
+                    found_image ||= 'afro_pop_hits.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'afro_pop_hits.jpg'))
+                  elsif title_lower.include?('electronic') || title_lower.include?('dance')
+                    found_image = 'electronic_dance.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'electronic_dance.jpg'))
+                  elsif title_lower.include?('latin')
+                    found_image = 'latin_pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'latin_pop.jpg'))
+                  elsif title_lower.include?('pop')
+                    found_image = 'This is Pop.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'This is Pop.jpg'))
+                    found_image ||= 'pop_play.jpg' if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', 'pop_play.jpg'))
+                  end
+                  
+                  # Fallback vers l'ancien système si pas de correspondance
+                  unless found_image
+                    image_variations = [
+                      playlist.title + '.jpg',
+                      playlist.title.parameterize.underscore + '.jpg',
+                      playlist.title.downcase.gsub(' ', '_') + '.jpg'
+                    ]
+                    image_variations.each do |img_name|
+                      if File.exist?(Rails.root.join('app', 'assets', 'images', 'playlists', img_name))
+                        found_image = img_name
+                        break
+                      end
                     end
                   end
                 %>
