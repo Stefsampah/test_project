@@ -58,15 +58,10 @@
                 <p class="text-2xl font-bold text-green-400 text-center"><%= @badge.condition_1_value %></p>
                 <% if user_signed_in? %>
                   <% current_value = case @badge.condition_1_type
-                                     when 'points_earned' then current_user.total_points
-                                     when 'games_played' then current_user.games.count
-                                     when 'win_ratio' then current_user.win_ratio
-                                     when 'top_3_count' then current_user.top_3_finishes_count
-                                     when 'consecutive_wins' then current_user.consecutive_wins_count
-                                     when 'unique_playlists' then current_user.unique_playlists_played_count
-                                     when 'genres_explored' then current_user.genres_explored_count
-                                     when 'completed_playlists' then current_user.completed_playlists_count
-                                     when 'performance_diversity' then current_user.performance_diversity
+                                     when 'regularity_points' then current_user.regularity_points
+                                     when 'listening_points' then current_user.listening_points
+                                     when 'critical_opinions' then current_user.critical_opinions_points
+                                     when 'total_points' then current_user.total_points
                                      else 0
                                      end %>
                   <p class="text-sm text-white/80 text-center">
@@ -87,15 +82,10 @@
                   <p class="text-2xl font-bold text-blue-400 text-center"><%= @badge.condition_2_value %></p>
                   <% if user_signed_in? %>
                     <% current_value = case @badge.condition_2_type
-                                       when 'points_earned' then current_user.total_points
-                                       when 'games_played' then current_user.games.count
-                                       when 'win_ratio' then current_user.win_ratio
-                                       when 'top_3_count' then current_user.top_3_finishes_count
-                                       when 'consecutive_wins' then current_user.consecutive_wins_count
-                                       when 'unique_playlists' then current_user.unique_playlists_played_count
-                                       when 'genres_explored' then current_user.genres_explored_count
-                                       when 'completed_playlists' then current_user.completed_playlists_count
-                                       when 'performance_diversity' then current_user.performance_diversity
+                                       when 'regularity_points' then current_user.regularity_points
+                                       when 'listening_points' then current_user.listening_points
+                                       when 'critical_opinions' then current_user.critical_opinions_points
+                                       when 'total_points' then current_user.total_points
                                        else 0
                                        end %>
                     <p class="text-sm text-white/80 text-center">
@@ -117,15 +107,10 @@
                   <p class="text-2xl font-bold text-purple-400 text-center"><%= @badge.condition_3_value %></p>
                   <% if user_signed_in? %>
                     <% current_value = case @badge.condition_3_type
-                                       when 'points_earned' then current_user.total_points
-                                       when 'games_played' then current_user.games.count
-                                       when 'win_ratio' then current_user.win_ratio
-                                       when 'top_3_count' then current_user.top_3_finishes_count
-                                       when 'consecutive_wins' then current_user.consecutive_wins_count
-                                       when 'unique_playlists' then current_user.unique_playlists_played_count
-                                       when 'genres_explored' then current_user.genres_explored_count
-                                       when 'completed_playlists' then current_user.completed_playlists_count
-                                       when 'performance_diversity' then current_user.performance_diversity
+                                       when 'regularity_points' then current_user.regularity_points
+                                       when 'listening_points' then current_user.listening_points
+                                       when 'critical_opinions' then current_user.critical_opinions_points
+                                       when 'total_points' then current_user.total_points
                                        else 0
                                        end %>
                     <p class="text-sm text-white/80 text-center">
@@ -142,10 +127,10 @@
               <p class="text-3xl font-bold text-yellow-400"><%= @badge.points_required %></p>
               <% if user_signed_in? %>
                 <% current_score = case @badge.badge_type
-                                   when 'competitor' then current_user.competitor_score
-                                   when 'engager' then current_user.engager_score
-                                   when 'critic' then current_user.critic_score
-                                   when 'challenger' then current_user.challenger_score
+                                   when 'competitor' then current_user.total_points
+                                   when 'engager' then current_user.listening_points + current_user.critical_opinions_points
+                                   when 'critic' then current_user.critical_opinions_points
+                                   when 'challenger' then current_user.total_points
                                    end %>
                 <p class="text-sm text-white/80">
                   Votre progression: <%= current_score %>/<%= @badge.points_required %>

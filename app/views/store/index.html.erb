@@ -88,6 +88,7 @@
       <% if @premium_playlists.any? %>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <% @premium_playlists.each do |playlist| %>
+            <% is_unlocked = @unlocked_playlists.include?(playlist) %>
             <% # Recherche de l'image associée à la playlist comme sur playlists/index.html.erb %>
             <% found_image = nil %>
             <% Dir.glob(Rails.root.join('app/assets/images/playlists/*')).each do |img_path| %>
@@ -103,6 +104,18 @@
                 <!-- Overlay gradient -->
                 <div class="absolute inset-0 bg-gradient-to-br from-green-600/50 to-emerald-600/50 rounded-xl"></div>
                 
+                <!-- Badge déjà achetée -->
+                <% if is_unlocked %>
+                  <div class="absolute top-4 right-4 z-30">
+                    <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide bg-green-600 text-white border-2 border-green-400">
+                      <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                      DÉJÀ ACHETÉE
+                    </span>
+                  </div>
+                <% end %>
+                
                 <div class="relative z-10 text-center">
                   <h3 class="text-xl font-semibold text-white mb-2"><%= playlist.title %></h3>
                   <p class="text-gray-300 text-sm mb-4"><%= truncate(playlist.description, length: 100) %></p>
@@ -112,12 +125,21 @@
                     <span class="text-green-400 font-bold text-lg"><%= playlist.points_required %> points</span>
                   </div>
                   
-                  <div class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 inline-block text-center relative z-20">
-                    <span class="flex items-center justify-center">
-                      <span class="mr-2">🛒</span>
-                      Acheter
-                    </span>
-                  </div>
+                  <% if is_unlocked %>
+                    <div class="w-full bg-gray-600 text-gray-300 font-semibold py-3 px-6 rounded-lg inline-block text-center relative z-20">
+                      <span class="flex items-center justify-center">
+                        <span class="mr-2">✓</span>
+                        Déjà achetée
+                      </span>
+                    </div>
+                  <% else %>
+                    <div class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 inline-block text-center relative z-20">
+                      <span class="flex items-center justify-center">
+                        <span class="mr-2">🛒</span>
+                        Acheter
+                      </span>
+                    </div>
+                  <% end %>
                 </div>
               </div>
             <% end %>

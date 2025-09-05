@@ -57,24 +57,7 @@ class Score < ApplicationRecord
       end
     end
 
-    # Attribuer les badges temporaires aux meilleurs de chaque catégorie
-    if top_engager.any?
-      top_engager_user_id = top_engager.first[:user_id]
-      combined_scores[top_engager_user_id] ||= { points: 0, badges: [] }
-      combined_scores[top_engager_user_id][:badges] << "Top Engager du jour"
-    end
-
-    if best_ratio.any?
-      best_ratio_user_id = best_ratio.first[:user_id]
-      combined_scores[best_ratio_user_id] ||= { points: 0, badges: [] }
-      combined_scores[best_ratio_user_id][:badges] << "Top Régularité du jour"
-    end
-
-    if wise_critic.any?
-      top_critic_user_id = wise_critic.first[:user_id]
-      combined_scores[top_critic_user_id] ||= { points: 0, badges: [] }
-      combined_scores[top_critic_user_id][:badges] << "Top Critic du jour"
-    end
+    # Plus de badges temporaires quotidiens - système simplifié
 
     # Convertir en tableau pour la vue
     combined_scores.map do |user_id, data|

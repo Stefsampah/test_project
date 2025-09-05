@@ -15,6 +15,7 @@ class StoreController < ApplicationController
     ]
 
     @premium_playlists = Playlist.where(premium: true)
+    @unlocked_playlists = current_user.user_playlist_unlocks.includes(:playlist).map(&:playlist)
   end
 
   def buy_points
