@@ -195,7 +195,7 @@ GEM
     json (2.11.3)
     jwt (2.10.1)
       base64
-    logger (1.5.3)
+    logger (1.7.0)
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -398,7 +398,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   jquery-rails
-  logger (~> 1.5.0)
+  logger (~> 1.7.0)
   puma (~> 4.3)
   rails (~> 7.1.5)
   redis (>= 4.0.1)
