@@ -2,12 +2,18 @@ class PlaylistsController < ApplicationController
   before_action :authenticate_user!, except: [:index]
 
   def index
-    # Récupérer toutes les playlists et les trier (exclure les playlists cachées)
-    @standard_playlists = Playlist.where(premium: [false, nil], hidden: [false, nil]).order(:id)
-    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil], hidden: [false, nil]).order(:id)
-    @exclusive_playlists = Playlist.where(exclusive: true, hidden: [false, nil]).order(:id)
+    # Récupérer toutes les playlists et les trier par catégorie (exclure les playlists cachées)
+    @standard_playlists = Playlist.where(premium: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
+    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
+    @exclusive_playlists = Playlist.where(exclusive: true, hidden: [false, nil]).order(:category, :subcategory, :id)
     @unlocked_playlists = []
     @unlocked_exclusive_playlists = []
+    
+    # Grouper les playlists par catégorie
+    @standard_by_category = @standard_playlists.group_by(&:category)
+    @premium_by_category = @premium_playlists.group_by(&:category)
+    @unlocked_by_category = {}
+    @exclusive_by_category = @exclusive_playlists.group_by(&:category)
     
     if user_signed_in?
       # Vérifier si l'utilisateur a un abonnement VIP actif
@@ -17,11 +23,13 @@ class PlaylistsController < ApplicationController
         # Si VIP actif, toutes les playlists premium sont débloquées (sauf exclusives)
         @unlocked_playlists = @premium_playlists
         @premium_playlists = []
+        @unlocked_by_category = @unlocked_playlists.group_by(&:category)
       else
         # Sinon, récupérer les playlists premium débloquées par l'utilisateur
         unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
         @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true, exclusive: [false, nil])
         @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
+        @unlocked_by_category = @unlocked_playlists.group_by(&:category)
       end
       
       # Gérer les playlists exclusives - seulement pour ceux qui ont gagné la récompense

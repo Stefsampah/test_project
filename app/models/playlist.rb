@@ -14,4 +14,29 @@ class Playlist < ApplicationRecord
   def points_required
     premium? ? 500 : 0
   end
+  
+  # Méthode pour obtenir le thumbnail aléatoire d'une vidéo de la playlist
+  def random_thumbnail
+    videos.sample&.youtube_id
+  end
+  
+  # Méthode pour obtenir l'URL du thumbnail YouTube
+  def thumbnail_url
+    if random_thumbnail
+      "https://img.youtube.com/vi/#{random_thumbnail}/maxresdefault.jpg"
+    else
+      "https://img.youtube.com/vi/default/maxresdefault.jpg"
+    end
+  end
+  
+  # Méthode pour obtenir la catégorie complète
+  def full_category
+    if category.present? && subcategory.present?
+      "#{category} > #{subcategory}"
+    elsif category.present?
+      category
+    else
+      genre
+    end
+  end
 end
