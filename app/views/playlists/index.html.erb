@@ -45,7 +45,7 @@
 
 
     <!-- Section playlists premium -->
-    <% if (@unlocked_playlists + @premium_playlists).any? %>
+    <% if (@unlocked_playlists + @premium_playlists).uniq.any? %>
       <div id="premium-section" class="mb-20 sm:mb-24 playlist-section">
         <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
           <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Playlists Premium</span>
@@ -53,7 +53,7 @@
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
-          <% (@unlocked_playlists + @premium_playlists).each do |playlist| %>
+          <% (@unlocked_playlists + @premium_playlists).uniq.each do |playlist| %>
             <% is_unlocked = @unlocked_playlists.include?(playlist) %>
             <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
             <% can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked %>
