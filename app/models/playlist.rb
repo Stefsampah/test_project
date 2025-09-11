@@ -22,8 +22,24 @@ class Playlist < ApplicationRecord
   
   # Méthode pour obtenir l'URL du thumbnail YouTube
   def thumbnail_url
-    if random_thumbnail
-      "https://img.youtube.com/vi/#{random_thumbnail}/maxresdefault.jpg"
+    thumbnail_id = random_thumbnail
+    if thumbnail_id
+      "https://img.youtube.com/vi/#{thumbnail_id}/maxresdefault.jpg"
+    else
+      "https://img.youtube.com/vi/default/maxresdefault.jpg"
+    end
+  end
+  
+  # Méthode pour obtenir un thumbnail cohérent (même ID pour toute la session)
+  def consistent_thumbnail
+    @consistent_thumbnail ||= random_thumbnail
+  end
+  
+  # Méthode pour obtenir l'URL du thumbnail cohérent
+  def consistent_thumbnail_url
+    thumbnail_id = consistent_thumbnail
+    if thumbnail_id
+      "https://img.youtube.com/vi/#{thumbnail_id}/maxresdefault.jpg"
     else
       "https://img.youtube.com/vi/default/maxresdefault.jpg"
     end

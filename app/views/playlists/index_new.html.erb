@@ -102,13 +102,14 @@
                       </div>
                     <% end %>
                     
-                    <!-- Thumbnail YouTube aléatoire -->
-                    <% thumbnail_id = playlist.random_thumbnail %>
+                    <!-- Thumbnail YouTube forcé -->
+                    <% thumbnail_id = playlist.consistent_thumbnail %>
                     <% if thumbnail_id %>
                       <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                            alt="<%= playlist.title %>" 
                            class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'">
+                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+                           style="background-image: none !important;">
                     <% else %>
                       <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                         <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -238,12 +239,13 @@
                 
                 <!-- Section image avec thumbnail YouTube -->
                 <div class="playlist-image-section">
-                  <% thumbnail_id = playlist.random_thumbnail %>
+                  <% thumbnail_id = playlist.consistent_thumbnail %>
                   <% if thumbnail_id %>
                     <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                          alt="<%= playlist.title %>" 
                          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                         onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'">
+                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+                           style="background-image: none !important;">
                   <% else %>
                     <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -321,12 +323,13 @@
               
               <!-- Section image avec thumbnail YouTube -->
               <div class="playlist-image-section">
-                <% thumbnail_id = playlist.random_thumbnail %>
+                <% thumbnail_id = playlist.consistent_thumbnail %>
                 <% if thumbnail_id %>
                   <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                        alt="<%= playlist.title %>" 
                        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                       onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'">
+                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+                           style="background-image: none !important;">
                 <% else %>
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                     <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
