@@ -73,56 +73,89 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     end
   end
   
-  # Playlist Standard: This is Hip Hop
-  hip_hop_playlist_1 = Playlist.find_or_create_by!(title: 'This is Hip Hop') do |playlist|
-    playlist.description = 'Le meilleur du hip hop actuel'
-    playlist.genre = 'Hip Hop'
+  # Playlist Standard: Afro Rap
+  afro_rap_playlist = Playlist.find_or_create_by!(title: 'Afro Rap') do |playlist|
+    playlist.description = 'Un mix équilibré de rap ivoirien moderne avec des sonorités futuristes'
+    playlist.genre = 'Afro Rap'
     playlist.premium = false
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
   end
   
-  # Vidéos pour la playlist Hip Hop
-  hip_hop_videos_1 = [
-    { title: 'ENTRE NOUS DEUX · Didi B · Doupi Papillon', youtube_id: 'fkn7f3Nyq88' },
-    { title: 'Nothing Without God · POPCAAN', youtube_id: 'wFRyzB170sk' },
+  # Vidéos pour la playlist Afro Rap
+  afro_rap_videos = [
     { title: 'HIMRA - NUMBER ONE (FT. MINZ)', youtube_id: 'b16_UBiP4G0' },
-    { title: 'Travis Scott - She Going Dumb', youtube_id: 'tN82cGi9kUc' },
-    { title: 'Quavo, Lil Baby - Legends', youtube_id: '4cCzuTQ49V8' },
-    { title: 'Skillibeng - New Gears', youtube_id: 'Yubuf7k1WZM' },
-    { title: 'TOUT VA BIEN · Didi B', youtube_id: 'oQNkebtoIN4' },
-    { title: 'Toosii - Party Girl Anthem', youtube_id: 'x4xDmrvHTY0' },
-    { title: 'YE - CIRCLES', youtube_id: 'WMexy8iEF7E' },
-    { title: 'Didi B - Good vibes', youtube_id: 'wLdtn45riSc' }
+    { title: 'Didi B - GO feat @jrk1912', youtube_id: 'I-_YDWMXTv0' },
+    { title: 'ZOH CATALEYA - TOURA DRILL 1', youtube_id: 'IDakTWRbG_g' },
+    { title: 'Didi B - DX3 feat MHD', youtube_id: '3madRVVh00I' },
+    { title: 'Bignyne Wiz - Haut Niveau', youtube_id: 'NEW_ID_1' },
+    { title: 'Didi B - Fatúmata feat Naira Marley', youtube_id: '2HxJ1R8_xV4' },
+    { title: 'HIMRA - ROI IVOIRIEN (2025)', youtube_id: 'gAhiONhqhpo' },
+    { title: 'Didi B - Rockstxr', youtube_id: 'YeCRoOnr5vU' },
+    { title: 'SINDIKA x DIDI B - RODELA', youtube_id: 'c25xChh56OQ' },
+    { title: 'Didi B - 2025 (Official Music Video)', youtube_id: 'yzWENpeiZzc' }
   ]
   
-  hip_hop_videos_1.each do |video|
-    hip_hop_playlist_1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+  afro_rap_videos.each do |video|
+    afro_rap_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
     end
   end
   
-  # Playlist Standard: Hot New Hip Hop
-  hip_hop_playlist_2 = Playlist.find_or_create_by!(title: 'Hot New Hip Hop') do |playlist|
-    playlist.description = 'Les dernières sorties hip hop à ne pas manquer'
-    playlist.genre = 'Hip Hop'
+  # Playlist Standard: Afro Trap
+  afro_trap_playlist = Playlist.find_or_create_by!(title: 'Afro Trap') do |playlist|
+    playlist.description = 'Les meilleurs sons trap et street du rap ivoirien'
+    playlist.genre = 'Afro Trap'
     playlist.premium = false
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
   end
   
-  # Vidéos pour la playlist Hot New Hip Hop
-  hip_hop_videos_2 = [
-    { "title": "Didi B - Big Boss", "youtube_id": "_PKbI32lsN8" },
-    { "title": "POPCAAN - Firm and Strong", "youtube_id": "0rEBT_Ge3sc" },  
-    { "title": "HIMRA - Freestyle Drill Ivoire #5", "youtube_id": "GyIDTBHEOAQ" },
-    { "title": "Travis Scott - Stargazing", "youtube_id": "2a8PgqWrc_4" },
-    { "title": "Quavo, Lil Baby - Ice Cold", "youtube_id": "4cCzuTQ49V8" },
-    { "title": "Skillibeng - Crocodile Teeth", "youtube_id": "m7vsOSIz4ds" },
-    { "title": "Didi B - En Haut", "youtube_id": "e0K3OjNHTtA" },
-    { "title:": "Toosii - Favorite Song", "youtube_id": "4D89Qr5vH6U" },
-    { "title": "YE - Hurricane", "youtube_id": "VRJiK-kdDb4" },
-    { "title": "Didi B - Rockstxr", "youtube_id": "YeCRoOnr5vU" }
+  # Vidéos pour la playlist Afro Trap
+  afro_trap_videos = [
+    { title: 'Wilzo - Pression', youtube_id: 'MXVL9vdiEUg' },
+    { title: 'HIMRA x PHILIPAYNE - FREESTYLE DRILL IVOIRE #4', youtube_id: 'OvIWDW10GhI' },
+    { title: 'BMUXX CARTER - 24H CHRONO (FT. DIDI B)', youtube_id: 'LQhTtxfmxAU' },
+    { title: 'TRK ft DOPELYM - AMINA', youtube_id: 'iEIuKUcTaTc' },
+    { title: 'SINDIKA - BOYAUX', youtube_id: '47DZRLGvN7I' },
+    { title: 'AMEKA ZRAI - AKO CÉLÉBRATE', youtube_id: 'q4y4A-YbgGY' },
+    { title: 'Toto Le Banzou & AriiSiguira - Attiéké', youtube_id: 'ZfPQxHDqkIU' },
+    { title: 'Salima Chica - Songi Songi (Dj Babs)', youtube_id: '4qlsQ95Q_nE' },
+    { title: 'SOKEÏ - ASSEHOMAPOU', youtube_id: 'CFNcg_MoyPc' },
+    { title: 'LEPAPARA x PAKI CHENZU - BAGAVATHI / CARDIO', youtube_id: 'utCXpnYBQSY' }
   ]
   
-  hip_hop_videos_2.each do |video|
-    hip_hop_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+  afro_trap_videos.each do |video|
+    afro_trap_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Standard: Rap Ivoire Power
+  rap_ivoire_power_playlist = Playlist.find_or_create_by!(title: 'Rap Ivoire Power') do |playlist|
+    playlist.description = 'Des sons apaisants et mélodiques pour se détendre'
+    playlist.genre = 'Rap Ivoire'
+    playlist.premium = false
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
+  end
+  
+  # Vidéos pour la playlist Rap Ivoire Power
+  rap_ivoire_power_videos = [
+    { title: 'À Toi – Socé', youtube_id: 'fDnY4Bz-ttY' },
+    { title: 'GAWA – Lesky', youtube_id: 'uQjVJKBrGHo' },
+    { title: 'Foua (C\'est Facile) – Miedjia', youtube_id: 'zdMS4wZxXIs' },
+    { title: 'Il sait – Leufa', youtube_id: '-LwHX5Nndcw' },
+    { title: 'Pleure – Le JLO & Ameka Zrai', youtube_id: '4QLNn0BHjHs' },
+    { title: 'Béni – Lesky', youtube_id: '2vQhkQiPSoA' },
+    { title: 'Tu dis quoi – Kadja', youtube_id: 's5zPAbaiZx4' },
+    { title: 'De Même – Miedjia', youtube_id: 'G-sK6B0GKIo' },
+    { title: 'BlackArtist – Albinny', youtube_id: 'RQQJfCK-_EY' },
+    { title: 'Si C\'est Pas Dieu – Kawid', youtube_id: '1_rhXT_4TMU' }
+  ]
+  
+  rap_ivoire_power_videos.each do |video|
+    rap_ivoire_power_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
     end
   end
@@ -181,29 +214,205 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     end
   end
 
-  # Playlist Premium: Hip Hop Essentials
-  hip_hop_essentials = Playlist.find_or_create_by!(title: 'Hip Hop Essentials') do |playlist|
-    playlist.description = 'Les classiques indispensables du hip hop'
-    playlist.genre = 'Hip Hop'
+  # Playlist Premium: Afro Vibes
+  afro_vibes = Playlist.find_or_create_by!(title: 'Afro Vibes') do |playlist|
+    playlist.description = 'Un mélange éclectique d\'ambiances et de styles variés'
+    playlist.genre = 'Afro Vibes'
     playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
   end
   
-  # Vidéos pour la playlist Hip Hop Essentials
-  hip_hop_essentials_videos = [
-    { title: 'Dr. Dre - Still D.R.E. ft. Snoop Dogg', youtube_id: '_CL6n0FJZpk' },
-    { title: 'Eminem - Lose Yourself', youtube_id: '_Yhyp-_hX2s' },
-    { title: 'The Notorious B.I.G. - Juicy', youtube_id: '_JZom_gVfuw' },
-    { title: 'Tupac - California Love', youtube_id: 'J7_bMdYfSws' },
-    { title: 'Jay-Z - Empire State of Mind', youtube_id: 'vk6014HuxcE' },
-    { title: 'Nas - N.Y. State of Mind', youtube_id: 'hI8A14Qcv68' },
-    { title: 'Wu-Tang Clan - C.R.E.A.M.', youtube_id: 'PBwAxmrE194' },
-    { title: 'Kendrick Lamar - Alright', youtube_id: 'Z-48u_uWMHY' },
-    { title: 'OutKast - Ms. Jackson', youtube_id: 'EUVo8epKwv0' },
-    { title: 'Kanye West - Runaway', youtube_id: 'VhEoCOWUtcU' }
+  # Vidéos pour la playlist Afro Vibes
+  afro_vibes_videos = [
+    { title: 'JOSEY - Le Monde Est à Nous (Official Music Video)', youtube_id: 'AzKUqSNSU5Y' },
+    { title: 'Dans Dos – Akim Papichulo', youtube_id: '_pYzyRrXM0o' },
+    { title: 'MARASSE – J-Haine', youtube_id: 'RhyiJQ8H7Fg' },
+    { title: 'Kedjevara - ça fait mal (Clip Officiel)', youtube_id: 'gcpq4wDm9gM' },
+    { title: 'MOUMENT – Boykito', youtube_id: 'YzTHnIVDOHI' },
+    { title: 'BEURRE – TC', youtube_id: 'yGCK_59VVM0' },
+    { title: 'MATA CRAZY KPALO – Sokeï', youtube_id: 'WaABvOJnq_Y' },
+    { title: 'UNDER THE SUN – Jeune Lion', youtube_id: '_2SDQ2DZv08' },
+    { title: 'BODOINGADAI – 3xdavs ft. Didi B', youtube_id: 'uhoIdYPVcfc' },
+    { title: '15500 VOLTS – Lil Jay Bingerack', youtube_id: 'B39sdzpWnTI' }
   ]
   
-  hip_hop_essentials_videos.each do |video|
-    hip_hop_essentials.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+  afro_vibes_videos.each do |video|
+    afro_vibes.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: This is Rap Ivoire
+  this_is_rap_ivoire = Playlist.find_or_create_by!(title: 'This is Rap Ivoire') do |playlist|
+    playlist.description = 'Le pur rap ivoirien dans toute sa splendeur'
+    playlist.genre = 'Rap Ivoire'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
+  end
+  
+  # Vidéos pour la playlist This is Rap Ivoire
+  this_is_rap_ivoire_videos = [
+    { title: 'Lograndvic – Trap Djou 2', youtube_id: 'V3HR6P4xb8k' },
+    { title: 'Tripa Gninnin – Dans l\'eau', youtube_id: 'M0KVSRHjWN4' },
+    { title: 'Kadja – Freestyle KORDIAL', youtube_id: 'hE8uFdBHwtA' },
+    { title: 'Black K & Fior 2 Bior – Tu veux gâter', youtube_id: 'dREDKBQ_nuM' },
+    { title: 'PHILIPAYNE – Undertaker', youtube_id: 'LQalf-Ten24' },
+    { title: 'HIMRA – Nouveau Boss', youtube_id: '_qMfCB2sJls' },
+    { title: 'SINDIKA – Boyaux', youtube_id: 'NEW_ID_2' },
+    { title: 'Didi B – PADRÉ VELI / VODOO FREESTYLE', youtube_id: '8yQv8iXGg5o' },
+    { title: 'DEFTY – Taper Créer', youtube_id: 'SbuH4o3eDSM' },
+    { title: 'Tripa Gninnin feat Latop – Pourquoi tu gnan', youtube_id: 'X0OeoOqwT3M' }
+  ]
+  
+  this_is_rap_ivoire_videos.each do |video|
+    this_is_rap_ivoire.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: Drill Rap Afro
+  drill_rap_afro = Playlist.find_or_create_by!(title: 'Drill Rap Afro') do |playlist|
+    playlist.description = 'Les meilleurs freestyles et sons drill de la scène ivoirienne'
+    playlist.genre = 'Drill Rap'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
+  end
+  
+  # Vidéos pour la playlist Drill Rap Afro
+  drill_rap_afro_videos = [
+    { title: 'BMUXX CARTER ft. Didi B – 24H CHRONO', youtube_id: 'LQhTtxfmxAU' },
+    { title: 'HIMRA x PHILIPAYNE – Freestyle Drill Ivoire #4', youtube_id: 'OvIWDW10GhI' },
+    { title: 'PHILIPAYNE – Contrat x Himra', youtube_id: 'ypXaXwE0Yq4' },
+    { title: 'Elow\'n – Piégé', youtube_id: 'gcrisZnEztU' },
+    { title: 'Black K – NO NO NO', youtube_id: 'IMxKsecyHPk' },
+    { title: 'Lil Jay Bingerack – 15500 VOLTS', youtube_id: 'ZTWJ_jfSIug' },
+    { title: 'D14 – DAGBACHI ft. Shado Chris & JM', youtube_id: 'kmABxEW_vq0' },
+    { title: 'Didi B – Forcement', youtube_id: 'PXnjCEpP9rE' },
+    { title: 'J-Haine – CAMELEON', youtube_id: 'geHi7DmvE7g' },
+    { title: '3XDAVS ft. Didi B – BODOINGADAI', youtube_id: 'uhoIdYPVcfc' }
+  ]
+  
+  drill_rap_afro_videos.each do |video|
+    drill_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: Flow Rap Afro
+  flow_rap_afro = Playlist.find_or_create_by!(title: 'Flow Rap Afro') do |playlist|
+    playlist.description = 'Des flows exceptionnels dans des ambiances uniques'
+    playlist.genre = 'Flow Rap'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
+  end
+  
+  # Vidéos pour la playlist Flow Rap Afro
+  flow_rap_afro_videos = [
+    { title: 'HIMRA – G3N3RATION N3RF ft. Kerchak', youtube_id: 'o3eRvNoPK80' },
+    { title: 'Widgunz – Ma girlfriend ft. Chrystel', youtube_id: '2GYAsAl8XG0' },
+    { title: 'Tripa Gninnin – Kirikou', youtube_id: 'UOfrbereOFE' },
+    { title: 'Kadja – Les Meilleurs', youtube_id: 'FsfwYxEmxQw' },
+    { title: 'PACO ft. Fireman – CUP', youtube_id: '4wMmF5obkDA' },
+    { title: 'Tripa Gninnin – C 1 JEU', youtube_id: 'DjM1GVoa5E8' },
+    { title: 'Suspect 95 – LE PARTI 2', youtube_id: 'SgPVwm9HCko' },
+    { title: 'J-Haine – MARASSE', youtube_id: 'NEW_ID_3' },
+    { title: 'HIMRA – Freestyle Drill Ivoire #5', youtube_id: 'GyIDTBHEOAQ' },
+    { title: 'Suspect 95 – HOLYGHOST', youtube_id: '8fOuA6V31YU' }
+  ]
+  
+  flow_rap_afro_videos.each do |video|
+    flow_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: Urban Rap Afro
+  urban_rap_afro = Playlist.find_or_create_by!(title: 'Urban Rap Afro') do |playlist|
+    playlist.description = 'Les meilleures punchlines et sons street du rap ivoirien'
+    playlist.genre = 'Urban Rap'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Rap'
+  end
+  
+  # Vidéos pour la playlist Urban Rap Afro
+  urban_rap_afro_videos = [
+    { title: 'PHILIPAYNE – Ils Disent Quoi', youtube_id: 'mPT2Kf6c6Eg' },
+    { title: 'Black K – TITI FLY3#', youtube_id: 'sEtuJ5ZX6_g' },
+    { title: 'Elow\'n – BPC Freestyle', youtube_id: 'cO3WEw7RQUg' },
+    { title: 'NAS ft. Didi B, Sindika, Dopelym… – BENI', youtube_id: 'oWIskZqDf_U' },
+    { title: 'Elow\'n – Bolide Nerveux', youtube_id: 'l9Uc-Oteino' },
+    { title: 'HIMRA – BÂTON NON NON', youtube_id: '3Eiq6mv8Vlo' },
+    { title: 'Kadja – Tu dis quoi', youtube_id: 'NEW_ID_4' },
+    { title: 'Black K – LAAARGE FLY1#', youtube_id: 'ZHiejZVpvgQ' },
+    { title: 'Didi B – Rockstxr', youtube_id: 'NEW_ID_5' },
+    { title: 'Suspect 95 – META VOL.2', youtube_id: 'Z7sbpd4fLyE' }
+  ]
+  
+  urban_rap_afro_videos.each do |video|
+    urban_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: Afro Flow
+  afro_flow = Playlist.find_or_create_by!(title: 'Afro Flow') do |playlist|
+    playlist.description = 'Les flows les plus techniques et punchlines les plus percutantes'
+    playlist.genre = 'Afro Flow'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Flow'
+  end
+  
+  # Vidéos pour la playlist Afro Flow
+  afro_flow_videos = [
+    { title: 'Lograndvic – Trap Djou 2', youtube_id: 'NEW_ID_6' },
+    { title: 'Tripa Gninnin – Dans l\'eau (Freestyle Gninnin 2)', youtube_id: '8y-iUrYrHT4' },
+    { title: 'Kadja – Freestyle KORDIAL 2', youtube_id: 'bZkMs9bHpi4' },
+    { title: 'Black K & Fior 2 Bior – Tu veux gâter', youtube_id: 'WdcJn_O-tVM' },
+    { title: 'PHILIPAYNE – Undertaker', youtube_id: 'NEW_ID_7' },
+    { title: 'HIMRA – Nouveau Boss', youtube_id: '_qMfCB2sJls' },
+    { title: 'SINDIKA – Boyaux', youtube_id: 'NEW_ID_8' },
+    { title: 'DEFTY – Taper Créer', youtube_id: 'NEW_ID_9' },
+    { title: 'Tripa Gninnin feat Latop – Pourquoi tu gnan', youtube_id: 'NEW_ID_10' },
+    { title: 'Elow\'n - Bolide Nerveux', youtube_id: 'l9Uc-Oteino' }
+  ]
+  
+  afro_flow_videos.each do |video|
+    afro_flow.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
+  # Playlist Premium: Afro Melow
+  afro_melow = Playlist.find_or_create_by!(title: 'Afro Melow') do |playlist|
+    playlist.description = 'Un mélange unique de drill, street et mélodie'
+    playlist.genre = 'Afro Melow'
+    playlist.premium = true
+    playlist.category = 'Rap'
+    playlist.subcategory = 'Afro Melow'
+  end
+  
+  # Vidéos pour la playlist Afro Melow
+  afro_melow_videos = [
+    { title: 'Black K – TITI FLY3#', youtube_id: 'sEtuJ5ZX6_g' },
+    { title: 'Lil Jay Bingerack – Espoir', youtube_id: 'rJvZxWlKZgQ' },
+    { title: 'D14 – Roule', youtube_id: 'ZK8vY7Jkz9g' },
+    { title: 'J-Haine – Position ft. Himra', youtube_id: 'XkzvBvUuJ9M' },
+    { title: 'HIMRA – BADMAN GANGSTA ft. Jeune Morty', youtube_id: 'gYzWvX3pJkE' },
+    { title: 'Widgunz – My Bae ft. Himra', youtube_id: 'TqWvLz9KpXo' },
+    { title: 'Tripa Gninnin – Decapo', youtube_id: 'YpLzKx8WvJg' },
+    { title: 'Kadja – Le Roi', youtube_id: 'MvXqLp9JzKf' },
+    { title: 'Albinny – Attaque à 2', youtube_id: 'JvKxWz8LpQo' },
+    { title: 'Tripa Gninnin – Ça va vite', youtube_id: 'LpXvJz9KqWg' }
+  ]
+  
+  afro_melow_videos.each do |video|
+    afro_melow.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
       v.title = video[:title]
     end
   end
@@ -321,7 +530,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     score.points = 7
   end
   
-  Score.find_or_create_by!(user: user, playlist: hip_hop_playlist_1) do |score|
+  Score.find_or_create_by!(user: user, playlist: afro_rap_playlist) do |score|
     score.points = 5
   end
   
@@ -333,7 +542,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     score.points = 9
   end
   
-  Score.find_or_create_by!(user: admin, playlist: hip_hop_playlist_1) do |score|
+  Score.find_or_create_by!(user: admin, playlist: afro_rap_playlist) do |score|
     score.points = 6
   end
   
@@ -520,7 +729,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     score.points = 950
   end
   
-  hip_hop_playlist_1.scores.find_or_create_by!(user: driss) do |score|
+  afro_rap_playlist.scores.find_or_create_by!(user: driss) do |score|
     score.points = 850
   end
   
@@ -545,7 +754,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     score.points = 400
   end
   
-  hip_hop_playlist_1.scores.find_or_create_by!(user: theo) do |score|
+  afro_rap_playlist.scores.find_or_create_by!(user: theo) do |score|
     score.points = 350
   end
   
@@ -571,7 +780,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     score.points = 2000
   end
   
-  hip_hop_playlist_1.scores.find_or_create_by!(user: vb) do |score|
+  afro_rap_playlist.scores.find_or_create_by!(user: vb) do |score|
     score.points = 1800
   end
   

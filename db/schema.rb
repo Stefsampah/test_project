@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_08_18_143157) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_10_154326) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -89,6 +89,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_08_18_143157) do
     t.integer "points_required"
     t.boolean "exclusive"
     t.boolean "hidden"
+    t.string "category"
+    t.string "subcategory"
   end
 
   create_table "rewards", force: :cascade do |t|
