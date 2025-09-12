@@ -1215,3 +1215,413 @@ challenge_reward_videos_9.each do |video|
     v.title = video[:title]
   end
 end
+
+# ==========================================
+# NOUVELLES CATÉGORIES ET PLAYLISTS
+# ==========================================
+
+# 1. POP FRANÇAISE
+puts "\n🎵 Création des playlists Pop Française..."
+
+# Pop Jeunes Espoirs vol.1 (Standard)
+pop_jeunes_espoirs_vol1 = Playlist.find_or_create_by!(title: 'Pop Jeunes Espoirs vol.1') do |p|
+  p.description = 'Les nouveaux talents de la pop française'
+  p.category = 'Pop'
+  p.subcategory = 'Pop Française'
+  p.premium = false
+  p.exclusive = false
+end
+
+pop_jeunes_espoirs_videos_vol1 = [
+  { title: 'Soleil Bleu (Radio Edit)', youtube_id: 'uz6sARD5XCU' },
+  { title: 'Dernière Danse', youtube_id: 'esb-jNwdG4s' },
+  { title: 'A qui le tour', youtube_id: 't1K_xzt0Wuo' },
+  { title: 'Monde', youtube_id: '2DU3gi8Bjdg' },
+  { title: 'Autrement', youtube_id: 'Euih-rtRJIo' },
+  { title: 'Insomnie', youtube_id: 'xMLhrEj2I90' },
+  { title: 'VHS', youtube_id: 'hD1v_sRE0Ns' },
+  { title: 'Bonne année', youtube_id: 'jlsNyDz1fZo' },
+  { title: 'Galbi', youtube_id: 'NzfifH0QsGg' },
+  { title: 'J\'avoue', youtube_id: '-xWnsupS024' }
+]
+
+pop_jeunes_espoirs_videos_vol1.each do |video|
+  pop_jeunes_espoirs_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Pop Jeunes Espoirs vol.2 (Premium)
+pop_jeunes_espoirs_vol2 = Playlist.find_or_create_by!(title: 'Pop Jeunes Espoirs vol.2') do |p|
+  p.description = 'Les nouveaux talents de la pop française - Volume 2'
+  p.category = 'Pop'
+  p.subcategory = 'Pop Française'
+  p.premium = true
+  p.exclusive = false
+end
+
+pop_jeunes_espoirs_videos_vol2 = [
+  { title: 'Je pars mais je reste', youtube_id: 'h0UnKETmMCE' },
+  { title: 'Falbala', youtube_id: 'OHCpFfNcQNQ' },
+  { title: 'Extraordinaire', youtube_id: 'ECk9BBJutAY' },
+  { title: 'Avec toi', youtube_id: 'kNv6tgb9vjo' },
+  { title: 'Danse dans Paris', youtube_id: 'MyQPo5vywwY' },
+  { title: 'Particule', youtube_id: '9_wLT8MXf_I' },
+  { title: 'Les filles, les meufs', youtube_id: 'Ag3E7mJeRYI' },
+  { title: 'Si je m\'en vais', youtube_id: 'F0C2UiEpvlA' },
+  { title: 'Cœur maladroit', youtube_id: 'VFvDwn2r5RI' },
+  { title: 'La fille du bar (Rush live)', youtube_id: 'QZxr_1hZPek' }
+]
+
+pop_jeunes_espoirs_videos_vol2.each do |video|
+  pop_jeunes_espoirs_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 2. RAP FRANÇAIS
+puts "\n🎤 Création des playlists Rap Français..."
+
+# Rap La Relève vol.1 (Standard)
+rap_la_releve_vol1 = Playlist.find_or_create_by!(title: 'Rap La Relève vol.1') do |p|
+  p.description = 'La nouvelle génération du rap français'
+  p.category = 'Rap'
+  p.subcategory = 'Rap Français'
+  p.premium = false
+  p.exclusive = false
+end
+
+rap_la_releve_videos_vol1 = [
+  { title: 'BOTTEGA', youtube_id: 'j0rrbBXnIMc' },
+  { title: 'P.I.B', youtube_id: 'uQB1ZdEd2CM' },
+  { title: 'COMMENT CA VA', youtube_id: '7dP7hYGmOmk' },
+  { title: '4h44', youtube_id: 'QbgdoKDZA0Y' },
+  { title: 'Biff pas d\'love', youtube_id: 'TDO0GRay2fQ' },
+  { title: 'Poukwa (elle m\'demande)', youtube_id: 'rAxVxcxuLnM' },
+  { title: 'Putana', youtube_id: 'R8_AgJnjDZE' },
+  { title: 'Terrain', youtube_id: 'RsBD1POgx-c' },
+  { title: 'Célibataire', youtube_id: '_xuNmoJEoIM' },
+  { title: 'Jaloux (feat. JUL)', youtube_id: 'j6P8RLRtU9I' }
+]
+
+rap_la_releve_videos_vol1.each do |video|
+  rap_la_releve_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Rap La Relève vol.2 (Premium)
+rap_la_releve_vol2 = Playlist.find_or_create_by!(title: 'Rap La Relève vol.2') do |p|
+  p.description = 'La nouvelle génération du rap français - Volume 2'
+  p.category = 'Rap'
+  p.subcategory = 'Rap Français'
+  p.premium = true
+  p.exclusive = false
+end
+
+rap_la_releve_videos_vol2 = [
+  { title: 'Le P\'tit', youtube_id: '0-p3Z1oqFzA' },
+  { title: 'Nagasaki', youtube_id: 'UrXt7YC0-VI' },
+  { title: 'Attack ft. Himra', youtube_id: 'foq514nlWXw' },
+  { title: 'David Douillet ft. IDS x SDM', youtube_id: 'CiAlc1mT62Q' },
+  { title: 'La Zone', youtube_id: 'nIcDZNZGXjI' },
+  { title: 'ISACK HADJAR ft. 2ZES', youtube_id: 'Sc4rMKhD7uI' },
+  { title: 'Génération Foirée', youtube_id: 'iip42mL8XYM' },
+  { title: 'BUSINESSMAN', youtube_id: '1Zs6Wa3LvTM' },
+  { title: 'Elle 2.0', youtube_id: 'ApzEnioZF74' },
+  { title: 'Tunnel ft. JRK 19', youtube_id: 'W33jLp-m0-Q' }
+]
+
+rap_la_releve_videos_vol2.each do |video|
+  rap_la_releve_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 3. INDIE FRANÇAIS
+puts "\n🎨 Création des playlists Indie Français..."
+
+# Indie Français vol.1 (Premium)
+indie_francais_vol1 = Playlist.find_or_create_by!(title: 'Indie Français vol.1') do |p|
+  p.description = 'Pop & Indie Francophone 2025'
+  p.category = 'Pop'
+  p.subcategory = 'Indie Français'
+  p.premium = true
+  p.exclusive = false
+end
+
+indie_francais_videos_vol1 = [
+  { title: 'Mille vagues', youtube_id: 'jYeMHMCyGRo' },
+  { title: 'This Country', youtube_id: '3VTFNxY0cGQ' },
+  { title: 'Tout tout', youtube_id: 'qqttfzzT6rU' },
+  { title: 'Reine de cœur', youtube_id: 'qS0U_Jf8Q3U' },
+  { title: 'Fragile', youtube_id: 'rFkijj7FfR4' },
+  { title: 'Toujours les vacances', youtube_id: 'ek8o8-z7hgU' },
+  { title: 'Tu me mens', youtube_id: 'LrYzCVsaqrA' },
+  { title: 'Allons Voir', youtube_id: 'ykpDVaMHGT4' },
+  { title: 'Vinyle', youtube_id: '1umWzAke9D8' },
+  { title: 'À deux', youtube_id: '4-FtDa3KYi4' }
+]
+
+indie_francais_videos_vol1.each do |video|
+  indie_francais_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Indie Français vol.2 (Premium)
+indie_francais_vol2 = Playlist.find_or_create_by!(title: 'Indie Français vol.2') do |p|
+  p.description = 'Pop & Indie Francophone 2025 - Volume 2'
+  p.category = 'Pop'
+  p.subcategory = 'Indie Français'
+  p.premium = true
+  p.exclusive = false
+end
+
+indie_francais_videos_vol2 = [
+  { title: 'I Can Do Anything', youtube_id: 'hLv95TyVWYg' },
+  { title: 'Rien du tout', youtube_id: 'EabdTJwvuuE' },
+  { title: 'Métamorphose', youtube_id: 'PkHBiElDtUs' },
+  { title: 'Au secours les vacances', youtube_id: 'IaxtJaWNhLY' },
+  { title: 'Sarah Sahara feat. billie', youtube_id: 'g1HzxkoZjuY' },
+  { title: 'Pas Bourré', youtube_id: 'y7sXD3e5leE' },
+  { title: 'Bouche en Feu', youtube_id: '5B-2_znK_S4' },
+  { title: 'Pas Toi', youtube_id: 'XLb4s24L9QI' },
+  { title: 'Coups de soleil', youtube_id: 'VspyR320paA' },
+  { title: 'Je t\'accuse', youtube_id: 'U3_djdjsI5Q' }
+]
+
+indie_francais_videos_vol2.each do |video|
+  indie_francais_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 4. POP INTERNATIONALE
+puts "\n🌍 Création des playlists Pop Internationale..."
+
+# Futurs Hits – Pop & Global Vibes vol.1 (Premium)
+futurs_hits_vol1 = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.1') do |p|
+  p.description = 'Futurs Hits – Pop & Global Vibes'
+  p.category = 'Pop'
+  p.subcategory = 'Pop Internationale'
+  p.premium = true
+  p.exclusive = false
+end
+
+futurs_hits_videos_vol1 = [
+  { title: 'Triangle des Bermudes – Charger', youtube_id: '8p7dQGEkHPk' },
+  { title: 'Appelle ta copine', youtube_id: 'gtvQOusc5mQ' },
+  { title: 'Dame Un Grrr', youtube_id: 'wHlAnhkLUvw' },
+  { title: 'Adriano', youtube_id: 'XyYkPM2THAg' },
+  { title: 'Viens on essaie', youtube_id: 'KwvCpirpSgI' },
+  { title: 'JUMP', youtube_id: 'CgCVZdcKcqY' },
+  { title: 'Y Que Fue?', youtube_id: '16nZ6K7sim4' },
+  { title: 'Ruinart', youtube_id: 'e2d9v6dbLHo' },
+  { title: 'Back to friends', youtube_id: 'c8zq4kAn_O0' },
+  { title: 'Which One', youtube_id: '9-dEHfSCZUQ' }
+]
+
+futurs_hits_videos_vol1.each do |video|
+  futurs_hits_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Futurs Hits – Pop & Global Vibes vol.2 (Standard)
+futurs_hits_vol2 = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.2') do |p|
+  p.description = 'Futurs Hits – Pop & Global Vibes - Volume 2'
+  p.category = 'Pop'
+  p.subcategory = 'Pop Internationale'
+  p.premium = false
+  p.exclusive = false
+end
+
+futurs_hits_videos_vol2 = [
+  { title: 'Just Keep Watching', youtube_id: 'dpvQqmX6SUI' },
+  { title: 'Air Force Blanche', youtube_id: 'lPS5VfgKDiU' },
+  { title: 'Ginger', youtube_id: 'Hoy5E6bSDZE' },
+  { title: 'Believe', youtube_id: 'Ar7ar6ppg-g' },
+  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
+  { title: 'Zun Zun', youtube_id: 'MB90ipLdT90' },
+  { title: 'Daisies', youtube_id: 'QyvREl7epGY' },
+  { title: 'Noventa', youtube_id: '4a67sLrI3EM' },
+  { title: 'Love Me Not', youtube_id: 'cswfR85D7jM' },
+  { title: 'TaTaTa', youtube_id: 'Uj1g5oumzWY' }
+]
+
+futurs_hits_videos_vol2.each do |video|
+  futurs_hits_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 5. HITS
+puts "\n🔥 Création des playlists Hits..."
+
+# RELEASED vol.1 (Standard)
+released_vol1 = Playlist.find_or_create_by!(title: 'RELEASED vol.1') do |p|
+  p.description = 'Hits Internationaux & Rap 2025'
+  p.category = 'Hits'
+  p.subcategory = 'Hits Pop'
+  p.premium = false
+  p.exclusive = false
+end
+
+released_videos_vol1 = [
+  { title: 'A Little More', youtube_id: 'O_0Wn73AnC8' },
+  { title: 'Gucci Gucci', youtube_id: 'h4u_QJsvoX0' },
+  { title: 'Soap (feat. PinkPantheress)', youtube_id: 'dtzHH4hpKc8' },
+  { title: 'Lunettes quartier // 2025', youtube_id: 'uN08LRMD0-A' },
+  { title: 'Things I Haven\'t Told You', youtube_id: 'PFZKmdpbGp0' },
+  { title: 'Malembe', youtube_id: 'a9GeotvTA4s' },
+  { title: 'Just Say Dat', youtube_id: '8gy-Y9tWK6M' },
+  { title: 'Holy Water', youtube_id: '4wMNUOnH514' },
+  { title: 'No Sharing ft. Luh Tyler', youtube_id: 'eLyYDgjMxr0' },
+  { title: 'Ugly', youtube_id: 'OLavHL4NJ08' }
+]
+
+released_videos_vol1.each do |video|
+  released_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# RELEASED vol.2 (Premium)
+released_vol2 = Playlist.find_or_create_by!(title: 'RELEASED vol.2') do |p|
+  p.description = 'Nouveautés Pop, Rap & R&B 2025'
+  p.category = 'Hits'
+  p.subcategory = 'Hits Pop'
+  p.premium = true
+  p.exclusive = false
+end
+
+released_videos_vol2 = [
+  { title: 'Si tu pars', youtube_id: 'XILS3CclI1k' },
+  { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
+  { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
+  { title: 'Loved You Better ft. Dean Lewis', youtube_id: '2XGO7NWwbnU' },
+  { title: 'Other Side of Love', youtube_id: 'S76hEZ7nHN0' },
+  { title: 'Grand-mère', youtube_id: 'lgdWKEtrBaU' },
+  { title: 'Vampire Bat', youtube_id: 'H4hyhP-Dguw' },
+  { title: 'Fineshyt', youtube_id: 'shRJSgx48es' },
+  { title: 'NO CAP', youtube_id: '-Q4kCS4u9b8' },
+  { title: 'Rain', youtube_id: '1If-cXUeVws' }
+]
+
+released_videos_vol2.each do |video|
+  released_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 6. AFRO MUSIC
+puts "\n🌍 Création des playlists Afro Music..."
+
+# Afro Vibes vol.1 (Standard)
+afro_vibes_vol1 = Playlist.find_or_create_by!(title: 'Afro Vibes vol.1') do |p|
+  p.description = 'Afro Vibes Vol. 1'
+  p.category = 'Afro Music'
+  p.subcategory = 'Afro Hits'
+  p.premium = false
+  p.exclusive = false
+end
+
+afro_vibes_videos_vol1 = [
+  { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
+  { title: 'Shatta Confessions', youtube_id: 'qRyBpbJvO8Y' },
+  { title: 'Charger', youtube_id: 'Om_gqUBQzlI' },
+  { title: 'Faut Laisser', youtube_id: 'If23KrW8zLg' },
+  { title: 'Ola Oli', youtube_id: 'V4gDbLmVyes' },
+  { title: 'Tu sais bien', youtube_id: 'Umgg-ccUSwc' },
+  { title: 'On fait Comment ?', youtube_id: 'gO4aEAIKl8w' },
+  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
+  { title: 'Djiwoun Foulawa', youtube_id: 'PFBa7Wl_kN0' },
+  { title: 'C\'est Dosé', youtube_id: 'lvCCqkkweyw' }
+]
+
+afro_vibes_videos_vol1.each do |video|
+  afro_vibes_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Fraîcheur Urbaine vol.1 (Premium)
+fraicheur_urbaine_vol1 = Playlist.find_or_create_by!(title: 'Fraîcheur Urbaine vol.1') do |p|
+  p.description = 'Nouveautés Rap & Pop Été 2025'
+  p.category = 'Afro Music'
+  p.subcategory = 'Afro Urbain'
+  p.premium = true
+  p.exclusive = false
+end
+
+fraicheur_urbaine_videos_vol1 = [
+  { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
+  { title: 'Tkt Pas', youtube_id: 'd6X_0BDO6Tg' },
+  { title: 'DO YOU LOVE ME ?', youtube_id: 's1LA-Kmqr04' },
+  { title: 'BTRD ft. R2 – Remix', youtube_id: 'QiA_KUkhKp4' },
+  { title: 'BANGER', youtube_id: 'SWi-BTsdhEU' },
+  { title: 'À l\'Ancienne', youtube_id: '2ho30E5W7Qs' },
+  { title: 'En Italie ft. DMA, Nina Palaire', youtube_id: 'kRw-sxRJAJ0' },
+  { title: 'Dingue ft. Jungeli', youtube_id: 'i-JAKOrnsws' },
+  { title: 'Chemise italienne ft. Vegedream & Youka', youtube_id: 'SNl5SIrdlK8' },
+  { title: 'FAUT LAISSER ft. Franglish', youtube_id: 'yQht5eGEBrI' }
+]
+
+fraicheur_urbaine_videos_vol1.each do |video|
+  fraicheur_urbaine_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# 7. CATÉGORIES VIDES POUR FUTURES PLAYLISTS
+puts "\n🎵 Création des catégories vides..."
+
+# Electro
+electro_placeholder = Playlist.find_or_create_by!(title: 'Électrons libres') do |p|
+  p.description = 'Electro & Chill Vibes - Bientôt disponible'
+  p.category = 'Electro'
+  p.subcategory = 'Électrons libres'
+  p.premium = true
+  p.exclusive = false
+end
+
+# Rock
+rock_placeholder = Playlist.find_or_create_by!(title: 'Nouveautés Rock') do |p|
+  p.description = 'Nouveautés Rock - Bientôt disponible'
+  p.category = 'Rock'
+  p.subcategory = 'Nouveautés Rock'
+  p.premium = true
+  p.exclusive = false
+end
+
+# Reggae
+reggae_placeholder = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes') do |p|
+  p.description = 'Dancehall & Island Vibes - Bientôt disponible'
+  p.category = 'Reggae'
+  p.subcategory = 'Dancehall & Island Vibes'
+  p.premium = true
+  p.exclusive = false
+end
+
+# 8. MISE À JOUR DES PLAYLISTS RAP IVOIRIEN EXISTANTES
+puts "\n🇨🇮 Mise à jour des playlists Rap Ivoirien..."
+
+# Mettre à jour les playlists existantes avec les bonnes catégories
+existing_rap_playlists = [
+  'Afro Rap', 'Afro Trap', 'Rap Ivoire Power', 'Afro Vibes', 'This is Rap Ivoire',
+  'Drill Rap Afro', 'Flow Rap Afro', 'Urban Rap Afro', 'Afro Flow', 'Afro Melow'
+]
+
+existing_rap_playlists.each do |title|
+  playlist = Playlist.find_by(title: title)
+  if playlist
+    playlist.update!(
+      category: 'Rap',
+      subcategory: 'Rap Ivoirien'
+    )
+    puts "✅ Mis à jour: #{title} -> Rap / Rap Ivoirien"
+  end
+end
+
+puts "\n🎉 Toutes les nouvelles catégories et playlists ont été créées !"
