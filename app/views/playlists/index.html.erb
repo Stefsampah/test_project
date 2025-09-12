@@ -34,12 +34,14 @@
     <!-- Tags de catégories -->
     <div id="categories-section" class="mb-12">
       <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 Par Catégorie</h2>
-      <div class="grid grid-cols-3 gap-4 max-w-4xl mx-auto mb-8">
+      <div class="row g-3 mb-8">
         <% categories = ['Pop', 'Rap', 'Afro Music', 'Hits', 'Electro', 'Rock'] %>
         <% categories.each do |category| %>
-          <button class="category-tag px-6 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
-            <%= category %>
-          </button>
+          <div class="col-4">
+            <button class="category-tag w-100 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
+              <%= category %>
+            </button>
+          </div>
         <% end %>
       </div>
       
@@ -49,13 +51,14 @@
         <% if category_playlists.any? %>
           <div class="category-section mb-12" data-category="<%= category %>" style="display: none;">
             <h3 class="text-xl font-bold text-white mb-6"><%= category %></h3>
-            <div class="grid grid-cols-2 gap-6">
+            <div class="row g-4">
               <% category_playlists.each do |playlist| %>
-                <% is_unlocked = @unlocked_playlists.include?(playlist) %>
-                <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
-                <% can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked %>
-              
-                <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
+                <div class="col-6">
+                  <% is_unlocked = @unlocked_playlists.include?(playlist) %>
+                  <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
+                  <% can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked %>
+                
+                  <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
                   <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
                     <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
                       <span style="display: none;">Jouer à <%= playlist.title %></span>
@@ -136,6 +139,7 @@
                     <div class="flex items-center justify-between mt-2">
                       <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
                     </div>
+                  </div>
                   </div>
                 </div>
               <% end %>
@@ -510,9 +514,10 @@
           </div>
         </div>
         
-        <div class="grid grid-cols-2 gap-6">
+        <div class="row g-4">
           <% @user_playlists.each do |playlist| %>
-            <div class="my-playlist-item group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout" data-category="<%= playlist.category || 'Other' %>">
+            <div class="col-6">
+              <div class="my-playlist-item group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout" data-category="<%= playlist.category || 'Other' %>">
               <!-- Lien global sur toute la carte si pas encore joué -->
               <% if !current_user.scores.exists?(playlist: playlist) %>
                 <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
@@ -613,6 +618,7 @@
                   <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
                 </div>
               </div>
+              </div>
             </div>
           <% end %>
         </div>
@@ -711,15 +717,42 @@
   /* Styles pour les tags de catégories */
   .category-tag {
     transition: all 0.2s ease-in-out;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .category-tag:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   }
   
   .category-section {
     transition: all 0.3s ease-in-out;
+  }
+  
+  /* Styles pour les filtres Mes Playlists */
+  .my-category-filter {
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .my-category-filter:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Amélioration du design des cartes */
+  .playlist-card-new-layout {
+    min-height: 280px;
+  }
+  
+  .playlist-image-section {
+    min-height: 168px; /* 60% de 280px */
+  }
+  
+  .playlist-text-section {
+    min-height: 112px; /* 40% de 280px */
   }
   
   /* Styles pour uniformiser les images */
@@ -838,8 +871,8 @@
         
         // Mettre à jour les tags
         categoryTags.forEach(t => t.classList.remove('bg-cyan-600', 'text-white'));
-        categoryTags.forEach(t => t.classList.add('bg-gray-700', 'text-gray-300'));
-        this.classList.remove('bg-gray-700', 'text-gray-300');
+        categoryTags.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
+        this.classList.remove('bg-gray-800', 'text-gray-300');
         this.classList.add('bg-cyan-600', 'text-white');
         
         // Afficher seulement la catégorie sélectionnée
@@ -854,6 +887,31 @@
         // Masquer les autres sections
         playlistSections.forEach(section => {
           section.style.display = 'none';
+        });
+      });
+    });
+    
+    // Gestion des filtres dans "Mes Playlists"
+    const myCategoryFilters = document.querySelectorAll('.my-category-filter');
+    const myPlaylistItems = document.querySelectorAll('.my-playlist-item');
+    
+    myCategoryFilters.forEach(filter => {
+      filter.addEventListener('click', function() {
+        const category = this.getAttribute('data-my-category');
+        
+        // Mettre à jour les filtres
+        myCategoryFilters.forEach(f => f.classList.remove('bg-cyan-600', 'text-white'));
+        myCategoryFilters.forEach(f => f.classList.add('bg-gray-700', 'text-gray-300'));
+        this.classList.remove('bg-gray-700', 'text-gray-300');
+        this.classList.add('bg-cyan-600', 'text-white');
+        
+        // Filtrer les playlists
+        myPlaylistItems.forEach(item => {
+          if (category === 'all' || item.getAttribute('data-category') === category) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
         });
       });
     });
