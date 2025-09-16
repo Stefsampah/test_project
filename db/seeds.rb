@@ -84,7 +84,7 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
   
   # Vidéos pour la playlist Afro Rap
   afro_rap_videos = [
-    { title: 'HIMRA - NUMBER ONE (FT. MINZ)', youtube_id: 'b16_UBiP4G0' },
+    { title: 'HIMRA - NUMBER ONE (FT.MINZ)', youtube_id: 'b16_UBiP4G0' },
     { title: 'Didi B - GO feat @jrk1912', youtube_id: 'I-_YDWMXTv0' },
     { title: 'ZOH CATALEYA - TOURA DRILL 1', youtube_id: 'IDakTWRbG_g' },
     { title: 'Didi B - DX3 feat MHD', youtube_id: '3madRVVh00I' },
