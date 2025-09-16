@@ -1,1561 +1,32 @@
 # This file should ensure the existence of records required to run the application in every environment (production,
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
 
 # Création d'un utilisateur admin
 admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
-    user.password = '123456'
-    user.admin = true
-  end
-  
-  # Création d'un utilisateur normal
-  user = User.find_or_create_by!(email: 'user@example.com') do |user|
-    user.password = '234567'
-  end
-  
-  # Playlist Standard: This is Pop
-  pop_playlist = Playlist.find_or_create_by!(title: 'This is Pop') do |playlist|
-    playlist.description = 'Les meilleurs hits pop du moment'
-    playlist.genre = 'Pop'
-    playlist.premium = false
-  end
-  
-  # Vidéos pour la playlist Pop
-  pop_videos = [
-    { title: 'Dua Lipa - Houdini', youtube_id: 'suAR1PYFNYA' },
-    { title: 'Tate McRae - Greedy', youtube_id: 'To4SWGZkEPk' },
-    { title: 'Doja Cat - Paint The Town Red', youtube_id: 'm4_9TFeMfJE' },
-    { title: 'Olivia Rodrigo - vampire', youtube_id: 'RlPNh_PBZb4' },
-    { title: 'Billie Eilish - What Was I Made For?', youtube_id: 'cW8VLC9nnTo' },
-    { title: 'Miley Cyrus - Flowers', youtube_id: 'G7KNmW9a75Y' },
-    { title: 'SZA - Kill Bill', youtube_id: 'MSRcC626prw' },
-    { title: 'Taylor Swift - Anti-Hero', youtube_id: 'b1kbLwvqugk' },
-    { title: 'The Weeknd - Die For You', youtube_id: 'uPD0QOGTmMI' },
-    { title: 'Ed Sheeran - Eyes Closed', youtube_id: 'u6wOyMUs74I' }
-  ]
-  
-  pop_videos.each do |video|
-    pop_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Standard: Pop Play
-  pop_playlist_2 = Playlist.find_or_create_by!(title: 'Pop Play') do |playlist|
-    playlist.description = 'La playlist parfaite pour danser sur des tubes pop'
-    playlist.genre = 'Pop'
-    playlist.premium = false
-  end
-  
-  # Vidéos pour la playlist Pop Play
-  pop_videos_2 = [
-    { title: 'Bruno Mars - Uptown Funk', youtube_id: 'OPf0YbXqDm0' },
-    { title: 'Pharrell Williams - Happy', youtube_id: 'ZbZSe6N_BXs' },
-    { title: 'Mark Ronson - Nothing Breaks Like a Heart', youtube_id: 'p1zrweVN4l4' },
-    { title: 'Rihanna - Diamonds', youtube_id: 'lWA2pjMjpBs' },
-    { title: 'Beyoncé - Halo', youtube_id: 'bnVUHWCynig' },
-    { title: 'Lady Gaga - Shallow', youtube_id: 'bo_efYhYU2A' },
-    { title: 'Adele - Rolling in the Deep', youtube_id: 'rYEDA3JcQqw' },
-    { title: 'Justin Timberlake - Can\'t Stop the Feeling', youtube_id: 'ru0K8uYEZWw' },
-    { title: 'Ariana Grande - thank u, next', youtube_id: 'gl1aHhXnN1k' },
-    { title: 'Sam Smith - Stay With Me', youtube_id: 'pB-5XG-DbAA' }
-  ]
-  
-  pop_videos_2.each do |video|
-    pop_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Standard: Afro Rap
-  afro_rap_playlist = Playlist.find_or_create_by!(title: 'Afro Rap') do |playlist|
-    playlist.description = 'Un mix équilibré de rap ivoirien moderne avec des sonorités futuristes'
-    playlist.genre = 'Afro Rap'
-    playlist.premium = false
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Afro Rap
-  afro_rap_videos = [
-    { title: 'HIMRA - NUMBER ONE (FT.MINZ)', youtube_id: 'b16_UBiP4G0' },
-    { title: 'Didi B - GO feat @jrk1912', youtube_id: 'I-_YDWMXTv0' },
-    { title: 'ZOH CATALEYA - TOURA DRILL 1', youtube_id: 'IDakTWRbG_g' },
-    { title: 'Didi B - DX3 feat MHD', youtube_id: '3madRVVh00I' },
-    { title: 'Bignyne Wiz - Haut Niveau', youtube_id: 'NEW_ID_1' },
-    { title: 'Didi B - Fatúmata feat Naira Marley', youtube_id: '2HxJ1R8_xV4' },
-    { title: 'HIMRA - ROI IVOIRIEN (2025)', youtube_id: 'gAhiONhqhpo' },
-    { title: 'Didi B - Rockstxr', youtube_id: 'YeCRoOnr5vU' },
-    { title: 'SINDIKA x DIDI B - RODELA', youtube_id: 'c25xChh56OQ' },
-    { title: 'Didi B - 2025 (Official Music Video)', youtube_id: 'yzWENpeiZzc' }
-  ]
-  
-  afro_rap_videos.each do |video|
-    afro_rap_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Standard: Afro Trap
-  afro_trap_playlist = Playlist.find_or_create_by!(title: 'Afro Trap') do |playlist|
-    playlist.description = 'Les meilleurs sons trap et street du rap ivoirien'
-    playlist.genre = 'Afro Trap'
-    playlist.premium = false
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Afro Trap
-  afro_trap_videos = [
-    { title: 'Wilzo - Pression', youtube_id: 'MXVL9vdiEUg' },
-    { title: 'HIMRA x PHILIPAYNE - FREESTYLE DRILL IVOIRE #4', youtube_id: 'OvIWDW10GhI' },
-    { title: 'BMUXX CARTER - 24H CHRONO (FT. DIDI B)', youtube_id: 'LQhTtxfmxAU' },
-    { title: 'TRK ft DOPELYM - AMINA', youtube_id: 'iEIuKUcTaTc' },
-    { title: 'SINDIKA - BOYAUX', youtube_id: '47DZRLGvN7I' },
-    { title: 'AMEKA ZRAI - AKO CÉLÉBRATE', youtube_id: 'q4y4A-YbgGY' },
-    { title: 'Toto Le Banzou & AriiSiguira - Attiéké', youtube_id: 'ZfPQxHDqkIU' },
-    { title: 'Salima Chica - Songi Songi (Dj Babs)', youtube_id: '4qlsQ95Q_nE' },
-    { title: 'SOKEÏ - ASSEHOMAPOU', youtube_id: 'CFNcg_MoyPc' },
-    { title: 'LEPAPARA x PAKI CHENZU - BAGAVATHI / CARDIO', youtube_id: 'utCXpnYBQSY' }
-  ]
-  
-  afro_trap_videos.each do |video|
-    afro_trap_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Standard: Rap Ivoire Power
-  rap_ivoire_power_playlist = Playlist.find_or_create_by!(title: 'Rap Ivoire Power') do |playlist|
-    playlist.description = 'Des sons apaisants et mélodiques pour se détendre'
-    playlist.genre = 'Rap Ivoire'
-    playlist.premium = false
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Rap Ivoire Power
-  rap_ivoire_power_videos = [
-    { title: 'À Toi – Socé', youtube_id: 'fDnY4Bz-ttY' },
-    { title: 'GAWA – Lesky', youtube_id: 'uQjVJKBrGHo' },
-    { title: 'Foua (C\'est Facile) – Miedjia', youtube_id: 'zdMS4wZxXIs' },
-    { title: 'Il sait – Leufa', youtube_id: '-LwHX5Nndcw' },
-    { title: 'Pleure – Le JLO & Ameka Zrai', youtube_id: '4QLNn0BHjHs' },
-    { title: 'Béni – Lesky', youtube_id: '2vQhkQiPSoA' },
-    { title: 'Tu dis quoi – Kadja', youtube_id: 's5zPAbaiZx4' },
-    { title: 'De Même – Miedjia', youtube_id: 'G-sK6B0GKIo' },
-    { title: 'BlackArtist – Albinny', youtube_id: 'RQQJfCK-_EY' },
-    { title: 'Si C\'est Pas Dieu – Kawid', youtube_id: '1_rhXT_4TMU' }
-  ]
-  
-  rap_ivoire_power_videos.each do |video|
-    rap_ivoire_power_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Standard: Best of Reggae
-  reggae_playlist = Playlist.find_or_create_by!(title: 'Best of Reggae') do |playlist|
-    playlist.description = 'Les meilleurs morceaux de reggae de tous les temps'
-    playlist.genre = 'Reggae'
-    playlist.premium = false
-  end
-  
-  # Vidéos pour la playlist Reggae
-  reggae_videos = [
-    { title: 'Bob Marley - No Woman No Cry', youtube_id: 'IT8XvzIfi4U' },  
-    { title: 'UB40 - Red Red Wine', youtube_id: 'zXt56MB-3vc' },
-    { title: 'Bob Marley - Three Little Birds', youtube_id: 'HNBCVM4KbUM' },  
-    { title: 'Damian Marley - Welcome To Jamrock', youtube_id: '_GZlJGERbvE' },
-    { title: 'Bob Marley - Jamming', youtube_id: 'oqVy6eRXc7Q' },
-    { title: 'UB40 - Kingston Town', youtube_id: '8Ikz-51w3mo' },
-    { title: 'Bob Marley - One Love', youtube_id: 'IN0KkGeEURw' },
-    { title: 'Inner Circle - Sweat', youtube_id: 'f7OXGANW9Ic' }, 
-    { title: 'Bob Marley - Could You Be Loved', youtube_id: '1ti2YCFgCoI' },
-    { title: 'UB40 - Can\'t Help Falling In Love', youtube_id: 'MXVxP8WMc4s' }
-  ]
-  
-  reggae_videos.each do |video|
-    reggae_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Standard: This is AfroPop
-  afropop_playlist = Playlist.find_or_create_by!(title: 'This is AfroPop') do |playlist|
-    playlist.description = 'Les meilleurs sons afropop du moment'
-    playlist.genre = 'Afro Pop'
-    playlist.premium = false
-  end
-  
-  # Vidéos pour la playlist AfroPop
-  afropop_videos = [
-    { title: 'Wizkid - Essence ft. Tems', youtube_id: 'm77FDcKg96Q' },
-    { title: 'Burna Boy - Last Last', youtube_id: '421w1j87fEM' },
-    { title: 'Davido - Fall', youtube_id: '3Iyuym-Gci0' },
-    { title: 'Rema - Calm Down', youtube_id: 'CQLsdm1ZYAw' },
-    { title: 'Fireboy DML - Peru', youtube_id: 'pekzpzNCNDQ' },
-    { title: 'CKay - Emiliana', youtube_id: 'Ypr5QN7Xn_M' },
-    { title: 'Ayra Starr - Rush', youtube_id: 'crtQSTYWtqE' },
-    { title: 'Tems - Me & U', youtube_id: '1JltlSJH5bY' },
-    { title: 'Asake - WHY LOVE', youtube_id: 'MCMyKcUNR8w' },
-    { title: 'Joeboy - Sip (Alcohol)', youtube_id: 'UEcAPvoSe_8' }
-  ]
-  
-  afropop_videos.each do |video|
-    afropop_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Premium: Afro Vibes
-  afro_vibes = Playlist.find_or_create_by!(title: 'Afro Vibes') do |playlist|
-    playlist.description = 'Un mélange éclectique d\'ambiances et de styles variés'
-    playlist.genre = 'Afro Vibes'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Afro Vibes
-  afro_vibes_videos = [
-    { title: 'JOSEY - Le Monde Est à Nous (Official Music Video)', youtube_id: 'AzKUqSNSU5Y' },
-    { title: 'Dans Dos – Akim Papichulo', youtube_id: '_pYzyRrXM0o' },
-    { title: 'MARASSE – J-Haine', youtube_id: 'RhyiJQ8H7Fg' },
-    { title: 'Kedjevara - ça fait mal (Clip Officiel)', youtube_id: 'gcpq4wDm9gM' },
-    { title: 'MOUMENT – Boykito', youtube_id: 'YzTHnIVDOHI' },
-    { title: 'BEURRE – TC', youtube_id: 'yGCK_59VVM0' },
-    { title: 'MATA CRAZY KPALO – Sokeï', youtube_id: 'WaABvOJnq_Y' },
-    { title: 'UNDER THE SUN – Jeune Lion', youtube_id: '_2SDQ2DZv08' },
-    { title: 'BODOINGADAI – 3xdavs ft. Didi B', youtube_id: 'uhoIdYPVcfc' },
-    { title: '15500 VOLTS – Lil Jay Bingerack', youtube_id: 'B39sdzpWnTI' }
-  ]
-  
-  afro_vibes_videos.each do |video|
-    afro_vibes.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: This is Rap Ivoire
-  this_is_rap_ivoire = Playlist.find_or_create_by!(title: 'This is Rap Ivoire') do |playlist|
-    playlist.description = 'Le pur rap ivoirien dans toute sa splendeur'
-    playlist.genre = 'Rap Ivoire'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist This is Rap Ivoire
-  this_is_rap_ivoire_videos = [
-    { title: 'Lograndvic – Trap Djou 2', youtube_id: 'V3HR6P4xb8k' },
-    { title: 'Tripa Gninnin – Dans l\'eau', youtube_id: 'M0KVSRHjWN4' },
-    { title: 'Kadja – Freestyle KORDIAL', youtube_id: 'hE8uFdBHwtA' },
-    { title: 'Black K & Fior 2 Bior – Tu veux gâter', youtube_id: 'dREDKBQ_nuM' },
-    { title: 'PHILIPAYNE – Undertaker', youtube_id: 'LQalf-Ten24' },
-    { title: 'HIMRA – Nouveau Boss', youtube_id: '_qMfCB2sJls' },
-    { title: 'SINDIKA – Boyaux', youtube_id: 'NEW_ID_2' },
-    { title: 'Didi B – PADRÉ VELI / VODOO FREESTYLE', youtube_id: '8yQv8iXGg5o' },
-    { title: 'DEFTY – Taper Créer', youtube_id: 'SbuH4o3eDSM' },
-    { title: 'Tripa Gninnin feat Latop – Pourquoi tu gnan', youtube_id: 'X0OeoOqwT3M' }
-  ]
-  
-  this_is_rap_ivoire_videos.each do |video|
-    this_is_rap_ivoire.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: Drill Rap Afro
-  drill_rap_afro = Playlist.find_or_create_by!(title: 'Drill Rap Afro') do |playlist|
-    playlist.description = 'Les meilleurs freestyles et sons drill de la scène ivoirienne'
-    playlist.genre = 'Drill Rap'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Drill Rap Afro
-  drill_rap_afro_videos = [
-    { title: 'BMUXX CARTER ft. Didi B – 24H CHRONO', youtube_id: 'LQhTtxfmxAU' },
-    { title: 'HIMRA x PHILIPAYNE – Freestyle Drill Ivoire #4', youtube_id: 'OvIWDW10GhI' },
-    { title: 'PHILIPAYNE – Contrat x Himra', youtube_id: 'ypXaXwE0Yq4' },
-    { title: 'Elow\'n – Piégé', youtube_id: 'gcrisZnEztU' },
-    { title: 'Black K – NO NO NO', youtube_id: 'IMxKsecyHPk' },
-    { title: 'Lil Jay Bingerack – 15500 VOLTS', youtube_id: 'ZTWJ_jfSIug' },
-    { title: 'D14 – DAGBACHI ft. Shado Chris & JM', youtube_id: 'kmABxEW_vq0' },
-    { title: 'Didi B – Forcement', youtube_id: 'PXnjCEpP9rE' },
-    { title: 'J-Haine – CAMELEON', youtube_id: 'geHi7DmvE7g' },
-    { title: '3XDAVS ft. Didi B – BODOINGADAI', youtube_id: 'uhoIdYPVcfc' }
-  ]
-  
-  drill_rap_afro_videos.each do |video|
-    drill_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: Flow Rap Afro
-  flow_rap_afro = Playlist.find_or_create_by!(title: 'Flow Rap Afro') do |playlist|
-    playlist.description = 'Des flows exceptionnels dans des ambiances uniques'
-    playlist.genre = 'Flow Rap'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Flow Rap Afro
-  flow_rap_afro_videos = [
-    { title: 'HIMRA – G3N3RATION N3RF ft. Kerchak', youtube_id: 'o3eRvNoPK80' },
-    { title: 'Widgunz – Ma girlfriend ft. Chrystel', youtube_id: '2GYAsAl8XG0' },
-    { title: 'Tripa Gninnin – Kirikou', youtube_id: 'UOfrbereOFE' },
-    { title: 'Kadja – Les Meilleurs', youtube_id: 'FsfwYxEmxQw' },
-    { title: 'PACO ft. Fireman – CUP', youtube_id: '4wMmF5obkDA' },
-    { title: 'Tripa Gninnin – C 1 JEU', youtube_id: 'DjM1GVoa5E8' },
-    { title: 'Suspect 95 – LE PARTI 2', youtube_id: 'SgPVwm9HCko' },
-    { title: 'J-Haine – MARASSE', youtube_id: 'NEW_ID_3' },
-    { title: 'HIMRA – Freestyle Drill Ivoire #5', youtube_id: 'GyIDTBHEOAQ' },
-    { title: 'Suspect 95 – HOLYGHOST', youtube_id: '8fOuA6V31YU' }
-  ]
-  
-  flow_rap_afro_videos.each do |video|
-    flow_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: Urban Rap Afro
-  urban_rap_afro = Playlist.find_or_create_by!(title: 'Urban Rap Afro') do |playlist|
-    playlist.description = 'Les meilleures punchlines et sons street du rap ivoirien'
-    playlist.genre = 'Urban Rap'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Rap'
-  end
-  
-  # Vidéos pour la playlist Urban Rap Afro
-  urban_rap_afro_videos = [
-    { title: 'PHILIPAYNE – Ils Disent Quoi', youtube_id: 'mPT2Kf6c6Eg' },
-    { title: 'Black K – TITI FLY3#', youtube_id: 'sEtuJ5ZX6_g' },
-    { title: 'Elow\'n – BPC Freestyle', youtube_id: 'cO3WEw7RQUg' },
-    { title: 'NAS ft. Didi B, Sindika, Dopelym… – BENI', youtube_id: 'oWIskZqDf_U' },
-    { title: 'Elow\'n – Bolide Nerveux', youtube_id: 'l9Uc-Oteino' },
-    { title: 'HIMRA – BÂTON NON NON', youtube_id: '3Eiq6mv8Vlo' },
-    { title: 'Kadja – Tu dis quoi', youtube_id: 'NEW_ID_4' },
-    { title: 'Black K – LAAARGE FLY1#', youtube_id: 'ZHiejZVpvgQ' },
-    { title: 'Didi B – Rockstxr', youtube_id: 'NEW_ID_5' },
-    { title: 'Suspect 95 – META VOL.2', youtube_id: 'Z7sbpd4fLyE' }
-  ]
-  
-  urban_rap_afro_videos.each do |video|
-    urban_rap_afro.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: Afro Flow
-  afro_flow = Playlist.find_or_create_by!(title: 'Afro Flow') do |playlist|
-    playlist.description = 'Les flows les plus techniques et punchlines les plus percutantes'
-    playlist.genre = 'Afro Flow'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Flow'
-  end
-  
-  # Vidéos pour la playlist Afro Flow
-  afro_flow_videos = [
-    { title: 'Lograndvic – Trap Djou 2', youtube_id: 'NEW_ID_6' },
-    { title: 'Tripa Gninnin – Dans l\'eau (Freestyle Gninnin 2)', youtube_id: '8y-iUrYrHT4' },
-    { title: 'Kadja – Freestyle KORDIAL 2', youtube_id: 'bZkMs9bHpi4' },
-    { title: 'Black K & Fior 2 Bior – Tu veux gâter', youtube_id: 'WdcJn_O-tVM' },
-    { title: 'PHILIPAYNE – Undertaker', youtube_id: 'NEW_ID_7' },
-    { title: 'HIMRA – Nouveau Boss', youtube_id: '_qMfCB2sJls' },
-    { title: 'SINDIKA – Boyaux', youtube_id: 'NEW_ID_8' },
-    { title: 'DEFTY – Taper Créer', youtube_id: 'NEW_ID_9' },
-    { title: 'Tripa Gninnin feat Latop – Pourquoi tu gnan', youtube_id: 'NEW_ID_10' },
-    { title: 'Elow\'n - Bolide Nerveux', youtube_id: 'l9Uc-Oteino' }
-  ]
-  
-  afro_flow_videos.each do |video|
-    afro_flow.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Playlist Premium: Afro Melow
-  afro_melow = Playlist.find_or_create_by!(title: 'Afro Melow') do |playlist|
-    playlist.description = 'Un mélange unique de drill, street et mélodie'
-    playlist.genre = 'Afro Melow'
-    playlist.premium = true
-    playlist.category = 'Rap'
-    playlist.subcategory = 'Afro Melow'
-  end
-  
-  # Vidéos pour la playlist Afro Melow
-  afro_melow_videos = [
-    { title: 'Black K – TITI FLY3#', youtube_id: 'sEtuJ5ZX6_g' },
-    { title: 'Lil Jay Bingerack – Espoir', youtube_id: 'rJvZxWlKZgQ' },
-    { title: 'D14 – Roule', youtube_id: 'ZK8vY7Jkz9g' },
-    { title: 'J-Haine – Position ft. Himra', youtube_id: 'XkzvBvUuJ9M' },
-    { title: 'HIMRA – BADMAN GANGSTA ft. Jeune Morty', youtube_id: 'gYzWvX3pJkE' },
-    { title: 'Widgunz – My Bae ft. Himra', youtube_id: 'TqWvLz9KpXo' },
-    { title: 'Tripa Gninnin – Decapo', youtube_id: 'YpLzKx8WvJg' },
-    { title: 'Kadja – Le Roi', youtube_id: 'MvXqLp9JzKf' },
-    { title: 'Albinny – Attaque à 2', youtube_id: 'JvKxWz8LpQo' },
-    { title: 'Tripa Gninnin – Ça va vite', youtube_id: 'LpXvJz9KqWg' }
-  ]
-  
-  afro_melow_videos.each do |video|
-    afro_melow.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Premium: Reggae Vibes
-  reggae_vibes = Playlist.find_or_create_by!(title: 'Reggae Vibes') do |playlist|
-    playlist.description = 'Les meilleures vibes reggae pour se détendre'
-    playlist.genre = 'Reggae'
-    playlist.premium = true
-  end
-  
-  # Vidéos pour la playlist Reggae Vibes
-  reggae_vibes_videos = [
-    { title: 'Steel Pulse - Steppin\' Out', youtube_id: '8SXCPuJCFmA' },
-    { title: 'Jimmy Cliff - Many Rivers to Cross', youtube_id: 'doWWHQDWe2k' },
-    { title: 'Peter Tosh - Legalize It', youtube_id: 'j6QkVTx2d88' },
-    { title: 'Burning Spear - Columbus', youtube_id: 'CZyTqj-vRrM' },
-    { title: 'Dennis Brown - Revolution', youtube_id: '0CGI0lS1ir4' },
-    { title: 'Gregory Isaacs - Night Nurse', youtube_id: 'K6oYyG0KcvQ' },
-    { title: 'Black Uhuru - Guess Who\'s Coming to Dinner', youtube_id: 'KWEGXb2juvM' },
-    { title: 'Toots & The Maytals - Pressure Drop', youtube_id: 'DKVB_CtU8XQ' },
-    { title: 'Third World - Now That We Found Love', youtube_id: 'XXeY74ttezU' },
-    { title: 'Buju Banton - Untold Stories', youtube_id: 'Kb-0Eo0Yk0o' }
-  ]
-  
-  reggae_vibes_videos.each do |video|
-    reggae_vibes.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Premium: Afro Pop Hits
-  afro_pop_hits = Playlist.find_or_create_by!(title: 'Afro Pop Hits') do |playlist|
-    playlist.description = 'Les meilleurs hits afro pop pour faire la fête'
-    playlist.genre = 'Afro Pop'
-    playlist.premium = true
-  end
-  
-  # Vidéos pour la playlist Afro Pop Hits
-  afro_pop_hits_videos = [
-    { title: 'Fally Ipupa - Eloko Oyo', youtube_id: 'T4KNVT2w0mU' },
-    { title: 'Tiwa Savage - Koroba', youtube_id: '5goMslKxEWs' },
-    { title: 'Diamond Platnumz - Waah! ft. Koffi Olomide', youtube_id: 'HCuTwNgY3_M' },
-    { title: 'Sarkodie - Adonai ft. Castro', youtube_id: 'pZvlG-wwWk' },
-    { title: 'Yemi Alade - Johnny', youtube_id: 'C_XkTKoDI18' },
-    { title: 'P-Square - Personally', youtube_id: 'ttdU19Kwce8' },
-    { title: 'D\'Banj - Oliver Twist', youtube_id: 'EUYNnVgkAag' },
-    { title: 'Tekno - Pana', youtube_id: '8YhAFBOSk1U' },
-    { title: 'Mr Eazi - Skin Tight ft. Efya', youtube_id: 'vk_4yxkgjAI' },
-    { title: 'Sauti Sol - Suzanna', youtube_id: 'mFBJtuQ1Llc' }
-  ]
-  
-  afro_pop_hits_videos.each do |video|
-    afro_pop_hits.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Premium: Latin Pop
-  latin_pop = Playlist.find_or_create_by!(title: 'Latin Pop') do |playlist|
-    playlist.description = 'Le meilleur de la pop latine pour danser'
-    playlist.genre = 'Latin'
-    playlist.premium = true
-  end
-  
-  # Vidéos pour la playlist Latin Pop
-  latin_pop_videos = [
-    { title: 'Shakira - Hips Don\'t Lie ft. Wyclef Jean', youtube_id: 'DUT5rEU6pqM' },
-    { title: 'Luis Fonsi - Despacito ft. Daddy Yankee', youtube_id: 'kJQP7kiw5Fk' },
-    { title: 'Enrique Iglesias - Bailando ft. Descemer Bueno, Gente De Zona', youtube_id: 'NUsoVlDFqZg' },
-    { title: 'Ricky Martin - Livin\' La Vida Loca', youtube_id: 'p47fEXGabaY' },
-    { title: 'J Balvin, Willy William - Mi Gente', youtube_id: 'wnJ6LuUFpMo' },
-    { title: 'Daddy Yankee - Gasolina', youtube_id: 'qGKrc3A6HHM' },
-    { title: 'Jennifer Lopez - On The Floor ft. Pitbull', youtube_id: 't4H_Zoh7G5A' },
-    { title: 'Ozuna - Dile Que Tu Me Quieres', youtube_id: 'r9Ey0xD9YO0' },
-    { title: 'Maluma - Felices los 4', youtube_id: 't_jHrUE5IOk' },
-    { title: 'Bad Bunny - Yo Perreo Sola', youtube_id: 'GtSRKwDCaZM' }
-  ]
-  
-  latin_pop_videos.each do |video|
-    latin_pop.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-
-  # Playlist Premium: Electronic Dance
-  electronic_dance = Playlist.find_or_create_by!(title: 'Electronic Dance') do |playlist|
-    playlist.description = 'Les meilleurs morceaux électroniques pour danser toute la nuit'
-    playlist.genre = 'Electronic'
-    playlist.premium = true
-  end
-  
-  # Vidéos pour la playlist Electronic Dance
-  electronic_dance_videos = [
-    { title: 'Avicii - Levels', youtube_id: '_ovdm2yX4MA' },
-    { title: 'David Guetta - Titanium ft. Sia', youtube_id: 'JRfuAukYTKg' },
-    { title: 'Calvin Harris - Summer', youtube_id: 'ebXbLfLACGM' },
-    { title: 'Swedish House Mafia - Don\'t You Worry Child', youtube_id: '1y6smkh6c-0' },
-    { title: 'Martin Garrix - Animals', youtube_id: 'gCYcHz2k5x0' },
-    { title: 'Zedd - Clarity ft. Foxes', youtube_id: 'IxxstCcJlsc' },
-    { title: 'Skrillex - Bangarang feat. Sirah', youtube_id: 'YJVmu6yttiw' },
-    { title: 'Daft Punk - Get Lucky ft. Pharrell Williams, Nile Rodgers', youtube_id: '5NV6Rdv1a3I' },
-    { title: 'The Chainsmokers - Don\'t Let Me Down ft. Daya', youtube_id: 'Io0fBr1XBUA' },
-    { title: 'Kygo - Firestone ft. Conrad Sewell', youtube_id: '9Sc-ir2UwGU' }
-  ]
-  
-  electronic_dance_videos.each do |video|
-    electronic_dance.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-      v.title = video[:title]
-    end
-  end
-  
-  # Création de quelques scores pour tester
-  Score.find_or_create_by!(user: user, playlist: pop_playlist) do |score|
-    score.points = 7
-  end
-  
-  Score.find_or_create_by!(user: user, playlist: afro_rap_playlist) do |score|
-    score.points = 5
-  end
-  
-  Score.find_or_create_by!(user: user, playlist: reggae_playlist) do |score|
-    score.points = 8
-  end
-  
-  Score.find_or_create_by!(user: admin, playlist: pop_playlist) do |score|
-    score.points = 9
-  end
-  
-  Score.find_or_create_by!(user: admin, playlist: afro_rap_playlist) do |score|
-    score.points = 6
-  end
-  
-  Score.find_or_create_by!(user: admin, playlist: reggae_playlist) do |score|
-    score.points = 7
-  end
-  
-  # Badges Seeds
-  # Competitor Badges
-  [
-    {
-      name: 'Bronze Competitor',
-      badge_type: 'competitor',
-      level: 'bronze',
-      points_required: 1000,
-      description: 'A solid start in the competition!',
-      reward_type: 'standard',
-      reward_description: 'Access to exclusive playlists'
-    },
-    {
-      name: 'Silver Competitor',
-      badge_type: 'competitor',
-      level: 'silver',
-      points_required: 3000,
-      description: 'You\'re becoming a force to be reckoned with!',
-      reward_type: 'standard',
-      reward_description: 'Photos dédicacées'
-    },
-    {
-      name: 'Gold Competitor',
-      badge_type: 'competitor',
-      level: 'gold',
-      points_required: 5000,
-      description: 'A true champion of the competition!',
-      reward_type: 'premium',
-      reward_description: 'Invitation à un concert VIP'
-    }
-  ].each do |badge_attrs|
-    Badge.find_or_create_by!(badge_type: badge_attrs[:badge_type], level: badge_attrs[:level]) do |badge|
-      badge.name = badge_attrs[:name]
-      badge.points_required = badge_attrs[:points_required]
-      badge.description = badge_attrs[:description]
-      badge.reward_type = badge_attrs[:reward_type]
-      badge.reward_description = badge_attrs[:reward_description]
-    end
-  end
-  
-  # Engager Badges
-  [
-    {
-      name: 'Bronze Engager',
-      badge_type: 'engager',
-      level: 'bronze',
-      points_required: 500,
-      description: 'You\'re starting to make your mark!',
-      reward_type: 'standard',
-      reward_description: 'Accès anticipé à des playlists'
-    },
-    {
-      name: 'Silver Engager',
-      badge_type: 'engager',
-      level: 'silver',
-      points_required: 1500,
-      description: 'Your engagement is making waves!',
-      reward_type: 'standard',
-      reward_description: 'Photos dédicacées'
-    },
-    {
-      name: 'Gold Engager',
-      badge_type: 'engager',
-      level: 'gold',
-      points_required: 3000,
-      description: 'You\'re the heart of the community!',
-      reward_type: 'premium',
-      reward_description: 'Rencontre avec un artiste'
-    }
-  ].each do |badge_attrs|
-    Badge.find_or_create_by!(badge_type: badge_attrs[:badge_type], level: badge_attrs[:level]) do |badge|
-      badge.name = badge_attrs[:name]
-      badge.points_required = badge_attrs[:points_required]
-      badge.description = badge_attrs[:description]
-      badge.reward_type = badge_attrs[:reward_type]
-      badge.reward_description = badge_attrs[:reward_description]
-    end
-  end
-  
-  # Critic Badges
-  [
-    {
-      name: 'Bronze Critic',
-      badge_type: 'critic',
-      level: 'bronze',
-      points_required: 500,
-      description: 'Your opinions are valued!',
-      reward_type: 'standard',
-      reward_description: 'Accès à du contenu exclusif'
-    },
-    {
-      name: 'Silver Critic',
-      badge_type: 'critic',
-      level: 'silver',
-      points_required: 2000,
-      description: 'Your taste is impeccable!',
-      reward_type: 'standard',
-      reward_description: 'Photos dédicacées'
-    },
-    {
-      name: 'Gold Critic',
-      badge_type: 'critic',
-      level: 'gold',
-      points_required: 4000,
-      description: 'You\'re a true connoisseur!',
-      reward_type: 'premium',
-      reward_description: 'Participation à des interviews live'
-    }
-  ].each do |badge_attrs|
-    Badge.find_or_create_by!(badge_type: badge_attrs[:badge_type], level: badge_attrs[:level]) do |badge|
-      badge.name = badge_attrs[:name]
-      badge.points_required = badge_attrs[:points_required]
-      badge.description = badge_attrs[:description]
-      badge.reward_type = badge_attrs[:reward_type]
-      badge.reward_description = badge_attrs[:reward_description]
-    end
-  end
-  
-  # Challenger Badges
-  [
-    {
-      name: 'Bronze Challenger',
-      badge_type: 'challenger',
-      level: 'bronze',
-      points_required: 800,
-      description: 'You\'re climbing the ranks!',
-      reward_type: 'standard',
-      reward_description: 'Accès anticipé à du contenu exclusif'
-    },
-    {
-      name: 'Silver Challenger',
-      badge_type: 'challenger',
-      level: 'silver',
-      points_required: 1500,
-      description: 'You\'re a formidable opponent!',
-      reward_type: 'standard',
-      reward_description: 'Merchandising exclusif'
-    },
-    {
-      name: 'Gold Challenger',
-      badge_type: 'challenger',
-      level: 'gold',
-      points_required: 2500,
-      description: 'You\'re the ultimate champion!',
-      reward_type: 'premium',
-      reward_description: 'Invitation à un concert VIP'
-    }
-  ].each do |badge_attrs|
-    Badge.find_or_create_by!(badge_type: badge_attrs[:badge_type], level: badge_attrs[:level]) do |badge|
-      badge.name = badge_attrs[:name]
-      badge.points_required = badge_attrs[:points_required]
-      badge.description = badge_attrs[:description]
-      badge.reward_type = badge_attrs[:reward_type]
-      badge.reward_description = badge_attrs[:reward_description]
-    end
-  end
-  
-  # Users Seeds
-  # Création des utilisateurs de test
-  driss = User.find_or_create_by!(email: 'driss@example.com') do |user|
-    user.password = '123456'
-    user.username = 'Driss'
-  end
-  
-  theo = User.find_or_create_by!(email: 'theo@example.com') do |user|
-    user.password = '123456'
-    user.username = 'Théo'
-  end
-  
-  vb = User.find_or_create_by!(email: 'vb@example.com') do |user|
-    user.password = '123456'
-    user.username = 'VB'
-  end
-  
-  # Scores pour Driss (Competitor)
-  pop_playlist.scores.find_or_create_by!(user: driss) do |score|
-    score.points = 950
-  end
-  
-  afro_rap_playlist.scores.find_or_create_by!(user: driss) do |score|
-    score.points = 850
-  end
-  
-  reggae_playlist.scores.find_or_create_by!(user: driss) do |score|
-    score.points = 900
-  end
-  
-  # Swipes pour Driss
-  # Créons d'abord un jeu pour Driss
-  driss_game = Game.find_or_create_by!(user: driss, playlist: pop_playlist)
-
-  pop_playlist.videos.each do |video|
-    Swipe.find_or_create_by!(user: driss, video: video, game: driss_game) do |swipe|
-      swipe.action = 'like'
-      swipe.liked = true
-      swipe.playlist = pop_playlist
-    end
-  end
-  
-  # Scores pour Théo (Engager)
-  pop_playlist.scores.find_or_create_by!(user: theo) do |score|
-    score.points = 400
-  end
-  
-  afro_rap_playlist.scores.find_or_create_by!(user: theo) do |score|
-    score.points = 350
-  end
-  
-  reggae_playlist.scores.find_or_create_by!(user: theo) do |score|
-    score.points = 380
-  end
-  
-  # Swipes pour Théo
-  # Créons d'abord un jeu pour Théo
-  theo_game = Game.find_or_create_by!(user: theo, playlist: pop_playlist)
-
-  pop_playlist.videos.each do |video|
-    action = ['like', 'dislike'].sample
-    Swipe.find_or_create_by!(user: theo, video: video, game: theo_game) do |swipe|
-      swipe.action = action
-      swipe.liked = (action == 'like')
-      swipe.playlist = pop_playlist
-    end
-  end
-  
-  # Scores pour VB (Challenger)
-  pop_playlist.scores.find_or_create_by!(user: vb) do |score|
-    score.points = 2000
-  end
-  
-  afro_rap_playlist.scores.find_or_create_by!(user: vb) do |score|
-    score.points = 1800
-  end
-  
-  reggae_playlist.scores.find_or_create_by!(user: vb) do |score|
-    score.points = 1900
-  end
-  
-  # Swipes pour VB
-  # Créons d'abord un jeu pour VB
-  vb_game = Game.find_or_create_by!(user: vb, playlist: pop_playlist)
-
-  pop_playlist.videos.each do |video|
-    Swipe.find_or_create_by!(user: vb, video: video, game: vb_game) do |swipe|
-      swipe.action = 'like'
-      swipe.liked = true
-      swipe.playlist = pop_playlist
-    end
-  end
-  
-  # Création des badges
-  # Badges pour The Competitor
-  Badge.find_or_create_by!(badge_type: "competitor", level: "bronze") do |badge|
-    badge.name = "Bronze Competitor"
-    badge.points_required = 100
-    badge.description = "Vous commencez à vous faire remarquer dans les compétitions"
-    badge.reward_type = "standard"
-    badge.reward_description = "Accès à une playlist exclusive"
-  end
-  
-  Badge.find_or_create_by!(badge_type: "competitor", level: "silver") do |badge|
-    badge.name = "Silver Competitor"
-    badge.points_required = 500
-    badge.description = "Vous êtes un compétiteur redoutable"
-    badge.reward_type = "premium"
-    badge.reward_description = "Accès à des playlists premium"
-  end
-  
-  Badge.find_or_create_by!(badge_type: "competitor", level: "gold") do |badge|
-    badge.name = "Gold Competitor"
-    badge.points_required = 1000
-    badge.description = "Vous êtes un champion incontesté"
-    badge.reward_type = "premium"
-    badge.reward_description = "Accès VIP à toutes les playlists"
-  end
-  
-  # Badges pour The Engager
-  Badge.find_or_create_by!(badge_type: "engager", level: "bronze") do |badge|
-    badge.name = "Bronze Engager"
-    badge.points_required = 300
-    badge.description = "Vous commencez à vous engager activement"
-    badge.reward_type = "standard"
-    badge.reward_description = "Accès à des statistiques détaillées"
-  end
-  
-  Badge.find_or_create_by!(badge_type: "engager", level: "silver") do |badge|
-    badge.name = "Silver Engager"
-    badge.points_required = 600
-    badge.description = "Vous êtes un membre très actif"
-    badge.reward_type = "premium"
-    badge.reward_description = "Accès à des fonctionnalités avancées"
-  end
-  
-  Badge.find_or_create_by!(badge_type: "engager", level: "gold") do |badge|
-    badge.name = "Gold Engager"
-    badge.points_required = 1200
-    badge.description = "Vous êtes un pilier de la communauté"
-    badge.reward_type = "premium"
-    badge.reward_description = "Accès à des fonctionnalités exclusives"
-  end
-  
-  # Création des utilisateurs de test si nécessaire
-  unless User.exists?(email: "theo@example.com")
-    theo = User.create!(
-      email: "theo@example.com",
-      password: "123456",
-      password_confirmation: "123456"
-    )
-    
-    # Attribuer quelques badges à Théo
-    bronze_competitor = Badge.find_by(name: "Bronze Competitor")
-    if bronze_competitor
-      UserBadge.create!(
-        user: theo,
-        badge: bronze_competitor,
-        earned_at: 2.days.ago,
-        points_at_earned: 120
-      )
-    end
-    
-    bronze_engager = Badge.find_by(name: "Bronze Engager")
-    if bronze_engager
-      UserBadge.create!(
-        user: theo,
-        badge: bronze_engager,
-        earned_at: 5.days.ago,
-        points_at_earned: 55
-      )
-    end
-  end
-
-# Update badge images
-{
-  'competitor' => {
-    'bronze' => 'dropmixpop.webp',
-    'silver' => 'NFT.jpg',
-    'gold' => 'VIP-gold.jpg'
-  },
-  'engager' => {
-    'bronze' => 'pandora-playlist-collage.webp',
-    'silver' => 'photos-dedicacees.jpeg',
-    'gold' => 'concert-virtuel.jpg'
-  },
-  'critic' => {
-    'bronze' => 'Best-Music.webp',
-    'silver' => 'artist_message.jpeg',
-    'gold' => 'backstage_virtuel.jpg'
-  },
-  'challenger' => {
-    'bronze' => 'Exclusive_content.jpeg',
-    'silver' => 'music_merch.jpeg',
-    'gold' => 'interview.jpg'
-  }
-}.each do |badge_type, levels|
-  levels.each do |level, image|
-    badge = Badge.find_by(badge_type: badge_type, level: level)
-    badge.update(image: image) if badge
-  end
+  user.password = '123456'
+  user.admin = true
 end
 
-# Playlist Exclusive: Exclusive Playlist
-exclusive_playlist = Playlist.find_or_create_by!(title: 'Exclusive Playlist') do |playlist|
-  playlist.description = 'Une playlist réservée aux membres ayant débloqué la récompense exclusive.'
-  playlist.genre = 'Exclusive'
-  playlist.premium = true
-  playlist.exclusive = true
+# Création d'un utilisateur normal
+user = User.find_or_create_by!(email: 'user@example.com') do |user|
+  user.password = '234567'
 end
 
-exclusive_videos = [
-  { title: 'Help Me Find My Drawls · Tonio Armani', youtube_id: 'Qzq45Z95Ass' },
-  { title: 'Joy · Snoop Dogg', youtube_id: 'bQrs57Uc7eY' },
-  { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
-  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: '7vHA5lqrMMI' },
-  { title: 'Funk Pop Type Beat, Funky Type Beat ("feels") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
-  { title: 'Rapid Fire · Cruel Santino', youtube_id: '40mssPDJodE' },
-  { title: 'White Noise · Joyner Lucas', youtube_id: 'cMPzYnVD0ng' },
-  { title: 'Fuego · Manu Crooks · Anfa Rose', youtube_id: 'u7i9oCgsukE' },
-  { title: 'Mary Jane (All Night Long) · Mary J. Blige', youtube_id: 'XWP9LWeE0-I' },
-  { title: 'Cowgirl Trailride (feat. Tonio Armani) S Dott', youtube_id: '33TIBfNR_bM' }
-]
+puts "✅ Utilisateurs créés"
 
-exclusive_videos.each do |video|
-  exclusive_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
+# ===========================================
+# PLAYLISTS POP
+# ===========================================
+
+# Playlist Pop 1: Fraîcheur Urbaine vol.1 (Standard)
+urban_fresh_playlist = Playlist.find_or_create_by!(title: 'Fraîcheur Urbaine vol.1') do |playlist|
+  playlist.description = 'Les nouveaux talents de la pop française'
+  playlist.category = 'Pop'
+  playlist.premium = false
 end
 
-# Créer les liaisons entre badges et playlists exclusives
-# Le badge "Bronze Competitor" débloque la "Exclusive Playlist" (Accès à une playlist exclusive)
-bronze_competitor_badge = Badge.find_by(badge_type: 'competitor', level: 'bronze')
-if bronze_competitor_badge && exclusive_playlist
-  BadgePlaylistUnlock.find_or_create_by!(badge: bronze_competitor_badge, playlist: exclusive_playlist)
-end
-
-# Note: Les badges sont maintenant attribués naturellement via BadgeService
-# Pas de badges forcés pour maintenir la cohérence du gameplay
-
-# Challenge Reward Playlist 1
-challenge_reward_playlist_1 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 1') do |playlist|
-  playlist.description = 'Playlist exclusive débloquée via les récompenses challenge.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_1 = [
-  { title: 'Help Me Find My Drawls · Tonio Armani', youtube_id: 'Qzq45Z95Ass' },
-  { title: 'Joy · Snoop Dogg', youtube_id: 'bQrs57Uc7eY' },
-  { title: 'My Mind Playin Tricks on Me · Geto Boys', youtube_id: '7vHA5lqrMMI' },
-  { title: 'Funk Pop Type Beat, Funky Type Beat ("feels") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
-  { title: 'Rapid Fire · Cruel Santino', youtube_id: '40mssPDJodE' },
-  { title: 'White Noise · Joyner Lucas', youtube_id: 'cMPzYnVD0ng' },
-  { title: 'Fuego · Manu Crooks · Anfa Rose', youtube_id: 'u7i9oCgsukE' },
-  { title: 'Mary Jane (All Night Long) · Mary J. Blige', youtube_id: 'XWP9LWeE0-I' },
-  { title: 'Cowgirl Trailride (feat. Tonio Armani) S Dott', youtube_id: '33TIBfNR_bM' },
-  { title: 'Go Anywhere · Sally Green', youtube_id: '2OMK7sQd-Qk' }
-]
-
-challenge_reward_videos_1.each do |video|
-  challenge_reward_playlist_1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist 2 - Artistes similaires à ceux de la Playlist 1
-challenge_reward_playlist_2 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 2') do |playlist|
-  playlist.description = 'Deuxième playlist exclusive débloquée via les récompenses challenge - Artistes similaires.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_2 = [
-  # Similaire à Tonio Armani (Hip Hop/Rap) - Artiste différent
-  { title: 'HIMRA - ÇA GLOW', youtube_id: '9_esOJNo7tA' },
-  # Similaire à Snoop Dogg (West Coast Hip Hop) - Artiste différent
-  { title: 'Eminem - Lose Yourself', youtube_id: '_Yhyp-_hX2s' },
-  # Similaire à Geto Boys (Southern Hip Hop) - Artiste différent
-  { title: 'OutKast - Ms. Jackson', youtube_id: 'EUVo8epKwv0' },
-  # Similaire à dannyebtracks (Type Beat) - Beat différent
-  { title: 'Hip Hop Type Beat, Trap Type Beat ("flow") dannyebtracks', youtube_id: 'lwvoRUDz7Ww' },
-  # Similaire à Cruel Santino (Alternative Hip Hop) - Artiste différent
-  { title: 'Tyler, The Creator - EARFQUAKE', youtube_id: '40mssPDJodE' },
-  # Similaire à Joyner Lucas (Conscious Hip Hop) - Artiste différent
-  { title: 'J. Cole - No Role Modelz', youtube_id: 'Kb-0Eo0Yk0o' },
-  # Similaire à Manu Crooks & Anfa Rose (Afro Hip Hop) - Artiste différent
-  { title: 'Burna Boy - Last Last', youtube_id: '421w1j87fEM' },
-  # Similaire à Mary J. Blige (R&B/Soul) - Artiste différent
-  { title: 'Alicia Keys - No One', youtube_id: 'rywUS-ohqeE' },
-  # Similaire à S Dott (Hip Hop) - Artiste différent
-  { title: 'Kendrick Lamar - HUMBLE.', youtube_id: 'tvTRZJ-4EyI' },
-  # Similaire à Sally Green (Alternative) - Artiste différent
-  { title: 'Lorde - Royals', youtube_id: 'nlcIKh6s9tU' }
-]
-
-challenge_reward_videos_2.each do |video|
-  challenge_reward_playlist_2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Note: Les Challenge Reward Playlists sont maintenant gérées uniquement comme des récompenses
-# Elles n'apparaissent pas dans la page des playlists du jeu, mais uniquement dans :
-# - Les récompenses de l'utilisateur
-# - Le profil de l'utilisateur
-# - Le système de récompenses aléatoires (3 badges = Challenge)
-
-# Challenge Reward Playlist 3
-challenge_reward_playlist_3 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 3') do |playlist|
-  playlist.description = 'Troisième playlist exclusive débloquée via les récompenses challenge.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_3 = [
-  { title: 'Teddy Pendergrass - Believe in Love', youtube_id: 'dQw4w9WgXcQ' },
-  { title: 'toni armani- Sooner or Later', youtube_id: '9bZkp7q19f0' },
-  { title: 'odunsi - Alté Cruise', youtube_id: 'kJQP7kiw5Fk' },
-  { title: 'Jackboys 2000excursion ', youtube_id: 'NUsoVlDFqZg' },
-  { title: 'Travis Scott - Dumbo', youtube_id: 'p47fEXGabaY' },
-  { title: 'Adriano - Niska', youtube_id: 'wnJ6LuUFpMo' },
-  { title: 'Coi Leray - No More Parties', youtube_id: 'qGKrc3A6HHM' },
-  { title: 'HIMRA - Nouveau Boss', youtube_id: 't4H_Zoh7G5A' },
-  { title: 'Yimaye - O\'Kennet', youtube_id: 'r9Ey0xD9YO0' },
-  { title: '4batz - WYA', youtube_id: 't_jHrUE5IOk' }
-]
-
-challenge_reward_videos_3.each do |video|
-  challenge_reward_playlist_3.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist 4
-challenge_reward_playlist_4 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 4') do |playlist|
-  playlist.description = 'Quatrième playlist exclusive débloquée via les récompenses challenge.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_4 = [
-  { title: 'Young Thug - i don\'t believe', youtube_id: '2YvMfHKdQgA' },
-  { title: 'Werenoi - Tu connais', youtube_id: '35RQgMvjpLA' },
-  { title: 'Lil wayne - Written History', youtube_id: '5xbjWBwtEQ4' },
-  { title: 'Teddy Pendregrass - I am who i am', youtube_id: 'bE7apZSC2iI' },
-  { title: 'Wiz khalifa - 5 star', youtube_id: 'mLVYwb933ls' },
-  { title: 'Latto - Somebody', youtube_id: 'qB7kLilZWwg' },
-  { title: 'Doja cat - Agora Hills', youtube_id: '0c66ksfigtU' },
-  { title: 'Kameron carter - Rari', youtube_id: 'cGTvegayqgM' },
-  { title: 'Himra - Diamants et de l\'or', youtube_id: 'YzhPpbV_E7U' },
-  { title: 'Travis Scott - Hooch', youtube_id: 'P6PXqRTpTo4' }
-]
-
-challenge_reward_videos_4.each do |video|
-  challenge_reward_playlist_4.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist 5
-challenge_reward_playlist_5 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist 5') do |playlist|
-  playlist.description = 'Cinquième playlist exclusive débloquée via les récompenses challenge.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_5 = [
-  { title: 'janet - that\'s the way love goes', youtube_id: '2b_KfAGiglc' },
-  { title: 'Calvin harris - slide', youtube_id: '8Ee4QjCEHHc' },
-  { title: 'Mozzy - never tell em shit', youtube_id: 'OeJ3U0qI_eY' },
-  { title: 'Koxo - Step by step', youtube_id: '0t7WbUz-q9Q' },
-  { title: 'Larry June - on the unda', youtube_id: 'wpX0rzhmskg' },
-  { title: 'Octavian - little', youtube_id: 'AuZxccRqB5M' },
-  { title: 'Aretha Franklin - Every girl', youtube_id: 'wsK4uU_6Ec4' },
-  { title: 'Yesterday - Hamza', youtube_id: '4dKbpBeoVaI' },
-  { title: '4h44 - ZZ et timar', youtube_id: 'QbgdoKDZA0Y' },
-  { title: 'Soleil Bleu - Bleu soleil', youtube_id: 'nd8RD3tjNQE' },
-  { title: 'charger- Triangle des bermudes', youtube_id: '8p7dQGEkHPk' }
-]
-
-challenge_reward_videos_5.each do |video|
-  challenge_reward_playlist_5.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist Alternative 6
-challenge_reward_playlist_6 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 6') do |playlist|
-  playlist.description = 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_6 = [
-  { title: 'Young Thug - Halftime [Acapella - Vocals Only]', youtube_id: '9251S1YusZQ' },
-  { title: 'Tu connais (Instrumental)', youtube_id: 'py6fNZ8vcRs' },
-  { title: 'Got Money (Acapella)', youtube_id: 'DDfTxqdi2WU' },
-  { title: 'Backing Track officiel', youtube_id: 'XfeRVI1uqfM' },
-  { title: 'See You Again (Vocals Only)', youtube_id: 'gFp8ovsgv-w' },
-  { title: 'Somebody (Instrumental)', youtube_id: '41yvBu1kXxI' },
-  { title: 'Agora Hills (Instrumental)', youtube_id: '6x26CVaJulE' },
-  { title: 'Rari - TikTok performances', youtube_id: '9251S1YusZQ' }, 
-  { title: 'Himra - Diamants et de l\'or (Clip officiel)', youtube_id: '2G2BjeBrjuk' },
-  { title: '90210 Acapella HQ', youtube_id: '6y1XGc_x4UA' }
-]
-
-challenge_reward_videos_6.each do |video|
-  challenge_reward_playlist_6.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist Alternative 7
-challenge_reward_playlist_7 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 7') do |playlist|
-  playlist.description = 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_7 = [
-  { title: 'Janet - That\'s the Way Love Goes (Studio Acapella)', youtube_id: 'BKHei0FZlUk' },
-  { title: 'Slide (Instrumental)', youtube_id: 'ejl5Dh1wEng' },
-  { title: 'Never Tell Em Shit (Instrumental officiel)', youtube_id: 'b1ynGxdIR2g' },
-  { title: 'Step by Step (Extended Version)', youtube_id: 'BhFNnjzic3o' },
-  { title: 'On The Unda Acapella', youtube_id: 'pal4em79IKI' },
-  { title: 'Papi Chulo (Acoustic Karaoke)', youtube_id: 'K_qqnlzChf4' },
-  { title: 'A Natural Woman (Acapella)', youtube_id: '1UxctZwjuv0' },
-  { title: 'Hamza - Yesterday (Clip officiel)', youtube_id: '4dKbpBeoVaI' },
-  { title: '4h44 - ZZ et Timar (Clip officiel)', youtube_id: 'QbgdoKDZA0Y' },
-  { title: 'Bleu Soleil (Karaoké version avec backing vocals)', youtube_id: 'DeyNHOqbeaA' }
-]
-
-challenge_reward_videos_7.each do |video|
-  challenge_reward_playlist_7.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist Alternative 8
-challenge_reward_playlist_8 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 8') do |playlist|
-  playlist.description = 'Huitième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_8 = [
-  { title: 'Teddy Pendergrass Love T.K.O. Acapella Performance', youtube_id: 'wEiJ56GAhQ8' },
-  { title: 'Sooner or Later (Accapella) Performed Live', youtube_id: 'wEiJ56GAhQ8' },
-  { title: 'Boiler Room Lagos – Live Performance', youtube_id: 'njBrMQDBmFk' },
-  { title: 'Instrumental Reproduced', youtube_id: '6tmXNZwLLKQ' },
-  { title: 'Dumbo (Instrumental) Accurate Version', youtube_id: '4hQ3GiQXrJ0' },
-  { title: 'NISKA - 44 (Acapella)', youtube_id: 'zt9RHrGpkBE' },
-  { title: 'No More Parties Acapella', youtube_id: 'xoq82JGVRJ8' },
-  { title: 'Booska Boss (Instrumental)', youtube_id: 'KVf4vV676lg' },
-  { title: 'Yimaye Lyrics Edit', youtube_id: 'n7tBsh68O6s' },
-  { title: 'WYA (feat. Sexyy Red)', youtube_id: 'J8Lz-1wTMi8' }
-]
-
-challenge_reward_videos_8.each do |video|
-  challenge_reward_playlist_8.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Challenge Reward Playlist Alternative 9
-challenge_reward_playlist_9 = Playlist.find_or_create_by!(title: 'Challenge Reward Playlist Alternative 9') do |playlist|
-  playlist.description = 'Neuvième playlist exclusive débloquée via les récompenses challenge - Versions alternatives et acoustiques.'
-  playlist.genre = 'Challenge'
-  playlist.premium = true
-  playlist.exclusive = true
-  playlist.hidden = true  # Ne pas afficher dans la page des playlists
-end
-
-challenge_reward_videos_9 = [
-  { title: 'HIMRA – Ça Glow (Visualizer)', youtube_id: 'y4V56cyd_jU' },
-  { title: 'Lose Yourself Acapella (Vocals Only)', youtube_id: 'cEOKtOd_5iQ' },
-  { title: 'Ms. Jackson (Instrumental)', youtube_id: 'yAZW0AhTyLo' },
-  { title: 'Genesis – Trap Beat (Prod. Danny E.B)', youtube_id: '5sEUXN2-3sM' },
-  { title: 'EARFQUAKE Acapella HQ', youtube_id: 'zcNgoQz7cww' },
-  { title: 'No Role Modelz (Instrumental Beat Only)', youtube_id: '1CbKr7Ni0Ac' },
-  { title: 'Last Last Instrumental', youtube_id: 'q8LLrUGF2NU' },
-  { title: 'No One Acoustic Version', youtube_id: '3V4QyGjqOlk' },
-  { title: 'HUMBLE. Acapella (Vocals Only)', youtube_id: 'AKFreeg_DlQ' },
-  { title: 'Royals – Pentatonix (A cappella Cover)', youtube_id: 'E9XQ2MdNgKY' }
-]
-
-challenge_reward_videos_9.each do |video|
-  challenge_reward_playlist_9.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# ==========================================
-# NOUVELLES CATÉGORIES ET PLAYLISTS
-# ==========================================
-
-# 1. POP FRANÇAISE
-puts "\n🎵 Création des playlists Pop Française..."
-
-# Pop Jeunes Espoirs vol.1 (Standard)
-pop_jeunes_espoirs_vol1 = Playlist.find_or_create_by!(title: 'Pop Jeunes Espoirs vol.1') do |p|
-  p.description = 'Les nouveaux talents de la pop française'
-  p.category = 'Pop'
-  p.subcategory = 'Pop Française'
-  p.premium = false
-  p.exclusive = false
-end
-
-pop_jeunes_espoirs_videos_vol1 = [
-  { title: 'Soleil Bleu (Radio Edit)', youtube_id: 'uz6sARD5XCU' },
-  { title: 'Dernière Danse', youtube_id: 'esb-jNwdG4s' },
-  { title: 'A qui le tour', youtube_id: 't1K_xzt0Wuo' },
-  { title: 'Monde', youtube_id: '2DU3gi8Bjdg' },
-  { title: 'Autrement', youtube_id: 'Euih-rtRJIo' },
-  { title: 'Insomnie', youtube_id: 'xMLhrEj2I90' },
-  { title: 'VHS', youtube_id: 'hD1v_sRE0Ns' },
-  { title: 'Bonne année', youtube_id: 'jlsNyDz1fZo' },
-  { title: 'Galbi', youtube_id: 'NzfifH0QsGg' },
-  { title: 'J\'avoue', youtube_id: '-xWnsupS024' }
-]
-
-pop_jeunes_espoirs_videos_vol1.each do |video|
-  pop_jeunes_espoirs_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Pop Jeunes Espoirs vol.2 (Premium)
-pop_jeunes_espoirs_vol2 = Playlist.find_or_create_by!(title: 'Pop Jeunes Espoirs vol.2') do |p|
-  p.description = 'Les nouveaux talents de la pop française - Volume 2'
-  p.category = 'Pop'
-  p.subcategory = 'Pop Française'
-  p.premium = true
-  p.exclusive = false
-end
-
-pop_jeunes_espoirs_videos_vol2 = [
-  { title: 'Je pars mais je reste', youtube_id: 'h0UnKETmMCE' },
-  { title: 'Falbala', youtube_id: 'OHCpFfNcQNQ' },
-  { title: 'Extraordinaire', youtube_id: 'ECk9BBJutAY' },
-  { title: 'Avec toi', youtube_id: 'kNv6tgb9vjo' },
-  { title: 'Danse dans Paris', youtube_id: 'MyQPo5vywwY' },
-  { title: 'Particule', youtube_id: '9_wLT8MXf_I' },
-  { title: 'Les filles, les meufs', youtube_id: 'Ag3E7mJeRYI' },
-  { title: 'Si je m\'en vais', youtube_id: 'F0C2UiEpvlA' },
-  { title: 'Cœur maladroit', youtube_id: 'VFvDwn2r5RI' },
-  { title: 'La fille du bar (Rush live)', youtube_id: 'QZxr_1hZPek' }
-]
-
-pop_jeunes_espoirs_videos_vol2.each do |video|
-  pop_jeunes_espoirs_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# 2. RAP FRANÇAIS
-puts "\n🎤 Création des playlists Rap Français..."
-
-# Rap La Relève vol.1 (Standard)
-rap_la_releve_vol1 = Playlist.find_or_create_by!(title: 'Rap La Relève vol.1') do |p|
-  p.description = 'La nouvelle génération du rap français'
-  p.category = 'Rap'
-  p.subcategory = 'Rap Français'
-  p.premium = false
-  p.exclusive = false
-end
-
-rap_la_releve_videos_vol1 = [
-  { title: 'BOTTEGA', youtube_id: 'j0rrbBXnIMc' },
-  { title: 'P.I.B', youtube_id: 'uQB1ZdEd2CM' },
-  { title: 'COMMENT CA VA', youtube_id: '7dP7hYGmOmk' },
-  { title: '4h44', youtube_id: 'QbgdoKDZA0Y' },
-  { title: 'Biff pas d\'love', youtube_id: 'TDO0GRay2fQ' },
-  { title: 'Poukwa (elle m\'demande)', youtube_id: 'rAxVxcxuLnM' },
-  { title: 'Putana', youtube_id: 'R8_AgJnjDZE' },
-  { title: 'Terrain', youtube_id: 'RsBD1POgx-c' },
-  { title: 'Célibataire', youtube_id: '_xuNmoJEoIM' },
-  { title: 'Jaloux (feat. JUL)', youtube_id: 'j6P8RLRtU9I' }
-]
-
-rap_la_releve_videos_vol1.each do |video|
-  rap_la_releve_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Rap La Relève vol.2 (Premium)
-rap_la_releve_vol2 = Playlist.find_or_create_by!(title: 'Rap La Relève vol.2') do |p|
-  p.description = 'La nouvelle génération du rap français - Volume 2'
-  p.category = 'Rap'
-  p.subcategory = 'Rap Français'
-  p.premium = true
-  p.exclusive = false
-end
-
-rap_la_releve_videos_vol2 = [
-  { title: 'Le P\'tit', youtube_id: '0-p3Z1oqFzA' },
-  { title: 'Nagasaki', youtube_id: 'UrXt7YC0-VI' },
-  { title: 'Attack ft. Himra', youtube_id: 'foq514nlWXw' },
-  { title: 'David Douillet ft. IDS x SDM', youtube_id: 'CiAlc1mT62Q' },
-  { title: 'La Zone', youtube_id: 'nIcDZNZGXjI' },
-  { title: 'ISACK HADJAR ft. 2ZES', youtube_id: 'Sc4rMKhD7uI' },
-  { title: 'Génération Foirée', youtube_id: 'iip42mL8XYM' },
-  { title: 'BUSINESSMAN', youtube_id: '1Zs6Wa3LvTM' },
-  { title: 'Elle 2.0', youtube_id: 'ApzEnioZF74' },
-  { title: 'Tunnel ft. JRK 19', youtube_id: 'W33jLp-m0-Q' }
-]
-
-rap_la_releve_videos_vol2.each do |video|
-  rap_la_releve_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# 3. INDIE FRANÇAIS
-puts "\n🎨 Création des playlists Indie Français..."
-
-# Indie Français vol.1 (Premium)
-indie_francais_vol1 = Playlist.find_or_create_by!(title: 'Indie Français vol.1') do |p|
-  p.description = 'Pop & Indie Francophone 2025'
-  p.category = 'Pop'
-  p.subcategory = 'Indie Français'
-  p.premium = true
-  p.exclusive = false
-end
-
-indie_francais_videos_vol1 = [
-  { title: 'Mille vagues', youtube_id: 'jYeMHMCyGRo' },
-  { title: 'This Country', youtube_id: '3VTFNxY0cGQ' },
-  { title: 'Tout tout', youtube_id: 'qqttfzzT6rU' },
-  { title: 'Reine de cœur', youtube_id: 'qS0U_Jf8Q3U' },
-  { title: 'Fragile', youtube_id: 'rFkijj7FfR4' },
-  { title: 'Toujours les vacances', youtube_id: 'ek8o8-z7hgU' },
-  { title: 'Tu me mens', youtube_id: 'LrYzCVsaqrA' },
-  { title: 'Allons Voir', youtube_id: 'ykpDVaMHGT4' },
-  { title: 'Vinyle', youtube_id: '1umWzAke9D8' },
-  { title: 'À deux', youtube_id: '4-FtDa3KYi4' }
-]
-
-indie_francais_videos_vol1.each do |video|
-  indie_francais_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Indie Français vol.2 (Premium)
-indie_francais_vol2 = Playlist.find_or_create_by!(title: 'Indie Français vol.2') do |p|
-  p.description = 'Pop & Indie Francophone 2025 - Volume 2'
-  p.category = 'Pop'
-  p.subcategory = 'Indie Français'
-  p.premium = true
-  p.exclusive = false
-end
-
-indie_francais_videos_vol2 = [
-  { title: 'I Can Do Anything', youtube_id: 'hLv95TyVWYg' },
-  { title: 'Rien du tout', youtube_id: 'EabdTJwvuuE' },
-  { title: 'Métamorphose', youtube_id: 'PkHBiElDtUs' },
-  { title: 'Au secours les vacances', youtube_id: 'IaxtJaWNhLY' },
-  { title: 'Sarah Sahara feat. billie', youtube_id: 'g1HzxkoZjuY' },
-  { title: 'Pas Bourré', youtube_id: 'y7sXD3e5leE' },
-  { title: 'Bouche en Feu', youtube_id: '5B-2_znK_S4' },
-  { title: 'Pas Toi', youtube_id: 'XLb4s24L9QI' },
-  { title: 'Coups de soleil', youtube_id: 'VspyR320paA' },
-  { title: 'Je t\'accuse', youtube_id: 'U3_djdjsI5Q' }
-]
-
-indie_francais_videos_vol2.each do |video|
-  indie_francais_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# 4. POP INTERNATIONALE
-puts "\n🌍 Création des playlists Pop Internationale..."
-
-# Futurs Hits – Pop & Global Vibes vol.1 (Premium)
-futurs_hits_vol1 = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.1') do |p|
-  p.description = 'Futurs Hits – Pop & Global Vibes'
-  p.category = 'Pop'
-  p.subcategory = 'Pop Internationale'
-  p.premium = true
-  p.exclusive = false
-end
-
-futurs_hits_videos_vol1 = [
-  { title: 'Triangle des Bermudes – Charger', youtube_id: '8p7dQGEkHPk' },
-  { title: 'Appelle ta copine', youtube_id: 'gtvQOusc5mQ' },
-  { title: 'Dame Un Grrr', youtube_id: 'wHlAnhkLUvw' },
-  { title: 'Adriano', youtube_id: 'XyYkPM2THAg' },
-  { title: 'Viens on essaie', youtube_id: 'KwvCpirpSgI' },
-  { title: 'JUMP', youtube_id: 'CgCVZdcKcqY' },
-  { title: 'Y Que Fue?', youtube_id: '16nZ6K7sim4' },
-  { title: 'Ruinart', youtube_id: 'e2d9v6dbLHo' },
-  { title: 'Back to friends', youtube_id: 'c8zq4kAn_O0' },
-  { title: 'Which One', youtube_id: '9-dEHfSCZUQ' }
-]
-
-futurs_hits_videos_vol1.each do |video|
-  futurs_hits_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Futurs Hits – Pop & Global Vibes vol.2 (Standard)
-futurs_hits_vol2 = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.2') do |p|
-  p.description = 'Futurs Hits – Pop & Global Vibes - Volume 2'
-  p.category = 'Pop'
-  p.subcategory = 'Pop Internationale'
-  p.premium = false
-  p.exclusive = false
-end
-
-futurs_hits_videos_vol2 = [
-  { title: 'Just Keep Watching', youtube_id: 'dpvQqmX6SUI' },
-  { title: 'Air Force Blanche', youtube_id: 'lPS5VfgKDiU' },
-  { title: 'Ginger', youtube_id: 'Hoy5E6bSDZE' },
-  { title: 'Believe', youtube_id: 'Ar7ar6ppg-g' },
-  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
-  { title: 'Zun Zun', youtube_id: 'MB90ipLdT90' },
-  { title: 'Daisies', youtube_id: 'QyvREl7epGY' },
-  { title: 'Noventa', youtube_id: '4a67sLrI3EM' },
-  { title: 'Love Me Not', youtube_id: 'cswfR85D7jM' },
-  { title: 'TaTaTa', youtube_id: 'Uj1g5oumzWY' }
-]
-
-futurs_hits_videos_vol2.each do |video|
-  futurs_hits_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# 5. HITS
-puts "\n🔥 Création des playlists Hits..."
-
-# RELEASED vol.1 (Standard)
-released_vol1 = Playlist.find_or_create_by!(title: 'RELEASED vol.1') do |p|
-  p.description = 'Hits Internationaux & Rap 2025'
-  p.category = 'Hits'
-  p.subcategory = 'Hits Pop'
-  p.premium = false
-  p.exclusive = false
-end
-
-released_videos_vol1 = [
-  { title: 'A Little More', youtube_id: 'O_0Wn73AnC8' },
-  { title: 'Gucci Gucci', youtube_id: 'h4u_QJsvoX0' },
-  { title: 'Soap (feat. PinkPantheress)', youtube_id: 'dtzHH4hpKc8' },
-  { title: 'Lunettes quartier // 2025', youtube_id: 'uN08LRMD0-A' },
-  { title: 'Things I Haven\'t Told You', youtube_id: 'PFZKmdpbGp0' },
-  { title: 'Malembe', youtube_id: 'a9GeotvTA4s' },
-  { title: 'Just Say Dat', youtube_id: '8gy-Y9tWK6M' },
-  { title: 'Holy Water', youtube_id: '4wMNUOnH514' },
-  { title: 'No Sharing ft. Luh Tyler', youtube_id: 'eLyYDgjMxr0' },
-  { title: 'Ugly', youtube_id: 'OLavHL4NJ08' }
-]
-
-released_videos_vol1.each do |video|
-  released_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# RELEASED vol.2 (Premium)
-released_vol2 = Playlist.find_or_create_by!(title: 'RELEASED vol.2') do |p|
-  p.description = 'Nouveautés Pop, Rap & R&B 2025'
-  p.category = 'Hits'
-  p.subcategory = 'Hits Pop'
-  p.premium = true
-  p.exclusive = false
-end
-
-released_videos_vol2 = [
-  { title: 'Si tu pars', youtube_id: 'XILS3CclI1k' },
-  { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
-  { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
-  { title: 'Loved You Better ft. Dean Lewis', youtube_id: '2XGO7NWwbnU' },
-  { title: 'Other Side of Love', youtube_id: 'S76hEZ7nHN0' },
-  { title: 'Grand-mère', youtube_id: 'lgdWKEtrBaU' },
-  { title: 'Vampire Bat', youtube_id: 'H4hyhP-Dguw' },
-  { title: 'Fineshyt', youtube_id: 'shRJSgx48es' },
-  { title: 'NO CAP', youtube_id: '-Q4kCS4u9b8' },
-  { title: 'Rain', youtube_id: '1If-cXUeVws' }
-]
-
-released_videos_vol2.each do |video|
-  released_vol2.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# 6. AFRO MUSIC
-puts "\n🌍 Création des playlists Afro Music..."
-
-# Afro Vibes vol.1 (Standard)
-afro_vibes_vol1 = Playlist.find_or_create_by!(title: 'Afro Vibes vol.1') do |p|
-  p.description = 'Afro Vibes Vol. 1'
-  p.category = 'Afro Music'
-  p.subcategory = 'Afro Hits'
-  p.premium = false
-  p.exclusive = false
-end
-
-afro_vibes_videos_vol1 = [
-  { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
-  { title: 'Shatta Confessions', youtube_id: 'qRyBpbJvO8Y' },
-  { title: 'Charger', youtube_id: 'Om_gqUBQzlI' },
-  { title: 'Faut Laisser', youtube_id: 'If23KrW8zLg' },
-  { title: 'Ola Oli', youtube_id: 'V4gDbLmVyes' },
-  { title: 'Tu sais bien', youtube_id: 'Umgg-ccUSwc' },
-  { title: 'On fait Comment ?', youtube_id: 'gO4aEAIKl8w' },
-  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
-  { title: 'Djiwoun Foulawa', youtube_id: 'PFBa7Wl_kN0' },
-  { title: 'C\'est Dosé', youtube_id: 'lvCCqkkweyw' }
-]
-
-afro_vibes_videos_vol1.each do |video|
-  afro_vibes_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
-  end
-end
-
-# Fraîcheur Urbaine vol.1 (Premium)
-fraicheur_urbaine_vol1 = Playlist.find_or_create_by!(title: 'Fraîcheur Urbaine vol.1') do |p|
-  p.description = 'Nouveautés Rap & Pop Été 2025'
-  p.category = 'Afro Music'
-  p.subcategory = 'Afro Urbain'
-  p.premium = true
-  p.exclusive = false
-end
-
-fraicheur_urbaine_videos_vol1 = [
+urban_fresh_videos = [
   { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
   { title: 'Tkt Pas', youtube_id: 'd6X_0BDO6Tg' },
   { title: 'DO YOU LOVE ME ?', youtube_id: 's1LA-Kmqr04' },
@@ -1568,60 +39,466 @@ fraicheur_urbaine_videos_vol1 = [
   { title: 'FAUT LAISSER ft. Franglish', youtube_id: 'yQht5eGEBrI' }
 ]
 
-fraicheur_urbaine_videos_vol1.each do |video|
-  fraicheur_urbaine_vol1.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+urban_fresh_videos.each do |video|
+  urban_fresh_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
     v.title = video[:title]
   end
 end
 
-# 7. CATÉGORIES VIDES POUR FUTURES PLAYLISTS
-puts "\n🎵 Création des catégories vides..."
-
-# Electro
-electro_placeholder = Playlist.find_or_create_by!(title: 'Électrons libres') do |p|
-  p.description = 'Electro & Chill Vibes - Bientôt disponible'
-  p.category = 'Electro'
-  p.subcategory = 'Électrons libres'
-  p.premium = true
-  p.exclusive = false
+# Playlist Pop 2: Futurs Hits – Pop & Global Vibes vol.1 (Premium)
+futurs_hits_playlist = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.1') do |playlist|
+  playlist.description = 'Futurs Hits – Pop & Global Vibes - Volume 1'
+  playlist.category = 'Pop'
+  playlist.premium = true
 end
 
-# Rock
-rock_placeholder = Playlist.find_or_create_by!(title: 'Nouveautés Rock') do |p|
-  p.description = 'Nouveautés Rock - Bientôt disponible'
-  p.category = 'Rock'
-  p.subcategory = 'Nouveautés Rock'
-  p.premium = true
-  p.exclusive = false
-end
-
-# Reggae
-reggae_placeholder = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes') do |p|
-  p.description = 'Dancehall & Island Vibes - Bientôt disponible'
-  p.category = 'Reggae'
-  p.subcategory = 'Dancehall & Island Vibes'
-  p.premium = true
-  p.exclusive = false
-end
-
-# 8. MISE À JOUR DES PLAYLISTS RAP IVOIRIEN EXISTANTES
-puts "\n🇨🇮 Mise à jour des playlists Rap Ivoirien..."
-
-# Mettre à jour les playlists existantes avec les bonnes catégories
-existing_rap_playlists = [
-  'Afro Rap', 'Afro Trap', 'Rap Ivoire Power', 'Afro Vibes', 'This is Rap Ivoire',
-  'Drill Rap Afro', 'Flow Rap Afro', 'Urban Rap Afro', 'Afro Flow', 'Afro Melow'
+futurs_hits_videos = [
+  { title: 'Triangle des Bermudes – Charger', youtube_id: '8p7dQGEkHPk' },
+  { title: 'Appelle ta copine', youtube_id: 'gtvQOusc5mQ' },
+  { title: 'Dame Un Grrr', youtube_id: 'wHlAnhkLUvw' },
+  { title: 'Adriano', youtube_id: 'XyYkPM2THAg' },
+  { title: 'Viens on essaie', youtube_id: 'KwvCpirpSgI' },
+  { title: 'JUMP', youtube_id: 'CgCVZdcKcqY' },
+  { title: 'Y Que Fue?', youtube_id: '16nZ6K7sim4' },
+  { title: 'Ruinart', youtube_id: 'e2d9v6dbLHo' },
+  { title: 'Back to friends', youtube_id: 'c8zq4kAn_O0' },
+  { title: 'Which One', youtube_id: '9-dEHfSCZUQ' }
 ]
 
-existing_rap_playlists.each do |title|
-  playlist = Playlist.find_by(title: title)
-  if playlist
-    playlist.update!(
-      category: 'Rap',
-      subcategory: 'Rap Ivoirien'
-    )
-    puts "✅ Mis à jour: #{title} -> Rap / Rap Ivoirien"
+futurs_hits_videos.each do |video|
+  futurs_hits_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
   end
 end
 
-puts "\n🎉 Toutes les nouvelles catégories et playlists ont été créées !"
+# Playlist Pop 3: Futurs Hits – Pop & Global Vibes vol.2 (Premium)
+futurs_hits_vol2_playlist = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.2') do |playlist|
+  playlist.description = 'Futurs Hits – Pop & Global Vibes - Volume 2'
+  playlist.category = 'Pop'
+  playlist.premium = true
+end
+
+futurs_hits_vol2_videos = [
+  { title: 'Just Keep Watching', youtube_id: 'dpvQqmX6SUI' },
+  { title: 'Air Force Blanche', youtube_id: 'lPS5VfgKDiU' },
+  { title: 'Ginger', youtube_id: 'Hoy5E6bSDZE' },
+  { title: 'Believe', youtube_id: 'Ar7ar6ppg-g' },
+  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
+  { title: 'Zun Zun', youtube_id: 'MB90ipLdT90' },
+  { title: 'Daisies', youtube_id: 'QyvREl7epGY' },
+  { title: 'Noventa', youtube_id: '4a67sLrI3EM' },
+  { title: 'Love Me Not', youtube_id: 'cswfR85D7jM' },
+  { title: 'TaTaTa', youtube_id: 'Uj1g5oumzWY' }
+]
+
+futurs_hits_vol2_videos.each do |video|
+  futurs_hits_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Pop créées"
+
+# ===========================================
+# PLAYLISTS AFRO
+# ===========================================
+
+# Playlist Afro 1: Afro Vibes Vol. 1 (Standard)
+afro_vibes_vol1_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 1') do |playlist|
+  playlist.description = 'Les meilleures vibes afro du moment'
+  playlist.category = 'Afro'
+  playlist.premium = false
+end
+
+afro_vibes_vol1_videos = [
+  { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
+  { title: 'Shatta Confessions', youtube_id: 'qRyBpbJvO8Y' },
+  { title: 'Charger', youtube_id: 'Om_gqUBQzlI' },
+  { title: 'Faut Laisser', youtube_id: 'If23KrW8zLg' },
+  { title: 'Ola Oli', youtube_id: 'V4gDbLmVyes' },
+  { title: 'Tu sais bien', youtube_id: 'Umgg-ccUSwc' },
+  { title: 'On fait Comment ?', youtube_id: 'gO4aEAIKl8w' },
+  { title: 'Whine', youtube_id: 'Gku25G-MrNE' },
+  { title: 'Djiwoun Foulawa', youtube_id: 'PFBa7Wl_kN0' },
+  { title: 'C\'est Dosé', youtube_id: 'lvCCqkkweyw' }
+]
+
+afro_vibes_vol1_videos.each do |video|
+  afro_vibes_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Afro 2: Afro Vibes Vol. 2 (Premium)
+afro_vibes_vol2_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 2') do |playlist|
+  playlist.description = 'Suite des meilleures vibes afro'
+  playlist.category = 'Afro'
+  playlist.premium = true
+end
+
+afro_vibes_vol2_videos = [
+  { title: 'Que Pasa ?', youtube_id: 'ZzYzXqzFJgI' },
+  { title: 'Trop d\'amour', youtube_id: 'JkXv9Z1ZkzQ' },
+  { title: 'C\'est mon BB', youtube_id: 'YgRz7XvZzYg' },
+  { title: 'Do You Love Me ?', youtube_id: 'KxvXzYzZgZg' },
+  { title: 'PAY!', youtube_id: 'ZgYzXvZgZgY' },
+  { title: 'Chouchou', youtube_id: 'ZxYzZgZgYgY' },
+  { title: 'Bodycount', youtube_id: 'ZgZgYgYgYgY' },
+  { title: 'Joke', youtube_id: 'ZgYgYgYgZgZ' },
+  { title: 'Bukki', youtube_id: 'ZgZgZgZgYgY' },
+  { title: 'Choix', youtube_id: 'ZgYgZgYgZgY' }
+]
+
+afro_vibes_vol2_videos.each do |video|
+  afro_vibes_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Afro 3: Afro Vibes Vol. 3 (Premium)
+afro_vibes_vol3_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 3') do |playlist|
+  playlist.description = 'Final des meilleures vibes afro'
+  playlist.category = 'Afro'
+  playlist.premium = true
+end
+
+afro_vibes_vol3_videos = [
+  { title: 'Simba', youtube_id: 'ZgZgYgYgZgZ' },
+  { title: 'Ça m\'a laissé', youtube_id: 'ZgYgZgZgYgZ' },
+  { title: 'À Tes Côtés', youtube_id: 'ZgZgZgYgZgY' },
+  { title: 'Pas Jalouse', youtube_id: 'ZgYgZgYgZgZ' },
+  { title: 'DX3', youtube_id: 'ZgZgYgZgYgZ' },
+  { title: 'Ayéyé (Nous aussi)', youtube_id: 'ZgYgZgZgYgY' },
+  { title: 'Faux Pas', youtube_id: 'ZgZgZgYgZgZ' },
+  { title: 'ZALA', youtube_id: 'ZgYgZgYgZgY' },
+  { title: 'Changer Camp', youtube_id: 'ZgZgYgYgZgZ' },
+  { title: 'Évidemment', youtube_id: 'ZgYgZgZgYgZ' }
+]
+
+afro_vibes_vol3_videos.each do |video|
+  afro_vibes_vol3_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Afro créées"
+
+# ===========================================
+# PLAYLISTS ELECTRO
+# ===========================================
+
+# Playlist Electro 1: Électrons libres Vol. 1 (Standard)
+electrons_libres_vol1_playlist = Playlist.find_or_create_by!(title: 'Électrons libres Vol. 1') do |playlist|
+  playlist.description = 'Electro & Chill Vibes 2025'
+  playlist.category = 'Electro'
+  playlist.premium = false
+end
+
+electrons_libres_vol1_videos = [
+  { title: 'Dream Night', youtube_id: 'SITfpgTCix8' },
+  { title: 'Vaitimbora', youtube_id: 'jOwsX8AAFx8' },
+  { title: 'Crazy For It', youtube_id: '7q8mnv5uZpQ' },
+  { title: 'One Mind', youtube_id: 'EpXzXFPXvfo' },
+  { title: 'take me by the hand', youtube_id: 'jdU16tnrt14' },
+  { title: 'Kimpton', youtube_id: 'dpSUbK-bOLA' },
+  { title: 'A Girl Like You', youtube_id: 'XGEhFOnEJ84' },
+  { title: 'Toute Première Fois', youtube_id: 'G-EWrKUHxZ4' },
+  { title: 'FREE', youtube_id: 'JYCuHUaOk28' },
+  { title: 'Everytime We Touch', youtube_id: 'B8qQXQkwQ3c' }
+]
+
+electrons_libres_vol1_videos.each do |video|
+  electrons_libres_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Electro 2: Électrons libres Vol. 2 (Premium)
+electrons_libres_vol2_playlist = Playlist.find_or_create_by!(title: 'Électrons libres Vol. 2') do |playlist|
+  playlist.description = 'Suite Electro & Chill Vibes'
+  playlist.category = 'Electro'
+  playlist.premium = true
+end
+
+electrons_libres_vol2_videos = [
+  { title: 'I Started A Fire', youtube_id: 'bthFcQOhQxY' },
+  { title: 'Runaway', youtube_id: 'P9RFU4ENucM' },
+  { title: 'I Never Party in Paris', youtube_id: 'SQ1HbA5rq44' },
+  { title: 'Resonances From The D', youtube_id: 'y5NQESpKm8s' },
+  { title: 'Morning Bliss', youtube_id: 'ejezLDkLtNU' },
+  { title: 'Dior', youtube_id: 'qXnqZo03PHY' },
+  { title: 'Unforgettable', youtube_id: 'IdBIdmi0k18' },
+  { title: 'Blessings', youtube_id: '_okjhzBpdU0' },
+  { title: 'MAD', youtube_id: 'LvUtS-btnyU' },
+  { title: 'Your River (Live)', youtube_id: 'Iau61g36Nb4' }
+]
+
+electrons_libres_vol2_videos.each do |video|
+  electrons_libres_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Electro créées"
+
+# ===========================================
+# PLAYLISTS REGGAE/DANCEHALL
+# ===========================================
+
+# Playlist Reggae 1: Dancehall & Island Vibes Vol. 1 (Standard)
+dancehall_vol1_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 1') do |playlist|
+  playlist.description = 'Les meilleures vibes dancehall et caribéennes'
+  playlist.category = 'Reggae'
+  playlist.premium = false
+end
+
+dancehall_vol1_videos = [
+  { title: 'The Greatest Band Ever', youtube_id: 'FgBmxD9JwKg' },
+  { title: 'Shake It To The Max', youtube_id: 'UjBhbMMgLzc' },
+  { title: 'Passenger Princess', youtube_id: 'Lk9wx5RoLLs' },
+  { title: 'DADA', youtube_id: 'lyogHC6UwlI' },
+  { title: 'Rich Mean Man', youtube_id: '2wkkg7wy29Y' },
+  { title: 'Rich Sew', youtube_id: '9XA-u1C9OoM' },
+  { title: 'NY Girls', youtube_id: 's_y6JT097Q8' },
+  { title: 'All Over the World', youtube_id: 'dPmuBVhKAWQ' },
+  { title: 'Toxic', youtube_id: 'uKgyeojpbqw' },
+  { title: 'Pretty Rockstar', youtube_id: '5ye4qj0z3Do' }
+]
+
+dancehall_vol1_videos.each do |video|
+  dancehall_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Reggae 2: Dancehall & Island Vibes Vol. 2 (Premium)
+dancehall_vol2_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 2') do |playlist|
+  playlist.description = 'Suite des vibes dancehall et caribéennes'
+  playlist.category = 'Reggae'
+  playlist.premium = true
+end
+
+dancehall_vol2_videos = [
+  { title: 'Ba Ba Bad', youtube_id: 'FszlG-KIRnM' },
+  { title: '4 Kampé', youtube_id: 'Srvt_6up-0o' },
+  { title: 'Taliban (Spaceship Billy Amapiano Mix)', youtube_id: 'tRTDPMl7u1g' },
+  { title: 'Praise Jah in the Moonlight', youtube_id: 'iD__IJWqwY8' },
+  { title: 'Push 2 Start', youtube_id: 'uLK2r3sG4lE' },
+  { title: 'Wild n Rich', youtube_id: 'O1PZ2Cu_9RM' },
+  { title: 'Hit and Run', youtube_id: 'rJwEphsNVH8' },
+  { title: '8:00 PM', youtube_id: 'ywackFGQNZQ' },
+  { title: 'Big Breeze', youtube_id: 'Yo3QyiD28Dc' },
+  { title: 'Bouwey', youtube_id: 'tW8KrbpTXcI' }
+]
+
+dancehall_vol2_videos.each do |video|
+  dancehall_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Reggae 3: Dancehall & Island Vibes Vol. 3 (Premium)
+dancehall_vol3_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 3') do |playlist|
+  playlist.description = 'Final des vibes dancehall et caribéennes'
+  playlist.category = 'Reggae'
+  playlist.premium = true
+end
+
+dancehall_vol3_videos = [
+  { title: 'Whites', youtube_id: '2C0mGEfQnt4' },
+  { title: 'Dating Szn', youtube_id: 'eUePmZFIXUg' },
+  { title: 'Balance', youtube_id: 'HSlhZfpnRZM' },
+  { title: 'Know About Dat', youtube_id: 'aROcMsnbCOc' },
+  { title: 'GO GO', youtube_id: 'WqwrIFzIpBg' },
+  { title: 'V6', youtube_id: 'B3suf-jqG1U' },
+  { title: 'Rum Behavior', youtube_id: 'JzV6K1yi5vo' },
+  { title: 'Top Tier', youtube_id: '1vZKxKJvJ9g' },
+  { title: 'Mad Out', youtube_id: 'KxYgGzJvL9o' },
+  { title: 'Pressure', youtube_id: 'ZpYgNzJgK9w' }
+]
+
+dancehall_vol3_videos.each do |video|
+  dancehall_vol3_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Reggae/Dancehall créées"
+
+# ===========================================
+# PLAYLISTS ROCK
+# ===========================================
+
+# Playlist Rock 1: Nouveautés Rock vol.1 (Standard)
+rock_vol1_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.1') do |playlist|
+  playlist.description = 'Les dernières nouveautés rock'
+  playlist.category = 'Rock'
+  playlist.premium = false
+end
+
+rock_vol1_videos = [
+  { title: 'Do Me Like That', youtube_id: 'ocJWc7DgGp8' },
+  { title: 'Hollywood Forever', youtube_id: '0trg8w9Wtsw' },
+  { title: 'Up From The Bottom', youtube_id: '97Mj6pXYMd8' },
+  { title: 'Heavy Is The Crown', youtube_id: '5FrhtahQiRc' },
+  { title: 'Afterlife', youtube_id: 'mTduyC2zPXg' },
+  { title: 'Eyes Closed', youtube_id: 'v08qmr8m_-w' },
+  { title: 'Lovesick Lullaby', youtube_id: 'WfwUrz7s_Vg' },
+  { title: 'HONEY (ARE U COMING?)', youtube_id: 'HZnNt9nnEhw' },
+  { title: 'The Emptiness Machine', youtube_id: 'SRXH9AbT280' },
+  { title: 'Wake Up', youtube_id: 'q392mSz4VeY' }
+]
+
+rock_vol1_videos.each do |video|
+  rock_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Rock 2: Nouveautés Rock vol.2 (Premium)
+rock_vol2_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.2') do |playlist|
+  playlist.description = 'Suite des nouveautés rock'
+  playlist.category = 'Rock'
+  playlist.premium = true
+end
+
+rock_vol2_videos = [
+  { title: 'Watch The World Burn', youtube_id: 'qMXESlny4-I' },
+  { title: 'DArkSide', youtube_id: '3Nt37RGbVjo' },
+  { title: 'Outta My Head', youtube_id: 'z7mAqJE2sHo' },
+  { title: 'Ash In The Wind', youtube_id: '_A571q0YbhQ' },
+  { title: 'The Funeral', youtube_id: '02T6xLNXEE0' },
+  { title: 'Mary On A Cross', youtube_id: 'k5mX3NkA7jM' },
+  { title: 'Believer', youtube_id: '7wtfhZwyrcc' },
+  { title: 'Mayday', youtube_id: 'o5hWEa1w6Z8' },
+  { title: 'Two Faced', youtube_id: 'kivUsDGWojU' },
+  { title: 'Prequel', youtube_id: 'hX0lhueeib8' }
+]
+
+rock_vol2_videos.each do |video|
+  rock_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Rock 3: Nouveautés Rock vol.3 (Premium)
+rock_vol3_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.3') do |playlist|
+  playlist.description = 'Final des nouveautés rock'
+  playlist.category = 'Rock'
+  playlist.premium = true
+end
+
+rock_vol3_videos = [
+  { title: 'WONDERWaLL', youtube_id: 'pwYCbAsF3EI' },
+  { title: 'Take Me To The Beach', youtube_id: '5Duje_sZko8' },
+  { title: 'Favour', youtube_id: 'HjSF2cpDU8s' },
+  { title: 'Taxi', youtube_id: 'sqFickrNDrk' },
+  { title: 'maybe', youtube_id: '9xht4JIOfjU' },
+  { title: 'OFF MY FACE', youtube_id: '8n4S1-ctsZw' },
+  { title: 'Top 10 statues that cried blood', youtube_id: 'LxxlN_FhLac' },
+  { title: 'Woman on the Moon', youtube_id: '2wI64khXXQw' },
+  { title: 'Navigating', youtube_id: '07YtBj3BEBQ' },
+  { title: 'Somebody Else', youtube_id: 'bjJdqpHDwq8' }
+]
+
+rock_vol3_videos.each do |video|
+  rock_vol3_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Rock créées"
+
+# ===========================================
+# PLAYLISTS HIP HOP
+# ===========================================
+
+# Playlist Hip Hop 1: Nouveautés Hip Hop Vol.1 (Standard)
+hiphop_vol1_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.1') do |playlist|
+  playlist.description = 'Les dernières nouveautés hip hop'
+  playlist.category = 'Hip Hop'
+  playlist.premium = false
+end
+
+hiphop_vol1_videos = [
+  { title: 'Young Black & Rich', youtube_id: 'F3qWBh7jZZ0' },
+  { title: 'They Wanna Have Fun', youtube_id: 'Hvv2tLVQ78E' },
+  { title: 'Bodies', youtube_id: '_hkoMopfRJU' },
+  { title: 'just say dat', youtube_id: '8gy-Y9tWK6M' },
+  { title: 'Which One', youtube_id: '9-dEHfSCZUQ' },
+  { title: 'Cant Go Broke (Remix)', youtube_id: 'OkB-pO74XK8' },
+  { title: 'Blow My High', youtube_id: '1Me0CGJXNqI' },
+  { title: 'Outside', youtube_id: 'QTbQMfWxZu8' },
+  { title: 'Clap', youtube_id: '1MSap_AkGOM' },
+  { title: 'forever be mine (feat. Wizkid)', youtube_id: 'jBaL41mKS8U' }
+]
+
+hiphop_vol1_videos.each do |video|
+  hiphop_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Hip Hop 2: Nouveautés Hip Hop Vol.2 (Premium)
+hiphop_vol2_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.2') do |playlist|
+  playlist.description = 'Suite des nouveautés hip hop'
+  playlist.category = 'Hip Hop'
+  playlist.premium = true
+end
+
+hiphop_vol2_videos = [
+  { title: 'WHERE WAS YOU', youtube_id: 'um-uRGkT8GU' },
+  { title: 'Somebody', youtube_id: 'qB7kLilZWwg' },
+  { title: 'BAND4BAND', youtube_id: 'pDddlvCfTiw' },
+  { title: 'Trunks (From "Highest 2 Lowest")', youtube_id: 'IN1Tbi7PRJQ' },
+  { title: 'NO COMMENTS', youtube_id: '5A_NqVSl1DQ' },
+  { title: 'tv off', youtube_id: 'U8F5G5wR1mk' },
+  { title: 'Planet Out', youtube_id: 'g3GpuKkqaYE' },
+  { title: 'I Might Be', youtube_id: 'ig3EDX_i0r4' },
+  { title: 'STOP PLAYING WITH ME', youtube_id: 'VpzPzFQVPK8' },
+  { title: 'WHATCHU KNO ABOUT ME', youtube_id: 'wyzSmQPuCJ0' }
+]
+
+hiphop_vol2_videos.each do |video|
+  hiphop_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+# Playlist Hip Hop 3: Nouveautés Hip Hop Vol.3 (Premium)
+hiphop_vol3_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.3') do |playlist|
+  playlist.description = 'Final des nouveautés hip hop'
+  playlist.category = 'Hip Hop'
+  playlist.premium = true
+end
+
+hiphop_vol3_videos = [
+  { title: 'WHAT DID I MISS', youtube_id: 'Lx4gPURH35g' },
+  { title: 'Chicken Grease', youtube_id: '_gf3bkP6B4U' },
+  { title: 'Like That', youtube_id: 'N9bKBAA22Go' },
+  { title: 'Identity Theft', youtube_id: 'f2B4Zn2N7kI' },
+  { title: 'NOKIA', youtube_id: '8ekJMC8OtGU' },
+  { title: 'All The Way', youtube_id: '7kyHvPNbugk' },
+  { title: 'Touch Down', youtube_id: 'pRt6cCpGaBU' },
+  { title: 'Ring Ring Ring', youtube_id: 'U85bOgG7DWM' },
+  { title: 'Finest', youtube_id: 'vJJ7Yt-uqJE' },
+  { title: 'Type Shit', youtube_id: 'I0fgkcTbBoI' }
+]
+
+hiphop_vol3_videos.each do |video|
+  hiphop_vol3_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+    v.title = video[:title]
+  end
+end
+
+puts "✅ Playlists Hip Hop créées"
+
+puts "🎉 Toutes les nouvelles playlists ont été créées avec succès !"
+puts "📊 Résumé :"
+puts "   - Pop: 3 playlists (1 standard + 2 premium)"
+puts "   - Afro: 3 playlists (1 standard + 2 premium)" 
+puts "   - Electro: 2 playlists (1 standard + 1 premium)"
+puts "   - Reggae: 3 playlists (1 standard + 2 premium)"
+puts "   - Rock: 3 playlists (1 standard + 2 premium)"
+puts "   - Hip Hop: 3 playlists (1 standard + 2 premium)"
+puts "   - Total: 17 playlists (170 vidéos)"
