@@ -1,25 +1,19 @@
 <% 
-  is_unlocked = @unlocked_playlists&.include?(playlist) || false
-  unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s
-  can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked
+  # Déterminer si la playlist est débloquée
+  is_unlocked = false
+  if defined?(@unlocked_playlists) && @unlocked_playlists
+    is_unlocked = @unlocked_playlists.include?(playlist)
+  end
+  if defined?(@unlocked_exclusive_playlists) && @unlocked_exclusive_playlists
+    is_unlocked = is_unlocked || @unlocked_exclusive_playlists.include?(playlist)
+  end
+  
+  # Déterminer si l'utilisateur peut accéder à la playlist
+  can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || (playlist.premium == false || playlist.premium.nil?)
 %>
 
 <div class="playlist-item">
   <div class="playlist-card-uniform">
-    <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
-      <%= link_to new_playlist_game_path(playlist), class: "absolute inset-0 z-30" do %>
-        <span style="display: none;">Jouer à <%= playlist.title %></span>
-      <% end %>
-    <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-      <div class="playlist-overlay-uniform">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        <div class="overlay-title">Déjà jouée</div>
-        <div class="overlay-subtitle">Playlist terminée</div>
-      </div>
-    <% end %>
-    
     <div class="playlist-image-uniform">
       <% unless can_access %>
         <div class="playlist-overlay-uniform">
@@ -70,5 +64,19 @@
         <span><%= pluralize(playlist.videos.count, 'titre') %></span>
       </div>
     </div>
+    
+    <% if can_access && user_signed_in? && !current_user.scores.exists?(playlist: playlist) %>
+      <%= link_to new_playlist_game_path(playlist), class: "absolute inset-0 z-30" do %>
+        <span style="display: none;">Jouer à <%= playlist.title %></span>
+      <% end %>
+    <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
+      <div class="playlist-overlay-uniform">
+        <svg fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+        </svg>
+        <div class="overlay-title">Déjà jouée</div>
+        <div class="overlay-subtitle">Playlist terminée</div>
+      </div>
+    <% end %>
   </div>
 </div>
