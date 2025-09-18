@@ -34,9 +34,9 @@
     <!-- Tags de catégories -->
     <div id="categories-section" class="mb-12">
       <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 Par Catégorie</h2>
-        <% categories = ['Pop', 'Rap', 'Afro Music', 'Hits', 'Electro', 'Rock', 'Standards', 'Premium', 'Playlists Exclusives'] %>
+        <% categories = ['Pop', 'Rap', 'Hits', 'Afro Music', 'Electro', 'Rock', 'Reggae', 'Afro', 'Hip Hop', 'Standards', 'Premium', 'Exclusives'] %>
       <div class="categories-grid mb-8">
-        <% ['Pop', 'Rap', 'Afro Music', 'Hits', 'Electro', 'Rock', 'Standards', 'Premium', 'Playlists Exclusives'].each do |category| %>
+        <% ['Pop', 'Rap', 'Hits', 'Afro Music', 'Electro', 'Rock', 'Reggae', 'Afro', 'Hip Hop', 'Standards', 'Premium', 'Exclusives'].each do |category| %>
           <button class="category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
               <%= category %>
             </button>
@@ -72,8 +72,8 @@
               playlist_type = 'premium'
             else
               playlist_type = 'standard'
-                end
-              %>
+            end
+          %>
           <div class="playlist-item <%= playlist_type %>-playlist" 
                data-category="<%= playlist.category || 'Other' %>" 
                data-type="<%= playlist_type %>">
@@ -223,7 +223,7 @@
   /* Styles pour les tags de catégories */
 .categories-grid {
   display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-columns: repeat(4, 1fr) !important;
   grid-template-rows: repeat(3, 1fr) !important;
   gap: 12px !important;
   width: 100% !important;
@@ -572,6 +572,7 @@
         
         // Filtrer les playlists dans la liste unifiée
         const allPlaylistItems = document.querySelectorAll('#all-playlists-section .playlist-item');
+        
         allPlaylistItems.forEach(item => {
           const itemCategory = item.getAttribute('data-category');
           const itemType = item.getAttribute('data-type');
@@ -581,7 +582,7 @@
             shouldShow = itemType === 'standard';
           } else if (category === 'Premium') {
             shouldShow = itemType === 'premium';
-          } else if (category === 'Playlists Exclusives') {
+          } else if (category === 'Exclusives') {
             shouldShow = itemType === 'exclusive';
           } else {
             // Filtrer par catégorie musicale
@@ -624,7 +625,7 @@
             shouldShow = itemType === 'standard';
           } else if (category === 'Premium') {
             shouldShow = itemType === 'premium';
-          } else if (category === 'Playlists Exclusives') {
+          } else if (category === 'Exclusives') {
             shouldShow = itemType === 'exclusive';
           } else {
             // Filtrer par catégorie musicale
