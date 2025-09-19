@@ -4,15 +4,15 @@
 
 # Création d'un utilisateur admin
 admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
-  user.password = '123456'
-  user.admin = true
-end
-
-# Création d'un utilisateur normal
-user = User.find_or_create_by!(email: 'user@example.com') do |user|
-  user.password = '234567'
-end
-
+    user.password = '123456'
+    user.admin = true
+  end
+  
+  # Création d'un utilisateur normal
+  user = User.find_or_create_by!(email: 'user@example.com') do |user|
+    user.password = '234567'
+  end
+  
 puts "✅ Utilisateurs créés"
 
 # ===========================================
@@ -23,9 +23,10 @@ puts "✅ Utilisateurs créés"
 urban_fresh_playlist = Playlist.find_or_create_by!(title: 'Fraîcheur Urbaine vol.1') do |playlist|
   playlist.description = 'Les nouveaux talents de la pop française'
   playlist.category = 'Pop'
-  playlist.premium = false
-end
-
+  playlist.save!
+    playlist.premium = false
+  end
+  
 urban_fresh_videos = [
   { title: 'Tout Doux', youtube_id: 'LM-qPkGHSaA' },
   { title: 'Tkt Pas', youtube_id: 'd6X_0BDO6Tg' },
@@ -41,15 +42,16 @@ urban_fresh_videos = [
 
 urban_fresh_videos.each do |video|
   urban_fresh_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
-# Playlist Pop 2: Futurs Hits – Pop & Global Vibes vol.1 (Premium)
+  
+# Playlist Hits 1: Futurs Hits – Pop & Global Vibes vol.1 (Premium)
 futurs_hits_playlist = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.1') do |playlist|
   playlist.description = 'Futurs Hits – Pop & Global Vibes - Volume 1'
-  playlist.category = 'Pop'
-  playlist.premium = true
+  playlist.category = 'Hits'
+  playlist.save!
+    playlist.premium = true
 end
 
 futurs_hits_videos = [
@@ -67,14 +69,15 @@ futurs_hits_videos = [
 
 futurs_hits_videos.each do |video|
   futurs_hits_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
-# Playlist Pop 3: Futurs Hits – Pop & Global Vibes vol.2 (Premium)
+  
+# Playlist Hits 2: Futurs Hits – Pop & Global Vibes vol.2 (Premium)
 futurs_hits_vol2_playlist = Playlist.find_or_create_by!(title: 'Futurs Hits – Pop & Global Vibes vol.2') do |playlist|
   playlist.description = 'Futurs Hits – Pop & Global Vibes - Volume 2'
-  playlist.category = 'Pop'
+  playlist.category = 'Hits'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -93,11 +96,71 @@ futurs_hits_vol2_videos = [
 
 futurs_hits_vol2_videos.each do |video|
   futurs_hits_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
+  
+# Playlist Pop 2: Indie Français vol.1 (Standard)
+indie_francais_vol1_playlist = Playlist.find_or_create_by!(title: 'Indie Français vol.1') do |playlist|
+  playlist.description = 'Pop & Indie Francophone 2025'
+  playlist.category = 'Pop'
+  playlist.save!
+    playlist.premium = false
 end
 
+indie_francais_vol1_videos = [
+  { title: 'Mille vagues', youtube_id: 'jYeMHMCyGRo' },
+  { title: 'This Country', youtube_id: '3VTFNxY0cGQ' },
+  { title: 'Tout tout', youtube_id: 'qqttfzzT6rU' },
+  { title: 'Reine de cœur', youtube_id: 'qS0U_Jf8Q3U' },
+  { title: 'Fragile', youtube_id: 'rFkijj7FfR4' },
+  { title: 'Toujours les vacances', youtube_id: 'ek8o8-z7hgU' },
+  { title: 'Tu me mens', youtube_id: 'LrYzCVsaqrA' },
+  { title: 'Allons Voir', youtube_id: 'ykpDVaMHGT4' },
+  { title: 'Vinyle', youtube_id: '1umWzAke9D8' },
+  { title: 'À deux', youtube_id: '4-FtDa3KYi4' }
+]
+
+indie_francais_vol1_videos.each do |video|
+  indie_francais_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+
+# Playlist Pop 3: Indie Français vol.2 (Premium)
+indie_francais_vol2_playlist = Playlist.find_or_create_by!(title: 'Indie Français vol.2') do |playlist|
+  playlist.description = 'Pop & Indie Francophone 2025 (suite)'
+  playlist.category = 'Pop'
+  playlist.save!
+    playlist.premium = true
+end
+
+indie_francais_vol2_videos = [
+  { title: 'I Can Do Anything', youtube_id: 'hLv95TyVWYg' },
+  { title: 'Rien du tout', youtube_id: 'EabdTJwvuuE' },
+  { title: 'Métamorphose', youtube_id: 'PkHBiElDtUs' },
+  { title: 'Au secours les vacances', youtube_id: 'IaxtJaWNhLY' },
+  { title: 'Sarah Sahara feat. billie', youtube_id: 'g1HzxkoZjuY' },
+  { title: 'Pas Bourré', youtube_id: 'y7sXD3e5leE' },
+  { title: 'Bouche en Feu', youtube_id: '5B-2_znK_S4' },
+  { title: 'Pas Toi', youtube_id: 'XLb4s24L9QI' },
+  { title: 'Coups de soleil', youtube_id: 'VspyR320paA' },
+  { title: 'Je t\'accuse', youtube_id: 'U3_djdjsI5Q' }
+]
+
+indie_francais_vol2_videos.each do |video|
+  indie_francais_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
+      v.title = video[:title]
+    end
+  end
+  
 puts "✅ Playlists Pop créées"
+
+# ===========================================
+# PLAYLISTS HITS
+# ===========================================
+
+puts "✅ Playlists Hits créées"
 
 # ===========================================
 # PLAYLISTS AFRO
@@ -107,6 +170,7 @@ puts "✅ Playlists Pop créées"
 afro_vibes_vol1_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 1') do |playlist|
   playlist.description = 'Les meilleures vibes afro du moment'
   playlist.category = 'Afro'
+  playlist.save!
   playlist.premium = false
 end
 
@@ -125,15 +189,16 @@ afro_vibes_vol1_videos = [
 
 afro_vibes_vol1_videos.each do |video|
   afro_vibes_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
+  
 # Playlist Afro 2: Afro Vibes Vol. 2 (Premium)
 afro_vibes_vol2_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 2') do |playlist|
   playlist.description = 'Suite des meilleures vibes afro'
   playlist.category = 'Afro'
-  playlist.premium = true
+  playlist.save!
+    playlist.premium = true
 end
 
 afro_vibes_vol2_videos = [
@@ -151,15 +216,16 @@ afro_vibes_vol2_videos = [
 
 afro_vibes_vol2_videos.each do |video|
   afro_vibes_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
+  
 # Playlist Afro 3: Afro Vibes Vol. 3 (Premium)
 afro_vibes_vol3_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 3') do |playlist|
   playlist.description = 'Final des meilleures vibes afro'
   playlist.category = 'Afro'
-  playlist.premium = true
+  playlist.save!
+    playlist.premium = true
 end
 
 afro_vibes_vol3_videos = [
@@ -177,10 +243,10 @@ afro_vibes_vol3_videos = [
 
 afro_vibes_vol3_videos.each do |video|
   afro_vibes_vol3_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
+  
 puts "✅ Playlists Afro créées"
 
 # ===========================================
@@ -191,6 +257,7 @@ puts "✅ Playlists Afro créées"
 electrons_libres_vol1_playlist = Playlist.find_or_create_by!(title: 'Électrons libres Vol. 1') do |playlist|
   playlist.description = 'Electro & Chill Vibes 2025'
   playlist.category = 'Electro'
+  playlist.save!
   playlist.premium = false
 end
 
@@ -209,17 +276,18 @@ electrons_libres_vol1_videos = [
 
 electrons_libres_vol1_videos.each do |video|
   electrons_libres_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
 
 # Playlist Electro 2: Électrons libres Vol. 2 (Premium)
 electrons_libres_vol2_playlist = Playlist.find_or_create_by!(title: 'Électrons libres Vol. 2') do |playlist|
   playlist.description = 'Suite Electro & Chill Vibes'
   playlist.category = 'Electro'
-  playlist.premium = true
-end
-
+  playlist.save!
+    playlist.premium = true
+  end
+  
 electrons_libres_vol2_videos = [
   { title: 'I Started A Fire', youtube_id: 'bthFcQOhQxY' },
   { title: 'Runaway', youtube_id: 'P9RFU4ENucM' },
@@ -235,9 +303,9 @@ electrons_libres_vol2_videos = [
 
 electrons_libres_vol2_videos.each do |video|
   electrons_libres_vol2_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
 
 puts "✅ Playlists Electro créées"
 
@@ -249,6 +317,7 @@ puts "✅ Playlists Electro créées"
 dancehall_vol1_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 1') do |playlist|
   playlist.description = 'Les meilleures vibes dancehall et caribéennes'
   playlist.category = 'Reggae'
+  playlist.save!
   playlist.premium = false
 end
 
@@ -267,14 +336,15 @@ dancehall_vol1_videos = [
 
 dancehall_vol1_videos.each do |video|
   dancehall_vol1_playlist.videos.find_or_create_by!(youtube_id: video[:youtube_id]) do |v|
-    v.title = video[:title]
+      v.title = video[:title]
+    end
   end
-end
-
+  
 # Playlist Reggae 2: Dancehall & Island Vibes Vol. 2 (Premium)
 dancehall_vol2_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 2') do |playlist|
   playlist.description = 'Suite des vibes dancehall et caribéennes'
   playlist.category = 'Reggae'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -301,6 +371,7 @@ end
 dancehall_vol3_playlist = Playlist.find_or_create_by!(title: 'Dancehall & Island Vibes Vol. 3') do |playlist|
   playlist.description = 'Final des vibes dancehall et caribéennes'
   playlist.category = 'Reggae'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -333,6 +404,7 @@ puts "✅ Playlists Reggae/Dancehall créées"
 rock_vol1_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.1') do |playlist|
   playlist.description = 'Les dernières nouveautés rock'
   playlist.category = 'Rock'
+  playlist.save!
   playlist.premium = false
 end
 
@@ -359,6 +431,7 @@ end
 rock_vol2_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.2') do |playlist|
   playlist.description = 'Suite des nouveautés rock'
   playlist.category = 'Rock'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -385,6 +458,7 @@ end
 rock_vol3_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rock vol.3') do |playlist|
   playlist.description = 'Final des nouveautés rock'
   playlist.category = 'Rock'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -410,13 +484,14 @@ end
 puts "✅ Playlists Rock créées"
 
 # ===========================================
-# PLAYLISTS HIP HOP
+# PLAYLISTS RAP
 # ===========================================
 
-# Playlist Hip Hop 1: Nouveautés Hip Hop Vol.1 (Standard)
-hiphop_vol1_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.1') do |playlist|
-  playlist.description = 'Les dernières nouveautés hip hop'
-  playlist.category = 'Hip Hop'
+# Playlist Rap 1: Nouveautés Rap Vol.1 (Standard)
+hiphop_vol1_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rap Vol.1') do |playlist|
+  playlist.description = 'Les dernières nouveautés rap'
+  playlist.category = 'Rap'
+  playlist.save!
   playlist.premium = false
 end
 
@@ -439,10 +514,11 @@ hiphop_vol1_videos.each do |video|
   end
 end
 
-# Playlist Hip Hop 2: Nouveautés Hip Hop Vol.2 (Premium)
-hiphop_vol2_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.2') do |playlist|
-  playlist.description = 'Suite des nouveautés hip hop'
-  playlist.category = 'Hip Hop'
+# Playlist Rap 2: Nouveautés Rap Vol.2 (Premium)
+hiphop_vol2_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rap Vol.2') do |playlist|
+  playlist.description = 'Suite des nouveautés rap'
+  playlist.category = 'Rap'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -465,10 +541,11 @@ hiphop_vol2_videos.each do |video|
   end
 end
 
-# Playlist Hip Hop 3: Nouveautés Hip Hop Vol.3 (Premium)
-hiphop_vol3_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Hip Hop Vol.3') do |playlist|
-  playlist.description = 'Final des nouveautés hip hop'
-  playlist.category = 'Hip Hop'
+# Playlist Rap 3: Nouveautés Rap Vol.3 (Premium)
+hiphop_vol3_playlist = Playlist.find_or_create_by!(title: 'Nouveautés Rap Vol.3') do |playlist|
+  playlist.description = 'Final des nouveautés rap'
+  playlist.category = 'Rap'
+  playlist.save!
   playlist.premium = true
 end
 
@@ -491,14 +568,15 @@ hiphop_vol3_videos.each do |video|
   end
 end
 
-puts "✅ Playlists Hip Hop créées"
+puts "✅ Playlists Rap créées"
 
 puts "🎉 Toutes les nouvelles playlists ont été créées avec succès !"
 puts "📊 Résumé :"
-puts "   - Pop: 3 playlists (1 standard + 2 premium)"
+puts "   - Pop: 3 playlists (2 standard + 1 premium)"
+puts "   - Hits: 2 playlists (0 standard + 2 premium)"
 puts "   - Afro: 3 playlists (1 standard + 2 premium)" 
 puts "   - Electro: 2 playlists (1 standard + 1 premium)"
 puts "   - Reggae: 3 playlists (1 standard + 2 premium)"
 puts "   - Rock: 3 playlists (1 standard + 2 premium)"
-puts "   - Hip Hop: 3 playlists (1 standard + 2 premium)"
-puts "   - Total: 17 playlists (170 vidéos)"
+puts "   - Rap: 13 playlists (4 standard + 9 premium)"
+puts "   - Total: 29 playlists (290 vidéos)"

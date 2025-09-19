@@ -12,8 +12,7 @@
   can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || (playlist.premium == false || playlist.premium.nil?)
 %>
 
-<div class="playlist-item">
-  <div class="playlist-card-uniform">
+<div class="playlist-card-uniform">
     <div class="playlist-image-uniform">
       <% unless can_access %>
         <div class="playlist-overlay-uniform">
@@ -78,5 +77,4 @@
         <div class="overlay-subtitle">Playlist terminée</div>
       </div>
     <% end %>
-  </div>
 </div>
