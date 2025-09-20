@@ -275,9 +275,8 @@ class User < ApplicationRecord
     # Calculer la moyenne des playlists jouées par jour sur les 7 derniers jours
     last_7_days = 7.days.ago..Time.current
     
-    # Compter les jeux uniques par jour (exclure les playlists récompenses)
+    # Compter les jeux uniques par jour (inclure tous les types de playlists)
     daily_playlists = games.joins(:playlist)
-                          .where.not(playlists: { id: reward_playlist_ids })
                           .where(games: { created_at: last_7_days })
                           .group("DATE(games.created_at)")
                           .count
@@ -297,9 +296,7 @@ class User < ApplicationRecord
   def watch_time_minutes
     # Estimer le temps de visionnage basé sur les swipes
     # Chaque swipe = ~30 secondes de visionnage (vidéo courte)
-    total_swipes = swipes.joins(:playlist)
-                        .where.not(playlists: { id: reward_playlist_ids })
-                        .count
+    total_swipes = swipes.joins(:playlist).count
     
     # 30 secondes par swipe = 0.5 minutes
     (total_swipes * 0.5).round
@@ -328,14 +325,12 @@ class User < ApplicationRecord
   
   def likes_count
     swipes.joins(:playlist)
-         .where.not(playlists: { id: reward_playlist_ids })
          .where(action: 'like')
          .count
   end
   
   def dislikes_count
     swipes.joins(:playlist)
-         .where.not(playlists: { id: reward_playlist_ids })
          .where(action: 'dislike')
          .count
   end

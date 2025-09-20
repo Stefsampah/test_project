@@ -1,29 +1,20 @@
 <% 
   # Déterminer si la playlist est débloquée
-  is_unlocked = false
-  if defined?(@unlocked_playlists) && @unlocked_playlists
-    is_unlocked = @unlocked_playlists.include?(playlist)
-  end
-  if defined?(@unlocked_exclusive_playlists) && @unlocked_exclusive_playlists
-    is_unlocked = is_unlocked || @unlocked_exclusive_playlists.include?(playlist)
-  end
+  is_unlocked = local_assigns[:is_unlocked] || false
   
-  # Déterminer si l'utilisateur peut accéder à la playlist
-  can_access = is_unlocked || (playlist.premium == false || playlist.premium.nil?)
-  
-  # Déterminer si l'overlay doit s'afficher (pour les playlists premium non débloquées)
-  show_overlay = playlist.premium? && !is_unlocked
+  # Pour la boutique, on peut toujours "acheter" (même si déjà achetée, on va vers la page d'achat)
+  can_access = true
 %>
 
 <div class="playlist-card-uniform">
     <div class="playlist-image-uniform">
-      <% if show_overlay %>
+      <% unless is_unlocked %>
         <div class="playlist-overlay-uniform">
           <svg fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
           </svg>
           <div class="overlay-title">Contenu Premium</div>
-          <div class="overlay-subtitle">500 points requis pour débloquer</div>
+          <div class="overlay-subtitle"><%= playlist.points_required %> points requis</div>
         </div>
       <% end %>
       
@@ -46,18 +37,14 @@
       
       <div class="playlist-tags-uniform">
         <% if is_unlocked %>
-          <span class="playlist-tag-uniform" style="background-color: #ff0000; color: white;">DÉBLOQUÉE</span>
-        <% elsif playlist.premium? %>
-          <span class="playlist-tag-uniform" style="background-color: #ff00ff; color: white;">PREMIUM</span>
-        <% elsif playlist.exclusive? %>
-          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;">EXCLUSIF</span>
+          <span class="playlist-tag-uniform" style="background-color: #10b981; color: white;">DÉJÀ ACHETÉE</span>
+        <% else %>
+          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;">PREMIUM</span>
         <% end %>
         <% if playlist.category.present? %>
           <span class="playlist-tag-uniform" style="background-color: #374151; color: #9ca3af;"><%= playlist.category.upcase %></span>
         <% end %>
-        <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-          <span class="playlist-tag-uniform" style="background-color: #10b981; color: white;">JOUÉE</span>
-        <% end %>
+        <span class="playlist-tag-uniform" style="background-color: #059669; color: white;">💰 <%= playlist.points_required %> POINTS</span>
       </div>
       
       <div class="playlist-description-uniform"><%= playlist.description %></div>
@@ -67,17 +54,19 @@
       </div>
     </div>
     
-    <% if can_access && user_signed_in? && !current_user.scores.exists?(playlist: playlist) %>
-      <%= link_to new_playlist_game_path(playlist), class: "absolute inset-0 z-30" do %>
-        <span style="display: none;">Jouer à <%= playlist.title %></span>
-      <% end %>
-    <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
+    <!-- Bouton d'achat -->
+    <%= link_to buy_playlist_store_path(playlist), class: "absolute inset-0 z-30" do %>
+      <span style="display: none;">Acheter <%= playlist.title %></span>
+    <% end %>
+    
+    <!-- Overlay pour les playlists déjà achetées -->
+    <% if is_unlocked %>
       <div class="playlist-overlay-uniform">
         <svg fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
         </svg>
-        <div class="overlay-title">Déjà jouée</div>
-        <div class="overlay-subtitle">Playlist terminée</div>
+        <div class="overlay-title">Déjà achetée</div>
+        <div class="overlay-subtitle">Voir les détails</div>
       </div>
     <% end %>
 </div>

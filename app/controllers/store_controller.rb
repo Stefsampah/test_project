@@ -14,7 +14,14 @@ class StoreController < ApplicationController
       { name: "VIP", price: 9.99, description: "Débloque toutes les playlists premium" }
     ]
 
+    # Exclure les playlists Challenge Reward (récompenses gagnées, pas achetées)
+    reward_playlist_ids = Playlist.where("LOWER(title) LIKE ? OR LOWER(title) LIKE ? OR LOWER(title) LIKE ?", 
+                                         "%reward%", "%récompense%", "%challenge%").pluck(:id)
+    
     @premium_playlists = Playlist.where(premium: true)
+                                 .where.not(id: reward_playlist_ids)
+                                 .order(:title)
+    
     @unlocked_playlists = current_user.user_playlist_unlocks.includes(:playlist).map(&:playlist)
   end
 
