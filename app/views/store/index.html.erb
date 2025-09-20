@@ -21,24 +21,31 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <% @point_packs.each_with_index do |pack, index| %>
-          <div class="rounded-xl p-6 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:scale-105 overflow-hidden relative" 
+          <div class="rounded-xl p-6 border border-gray-700 overflow-hidden relative" 
                style="background-image: url('/assets/store/<%= pack[:points] <= 500 ? 'lovepik.png' : 'trove_of_coins.png' %>'); background-size: cover; background-position: center;">
             <!-- Overlay gradient -->
             <div class="absolute inset-0 bg-gradient-to-br from-purple-600/60 to-blue-600/60 rounded-xl"></div>
+            
+            <!-- Overlay "Bientôt disponible" -->
+            <div class="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center z-30">
+              <div class="text-center">
+                <div class="text-4xl mb-2">🚧</div>
+                <div class="text-white font-bold text-lg mb-2">Bientôt disponible</div>
+                <div class="text-purple-200 text-sm">Système d'achat in-app en cours de développement</div>
+              </div>
+            </div>
             
             <div class="relative z-10 text-center">
               <h3 class="text-xl font-semibold text-white mb-2"><%= pack[:name] %></h3>
               <div class="text-3xl font-bold text-purple-400 mb-2"><%= pack[:price] %> €</div>
               <p class="text-gray-300 text-sm mb-4"><%= pack[:description] %></p>
               
-              <%= button_to buy_points_store_path(pack_id: index), 
-                          method: :post, 
-                          class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 relative z-20" do %>
+              <button disabled class="w-full bg-gray-600 text-gray-400 font-semibold py-3 px-6 rounded-lg cursor-not-allowed">
                 <span class="flex items-center justify-center">
-                  <span class="mr-2">🛒</span>
-                  Acheter
+                  <span class="mr-2">🔒</span>
+                  Indisponible
                 </span>
-              <% end %>
+              </button>
             </div>
           </div>
         <% end %>
@@ -54,24 +61,31 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @subscriptions.each do |subscription| %>
-          <div class="rounded-xl p-8 border border-yellow-500 hover:border-yellow-400 transition-all duration-300 transform hover:scale-105 overflow-hidden relative"
+          <div class="rounded-xl p-8 border border-yellow-500 overflow-hidden relative"
                style="background-image: url('/assets/store/6070880.jpg'); background-size: cover; background-position: center;">
             <!-- Overlay gradient -->
             <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/50 to-orange-600/50 rounded-xl"></div>
+            
+            <!-- Overlay "Bientôt disponible" -->
+            <div class="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center z-30">
+              <div class="text-center">
+                <div class="text-4xl mb-2">🚧</div>
+                <div class="text-white font-bold text-lg mb-2">Bientôt disponible</div>
+                <div class="text-yellow-200 text-sm">Système d'achat in-app en cours de développement</div>
+              </div>
+            </div>
             
             <div class="relative z-10 text-center">
               <h3 class="text-2xl font-bold text-white mb-2">Abonnement <%= subscription[:name] %></h3>
               <div class="text-4xl font-bold text-white mb-4"><%= subscription[:price] %> €</div>
               <p class="text-yellow-100 text-sm mb-6"><%= subscription[:description] %></p>
               
-              <%= button_to buy_subscription_store_path(subscription_type: subscription[:name].downcase), 
-                          method: :post, 
-                          class: "w-full bg-white text-orange-600 font-bold py-3 px-6 rounded-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 relative z-20" do %>
+              <button disabled class="w-full bg-gray-600 text-gray-400 font-bold py-3 px-6 rounded-lg cursor-not-allowed">
                 <span class="flex items-center justify-center">
-                  <span class="mr-2">🎟️</span>
-                  Acheter <%= subscription[:price] %> €
+                  <span class="mr-2">🔒</span>
+                  Indisponible
                 </span>
-              <% end %>
+              </button>
             </div>
           </div>
         <% end %>
@@ -118,8 +132,8 @@
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5.14v14l11-7-11-7z"/>
                       </svg>
-                    </div>
-                  <% end %>
+                  </div>
+                <% end %>
                 </div>
                 
                 <div class="playlist-text-uniform">
@@ -150,17 +164,17 @@
                 <% end %>
                 
                 <!-- Overlay pour les playlists déjà achetées -->
-                <% if is_unlocked %>
+                  <% if is_unlocked %>
                   <div class="playlist-overlay-uniform">
                     <svg fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                     </svg>
                     <div class="overlay-title">Déjà achetée</div>
                     <div class="overlay-subtitle">Voir les détails</div>
-                  </div>
-                <% end %>
+                    </div>
+                  <% end %>
+                </div>
               </div>
-            </div>
           <% end %>
         </div>
       <% else %>

@@ -158,8 +158,8 @@ class User < ApplicationRecord
     # Vérifier d'abord les conditions multiples si elles existent
     return false unless badge.conditions_met?(self)
     
-    # Utiliser total_points pour inclure les points achetés
-    current_score = total_points
+    # Utiliser game_points uniquement (pas les points achetés)
+    current_score = game_points
     
     current_score >= badge.points_required && !badges.include?(badge)
   end
@@ -174,8 +174,8 @@ class User < ApplicationRecord
     next_badges = {}
     
     Badge::BADGE_TYPES.each do |badge_type|
-      # Utiliser total_points pour inclure les points achetés
-      current_score = total_points
+      # Utiliser game_points uniquement (pas les points achetés)
+      current_score = game_points
       
       next_badge = Badge.where(badge_type: badge_type)
                        .where('points_required > ?', current_score)
