@@ -55,13 +55,6 @@ class User < ApplicationRecord
     (competitor_score + engager_score + critic_score) || 0
   end
 
-  def total_points
-    # Inclure les points achetés dans la boutique
-    purchased_points = self.points || 0
-    # challenger_score est déjà la somme des autres scores, éviter la double comptabilisation
-    game_points = challenger_score
-    purchased_points + game_points
-  end
 
   # Nouvelles méthodes pour les conditions multiples
   def win_ratio
@@ -352,9 +345,9 @@ class User < ApplicationRecord
     regularity_points + listening_points + critical_opinions_points
   end
   
-  # 5. Total des points (seulement les points gagnés pour les badges)
+  # 5. Total des points (points achetés + points de jeu)
   def total_points
-    game_points  # Pas de cumul avec les points achetés
+    purchased_points + game_points
   end
   
   # 6. Points achetés (pour débloquer du contenu uniquement)
