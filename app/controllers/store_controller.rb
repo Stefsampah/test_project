@@ -23,6 +23,7 @@ class StoreController < ApplicationController
                                  .order(:title)
     
     @unlocked_playlists = current_user.user_playlist_unlocks.includes(:playlist).map(&:playlist)
+    @unlocked_exclusive_playlists = [] # Pas de playlists exclusives dans la boutique
   end
 
   def buy_points
