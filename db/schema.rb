@@ -103,12 +103,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_10_154326) do
     t.datetime "unlocked_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "content_type"
-    t.string "icon"
-    t.boolean "claimed", default: false
-    t.datetime "claimed_at"
-    t.index ["claimed"], name: "index_rewards_on_claimed"
-    t.index ["content_type"], name: "index_rewards_on_content_type"
     t.index ["user_id", "badge_type", "quantity_required"], name: "index_rewards_on_user_badge_quantity", unique: true
     t.index ["user_id"], name: "index_rewards_on_user_id"
   end
