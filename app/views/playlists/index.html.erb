@@ -658,4 +658,29 @@ h3.text-lg.font-bold.text-white,
       });
     });
   });
+  
+  // Gestionnaire global pour les clics sur les playlists
+  document.addEventListener('click', function(event) {
+    const playlistCard = event.target.closest('.playlist-card-uniform');
+    
+    if (playlistCard) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Vérifier si c'est une playlist premium non débloquée
+      const overlay = playlistCard.querySelector('.playlist-overlay-uniform');
+      if (overlay) {
+        return;
+      }
+      
+      // Trouver le bouton dans la carte et exécuter son onclick
+      const button = playlistCard.querySelector('button[onclick]');
+      if (button) {
+        const onclickCode = button.getAttribute('onclick');
+        if (onclickCode) {
+          eval(onclickCode);
+        }
+      }
+    }
+  });
 </script>

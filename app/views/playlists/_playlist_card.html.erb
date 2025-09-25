@@ -1,15 +1,14 @@
 <% 
   # Déterminer si la playlist est débloquée
   is_unlocked = false
-  if defined?(@unlocked_playlists) && @unlocked_playlists
-    is_unlocked = @unlocked_playlists.include?(playlist)
-  end
-  if defined?(@unlocked_exclusive_playlists) && @unlocked_exclusive_playlists
-    is_unlocked = is_unlocked || @unlocked_exclusive_playlists.include?(playlist)
+  if user_signed_in?
+    # Vérifier si l'utilisateur a débloqué cette playlist ou s'il a suffisamment de points
+    is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist) || 
+                  current_user.total_points >= playlist.points_required
   end
   
   # Déterminer si l'utilisateur peut accéder à la playlist
-  can_access = is_unlocked || (playlist.premium == false || playlist.premium.nil?)
+  can_access = !playlist.premium? || is_unlocked
   
   # Déterminer si l'overlay doit s'afficher (pour les playlists premium non débloquées)
   show_overlay = playlist.premium? && !is_unlocked
@@ -88,17 +87,19 @@
       </div>
     </div>
     
-    <% if can_access && user_signed_in? && !current_user.scores.exists?(playlist: playlist) %>
-      <%= link_to new_playlist_game_path(playlist), class: "absolute inset-0 z-30" do %>
+    <% if playlist.premium? && !is_unlocked %>
+      <!-- Playlist premium non débloquée - pas de lien -->
+    <% elsif user_signed_in? %>
+      <!-- Playlist accessible - bouton vers le jeu -->
+      <button class="absolute inset-0 z-30 bg-transparent border-none cursor-pointer" 
+              onclick="window.location.href='<%= new_playlist_game_path(playlist) %>'">
         <span style="display: none;">Jouer à <%= playlist.title %></span>
-      <% end %>
-    <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-      <div class="playlist-overlay-uniform">
-        <svg fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        <div class="overlay-title">Déjà jouée</div>
-        <div class="overlay-subtitle">Playlist terminée</div>
-      </div>
+      </button>
+    <% else %>
+      <!-- Utilisateur non connecté - bouton vers connexion -->
+      <button class="absolute inset-0 z-30 bg-transparent border-none cursor-pointer" 
+              onclick="window.location.href='<%= new_user_session_path %>'">
+        <span style="display: none;">Se connecter pour jouer à <%= playlist.title %></span>
+      </button>
     <% end %>
 </div>

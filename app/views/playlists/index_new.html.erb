@@ -68,16 +68,23 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
               <% playlists.each do |playlist| %>
-                <% is_unlocked = @unlocked_playlists.include?(playlist) %>
-                <% unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s %>
-                <% can_access = is_unlocked || (user_signed_in? && current_user.total_points >= 500) || unlocked %>
+                <% 
+                  # Déterminer si la playlist est débloquée
+                  is_unlocked = false
+                  if user_signed_in?
+                    is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist) || 
+                                  current_user.total_points >= playlist.points_required
+                  end
+                  unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s
+                  can_access = !playlist.premium? || is_unlocked || unlocked
+                %>
               
                 <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
-                  <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
-                    <!-- Lien global sur toute la carte si l'utilisateur peut y accéder ET n'a pas encore joué -->
-                    <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
-                      <span style="display: none;">Jouer à <%= playlist.title %></span>
-                    <% end %>
+           <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
+             <!-- Lien global sur toute la carte si l'utilisateur peut y accéder ET n'a pas encore joué -->
+             <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
+               <span style="display: none;">Jouer à <%= playlist.title %></span>
+             <% end %>
                   <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
                     <!-- Overlay pour indiquer que c'est déjà joué -->
                     <div class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center">
@@ -222,25 +229,20 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12">
             <% playlists.each do |playlist| %>
               <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
-                <!-- Lien global sur toute la carte si l'utilisateur est connecté ET n'a pas encore joué -->
-                <% if user_signed_in? && !current_user.scores.exists?(playlist: playlist) %>
-                  <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <!-- Lien global sur toute la carte -->
+                <% if playlist.premium? && !is_unlocked %>
+                  <!-- Playlist premium non débloquée - pas de lien -->
+                <% elsif user_signed_in? %>
+                  <!-- Playlist accessible - lien vers le jeu -->
+                  <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
                     <span style="display: none;">Jouer à <%= playlist.title %></span>
                   <% end %>
-                <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-                  <!-- Overlay pour indiquer que c'est déjà joué -->
-                  <div class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center">
-                    <svg class="w-12 h-12 text-green-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                    <p class="text-white font-bold text-lg">Déjà jouée</p>
-                    <p class="text-gray-300 text-sm mt-1">Vous avez déjà terminé cette playlist</p>
-                  </div>
-                <% else %>
-                  <%= link_to new_user_session_path, class: "clickable-card" do %>
-                    <span style="display: none;">Jouer à <%= playlist.title %></span>
-                  <% end %>
-                <% end %>
+             <% else %>
+               <!-- Utilisateur non connecté - lien vers connexion -->
+               <%= link_to new_user_session_path, class: "clickable-card", data: { turbo: false } do %>
+                 <span style="display: none;">Se connecter pour jouer à <%= playlist.title %></span>
+               <% end %>
+             <% end %>
                 
                 <!-- Section image avec thumbnail YouTube - FORCÉ PREMIÈRE VIDÉO -->
                 <div class="playlist-image-section">

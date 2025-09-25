@@ -10,6 +10,11 @@ class Playlist < ApplicationRecord
   validates :title, presence: true
   validates :description, presence: true
   
+  # Méthode pour vérifier si la playlist est premium
+  def premium?
+    premium == true
+  end
+  
   # Points requis pour débloquer si la playlist est premium
   def points_required
     premium? ? 500 : 0
