@@ -41,32 +41,14 @@ class Score < ApplicationRecord
   end
 
   def self.calculate_total_scores
-    top_engager = calculate_top_engager_scores
-    best_ratio = calculate_best_ratio_scores
-    wise_critic = calculate_wise_critic_scores
-
-    # Combiner tous les scores avec le nouveau système
-    combined_scores = {}
-    
-    [top_engager, best_ratio, wise_critic].each do |scores|
-      scores.each do |score|
-        user_id = score[:user_id]
-        combined_scores[user_id] ||= { points: 0, badges: [] }
-        combined_scores[user_id][:points] += score[:points]
-        combined_scores[user_id][:badges].concat(score[:badges])
-      end
-    end
-
-    # Plus de badges temporaires quotidiens - système simplifié
-
-    # Convertir en tableau pour la vue
-    combined_scores.map do |user_id, data|
+    # Utiliser directement le score global de chaque utilisateur
+    User.all.map do |user|
       {
-        user_id: user_id,
-        points: data[:points],
-        badges: data[:badges]
+        user_id: user.id,
+        points: user.game_points,
+        badges: []
       }
-    end
+    end.sort_by { |score| -score[:points] }
   end
 
   def badges
