@@ -122,11 +122,16 @@
                     </div>
                   <% end %>
                   
-                  <% thumbnail_id = playlist.consistent_thumbnail %>
+                  <% thumbnail_id = playlist.videos.first&.youtube_id %>
                   <% if thumbnail_id %>
-                    <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                         alt="<%= playlist.title %>" 
-                         onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'">
+         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
+              alt="<%= playlist.title %>"
+              onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg?v=20250115'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};">
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
+                      <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5.14v14l11-7-11-7z"/>
+                      </svg>
+                    </div>
                   <% else %>
                     <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">

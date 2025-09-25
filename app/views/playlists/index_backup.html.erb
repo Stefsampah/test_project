@@ -113,12 +113,12 @@
                 <% end %>
                 
                 <!-- Thumbnail YouTube -->
-                <% thumbnail_id = playlist.consistent_thumbnail %>
+                <% thumbnail_id = playlist.videos.first&.youtube_id %>
                 <% if thumbnail_id %>
-                  <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                       alt="<%= playlist.title %>" 
-                       class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                       onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
+              alt="<%= playlist.title %>"
+              class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+              onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'"
                        style="background-image: none !important;">
                 <% else %>
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center">
@@ -241,12 +241,12 @@
                 <% end %>
                 
                 <!-- Thumbnail YouTube -->
-                <% thumbnail_id = playlist.consistent_thumbnail %>
+                <% thumbnail_id = playlist.videos.first&.youtube_id %>
                 <% if thumbnail_id %>
-                  <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                       alt="<%= playlist.title %>" 
-                       class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                       onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
+              alt="<%= playlist.title %>"
+              class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+              onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'"
                        style="background-image: none !important;">
                 <% else %>
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center">
@@ -358,12 +358,12 @@
                 end
               %>
               <!-- Thumbnail YouTube -->
-              <% thumbnail_id = playlist.consistent_thumbnail %>
+              <% thumbnail_id = playlist.videos.first&.youtube_id %>
               <% if thumbnail_id %>
-                <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                     alt="<%= playlist.title %>" 
-                     class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                     onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
+              alt="<%= playlist.title %>"
+              class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+              onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'"
                      style="background-image: none !important;">
               <% else %>
                 <div class="w-full h-full bg-gray-700 flex items-center justify-center">
@@ -464,12 +464,12 @@
                 %>
                 
                 <!-- Thumbnail YouTube -->
-                <% thumbnail_id = playlist.consistent_thumbnail %>
+                <% thumbnail_id = playlist.videos.first&.youtube_id %>
                 <% if thumbnail_id %>
-                  <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                       alt="<%= playlist.title %>" 
-                       class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                       onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
+              alt="<%= playlist.title %>"
+              class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+              onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'"
                        style="background-image: none !important;">
                 <% else %>
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center">

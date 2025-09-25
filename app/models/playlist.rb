@@ -15,14 +15,19 @@ class Playlist < ApplicationRecord
     premium? ? 500 : 0
   end
   
-  # Méthode pour obtenir le thumbnail aléatoire d'une vidéo de la playlist
+  # Méthode pour obtenir le thumbnail de la première vidéo de la playlist (stable)
+  def first_thumbnail
+    videos.first&.youtube_id
+  end
+  
+  # Méthode pour obtenir le thumbnail de la première vidéo de la playlist (stable)
   def random_thumbnail
-    videos.sample&.youtube_id
+    first_thumbnail
   end
   
   # Méthode pour obtenir l'URL du thumbnail YouTube
   def thumbnail_url
-    thumbnail_id = random_thumbnail
+    thumbnail_id = first_thumbnail
     if thumbnail_id
       "https://img.youtube.com/vi/#{thumbnail_id}/maxresdefault.jpg"
     else
@@ -32,7 +37,7 @@ class Playlist < ApplicationRecord
   
   # Méthode pour obtenir un thumbnail cohérent (même ID pour toute la session)
   def consistent_thumbnail
-    @consistent_thumbnail ||= random_thumbnail
+    @consistent_thumbnail ||= first_thumbnail
   end
   
   # Méthode pour obtenir l'URL du thumbnail cohérent

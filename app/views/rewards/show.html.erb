@@ -233,13 +233,13 @@
           <!-- Bannière de la playlist avec thumbnail aléatoire -->
           <div class="playlist-thumbnail relative flex items-center justify-center overflow-hidden">
             <% 
-              # Sélectionner une vidéo aléatoire de la playlist pour le thumbnail
-              random_video = @playlist.videos.sample
-              if random_video && random_video.youtube_id.present?
+              # Utiliser la première vidéo de la playlist pour le thumbnail (stable)
+              first_video = @playlist.videos.first
+              if first_video && first_video.youtube_id.present?
                 # Essayer plusieurs qualités de thumbnail
-                thumbnail_url = "https://img.youtube.com/vi/#{random_video.youtube_id}/maxresdefault.jpg"
+                thumbnail_url = "https://img.youtube.com/vi/#{first_video.youtube_id}/maxresdefault.jpg"
                 # Fallback si maxresdefault n'existe pas
-                fallback_url = "https://img.youtube.com/vi/#{random_video.youtube_id}/hqdefault.jpg"
+                fallback_url = "https://img.youtube.com/vi/#{first_video.youtube_id}/hqdefault.jpg"
               else
                 thumbnail_url = nil
                 fallback_url = nil
@@ -249,12 +249,12 @@
             <!-- Thumbnail en arrière-plan -->
             <% if thumbnail_url %>
               <div class="absolute inset-0 w-full h-full">
-                <img src="<%= thumbnail_url %>" 
-                     alt="<%= random_video.title %>" 
-                     class="w-full h-full object-cover"
-                     style="opacity: 0.7;"
-                     onerror="this.onerror=null; this.src='<%= fallback_url %>'; this.style.opacity='0.7';"
-                     onload="this.style.opacity='0.7';">
+           <img src="<%= thumbnail_url %>?v=20250115"
+                alt="<%= first_video.title %>"
+                class="w-full h-full object-cover"
+                style="opacity: 0.7;"
+                onerror="this.onerror=null; this.src='<%= fallback_url %>?v=20250115'; this.style.opacity='0.7';"
+                onload="this.style.opacity='0.7';">
                 <div class="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-600/30"></div>
               </div>
             <% else %>

@@ -102,14 +102,19 @@
                       </div>
                     <% end %>
                     
-                    <!-- Thumbnail YouTube forcé -->
-                    <% thumbnail_id = playlist.consistent_thumbnail %>
+                    <!-- Thumbnail YouTube avec fallback robuste - FORCÉ PREMIÈRE VIDÉO -->
+                    <% thumbnail_id = playlist.videos.first&.youtube_id %>
                     <% if thumbnail_id %>
                       <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                            alt="<%= playlist.title %>" 
                            class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
+                           onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
                            style="background-image: none !important;">
+                      <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
+                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5.14v14l11-7-11-7z"/>
+                        </svg>
+                      </div>
                     <% else %>
                       <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                         <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -237,15 +242,20 @@
                   <% end %>
                 <% end %>
                 
-                <!-- Section image avec thumbnail YouTube -->
+                <!-- Section image avec thumbnail YouTube - FORCÉ PREMIÈRE VIDÉO -->
                 <div class="playlist-image-section">
-                  <% thumbnail_id = playlist.consistent_thumbnail %>
+                  <% thumbnail_id = playlist.videos.first&.youtube_id %>
                   <% if thumbnail_id %>
-                    <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
+                    <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115" 
                          alt="<%= playlist.title %>" 
                          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
-                           style="background-image: none !important;">
+                         onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg?v=20250115'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
+                         style="background-image: none !important;">
+                    <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
+                      <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5.14v14l11-7-11-7z"/>
+                      </svg>
+                    </div>
                   <% else %>
                     <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -321,15 +331,20 @@
                 </div>
               <% end %>
               
-              <!-- Section image avec thumbnail YouTube -->
+              <!-- Section image avec thumbnail YouTube - FORCÉ PREMIÈRE VIDÉO -->
               <div class="playlist-image-section">
-                <% thumbnail_id = playlist.consistent_thumbnail %>
+                <% thumbnail_id = playlist.videos.first&.youtube_id %>
                 <% if thumbnail_id %>
                   <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                        alt="<%= playlist.title %>" 
                        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                           onerror="this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'"
-                           style="background-image: none !important;">
+                       onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
+                       style="background-image: none !important;">
+                  <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
+                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5.14v14l11-7-11-7z"/>
+                    </svg>
+                  </div>
                 <% else %>
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center">
                     <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
@@ -411,9 +426,9 @@
     100% { background-position: 0% 50%; }
   }
   
-  .line-clamp-2 {
+  .line-clamp-3 {
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -553,6 +568,16 @@
     font-size: 0.875rem !important;
     line-height: 1.25rem !important;
   }
+
+/* Styles pour les titres de playlists */
+.playlist-card-new-layout h3 {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  hyphens: auto !important;
+  line-height: 1.4 !important;
+  max-height: none !important;
+}
+
 </style>
 
 <script>
