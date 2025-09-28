@@ -1,0 +1,14 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Test Playlist 1
+  description: Test description 1
+  category: Test
+  premium: false
+
+two:
+  title: Test Playlist 2
+  description: Test description 2
+  category: Test
+  premium: true
+  points_required: 500
