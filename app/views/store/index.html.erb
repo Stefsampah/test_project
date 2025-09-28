@@ -104,29 +104,36 @@
           <% @premium_playlists.each do |playlist| %>
             <% 
               # Déterminer si la playlist est débloquée
-              is_unlocked = @unlocked_playlists.include?(playlist)
-              
-              # Déterminer si l'overlay doit s'afficher (pour les playlists premium non débloquées)
-              show_overlay = playlist.premium? && !is_unlocked
+              is_unlocked = false
+              if user_signed_in?
+                is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist) || 
+                              current_user.total_points >= playlist.points_required
+              end
+              unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s
+              can_access = !playlist.premium? || is_unlocked || unlocked
             %>
             <div class="playlist-item premium-playlist" data-category="<%= playlist.category || 'Premium' %>">
               <div class="playlist-card-uniform">
                 <div class="playlist-image-uniform">
-                  <% if show_overlay %>
-                    <div class="playlist-overlay-uniform">
-                      <svg fill="currentColor" viewBox="0 0 20 20">
+                  <% unless can_access %>
+                    <!-- Filtre de verrouillage pour les utilisateurs sans assez de points -->
+                    <div class="absolute inset-0 bg-black/10 z-20 flex flex-col items-center justify-center">
+                      <svg class="w-12 h-12 text-gray-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                       </svg>
-                      <div class="overlay-title">Contenu Premium</div>
-                      <div class="overlay-subtitle">500 points requis pour débloquer</div>
+                      <p class="text-white font-bold text-lg">Contenu Premium</p>
+                      <p class="text-gray-300 text-sm mt-1">500 points requis pour débloquer</p>
                     </div>
                   <% end %>
                   
+                  <!-- Thumbnail YouTube avec fallback robuste - FORCÉ PREMIÈRE VIDÉO -->
                   <% thumbnail_id = playlist.videos.first&.youtube_id %>
                   <% if thumbnail_id %>
-         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115"
-              alt="<%= playlist.title %>"
-              onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg?v=20250115'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};">
+                    <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg"
+                         alt="<%= playlist.title %>"
+                         class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                         onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};"
+                         style="background-image: none !important;">
                     <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5.14v14l11-7-11-7z"/>
@@ -137,8 +144,8 @@
                       <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8 5.14v14l11-7-11-7z"/>
                       </svg>
-                  </div>
-                <% end %>
+                    </div>
+                  <% end %>
                 </div>
                 
                 <div class="playlist-text-uniform">
@@ -301,7 +308,6 @@
     width: 100% !important;
     position: relative !important;
     overflow: hidden !important;
-    background: #374151 !important;
   }
 
   .playlist-image-uniform img {
@@ -384,7 +390,7 @@
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
-    background: rgba(0, 0, 0, 0.4) !important;
+    background: rgba(0, 0, 0, 0.1) !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
