@@ -7,6 +7,12 @@ class BadgesController < ApplicationController
 
   def my_badges
     @user_badges = current_user.user_badges.includes(:badge)
+    
+    # Statistiques des badges
+    @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+    @total_badges = current_user.user_badges.count
   end
 
   def all_badges

@@ -21,11 +21,6 @@ class RewardsController < ApplicationController
       @badge_counts[badge_type] = current_user.user_badges.joins(:badge).where(badges: { badge_type: badge_type }).count
     end
     
-    @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
-    @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
-    @gold_count = current_user.user_badges.joins(:badge).where(badges: { level: 'gold' }).count
-    @total_badges = current_user.user_badges.count
-    
     @progress = current_user.progress_to_next_digital_reward
     @next_level = current_user.next_digital_reward_level
     
