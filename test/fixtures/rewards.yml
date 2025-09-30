@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  badge_type: "competitor"
+  quantity_required: 1
+  reward_type: "challenge"
+  reward_description: "Test reward description 1"
+  content_type: "playlist_exclusive"
+
+two:
+  user: two
+  badge_type: "engager"
+  quantity_required: 2
+  reward_type: "premium"
+  reward_description: "Test reward description 2"
+  content_type: "playlist_acoustic"

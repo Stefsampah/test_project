@@ -12,3 +12,9 @@ two:
   category: Test
   premium: true
   points_required: 500
+
+three:
+  title: Challenge Reward Playlist
+  description: Test reward playlist
+  category: Reward
+  premium: false

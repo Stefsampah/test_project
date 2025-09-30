@@ -11,8 +11,8 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Aller à la page des playlists
     visit playlists_path
@@ -56,8 +56,8 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Aller directement à une playlist
     visit playlist_path(@playlist)
@@ -92,8 +92,8 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer un jeu avec une seule vidéo pour tester la completion
     single_video_playlist = playlists(:two)
@@ -123,8 +123,8 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer une playlist premium
     premium_playlist = Playlist.create!(
@@ -145,14 +145,13 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer une playlist récompense
     reward_playlist = Playlist.create!(
-      title: "Playlist Récompense",
-      description: "Test récompense",
-      reward: true
+      title: "Challenge Reward Playlist",
+      description: "Test récompense"
     )
     
     # Ajouter une vidéo à la playlist récompense
@@ -188,8 +187,8 @@ class GameplayTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Commencer une partie
     visit playlist_path(@playlist)

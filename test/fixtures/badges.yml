@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: "Test Badge 1"
+  badge_type: "competitor"
+  level: "bronze"
+  points_required: 100
+  description: "Test badge description 1"
+
+two:
+  name: "Test Badge 2"
+  badge_type: "engager"
+  level: "silver"
+  points_required: 200
+  description: "Test badge description 2"
+
+three:
+  name: "Test Badge 3"
+  badge_type: "critic"
+  level: "gold"
+  points_required: 300
+  description: "Test badge description 3"

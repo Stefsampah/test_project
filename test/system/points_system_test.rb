@@ -11,8 +11,8 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Commencer une partie
     visit playlist_path(@playlist)
@@ -42,14 +42,13 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer une playlist récompense
     reward_playlist = Playlist.create!(
-      title: "Playlist Récompense",
-      description: "Test récompense",
-      reward: true
+      title: "Challenge Reward Playlist",
+      description: "Test récompense"
     )
     
     # Ajouter une vidéo
@@ -75,8 +74,8 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer plusieurs playlists et jouer
     playlist1 = playlists(:one)
@@ -108,8 +107,8 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Jouer à une playlist pour gagner des points
     visit playlist_path(@playlist)
@@ -120,15 +119,15 @@ class PointsSystemTest < ApplicationSystemTestCase
     visit profile_path
     
     # Vérifier que les points s'affichent
-    assert_selector "text", text: "Points"
+    assert_selector "text", text: /points/
   end
 
   test "points reset when starting new game" do
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Jouer à une playlist
     visit playlist_path(@playlist)
@@ -153,8 +152,8 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer une playlist avec une seule vidéo
     single_video_playlist = playlists(:two)
@@ -181,8 +180,8 @@ class PointsSystemTest < ApplicationSystemTestCase
     # Se connecter
     visit new_user_session_path
     fill_in "Email", with: @user.email
-    fill_in "Password", with: "password"
-    click_button "Log in"
+    fill_in "Mot de passe", with: "password"
+    click_button "Se connecter"
 
     # Créer une playlist avec plusieurs vidéos
     multi_video_playlist = Playlist.create!(

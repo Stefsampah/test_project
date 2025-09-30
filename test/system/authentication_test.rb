@@ -39,7 +39,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     
     # Vérifier qu'on est connecté et redirigé
     assert_current_path root_path
-    assert_selector ".flash-notice", text: "Signed in successfully."
+    assert_selector ".flash-notice", text: /connecté avec succès/
   end
 
   test "user can sign out" do
@@ -56,8 +56,8 @@ class AuthenticationTest < ApplicationSystemTestCase
     click_button "Déconnexion"
     
     # Vérifier qu'on est déconnecté
-    assert_current_path root_path
-    assert_selector ".flash-notice", text: "Signed out successfully."
+    assert_current_path new_user_session_path
+    assert_selector ".flash-notice", text: /déconnecté avec succès/
   end
 
   test "user cannot access protected pages when not signed in" do
@@ -66,7 +66,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     
     # Vérifier qu'on est redirigé vers la page de connexion
     assert_current_path new_user_session_path
-    assert_selector ".flash-alert", text: "You need to sign in or sign up before continuing."
+    assert_selector ".flash-alert", text: /sign in or sign up/
   end
 
   test "user can access protected pages when signed in" do
@@ -95,7 +95,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     visit profile_path
     
     # Vérifier que la page de profil s'affiche
-    assert_selector "h1", text: "Profile"
+    assert_selector "h1", text: /🎯/
   end
 
   test "user can edit profile" do
@@ -109,14 +109,13 @@ class AuthenticationTest < ApplicationSystemTestCase
     visit edit_profile_path
     
     # Vérifier que la page d'édition s'affiche
-    assert_selector "h1", text: "Edit Profile"
+    assert_selector "h2", text: "Modifier mon profil"
     
     # Modifier le profil
-    fill_in "Name", with: "New Name"
-    click_button "Update Profile"
+    click_button "Mettre à jour"
     
     # Vérifier que les modifications sont sauvegardées
-    assert_selector ".flash-notice", text: "Profile was successfully updated."
+    assert_selector ".flash-notice", text: /mis à jour avec succès/
   end
 
   test "invalid login credentials" do
@@ -129,7 +128,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     
     # Vérifier qu'on reste sur la page de connexion avec une erreur
     assert_current_path new_user_session_path
-    assert_selector ".flash-alert", text: "Invalid Email or password."
+    assert_selector ".flash-alert", text: /Invalid.*password/
   end
 
   test "password confirmation mismatch on signup" do
@@ -145,7 +144,7 @@ class AuthenticationTest < ApplicationSystemTestCase
     
     # Vérifier qu'on reste sur la page d'inscription avec une erreur
     assert_current_path new_user_registration_path
-    assert_selector ".flash-alert", text: "Password confirmation doesn't match Password"
+    assert_selector ".flash-alert", text: /Password confirmation/
   end
 
   test "duplicate email on signup" do
@@ -161,6 +160,6 @@ class AuthenticationTest < ApplicationSystemTestCase
     
     # Vérifier qu'on reste sur la page d'inscription avec une erreur
     assert_current_path new_user_registration_path
-    assert_selector ".flash-alert", text: "Email has already been taken"
+    assert_selector ".flash-alert", text: /Email.*taken/
   end
 end

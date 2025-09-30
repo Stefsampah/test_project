@@ -8,44 +8,44 @@ class Score < ApplicationRecord
 
   # Méthodes pour calculer les différents types de scores (SYSTÈME SIMPLIFIÉ)
   def self.calculate_top_engager_scores
-    # Utiliser le nouveau système simplifié
+    # Utiliser les scores de jeu réels (swipes)
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.listening_points + user.critical_opinions_points,
+        points: user.engager_score,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_best_ratio_scores
-    # Utiliser le nouveau système simplifié (régularité)
+    # Utiliser les scores de jeu réels (competitor_score)
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.regularity_points,
+        points: user.competitor_score,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_wise_critic_scores
-    # Utiliser le nouveau système simplifié
+    # Utiliser les scores de jeu réels (critic_score)
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.critical_opinions_points,
+        points: user.critic_score,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
   end
 
   def self.calculate_total_scores
-    # Utiliser directement le score global de chaque utilisateur
+    # Utiliser le score total basé sur les swipes (challenger_score)
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.game_points,
+        points: user.challenger_score,
         badges: []
       }
     end.sort_by { |score| -score[:points] }

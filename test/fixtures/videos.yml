@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: Test Video 1
+  youtube_id: test123
+  description: Test video description 1
+  playlist: one
+
+two:
+  title: Test Video 2
+  youtube_id: test456
+  description: Test video description 2
+  playlist: one
+
+three:
+  title: Test Video 3
+  youtube_id: test789
+  description: Test video description 3
+  playlist: two
+
+four:
+  title: Reward Video 1
+  youtube_id: reward123
+  description: Reward video description
+  playlist: three

@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  video: one
+  game: one
+  action: "like"
+  liked: true
+  playlist: one
+
+two:
+  user: two
+  video: two
+  game: two
+  action: "dislike"
+  liked: false
+  playlist: two

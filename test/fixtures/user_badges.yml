@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  badge: one
+  earned_at: <%= 1.day.ago %>
+  points_at_earned: 100
+
+two:
+  user: two
+  badge: one
+  earned_at: <%= 2.days.ago %>
+  points_at_earned: 150
