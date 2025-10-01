@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Charger l'environnement Rails
+require_relative 'config/environment'
+
 puts "🔍 Vérification de la cohérence du système simplifié..."
 puts "=" * 60
 

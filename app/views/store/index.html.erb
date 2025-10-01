@@ -23,29 +23,26 @@
         <% @point_packs.each_with_index do |pack, index| %>
           <div class="rounded-xl p-6 border border-gray-700 overflow-hidden relative" 
                style="background-image: url('/assets/store/<%= pack[:points] <= 500 ? 'lovepik.png' : 'trove_of_coins.png' %>'); background-size: cover; background-position: center;">
-            <!-- Overlay gradient -->
-            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/60 to-blue-600/60 rounded-xl"></div>
-            
-            <!-- Overlay "Bientôt disponible" -->
-            <div class="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center z-30">
-              <div class="text-center">
-                <div class="text-4xl mb-2">🚧</div>
-                <div class="text-white font-bold text-lg mb-2">Bientôt disponible</div>
-                <div class="text-purple-200 text-sm">Système d'achat in-app en cours de développement</div>
-              </div>
-            </div>
+            <!-- Overlay gradient pour améliorer la lisibilité -->
+            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/80 to-blue-600/80 rounded-xl"></div>
             
             <div class="relative z-10 text-center">
-              <h3 class="text-xl font-semibold text-white mb-2"><%= pack[:name] %></h3>
-              <div class="text-3xl font-bold text-purple-400 mb-2"><%= pack[:price] %> €</div>
-              <p class="text-gray-300 text-sm mb-4"><%= pack[:description] %></p>
+              <!-- Fond semi-transparent pour le texte -->
+              <div class="bg-black/40 backdrop-blur-sm rounded-lg p-4 mb-4">
+                <h3 class="text-xl font-bold text-white mb-2 drop-shadow-lg"><%= pack[:name] %></h3>
+                <div class="text-3xl font-bold text-yellow-300 mb-2 drop-shadow-lg"><%= pack[:price] %> €</div>
+                <p class="text-gray-100 text-sm mb-4 drop-shadow-md"><%= pack[:description] %></p>
+              </div>
               
-              <button disabled class="w-full bg-gray-600 text-gray-400 font-semibold py-3 px-6 rounded-lg cursor-not-allowed">
-                <span class="flex items-center justify-center">
-                  <span class="mr-2">🔒</span>
-                  Indisponible
-                </span>
-              </button>
+              <%= form_with url: buy_points_store_path, method: :post, local: true, class: "w-full" do |form| %>
+                <%= form.hidden_field :pack_id, value: index %>
+                <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  <span class="flex items-center justify-center">
+                    <span class="mr-2">💰</span>
+                    Acheter maintenant
+                  </span>
+                </button>
+              <% end %>
             </div>
           </div>
         <% end %>
@@ -63,29 +60,26 @@
         <% @subscriptions.each do |subscription| %>
           <div class="rounded-xl p-8 border border-yellow-500 overflow-hidden relative"
                style="background-image: url('/assets/store/6070880.jpg'); background-size: cover; background-position: center;">
-            <!-- Overlay gradient -->
-            <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/50 to-orange-600/50 rounded-xl"></div>
-            
-            <!-- Overlay "Bientôt disponible" -->
-            <div class="absolute inset-0 bg-black/60 rounded-xl flex items-center justify-center z-30">
-              <div class="text-center">
-                <div class="text-4xl mb-2">🚧</div>
-                <div class="text-white font-bold text-lg mb-2">Bientôt disponible</div>
-                <div class="text-yellow-200 text-sm">Système d'achat in-app en cours de développement</div>
-              </div>
-            </div>
+            <!-- Overlay gradient pour améliorer la lisibilité -->
+            <div class="absolute inset-0 bg-gradient-to-br from-yellow-600/80 to-orange-600/80 rounded-xl"></div>
             
             <div class="relative z-10 text-center">
-              <h3 class="text-2xl font-bold text-white mb-2">Abonnement <%= subscription[:name] %></h3>
-              <div class="text-4xl font-bold text-white mb-4"><%= subscription[:price] %> €</div>
-              <p class="text-yellow-100 text-sm mb-6"><%= subscription[:description] %></p>
+              <!-- Fond semi-transparent pour le texte -->
+              <div class="bg-black/50 backdrop-blur-sm rounded-lg p-6 mb-6">
+                <h3 class="text-2xl font-bold text-white mb-2 drop-shadow-lg">Abonnement <%= subscription[:name] %></h3>
+                <div class="text-4xl font-bold text-yellow-300 mb-4 drop-shadow-lg"><%= subscription[:price] %> €</div>
+                <p class="text-yellow-100 text-sm mb-6 drop-shadow-md"><%= subscription[:description] %></p>
+              </div>
               
-              <button disabled class="w-full bg-gray-600 text-gray-400 font-bold py-3 px-6 rounded-lg cursor-not-allowed">
-                <span class="flex items-center justify-center">
-                  <span class="mr-2">🔒</span>
-                  Indisponible
-                </span>
-              </button>
+              <%= form_with url: buy_subscription_store_path, method: :post, local: true, class: "w-full" do |form| %>
+                <%= form.hidden_field :subscription_type, value: "vip" %>
+                <button type="submit" class="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+                  <span class="flex items-center justify-center">
+                    <span class="mr-2">👑</span>
+                    S'abonner maintenant
+                  </span>
+                </button>
+              <% end %>
             </div>
           </div>
         <% end %>

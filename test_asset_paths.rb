@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Charger l'environnement Rails
+require_relative 'config/environment'
+
 # Test des chemins d'assets pour les images ultimes
 puts "🎯 Test des chemins d'assets pour les images ultimes"
 puts "=" * 60

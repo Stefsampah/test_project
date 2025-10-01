@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Charger l'environnement Rails
+require_relative 'config/environment'
+
 puts "=== TEST DE STABILITÉ DES URLs YOUTUBE ==="
 playlists_problematiques = ['Afro Vibes Vol. 1', 'Afro Vibes Vol. 3', 'Futurs Hits – Pop & Global Vibes vol.1']
 

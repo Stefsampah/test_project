@@ -97,35 +97,39 @@ class ScoreTest < ActiveSupport::TestCase
 
   test "badges should include Best Ratio du jour for balanced ratios" do
     # Create swipes with balanced ratio (40-60%)
-    game = Game.create!(user: @user, playlist: @playlist)
+    new_user = users(:two) # Utiliser un utilisateur différent
+    new_score = Score.create!(user: new_user, playlist: @playlist, points: 100)
+    game = Game.create!(user: new_user, playlist: @playlist)
     video1 = videos(:one)
     video2 = videos(:two)
     
     # Create 2 likes and 3 dislikes (40% likes, 60% dislikes)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
-    Swipe.create!(user: @user, video: video2, game: game, action: 'like', liked: true, playlist: @playlist)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
-    Swipe.create!(user: @user, video: video2, game: game, action: 'dislike', liked: false, playlist: @playlist)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video2, game: game, action: 'like', liked: true, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video2, game: game, action: 'dislike', liked: false, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
     
-    badges = @score.badges
+    badges = new_score.badges
     assert_includes badges, "Best Ratio du jour"
   end
 
   test "badges should include Wise Critic du jour for small gaps" do
     # Create swipes with small gap between likes and dislikes
-    game = Game.create!(user: @user, playlist: @playlist)
+    new_user = users(:three) # Utiliser un utilisateur différent
+    new_score = Score.create!(user: new_user, playlist: @playlist, points: 100)
+    game = Game.create!(user: new_user, playlist: @playlist)
     video1 = videos(:one)
     video2 = videos(:two)
     
     # Create 3 likes and 2 dislikes (60% likes, 40% dislikes, gap = 20%)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
-    Swipe.create!(user: @user, video: video2, game: game, action: 'like', liked: true, playlist: @playlist)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
-    Swipe.create!(user: @user, video: video2, game: game, action: 'dislike', liked: false, playlist: @playlist)
-    Swipe.create!(user: @user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video2, game: game, action: 'like', liked: true, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'like', liked: true, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video2, game: game, action: 'dislike', liked: false, playlist: @playlist)
+    Swipe.create!(user: new_user, video: video1, game: game, action: 'dislike', liked: false, playlist: @playlist)
     
-    badges = @score.badges
+    badges = new_score.badges
     assert_includes badges, "Wise Critic du jour"
   end
 end

@@ -30,20 +30,21 @@ class UserBadgeTest < ActiveSupport::TestCase
   end
 
   test "earned scope should return badges with earned_at" do
-    @user_badge.earned_at = Time.current
-    @user_badge.points_at_earned = 100
-    @user_badge.save!
+    # Créer un nouveau user_badge pour éviter les conflits
+    new_user = users(:two)
+    new_user_badge = UserBadge.create!(user: new_user, badge: @badge, earned_at: Time.current, points_at_earned: 100)
     
     earned_badges = UserBadge.earned
-    assert_includes earned_badges, @user_badge
+    assert_includes earned_badges, new_user_badge
   end
 
   test "earned scope should not return badges without earned_at" do
-    @user_badge.points_at_earned = 100
-    @user_badge.save!
+    # Créer un nouveau user_badge pour éviter les conflits
+    new_user = users(:two)
+    new_user_badge = UserBadge.create!(user: new_user, badge: @badge, points_at_earned: 100)
     
     earned_badges = UserBadge.earned
-    assert_not_includes earned_badges, @user_badge
+    assert_not_includes earned_badges, new_user_badge
   end
 
   test "reward_available? should return true when earned_at is present" do

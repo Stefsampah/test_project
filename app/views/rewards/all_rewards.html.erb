@@ -150,6 +150,22 @@
                       </div>
                     </div>
                   <% end %>
+                  
+                  <!-- Détails des badges requis -->
+                  <div class="mt-3 p-2 bg-white/5 rounded text-center">
+                    <div class="text-xs text-gray-400 mb-1">Badges requis :</div>
+                    <% case reward_info[:quantity] %>
+                    <% when 3 %>
+                      <div class="text-xs text-gray-300">🥉 <strong>3 badges</strong> (n'importe lesquels)</div>
+                    <% when 6 %>
+                      <div class="text-xs text-gray-300">🥈 <strong>6 badges</strong> (n'importe lesquels)</div>
+                    <% when 9 %>
+                      <div class="text-xs text-gray-300">🥇 <strong>9 badges</strong> (n'importe lesquels)</div>
+                    <% when 12 %>
+                      <div class="text-xs text-gray-300">🌈 <strong>Collection Arc-en-ciel</strong></div>
+                      <div class="text-xs text-gray-400 mt-1">12 badges dont au moins 1 Bronze + 1 Silver + 1 Gold</div>
+                    <% end %>
+                  </div>
                 </div>
                 
                 <!-- Progression simplifiée -->
@@ -210,7 +226,7 @@
             <p>• <strong>3 badges</strong> = 🥉 Challenge (Playlists Spéciales + Versions acoustiques)</p>
             <p>• <strong>6 badges</strong> = 🥈 Exclusif (Contenu exclusif + Sessions studio)</p>
             <p>• <strong>9 badges</strong> = 🥇 Premium (Contenu exclusif artistes + Backstage)</p>
-            <p>• <strong>12 badges</strong> = 🌈 Ultime (Expériences VIP)</p>
+            <p>• <strong>12 badges</strong> = 🌈 Ultime (Collection Arc-en-ciel + Expériences VIP)</p>
           </div>
         </div>
 
@@ -224,6 +240,7 @@
           </div>
         </div>
       </div>
+      
       
       <div class="mt-6 p-4 bg-white/5 rounded-lg">
         <h3 class="text-lg font-bold text-white mb-2">💡 Conseils d'Expert :</h3>

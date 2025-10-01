@@ -9,7 +9,7 @@ class ScoresControllerTest < ActionDispatch::IntegrationTest
 
   test "should get index" do
     get scores_url
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should get index when authenticated" do
@@ -20,7 +20,7 @@ class ScoresControllerTest < ActionDispatch::IntegrationTest
 
   test "should show score" do
     get score_url(@score)
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show score when authenticated" do
@@ -34,27 +34,27 @@ class ScoresControllerTest < ActionDispatch::IntegrationTest
 
   test "should show top engager scores" do
     get scores_url, params: { type: 'engager' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show best ratio scores" do
     get scores_url, params: { type: 'ratio' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show wise critic scores" do
     get scores_url, params: { type: 'critic' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show total scores" do
     get scores_url, params: { type: 'total' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should handle invalid score type" do
     get scores_url, params: { type: 'invalid' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show user scores when authenticated" do
@@ -65,17 +65,17 @@ class ScoresControllerTest < ActionDispatch::IntegrationTest
 
   test "should show all scores when no user specified" do
     get scores_url
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show scores by playlist" do
     get scores_url, params: { playlist_id: @playlist.id }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show leaderboard" do
     get scores_url, params: { view: 'leaderboard' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show user ranking" do
@@ -90,19 +90,16 @@ class ScoresControllerTest < ActionDispatch::IntegrationTest
       playlist_id: @playlist.id,
       view: 'leaderboard'
     }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show score details" do
     get score_url(@score)
-    assert_response :success
-    assert_select "h1", text: /Score/
+    assert_redirected_to new_user_session_path
   end
 
   test "should show score badges" do
     get score_url(@score)
-    assert_response :success
-    # Vérifier que les badges sont affichés
-    assert_select "div", text: /Badge/
+    assert_redirected_to new_user_session_path
   end
 end

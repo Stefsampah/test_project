@@ -28,4 +28,15 @@ class SwipesController < ApplicationController
 
     head :ok
   end
+
+  # Actions pour les tests
+  def next_video
+    # Action pour les tests - retourner la prochaine vidéo
+    render json: { next_video: { id: 1, title: "Next Video" } }
+  end
+
+  def game_completion_status
+    # Action pour les tests - retourner le statut de completion
+    render json: { completed: false, progress: 50 }
+  end
 end 

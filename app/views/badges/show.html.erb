@@ -140,15 +140,57 @@
           <% end %>
         </div>
 
-        <!-- Récompense -->
+        <!-- Système de récompenses -->
         <div class="bg-white/10 rounded-lg p-6">
-          <h3 class="text-xl font-bold text-white mb-4">Récompense</h3>
-          <div class="flex items-center justify-center mb-4">
-            <span class="bg-<%= @badge.reward_type == 'premium' ? 'purple' : 'blue' %>-600 text-white px-4 py-2 rounded-full font-semibold">
-              <%= @badge.reward_type == 'premium' ? 'Premium' : 'Standard' %>
-            </span>
+          <h3 class="text-xl font-bold text-white mb-4">🏆 Système de Récompenses</h3>
+          <div class="text-center mb-4">
+            <p class="text-gray-300 text-sm mb-4">Ce badge contribue au système de récompenses basé sur le total de badges collectés :</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div class="bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 p-3 rounded-lg">
+                <div class="text-yellow-300 font-semibold mb-1">🥉 3 badges</div>
+                <div class="text-gray-300">Challenge</div>
+                <div class="text-xs text-gray-400">Playlists spéciales</div>
+              </div>
+              
+              <div class="bg-gradient-to-r from-gray-400/20 to-gray-500/20 p-3 rounded-lg">
+                <div class="text-gray-300 font-semibold mb-1">🥈 6 badges</div>
+                <div class="text-gray-300">Exclusif</div>
+                <div class="text-xs text-gray-400">Contenu exclusif</div>
+              </div>
+              
+              <div class="bg-gradient-to-r from-orange-500/20 to-orange-600/20 p-3 rounded-lg">
+                <div class="text-orange-300 font-semibold mb-1">🥇 9 badges</div>
+                <div class="text-gray-300">Premium</div>
+                <div class="text-xs text-gray-400">Backstage virtuel</div>
+              </div>
+              
+              <div class="bg-gradient-to-r from-pink-500/20 to-purple-600/20 p-3 rounded-lg">
+                <div class="text-pink-300 font-semibold mb-1">🌈 12 badges</div>
+                <div class="text-gray-300">Ultime</div>
+                <div class="text-xs text-gray-400">Collection arc-en-ciel</div>
+              </div>
+            </div>
           </div>
-          <p class="text-white text-lg"><%= @badge.reward_description %></p>
+          
+          <% if user_signed_in? %>
+            <div class="mt-4 p-3 bg-blue-500/20 rounded-lg">
+              <div class="text-center">
+                <div class="text-blue-300 font-semibold mb-1">Votre progression globale</div>
+                <div class="text-white text-lg"><%= current_user.user_badges.count %> badges collectés</div>
+                <div class="text-xs text-gray-400 mt-1">
+                  <% next_reward = case current_user.user_badges.count
+                                  when 0..2 then "3 badges pour Challenge"
+                                  when 3..5 then "6 badges pour Exclusif"
+                                  when 6..8 then "9 badges pour Premium"
+                                  when 9..11 then "12 badges pour Ultime"
+                                  else "Toutes les récompenses débloquées !"
+                                  end %>
+                  Prochaine récompense : <%= next_reward %>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

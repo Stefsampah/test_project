@@ -201,7 +201,86 @@ class User < ApplicationRecord
     bronze_count >= 1 && silver_count >= 1 && gold_count >= 1
   end
   
-  # Méthodes pour les récompenses digitales supprimées car le modèle DigitalReward n'existe pas
+  # Méthodes pour les récompenses digitales
+  def progress_to_next_digital_reward
+    current_badges = user_badges.count
+    
+    # Définir les niveaux de récompenses
+    reward_levels = [
+      { level: 'challenge', required: 3 },
+      { level: 'exclusif', required: 6 },
+      { level: 'premium', required: 9 },
+      { level: 'ultime', required: 12 } # Collection arc-en-ciel
+    ]
+    
+    # Trouver le prochain niveau non atteint
+    next_level = reward_levels.find do |level|
+      if level[:level] == 'ultime'
+        # Pour ultime, vérifier la collection arc-en-ciel
+        current_badges >= 12 && !has_rainbow_collection?
+      else
+        # Pour les autres niveaux, vérifier le nombre de badges et si la récompense n'est pas déjà débloquée
+        current_badges >= level[:required] && !has_reward_for_level?(level[:level])
+      end
+    end
+    
+    # Si aucun niveau n'est atteint, trouver le prochain à atteindre
+    if next_level.nil?
+      next_level = reward_levels.find { |level| current_badges < level[:required] }
+    end
+    
+    if next_level
+      if next_level[:level] == 'ultime'
+        # Pour ultime, calculer les badges manquants pour la collection arc-en-ciel
+        bronze_count = user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
+        silver_count = user_badges.joins(:badge).where(badges: { level: 'silver' }).count
+        gold_count = user_badges.joins(:badge).where(badges: { level: 'gold' }).count
+        
+        missing_levels = []
+        missing_levels << 'bronze' if bronze_count == 0
+        missing_levels << 'silver' if silver_count == 0
+        missing_levels << 'gold' if gold_count == 0
+        
+        required_badges = missing_levels.count
+        [current_badges, required_badges]
+      else
+        [current_badges, next_level[:required]]
+      end
+    else
+      # Toutes les récompenses sont débloquées
+      [current_badges, current_badges]
+    end
+  end
+  
+  def next_digital_reward_level
+    current_badges = user_badges.count
+    
+    # Définir les niveaux de récompenses
+    reward_levels = [
+      { level: 'challenge', required: 3 },
+      { level: 'exclusif', required: 6 },
+      { level: 'premium', required: 9 },
+      { level: 'ultime', required: 12 } # Collection arc-en-ciel
+    ]
+    
+    # Trouver le prochain niveau non atteint
+    next_level = reward_levels.find do |level|
+      if level[:level] == 'ultime'
+        # Pour ultime, vérifier la collection arc-en-ciel
+        current_badges >= 12 && !has_rainbow_collection?
+      else
+        # Pour les autres niveaux, vérifier le nombre de badges et si la récompense n'est pas déjà débloquée
+        current_badges >= level[:required] && !has_reward_for_level?(level[:level])
+      end
+    end
+    
+    # Si aucun niveau n'est atteint, trouver le prochain à atteindre
+    if next_level.nil?
+      next_level = reward_levels.find { |level| current_badges < level[:required] }
+    end
+    
+    next_level&.dig(:level)
+  end
   
   # Méthodes pour les récompenses (intégrées dans le système existant)
   def rewards_by_level(level)

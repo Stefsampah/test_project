@@ -46,6 +46,9 @@ gem 'google-api-client'
 # Environment variables
 gem 'dotenv-rails'
 
+# Stripe for payments
+gem 'stripe'
+
 # Use Redis adapter to run Action Cable in production
 gem "redis", ">= 4.0.1"
 

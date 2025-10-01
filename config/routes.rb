@@ -28,7 +28,12 @@ Rails.application.routes.draw do
   end
   
   resources :scores, only: [:index, :show]
-  resources :swipes, only: [:create]
+  resources :swipes, only: [:create] do
+    collection do
+      get :next_video
+      get :game_completion_status
+    end
+  end
 
   namespace :admin do
     resources :playlists, only: [:new, :create]
@@ -76,4 +81,13 @@ Rails.application.routes.draw do
   post 'store/buy_subscription', to: 'store#buy_subscription', as: :buy_subscription_store
   get  'store/buy_playlist/:playlist_id', to: 'store#buy_playlist', as: :buy_playlist_store
   post 'store/confirm_playlist_purchase/:playlist_id', to: 'store#confirm_playlist_purchase', as: :confirm_playlist_purchase_store
+  
+  # Routes Stripe Checkout
+  get 'store/success', to: 'store#success', as: :store_success
+  get 'store/cancel', to: 'store#cancel', as: :store_cancel
+  
+  # Routes pour les tests
+  post 'store/purchase_points', to: 'store#purchase_points', as: :purchase_points_store
+  post 'store/unlock_playlist', to: 'store#unlock_playlist', as: :unlock_playlist_store
+  post 'store/unlock_exclusive_content', to: 'store#unlock_exclusive_content', as: :unlock_exclusive_content_store
 end

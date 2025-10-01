@@ -33,16 +33,18 @@ class PlaylistsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show premium playlist to non-authenticated user" do
     get playlist_url(@premium_playlist)
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should handle playlist with videos" do
+    sign_in @user
     get playlist_url(@playlist)
     assert_response :success
     assert_select "h1", text: @playlist.title
   end
 
   test "should handle playlist without videos" do
+    sign_in @user
     empty_playlist = Playlist.create!(
       title: "Empty Playlist",
       description: "No videos",

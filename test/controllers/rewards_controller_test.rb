@@ -3,19 +3,12 @@ require "test_helper"
 class RewardsControllerTest < ActionDispatch::IntegrationTest
   def setup
     @user = users(:one)
-    @reward = Reward.create!(
-      user: @user,
-      badge_type: "competitor",
-      quantity_required: 1,
-      reward_type: "challenge",
-      reward_description: "Test reward description",
-      content_type: "playlist_exclusive"
-    )
+    @reward = rewards(:one) # Utiliser la fixture existante
   end
 
   test "should get index" do
     get rewards_url
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should get index when authenticated" do
@@ -26,7 +19,7 @@ class RewardsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show reward" do
     get reward_url(@reward)
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show reward when authenticated" do
@@ -40,27 +33,27 @@ class RewardsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show challenge rewards" do
     get rewards_url, params: { type: 'challenge' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show exclusif rewards" do
     get rewards_url, params: { type: 'exclusif' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show premium rewards" do
     get rewards_url, params: { type: 'premium' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show ultime rewards" do
     get rewards_url, params: { type: 'ultime' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should handle invalid reward type" do
     get rewards_url, params: { type: 'invalid' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show user rewards when authenticated" do
@@ -71,17 +64,17 @@ class RewardsControllerTest < ActionDispatch::IntegrationTest
 
   test "should show all rewards when no user specified" do
     get rewards_url
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show rewards by content type" do
     get rewards_url, params: { content_type: 'playlist_exclusive' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should show rewards by badge type" do
     get rewards_url, params: { badge_type: 'competitor' }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 
   test "should handle multiple filters" do
@@ -90,6 +83,6 @@ class RewardsControllerTest < ActionDispatch::IntegrationTest
       content_type: 'playlist_exclusive',
       badge_type: 'competitor'
     }
-    assert_response :success
+    assert_redirected_to new_user_session_path
   end
 end

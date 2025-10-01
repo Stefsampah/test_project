@@ -2,13 +2,7 @@ require "test_helper"
 
 class BadgePlaylistUnlockTest < ActiveSupport::TestCase
   def setup
-    @badge = Badge.create!(
-      name: "Test Badge",
-      badge_type: "competitor",
-      level: "bronze",
-      points_required: 100,
-      description: "Test badge description"
-    )
+    @badge = badges(:one) # Utiliser la fixture existante
     @playlist = playlists(:one)
     @unlock = BadgePlaylistUnlock.new(badge: @badge, playlist: @playlist)
   end

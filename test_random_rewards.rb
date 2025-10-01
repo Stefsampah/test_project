@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# Charger l'environnement Rails
+require_relative 'config/environment'
+
 # Script de test pour le système de récompenses aléatoires
 puts "🎲 Test du système de récompenses aléatoires"
 puts "=" * 50
