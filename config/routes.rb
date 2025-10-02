@@ -86,6 +86,12 @@ Rails.application.routes.draw do
   get 'store/success', to: 'store#success', as: :store_success
   get 'store/cancel', to: 'store#cancel', as: :store_cancel
   
+  # Gestion des abonnements VIP
+  get 'subscriptions', to: 'subscriptions#index'
+  get 'subscriptions/checkout', to: 'subscriptions#checkout'
+  get 'subscriptions/renewed', to: 'subscriptions#renewed'
+  get 'api/subscriptions/:user_id/status', to: 'subscriptions#status'
+  
   # Routes pour les tests
   post 'store/purchase_points', to: 'store#purchase_points', as: :purchase_points_store
   post 'store/unlock_playlist', to: 'store#unlock_playlist', as: :unlock_playlist_store

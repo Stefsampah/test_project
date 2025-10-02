@@ -78,6 +78,26 @@ class RewardsController < ApplicationController
   end
   
   def reward_details
+    # Vérifier s'il s'agit d'un NFT spécifique
+    @content_type = params[:content_type]
+    
+    puts "🔍 DEBUG reward_details: content_type=#{@content_type}"
+    
+    if @content_type && @content_type.end_with?('_nft')
+      # Mode NFT spécifique
+      puts "✅ NFT détecté: #{@content_type}"
+      @nft_data = get_nft_data(@content_type)
+      @artist_name = @nft_data[:artist_name]
+      @artist_description = @nft_data[:artist_description]
+      @gradient_colors = @nft_data[:gradient_colors]
+      
+      puts "🎨 NFT Data: #{@nft_data}"
+      
+      render 'nft_details'
+      return
+    end
+    
+    # Mode récompense normale
     @badge_type = params[:badge_type] || 'unified'
     @quantity = (params[:quantity] || 0).to_i
     @category = 'unified'
@@ -673,5 +693,49 @@ class RewardsController < ApplicationController
     end
     
     images
+  end
+  
+  # Méthode pour obtenir les données NFT spécifiques
+  def get_nft_data(content_type)
+    case content_type
+    when 'didi_b_nft'
+      {
+        artist_name: 'DIDI B',
+        artist_description: 'Rapper, songwriter, performer, entrepreneur, Afro-urban visionary, leader of Africa Mindset',
+        gradient_colors: 'from-blue-500 to-purple-600'
+      }
+    when 'okenneth_nft'
+      {
+        artist_name: 'O\'KENNETH',
+        artist_description: 'Ghanaian rapper, raw voice of Kumasi, Asakaa drill pioneer, \'Yimaye\' – street soul meets introspection',
+        gradient_colors: 'from-green-400 to-blue-500'
+      }
+    when 'chuwi_nft'
+      {
+        artist_name: 'CHUWI',
+        artist_description: 'Indie tropical band from Isabela, Puerto Rico, \'Weltita\' (2025) – collab with Bad Bunny',
+        gradient_colors: 'from-orange-400 to-red-500'
+      }
+    when 'punk_duo_nft'
+      {
+        artist_name: 'PUNK DUO',
+        artist_description: 'Punk duo from Brighton, UK, queer, neurodivergent, loud & unapologetic',
+        embed_id: '4M9VUTjC7s3nhCshh6DxoR',
+        gradient_colors: 'from-red-400 to-purple-500'
+      }
+    when 'koffee_nft'
+      {
+        artist_name: 'KOFFEE',
+        artist_description: 'Reggae artist from Spanish Town, empowering, radiant, and unapologetically uplifting',
+        gradient_colors: 'from-yellow-400 to-green-500'
+      }
+    else
+      {
+        artist_name: 'ARTIST',
+        artist_description: 'Musical artist NFT collection',
+        embed_id: '4M9VUTjC7s3nhCshh6DxoR',
+        gradient_colors: 'from-purple-400 to-pink-500'
+      }
+    end
   end
 end 

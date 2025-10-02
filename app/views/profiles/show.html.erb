@@ -60,9 +60,108 @@
       </div>
     </div>
 
+    <!-- Section Badges et Récompenses améliorée -->
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🏆 Mes Réalisations</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Mes Badges -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+            <span class="mr-2">🥇</span>
+            Mes Badges (<%= @badges.count %>)
+          </h3>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <% @badges.take(4).each do |user_badge| %>
+              <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center hover:bg-white/30 transition-all">
+                <div class="text-white text-lg mb-1">
+                  <% case user_badge.badge.level %>
+                  <% when 'bronze' %>
+                    🥉
+                  <% when 'silver' %>
+                    🥈  
+                  <% when 'gold' %>
+                    🥇
+                  <% end %>
+                </div>
+                <div class="text-white text-xs font-medium">
+                  <%= user_badge.badge.badge_type.humanize %>
+                </div>
+              </div>
+            <% end %>
+            
+            <% if @badges.count > 4 %>
+              <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center hover:bg-white/30 transition-all">
+                <div class="text-white text-lg mb-1">+</div>
+                <div class="text-white text-xs font-medium">
+                  <%= @badges.count - 4 %> autres
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if @badges.any? %>
+            <div class="mt-4">
+              <%= link_to rewards_path, class: "inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all" do %>
+                <span>Voir tous mes badges</span>
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- Mes Récompenses -->
+        <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl p-6">
+          <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+            <span class="mr-2">🎁</span>
+            Mes Récompenses (<%= current_user.rewards.unlocked.count %>)
+          </h3>
+          
+          <div class="grid grid-cols-2 gap-3">
+            <% current_user.rewards.unlocked.take(4).each do |reward| %>
+              <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center hover:bg-white/30 transition-all">
+                <div class="text-white text-lg mb-1">
+                  <% case reward.reward_type %>
+                  <% when 'challenge' %>
+                    🥉
+                  <% when 'exclusif' %>
+                    🥈
+                  <% when 'premium' %>
+                    🥇
+                  <% when 'ultime' %>
+                    🌈
+                  <% end %>
+                </div>
+                <div class="text-white text-xs font-medium">
+                  <%= reward.reward_type.humanize %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          
+          <% if current_user.rewards.unlocked.any? %>
+            <div class="mt-4">
+              <%= link_to rewards_path, class: "inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all" do %>
+                <span>Voir toutes mes récompenses</span>
+                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="mt-4 text-white/70 text-sm">
+              Collectez plus de badges pour débloquer vos premières récompenses !
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
     <!-- Grille des sections -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      
       <!-- 🏆 Badges et Récompenses -->
       <div class="bg-gray-800 rounded-lg p-6">
         <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
