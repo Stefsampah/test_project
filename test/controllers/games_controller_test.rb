@@ -9,6 +9,8 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
 
   test "should get new" do
     sign_in @user
+    # Supprimer le jeu existant pour ce test
+    @user.games.where(playlist: @playlist).destroy_all
     get new_playlist_game_url(@playlist)
     assert_response :success
   end
@@ -20,6 +22,9 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create game when authenticated" do
     sign_in @user
+    # Supprimer le jeu existant pour ce test
+    @user.games.where(playlist: @playlist).destroy_all
+    
     assert_difference('Game.count') do
       post playlist_games_url(@playlist), params: { 
         game: { 
@@ -85,6 +90,9 @@ class GamesControllerTest < ActionDispatch::IntegrationTest
 
   test "should create game with valid playlist" do
     sign_in @user
+    # Supprimer le jeu existant pour ce test
+    @user.games.where(playlist: @playlist).destroy_all
+    
     assert_difference('Game.count') do
       post playlist_games_url(@playlist), params: { 
         game: { 

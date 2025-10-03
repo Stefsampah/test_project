@@ -121,25 +121,37 @@
                       </div>
                     <% end %>
                     
-                    <!-- Thumbnail YouTube avec fallback robuste - FORCÉ PREMIÈRE VIDÉO -->
-                    <% thumbnail_id = playlist.videos.first&.youtube_id %>
-                    <% if thumbnail_id %>
-                      <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
-                           alt="<%= playlist.title %>" 
-                           class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                           onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
-                           style="background-image: none !important;">
-                      <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
-                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5.14v14l11-7-11-7z"/>
+                    <!-- Thumbnail avec fix spécial pour playlists problématiques -->
+                    <% problematic_playlists = ['Rap Ivoire Power', 'Afro Vibes Vol. 1'] %>
+                    <% if problematic_playlists.include?(playlist.title) %>
+                      <!-- Fix temporaire : Force l'affichage SVG -->
+                      <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                        <svg class="w-20 h-20 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M3 22v-20l18 10-18 10z"/>
+                          <text x="12" y="16" font-family="Arial" font-size="8" fill="rgba(255,255,255,0.7)" text-anchor="middle">Fix</text>
                         </svg>
                       </div>
                     <% else %>
-                      <div class="w-full h-full bg-gray-700 flex items-center justify-center">
-                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5.14v14l11-7-11-7z"/>
-                        </svg>
-                      </div>
+                      <!-- Code YouTube normal pour autres playlists -->
+                      <% thumbnail_id = playlist.videos.first&.youtube_id %>
+                      <% if thumbnail_id %>
+                        <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
+                             alt="<%= playlist.title %>" 
+                             class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                             style="background-image: none !important;">
+                        <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
+                          <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 22v-20l18 10-18 10z"/>
+                          </svg>
+                        </div>
+                      <% else %>
+                        <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5.14v14l11-7-11-7z"/>
+                          </svg>
+                        </div>
+                      <% end %>
                     <% end %>
                   </div>
                   
@@ -260,14 +272,17 @@
                 <div class="playlist-image-section">
                   <% thumbnail_id = playlist.videos.first&.youtube_id %>
                   <% if thumbnail_id %>
-                    <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115" 
+                     <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115" 
                          alt="<%= playlist.title %>" 
                          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                         onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg?v=20250115'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg?v=20250115'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                          style="background-image: none !important;">
                     <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
-                      <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5.14v14l11-7-11-7z"/>
+                      <!-- SVG amélioré avec icône plus grande -->
+                      <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 22v-20l18 10-18 10z"/>
+                        <circle cx="8" cy="12" r="1" fill="white"/>
+                        <circle cx="16" cy="12" r="1" fill="white"/>
                       </svg>
                     </div>
                   <% else %>
@@ -352,11 +367,14 @@
                   <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                        alt="<%= playlist.title %>" 
                        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                       onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};"
+                       onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                        style="background-image: none !important;">
                   <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
-                    <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5.14v14l11-7-11-7z"/>
+                    <!-- SVG amélioré avec icône plus grande -->
+                    <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 22v-20l18 10-18 10z"/>
+                      <circle cx="8" cy="12" r="1" fill="white"/>
+                      <circle cx="16" cy="12" r="1" fill="white"/>
                     </svg>
                   </div>
                 <% else %>

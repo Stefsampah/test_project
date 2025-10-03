@@ -10,8 +10,13 @@ gem "sprockets-rails"
 # Use Importmap for JavaScript dependencies
 gem "importmap-rails"
 
-# Use sqlite3 as the database for Active Record
+# Use sqlite3 as the database for Active Record (development/test)
 gem "sqlite3", "~> 1.4"
+
+# Use PostgreSQL for production (Heroku)
+group :production do
+  gem 'pg', '~> 1.1'
+end
 
 # Use the Puma web server
 gem "puma", "~> 4.3"

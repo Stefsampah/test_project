@@ -174,8 +174,8 @@ afro_vibes_vol1_playlist = Playlist.find_or_create_by!(title: 'Afro Vibes Vol. 1
 end
 
 afro_vibes_vol1_videos = [
-  { title: 'Tout Doux', youtube_id: '1A-V7w7lUPM' },
   { title: 'Shatta Confessions', youtube_id: 'qRyBpbJvO8Y' },
+  { title: 'Tout Doux', youtube_id: '1A-V7w7lUPM' },
   { title: 'Faut Laisser', youtube_id: 'If23KrW8zLg' },
   { title: 'Ola Oli', youtube_id: 'V4gDbLmVyes' },
   { title: 'Tu sais bien', youtube_id: 'Umgg-ccUSwc' },
@@ -632,8 +632,8 @@ rap_ivoire_power_playlist = Playlist.find_or_create_by!(title: 'Rap Ivoire Power
 end
 
 rap_ivoire_power_videos = [
-  { title: 'À Toi – Socé', youtube_id: 'fDnY4Bz-ttY' },
   { title: 'GAWA – Lesky', youtube_id: 'uQjVJKBrGHo' },
+  { title: 'À Toi – Socé', youtube_id: 'fDnY4Bz-ttY' },
   { title: 'Foua (C\'est Facile) – Miedjia', youtube_id: 'zdMS4wZxXIs' },
   { title: 'Il sait – Leufa', youtube_id: '-LwHX5Nndcw' },
   { title: 'Pleure – Le JLO & Ameka Zrai', youtube_id: '4QLNn0BHjHs' },
@@ -918,10 +918,10 @@ released_vol2_playlist = Playlist.find_or_create_by!(title: 'RELEASED vol.2') do
 end
 
 released_vol2_videos = [
-  { title: 'Si tu pars', youtube_id: 'XILS3CclI1k' },
-  { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
-  { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
   { title: 'Loved You Better ft. Dean Lewis', youtube_id: '2XGO7NWwbnU' },
+  { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
+  { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
+  { title: 'Si tu pars', youtube_id: 'XILS3CclI1k' },
   { title: 'Other Side of Love', youtube_id: 'S76hEZ7nHN0' },
   { title: 'Grand-mère', youtube_id: 'lgdWKEtrBaU' },
   { title: 'Vampire Bat', youtube_id: 'H4hyhP-Dguw' },

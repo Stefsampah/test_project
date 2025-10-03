@@ -28,33 +28,22 @@
       
       <% thumbnail_id = playlist.videos.first&.youtube_id %>
       <% if thumbnail_id %>
-        <% 
-          # Essayer d'abord les images locales
-          local_images = [
-            "/playlist_thumbnails/#{playlist.id}_maxresdefault.jpg",
-            "/playlist_thumbnails/#{playlist.id}_hqdefault.jpg", 
-            "/playlist_thumbnails/#{playlist.id}_mqdefault.jpg",
-            "/playlist_thumbnails/#{playlist.id}_default.jpg"
-          ]
-          youtube_urls = [
-            "https://img.youtube.com/vi/#{thumbnail_id}/maxresdefault.jpg?v=20250115",
-            "https://img.youtube.com/vi/#{thumbnail_id}/hqdefault.jpg?v=20250115",
-            "https://img.youtube.com/vi/#{thumbnail_id}/mqdefault.jpg?v=20250115",
-            "https://img.youtube.com/vi/#{thumbnail_id}/default.jpg?v=20250115"
-          ]
-        %>
-        <img src="<%= local_images[0] %>" 
+        <!-- Système anti-casse : essayer plusieurs formats YouTube -->
+        <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg" 
              alt="<%= playlist.title %>" 
-             onerror="this.onerror=null; this.src='<%= local_images[1] %>'; this.onerror=function(){this.onerror=null; this.src='<%= local_images[2] %>'; this.onerror=function(){this.onerror=null; this.src='<%= local_images[3] %>'; this.onerror=function(){this.onerror=null; this.src='<%= youtube_urls[0] %>'; this.onerror=function(){this.onerror=null; this.src='<%= youtube_urls[1] %>'; this.onerror=function(){this.onerror=null; this.src='<%= youtube_urls[2] %>'; this.onerror=function(){this.onerror=null; this.src='<%= youtube_urls[3] %>'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};};};};};"
+             class="w-full h-full object-cover"
+             onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/0.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';}};};};"
              loading="lazy">
+        <!-- Fallback SVG si tous les formats YouTube échouent -->
         <div class="w-full h-full bg-gray-700 flex items-center justify-center" style="display: none;">
-          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5.14v14l11-7-11-7z"/>
           </svg>
         </div>
       <% else %>
+        <!-- Pas de thumbnail_id -->
         <div class="w-full h-full bg-gray-700 flex items-center justify-center">
-          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+          <svg class="w-20 h-20 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M8 5.14v14l11-7-11-7z"/>
           </svg>
         </div>

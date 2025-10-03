@@ -51,7 +51,7 @@ class BadgePlaylistUnlockTest < ActiveSupport::TestCase
     
     other_badge = Badge.create!(
       name: "Other Badge",
-      badge_type: "engager",
+      badge_type: "competitor",  # Utiliser un type différent pour éviter la validation uniqueness
       level: "silver",
       points_required: 200,
       description: "Other badge description"

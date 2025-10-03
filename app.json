@@ -1,0 +1,48 @@
+{
+  "name": "test_project_rails_app",
+  "description": "Application Rails avec système de récompenses et badges",
+  "repository": "https://github.com/votre-username/test_project",
+  "logo": "",
+  "keywords": ["rails", "ruby", "music", "badges", "rewards"],
+  "addons": [
+    {
+      "plan": "heroku-postgresql:mini"
+    }
+  ],
+  "env": {
+    "RAILS_ENV": {
+      "description": "Environnement Rails",
+      "value": "production"
+    },
+    "SECRET_KEY_BASE": {
+      "description": "Clé secrète Rails pour la production",
+      "generator": "secret"
+    },
+    "STRIPE_PUBLISHABLE_KEY": {
+      "description": "Clé publique Stripe (pk_live_... ou pk_test_...)",
+      "value": "pk_test_EXEMPLE_STRIPE_PUBLISHABLE_KEY"
+    },
+    "STRIPE_SECRET_KEY": {
+      "description": "Clé secrète Stripe (sk_live_... ou sk_test_...)",
+      "value": "sk_test_EXEMPLE_STRIPE_SECRET_KEY"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "basic"
+    } 
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/ruby"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "stack": "heroku-22",
+  "scripts": {
+    "postdeploy": "bundle exec rails db:migrate"
+  }
+}

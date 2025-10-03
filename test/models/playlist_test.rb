@@ -106,10 +106,10 @@ class PlaylistTest < ActiveSupport::TestCase
     end
   end
 
-  test "full_category should return category when both category and subcategory present" do
+  test "full_category/: should return category > subcategory when both category and subcategory present" do
     @playlist.category = "Pop"
     @playlist.subcategory = "Hits"
-    assert_equal "Pop", @playlist.full_category
+    assert_equal "Pop > Hits", @playlist.full_category
   end
 
   test "full_category should return category when only category present" do

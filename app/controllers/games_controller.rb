@@ -20,7 +20,7 @@ class GamesController < ApplicationController
     
     # Pour les playlists normales, vérifier si déjà terminée
     # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
-    completed_game = current_user.games.where(playlist: @playlist, completed_at: nil).where.not(completed_at: nil).last
+    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
     
     if completed_game
       redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
