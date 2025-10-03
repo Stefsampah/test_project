@@ -169,18 +169,44 @@
         </h2>
         
         <% if @badges.any? %>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Grille 2x2 pour les badges -->
+          <div class="grid grid-cols-2 gap-4">
             <% @badges.each do |user_badge| %>
-              <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-yellow-400">
+              <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-yellow-400 hover:bg-gray-600 transition-all">
+                <!-- Header avec badge niveau -->
                 <div class="flex items-center justify-between mb-2">
-                  <h3 class="font-semibold text-white"><%= user_badge.badge.name %></h3>
-                  <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">✓ Gagné</span>
+                  <div class="flex items-center gap-2">
+                    <% case user_badge.badge.level %>
+                      <% when 'bronze' %>
+                        <span class="text-lg">🥉</span>
+                      <% when 'silver' %>
+                        <span class="text-lg">🥈</span>
+                      <% when 'gold' %>
+                        <span class="text-lg">🥇</span>
+                    <% end %>
+                    <h3 class="font-semibold text-white text-sm"><%= user_badge.badge.name %></h3>
+                  </div>
+                  <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">✓</span>
                 </div>
-                <p class="text-gray-300 text-sm mb-2"><%= user_badge.badge.description %></p>
+                
+                <!-- Description -->
+                <p class="text-gray-300 text-xs mb-2 line-clamp-2"><%= user_badge.badge.description %></p>
+                
+                <!-- Footer avec date -->
                 <p class="text-gray-400 text-xs">
-                  Gagné le <%= user_badge.earned_at.strftime("%d/%m/%Y") %>
+                  <%= user_badge.earned_at.strftime("%d/%m/%Y") %>
                 </p>
               </div>
+            <% end %>
+          </div>
+          
+          <!-- Lien vers page badges complète -->
+          <div class="mt-6 text-center">
+            <%= link_to my_badges_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all" do %>
+              <span>Voir tous mes badges</span>
+              <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             <% end %>
           </div>
         <% else %>
@@ -368,6 +394,22 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* CSS pour line-clamp-2 sur les descriptions de badges */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  /* Style amélioré pour les cartes badges */
+  .badge-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+</style>
 
 <script>
   // Auto-submit du formulaire d'avatar
