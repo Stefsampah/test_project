@@ -1,20 +1,15 @@
 <% require 'ostruct' %>
 <!-- Page Scores Complète et Responsive -->
-<div class="min-h-screen bg-gray-900 py-6 sm:py-10">
+<div class="min-h-screen bg-gray-900 py-0">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     
-    <!-- En-tête responsive -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-      <div class="flex items-center mb-4 sm:mb-0">
-        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        <h1 class="text-2xl font-bold text-white ml-3">Classements</h1>
-      </div>
-      
-      <!-- Filtres responsive -->
+    <!-- En-tête harmonisé -->
+    <div class="text-center mb-4">
+      <h1 class="text-2xl font-bold text-white">Classements</h1>
+    </div>
+    
+    <!-- Filtres centrés -->
+    <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
         <button class="score-filter active px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors" data-target="all">Tous les scores</button>
         <button class="score-filter px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" data-target="my">Mes scores</button>
@@ -427,8 +422,14 @@
         <span>👤 Mon Profil</span>
       </button>
     </div>
-  </div>
-</div>
+<style>
+  /* Harmonisation des titres principaux */
+  h1.text-2xl.font-bold.text-white {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+</style>
 
 <style>
   .score-filter.active {

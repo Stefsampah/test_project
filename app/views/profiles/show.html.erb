@@ -1,5 +1,10 @@
-<div class="min-h-screen bg-gray-900 py-8">
-  <div class="max-w-6xl mx-auto px-4">
+<div class="min-h-screen bg-gray-900 py-0">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- En-tête harmonisé -->
+    <div class="text-center mb-4">
+      <h1 class="text-2xl font-bold text-white">Mon Profil</h1>
+    </div>
     
     <!-- En-tête du profil -->
     <div class="bg-gradient-to-r from-purple-800 to-blue-800 rounded-lg p-8 mb-8">
@@ -30,14 +35,14 @@
         
         <!-- Informations utilisateur -->
         <div class="text-center md:text-left">
-          <h1 class="text-4xl font-bold text-white mb-2">
+          <h2 class="text-4xl font-bold text-white mb-2">
             🎯 <%= @user.username || @user.email.split('@').first %>
-          </h1>
+          </h2>
           <p class="text-xl text-white/80 mb-4">
             📧 <%= @user.email %>
           </p>
           
-          <!-- Statistiques rapides alignées avec le système de badges -->
+          <!-- Statistiques rapides -->
           <div class="flex flex-wrap justify-center md:justify-start gap-4">
             <div class="bg-white/10 rounded-lg px-4 py-2">
               <span class="text-2xl font-bold text-yellow-400"><%= @user.game_points || 0 %></span>
@@ -60,19 +65,16 @@
       </div>
     </div>
 
-    <!-- Section Badges et Récompenses améliorée -->
+    <!-- Section Badges simplifiée -->
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🏆 Mes Réalisations</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Mes Badges -->
-        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6">
-          <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-            <span class="mr-2">🥇</span>
-            Mes Badges (<%= @badges.count %>)
-          </h3>
-          
-          <div class="grid grid-cols-2 gap-3">
+      <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6">
+        <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+          <span class="mr-2">🏆</span>
+          Mes Badges (<%= @badges.count %>)
+        </h3>
+        
+        <% if @badges.any? %>
+          <div class="grid grid-cols-2 gap-3 mb-4">
             <% @badges.take(4).each do |user_badge| %>
               <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center hover:bg-white/30 transition-all">
                 <div class="text-white text-lg mb-1">
@@ -101,108 +103,8 @@
             <% end %>
           </div>
           
-          <% if @badges.any? %>
-            <div class="mt-4">
-              <%= link_to rewards_path, class: "inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all" do %>
-                <span>Voir tous mes badges</span>
-                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              <% end %>
-            </div>
-          <% end %>
-        </div>
-        
-        <!-- Mes Récompenses -->
-        <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-xl p-6">
-          <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-            <span class="mr-2">🎁</span>
-            Mes Récompenses (<%= current_user.rewards.unlocked.count %>)
-          </h3>
-          
-          <div class="grid grid-cols-2 gap-3">
-            <% current_user.rewards.unlocked.take(4).each do |reward| %>
-              <div class="bg-white/20 backdrop-blur-sm rounded-lg p-3 text-center hover:bg-white/30 transition-all">
-                <div class="text-white text-lg mb-1">
-                  <% case reward.reward_type %>
-                  <% when 'challenge' %>
-                    🥉
-                  <% when 'exclusif' %>
-                    🥈
-                  <% when 'premium' %>
-                    🥇
-                  <% when 'ultime' %>
-                    🌈
-                  <% end %>
-                </div>
-                <div class="text-white text-xs font-medium">
-                  <%= reward.reward_type.humanize %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-          
-          <% if current_user.rewards.unlocked.any? %>
-            <div class="mt-4">
-              <%= link_to rewards_path, class: "inline-flex items-center px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all" do %>
-                <span>Voir toutes mes récompenses</span>
-                <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-              <% end %>
-            </div>
-          <% else %>
-            <div class="mt-4 text-white/70 text-sm">
-              Collectez plus de badges pour débloquer vos premières récompenses !
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <!-- Grille des sections -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- 🏆 Badges et Récompenses -->
-      <div class="bg-gray-800 rounded-lg p-6">
-        <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-          🏆 <span class="ml-2">Mes Badges</span>
-        </h2>
-        
-        <% if @badges.any? %>
-          <!-- Grille 2x2 pour les badges -->
-          <div class="grid grid-cols-2 gap-4">
-            <% @badges.each do |user_badge| %>
-              <div class="bg-gray-700 rounded-lg p-4 border-l-4 border-yellow-400 hover:bg-gray-600 transition-all">
-                <!-- Header avec badge niveau -->
-                <div class="flex items-center justify-between mb-2">
-                  <div class="flex items-center gap-2">
-                    <% case user_badge.badge.level %>
-                      <% when 'bronze' %>
-                        <span class="text-lg">🥉</span>
-                      <% when 'silver' %>
-                        <span class="text-lg">🥈</span>
-                      <% when 'gold' %>
-                        <span class="text-lg">🥇</span>
-                    <% end %>
-                    <h3 class="font-semibold text-white text-sm"><%= user_badge.badge.name %></h3>
-                  </div>
-                  <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">✓</span>
-                </div>
-                
-                <!-- Description -->
-                <p class="text-gray-300 text-xs mb-2 line-clamp-2"><%= user_badge.badge.description %></p>
-                
-                <!-- Footer avec date -->
-                <p class="text-gray-400 text-xs">
-                  <%= user_badge.earned_at.strftime("%d/%m/%Y") %>
-                </p>
-              </div>
-            <% end %>
-          </div>
-          
-          <!-- Lien vers page badges complète -->
-          <div class="mt-6 text-center">
-            <%= link_to my_badges_path, class: "inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all" do %>
+          <div class="text-center">
+            <%= link_to my_badges_path, class: "inline-flex items-center px-6 py-3 bg-white/20 text-white rounded-lg hover:bg-white/30 transition-all font-medium" do %>
               <span>Voir tous mes badges</span>
               <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
@@ -212,171 +114,15 @@
         <% else %>
           <div class="text-center py-8">
             <div class="text-6xl mb-4">🏆</div>
-            <p class="text-gray-400">Aucun badge encore gagné</p>
-            <p class="text-gray-500 text-sm mt-2">Jouez pour gagner vos premiers badges !</p>
+            <p class="text-white/70 mb-4">Aucun badge encore gagné</p>
+            <p class="text-white/50 text-sm">Jouez pour gagner vos premiers badges !</p>
           </div>
         <% end %>
       </div>
-
-      <!-- 📊 Nouvelles statistiques alignées avec le système de badges -->
-      <div class="bg-gray-800 rounded-lg p-6">
-        <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-          📊 <span class="ml-2">Mes Statistiques</span>
-        </h2>
-        
-        <div class="space-y-4">
-          <!-- Points de jeu -->
-          <div class="bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm">Points de jeu</p>
-                <p class="text-3xl font-bold text-white"><%= @user.game_points || 0 %></p>
-                <p class="text-white/60 text-xs">
-                  Régularité: <%= @user.regularity_points || 0 %> | Écoute: <%= @user.listening_points || 0 %> | Critique: <%= @user.critical_opinions_points || 0 %>
-                </p>
-              </div>
-              <div class="text-4xl">🎯</div>
-            </div>
-          </div>
-          
-          <!-- Points achetés -->
-          <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm">Points achetés</p>
-                <p class="text-3xl font-bold text-white"><%= @user.points || 0 %></p>
-                <p class="text-white/60 text-xs">
-                  Pour débloquer du contenu
-                </p>
-              </div>
-              <div class="text-4xl">💰</div>
-            </div>
-          </div>
-          
-          <!-- Régularité -->
-          <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm">Régularité</p>
-                <p class="text-3xl font-bold text-white"><%= (@user.playlists_per_day || 0).round(1) %></p>
-                <p class="text-white/60 text-xs">
-                  playlists par jour (moyenne 7 jours)
-                </p>
-              </div>
-              <div class="text-4xl">🎮</div>
-            </div>
-          </div>
-          
-          <!-- Temps d'écoute -->
-          <div class="bg-gradient-to-r from-cyan-600 to-blue-600 rounded-lg p-4">
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-white/80 text-sm">Temps d'écoute</p>
-                <p class="text-3xl font-bold text-white"><%= @user.watch_time_minutes || 0 %></p>
-                <p class="text-white/60 text-xs">
-                  minutes d'écoute totales
-                </p>
-              </div>
-              <div class="text-4xl">⏱️</div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <!-- Progression vers les badges -->
-    <div class="bg-gray-800 rounded-lg p-6 mt-8">
-      <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-        🎯 <span class="ml-2">Progression vers les badges</span>
-      </h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <% @user.next_badges.each do |badge_type, data| %>
-          <% if data[:badge] %>
-            <div class="bg-gray-700 rounded-lg p-4">
-              <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold text-white text-sm"><%= data[:badge].name %></h3>
-                <span class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-600 text-white px-2 py-1 rounded text-xs">
-                  <%= badge_type.capitalize %>
-                </span>
-              </div>
-              <div class="mb-3">
-                <div class="flex justify-between text-xs text-white/80 mb-1">
-                  <span>Progression</span>
-                  <span><%= data[:current_score] %> / <%= data[:badge].points_required %></span>
-                </div>
-                <div class="w-full bg-gray-600 rounded-full h-2">
-                  <% progress = (data[:current_score].to_f / data[:badge].points_required * 100).round %>
-                  <div class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-500 h-2 rounded-full" style="width: <%= [progress, 100].min %>%"></div>
-                </div>
-              </div>
-              <p class="text-xs text-white/60">
-                <% if data[:points_needed] > 0 %>
-                  Il manque <%= data[:points_needed] %> points
-                <% else %>
-                  Badge disponible !
-                <% end %>
-              </p>
-            </div>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Historique des scores -->
-    <% if @scores.any? %>
-      <div class="bg-gray-800 rounded-lg p-6 mt-8">
-        <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-          📈 <span class="ml-2">Historique des Scores</span>
-        </h2>
-        
-        <div class="overflow-x-auto">
-          <table class="w-full text-sm">
-            <thead>
-              <tr class="border-b border-gray-700">
-                <th class="text-left py-3 text-white">Playlist</th>
-                <th class="text-left py-3 text-white">Score</th>
-                <th class="text-left py-3 text-white">Date</th>
-                <th class="text-left py-3 text-white">Position</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @scores.order(points: :desc).each do |score| %>
-                <tr class="border-b border-gray-700 hover:bg-gray-700/50">
-                  <td class="py-3 text-white">
-                    <div class="flex items-center">
-                      <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-white text-xs font-bold">🎵</span>
-                      </div>
-                      <%= score.playlist.title %>
-                    </div>
-                  </td>
-                  <td class="py-3">
-                    <span class="text-yellow-400 font-bold"><%= score.points %></span>
-                  </td>
-                  <td class="py-3 text-gray-300">
-                    <%= score.created_at.strftime("%d/%m/%Y") %>
-                  </td>
-                  <td class="py-3">
-                    <% position = Score.where(playlist: score.playlist).where('points > ?', score.points).count + 1 %>
-                    <span class="px-2 py-1 rounded text-xs font-medium
-                      <%= position == 1 ? 'bg-yellow-600 text-white' : 
-                          position == 2 ? 'bg-gray-400 text-white' : 
-                          position == 3 ? 'bg-orange-600 text-white' : 
-                          'bg-gray-600 text-gray-300' %>">
-                      <%= position %>ème
-                    </span>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    <% end %>
 
     <!-- Actions -->
-    <div class="flex justify-center mt-8 gap-4">
+    <div class="flex justify-center gap-4">
       <button onclick="window.location.href='<%= playlists_path %>'" 
           class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all">
         <span>🎵 Jouer</span>
@@ -396,18 +142,11 @@
 </div>
 
 <style>
-  /* CSS pour line-clamp-2 sur les descriptions de badges */
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  /* Style amélioré pour les cartes badges */
-  .badge-card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  /* Harmonisation des titres principaux */
+  h1.text-2xl.font-bold.text-white {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
   }
 </style>
 

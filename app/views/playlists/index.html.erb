@@ -1,20 +1,8 @@
-<div class="min-h-screen bg-gray-900 py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen bg-gray-900 py-0">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
-    <div class="text-center mb-12">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5.14v14l11-7-11-7z"/>
-            </svg>
-          </div>
-        </div>
-        <h1 class="text-4xl font-bold text-white ml-4">Playlists</h1>
-      </div>
-      <p class="text-gray-300 max-w-2xl mx-auto">
-        Découvrez notre sélection de playlists musicales et votez pour vos chansons préférées.
-      </p>
+    <div class="text-center mb-4">
+      <h1 class="text-2xl font-bold text-white">Playlists</h1>
     </div>
 
     <!-- Boutons de filtrage -->
@@ -32,7 +20,7 @@
     </div>
 
     <!-- Tags de catégories -->
-    <div id="categories-section" class="mb-12">
+    <div id="categories-section" class="mb-6">
       <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 Par Catégorie</h2>
         <% categories = ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'] %>
       <div class="categories-grid mb-8">
@@ -135,6 +123,13 @@
 </div>
 
 <style>
+  /* Harmonisation des titres principaux */
+  h1.text-2xl.font-bold.text-white {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+  
   @keyframes gradient {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
