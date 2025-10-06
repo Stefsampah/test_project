@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Video Swipe App</title>
+    <title>Tube'NPlay</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= favicon_link_tag "logo/Copilot_20251006_162220.png" %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
@@ -179,12 +180,9 @@
       <div class="nav-container">
         <div class="nav-content">
           <!-- Logo -->
-          <a href="<%= root_path %>" class="logo" title="Accueil - Video Swipe" onclick="window.location.href='<%= root_path %>'; return false;">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4 8V4m0 4h16M4 8l4-4h8l4 4M4 8v8c0 1.1.9 2 2 2h12a2 2 0 002-2V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M10 12l4 2-4 2v-4z" fill="currentColor"/>
-            </svg>
-            <span>Video Swipe</span>
+          <a href="<%= root_path %>" class="logo" title="Accueil - Tube'NPlay" onclick="window.location.href='<%= root_path %>'; return false;">
+            <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
+            <span>Tube'NPlay</span>
           </a>
 
           <!-- Menu principal -->

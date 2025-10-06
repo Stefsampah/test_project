@@ -1,0 +1,289 @@
+<!-- Landing Page Tube'NPlay - Version Immersive -->
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+  
+  <!-- Hero Section -->
+  <div class="relative overflow-hidden h-screen flex items-center justify-center">
+    <div class="text-center px-4">
+      <!-- Nom de l'app -->
+      <h1 class="text-5xl font-bold text-white mb-8 drop-shadow-2xl">
+        Tube<span class="text-cyan-400 animate-pulse">'N</span>Play
+      </h1>
+      
+      <p class="text-2xl md:text-3xl text-white/90 mb-12 drop-shadow-lg">
+        L'expérience musicale ultime
+      </p>
+      
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-6 justify-center">
+        <% if user_signed_in? %>
+          <%= link_to playlists_path, class: "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+            🎵 JOUER MAINTENANT
+          <% end %>
+        <% else %>
+          <%= link_to new_user_registration_path, class: "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+            🚀 COMMENCER
+          <% end %>
+        <% end %>
+      </div>
+      
+      <!-- Logo agrandi en bas -->
+      <div class="mt-16">
+        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-32 h-32 mx-auto object-contain drop-shadow-2xl" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Playlists avec vraies playlists du jeu -->
+  <div class="py-20 bg-gray-900/80 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-bold text-white mb-4">Découvrez nos Playlists</h2>
+      </div>
+      
+      <!-- Vraies playlists du jeu avec images -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <% 
+          # Utiliser les vraies playlists du jeu depuis la base de données
+          real_playlists = Playlist.limit(4)
+        %>
+        <% real_playlists.each do |playlist| %>
+          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
+            <!-- Image de la playlist -->
+            <div class="aspect-square relative">
+              <% thumbnail_id = playlist.videos.first&.youtube_id %>
+              <% if thumbnail_id %>
+                <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
+                     alt="<%= playlist.title %>" 
+                     class="w-full h-full object-cover"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
+                    <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
+                  </div>
+                </div>
+              <% else %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
+                    <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
+                  </div>
+                </div>
+              <% end %>
+              
+              <!-- Overlay avec titre -->
+              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
+                <div class="text-white">
+                  <h3 class="text-lg font-bold drop-shadow-lg"><%= playlist.title %></h3>
+                  <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Badges avec vrais badges du jeu -->
+  <div class="py-20 bg-gradient-to-r from-yellow-600/20 to-orange-600/20">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-bold text-white mb-4">Collectionnez vos Badges</h2>
+      </div>
+      
+      <!-- Vrais badges du jeu avec images -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <% 
+          # Utiliser les vrais badges du jeu depuis la base de données
+          real_badges = Badge.limit(4)
+        %>
+        <% real_badges.each do |badge| %>
+          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
+            <!-- Image du badge -->
+            <div class="aspect-square relative">
+              <% if badge.image.present? %>
+                <%= image_tag "badges/#{badge.image}", 
+                    alt: badge.name, 
+                    class: "w-full h-full object-cover",
+                    onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= badge.name %></h3>
+                    <p class="text-white/80 text-sm"><%= badge.points_required %> points</p>
+                  </div>
+                </div>
+              <% else %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= badge.name %></h3>
+                    <p class="text-white/80 text-sm"><%= badge.points_required %> points</p>
+                  </div>
+                </div>
+              <% end %>
+              
+              <!-- Overlay avec titre -->
+              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
+                <div class="text-white">
+                  <h3 class="text-lg font-bold drop-shadow-lg"><%= badge.name %></h3>
+                  <div class="text-white/80 text-sm"><%= badge.points_required %> points</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Récompenses avec vraies récompenses du jeu -->
+  <div class="py-20 bg-gray-900/80">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-bold text-white mb-4">Débloquez des Récompenses</h2>
+      </div>
+      
+      <!-- Vraies récompenses du jeu avec images -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <% 
+          # Utiliser les vraies récompenses du jeu depuis la base de données
+          real_rewards = Reward.limit(4)
+        %>
+        <% real_rewards.each do |reward| %>
+          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
+            <!-- Image de la récompense -->
+            <div class="aspect-square relative">
+              <% if reward.image.present? %>
+                <%= image_tag "rewards/#{reward.image}", 
+                    alt: reward.name, 
+                    class: "w-full h-full object-cover",
+                    onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= reward.name %></h3>
+                    <p class="text-white/80 text-sm"><%= reward.reward_type.humanize %></p>
+                  </div>
+                </div>
+              <% else %>
+                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                  <div class="text-center">
+                    <h3 class="text-white text-lg font-bold"><%= reward.name %></h3>
+                    <p class="text-white/80 text-sm"><%= reward.reward_type.humanize %></p>
+                  </div>
+                </div>
+              <% end %>
+              
+              <!-- Overlay avec titre -->
+              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
+                <div class="text-white">
+                  <h3 class="text-lg font-bold drop-shadow-lg"><%= reward.name %></h3>
+                  <div class="text-white/80 text-sm"><%= reward.reward_type.humanize %></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Boutique avec vrais produits -->
+  <div class="py-20 bg-gradient-to-r from-green-600/20 to-blue-600/20">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-5xl font-bold text-white mb-4">Boutique Premium</h2>
+      </div>
+      
+      <!-- Vrais produits de la boutique -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Points -->
+        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
+          <h3 class="text-2xl font-bold text-white mb-4">Points Premium</h3>
+          <div class="text-4xl font-bold text-white mb-2">1000 pts</div>
+          <div class="text-white/80 mb-6">Débloquez du contenu exclusif</div>
+          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">3.99€</div>
+        </div>
+        
+        <!-- Abonnement VIP -->
+        <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
+          <h3 class="text-2xl font-bold text-white mb-4">Abonnement VIP</h3>
+          <div class="text-4xl font-bold text-white mb-2">Accès Total</div>
+          <div class="text-white/80 mb-6">Toutes les playlists premium</div>
+          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">9.99€/mois</div>
+        </div>
+        
+        <!-- Playlist Premium -->
+        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
+          <h3 class="text-2xl font-bold text-white mb-4">Playlist Premium</h3>
+          <div class="text-4xl font-bold text-white mb-2">500 points</div>
+          <div class="text-white/80 mb-6">Contenu exclusif et inédit</div>
+          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">Points</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Final Immersif -->
+  <div class="py-32 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 relative overflow-hidden">
+    <!-- Background simplifié -->
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-600/80 via-blue-600/80 to-cyan-600/80"></div>
+    
+    <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
+      <h2 class="text-6xl font-bold text-white mb-8 drop-shadow-2xl">
+        Prêt pour l'aventure ?
+      </h2>
+      
+      <% if user_signed_in? %>
+        <%= link_to playlists_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-16 py-8 rounded-full text-3xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+          COMMENCER MAINTENANT
+        <% end %>
+      <% else %>
+        <%= link_to new_user_registration_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-16 py-8 rounded-full text-3xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+          REJOINDRE LA COMMUNAUTÉ
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Footer minimaliste -->
+  <div class="bg-gray-900 py-8">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center">
+        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
+        <span class="text-white text-xl font-bold">Tube'NPlay</span>
+      </div>
+      
+      <div class="flex space-x-6 text-gray-400">
+        <% if user_signed_in? %>
+          <%= link_to "Jouer", playlists_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "Classements", scores_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "Badges", my_badges_path, class: "hover:text-white transition-colors" %>
+        <% else %>
+          <%= link_to "Connexion", new_user_session_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "Inscription", new_user_registration_path, class: "hover:text-white transition-colors" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Animations avancées */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+    50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.8); }
+  }
+  
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+</style>

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   devise_for :users
-  root 'playlists#index'
+  root 'pages#home'
   get 'check_user', to: 'tests#check_user'
   
   # Route temporaire pour gérer les anciens liens GET vers sign_out
@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   get 'my_badges', to: 'badges#my_badges'
   get 'all_badges', to: 'badges#all_badges'
 
-  resources :playlists, only: [:index, :show] do
+  get 'playlists', to: 'playlists#index'
+  resources :playlists, only: [:show] do
     resources :games, only: [:new, :create, :show] do
       member do
         post :swipe

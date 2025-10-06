@@ -12,3 +12,4 @@ Rails.application.config.assets.paths << Rails.root.join("app/assets/builds")
 # folder are already added.
 Rails.application.config.assets.precompile += %w( application.tailwind.css tailwind.css )
 Rails.application.config.assets.precompile += %w( badge_service.js )
+Rails.application.config.assets.precompile += %w( logo/Copilot_20251006_162220.png )
