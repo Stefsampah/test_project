@@ -27,7 +27,8 @@ cover_url = found_image ? asset_path("playlists/#{found_image}") : asset_path('p
   <div class="relative flex-1 flex flex-col justify-between bg-gray-900 p-6" style="flex-basis: 60%;">
     <div class="w-full">
       <h4 class="text-white text-lg font-semibold mb-2">Top Players</h4>
-      <% scores.first(3).each_with_index do |score, idx| %>
+      <% top_scores_by_user = scores.group_by(&:user_id).map { |user_id, user_scores| user_scores.max_by(&:points) }.sort_by { |s| -s.points } %>
+      <% top_scores_by_user.first(3).each_with_index do |score, idx| %>
         <% user = score.user %>
         <div class="flex items-center justify-between bg-black bg-opacity-40 rounded-xl px-3 py-2 mb-2">
           <div class="flex items-center gap-3">

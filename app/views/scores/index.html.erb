@@ -292,20 +292,29 @@
                     <p class="text-gray-400 text-sm"><%= playlist.genre %></p>
                   </div>
                   <div class="text-right flex-shrink-0">
-                    <div class="text-2xl font-bold text-cyan-400"><%= scores.count %></div>
+                    <div class="text-2xl font-bold text-cyan-400"><%= scores.map(&:user).uniq.count %></div>
                     <div class="text-xs text-gray-400">joueurs</div>
                   </div>
                 </div>
                 
-                <!-- Top 3 de cette playlist -->
+                <!-- Top 3 de cette playlist (meilleur score par utilisateur) -->
                 <div class="space-y-2">
-                  <% scores.first(3).each_with_index do |score, index| %>
+                  <% top_scores_by_user = scores.group_by(&:user_id).map { |user_id, user_scores| user_scores.max_by(&:points) }.sort_by { |s| -s.points } %>
+                  <% top_scores_by_user.first(3).each_with_index do |score, index| %>
+                    <% user = score.user %>
                     <div class="flex items-center justify-between p-2 bg-gray-700 rounded">
                       <div class="flex items-center space-x-2">
                         <div class="w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                           <%= index + 1 %>
                         </div>
-                        <span class="text-white text-sm truncate"><%= score.user.email.split('@').first %></span>
+                        <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-gray-600 text-white text-xs font-bold">
+                          <% if user.avatar.attached? %>
+                            <%= image_tag user.avatar, class: "w-6 h-6 object-cover" %>
+                          <% else %>
+                            <span><%= user.email.first.upcase %></span>
+                          <% end %>
+                        </div>
+                        <span class="text-white text-sm truncate"><%= user.email.split('@').first %></span>
                       </div>
                       <span class="text-yellow-400 font-bold text-sm"><%= score.points %></span>
                     </div>
