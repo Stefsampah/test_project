@@ -40,42 +40,92 @@
         <h2 class="text-5xl font-bold text-white mb-4">Découvrez nos Playlists</h2>
       </div>
       
-      <!-- Vraies playlists du jeu avec images -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <!-- Vraies playlists du jeu - carte custom home (2 colonnes, vignettes agrandies) -->
+      <div class="playlists-grid-home">
         <% 
-          # Utiliser les vraies playlists du jeu depuis la base de données
-          real_playlists = Playlist.limit(4)
+          # 4 catégories distinctes sans doublons
+          requested_categories = ["ROCK", "POP", "HITS", "HIP HOP"]
+          selected = []
+          used_ids = []
+          used_categories = []
+          
+          # D'abord, essayer de prendre une playlist de chaque catégorie demandée
+          requested_categories.each do |cat|
+            pl = Playlist.where("upper(category) = ?", cat).where.not(id: used_ids).first
+            if pl && !used_categories.include?(pl.category.upcase)
+              selected << pl
+              used_ids << pl.id
+              used_categories << pl.category.upcase
+            end
+          end
+          
+          # Si on n'a pas 4 playlists, compléter avec d'autres catégories
+          if selected.size < 4
+            remaining = 4 - selected.size
+            fallback_playlists = Playlist.where.not(id: used_ids)
+                                        .where.not("upper(category) IN (?)", used_categories)
+                                        .limit(remaining)
+            
+            fallback_playlists.each do |pl|
+              selected << pl
+              used_ids << pl.id
+              used_categories << pl.category.upcase
+            end
+          end
+          
+          real_playlists = selected
         %>
         <% real_playlists.each do |playlist| %>
-          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
-            <!-- Image de la playlist -->
-            <div class="aspect-square relative">
-              <% thumbnail_id = playlist.videos.first&.youtube_id %>
+          <div class="playlist-item-home">
+            <div class="text-center mb-2">
+              <div class="playlist-category-title"><%= (playlist.category.presence || 'HITS').upcase %></div>
+            </div>
+            <% 
+              # Essayer de trouver une vidéo avec youtube_id valide
+              videos_with_id = playlist.videos.select { |v| v.youtube_id.present? }
+              
+              if playlist.title&.include?("Futurs Hits") && videos_with_id.size > 1
+                # Pour la playlist Futurs Hits (qui contient Triangle des Bermudes), prendre la 2ème vidéo
+                video_with_id = videos_with_id[1]
+                thumbnail_id = video_with_id&.youtube_id
+              else
+                # Pour les autres playlists, prendre la première vidéo
+                video_with_id = videos_with_id.first
+                thumbnail_id = video_with_id&.youtube_id
+              end
+            %>
+            <div class="playlist-image-container">
               <% if thumbnail_id %>
-                <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
+                <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg" 
                      alt="<%= playlist.title %>" 
-                     class="w-full h-full object-cover"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                    <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
-                  </div>
+                     class="playlist-thumbnail"
+                     onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';};};">
+                <div class="playlist-fallback" style="display: none;">
+                  <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+                  <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
+                  <p class="text-white/80 text-sm"><%= playlist.videos.count %> titres</p>
                 </div>
               <% else %>
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                    <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
-                  </div>
+                <div class="playlist-fallback">
+                  <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
+                  <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
+                  <p class="text-white/80 text-sm"><%= playlist.videos.count %> titres</p>
                 </div>
               <% end %>
               
-              <!-- Overlay avec titre -->
-              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
-                <div class="text-white">
-                  <h3 class="text-lg font-bold drop-shadow-lg"><%= playlist.title %></h3>
-                  <div class="text-white/80 text-sm"><%= playlist.videos.count %> titres</div>
+              <!-- Overlay dégradé -->
+              <div class="playlist-overlay"></div>
+              
+              <!-- Titre retiré de l'overlay; affiché au-dessus -->
+
+              <!-- Bouton JOUER -->
+              <div class="playlist-button-overlay">
+                <div class="playlist-button-container">
+                  <% if user_signed_in? %>
+                    <%= link_to 'JOUER', new_playlist_game_path(playlist), class: 'playlist-play-button' %>
+                  <% else %>
+                    <%= link_to 'JOUER', new_user_session_path, class: 'playlist-play-button' %>
+                  <% end %>
                 </div>
               </div>
             </div>
@@ -143,43 +193,25 @@
         <h2 class="text-5xl font-bold text-white mb-4">Débloquez des Récompenses</h2>
       </div>
       
-      <!-- Vraies récompenses du jeu avec images -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <!-- Deux cartes de récompenses aléatoires (1 exclusif, 1 premium) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <% 
-          # Utiliser les vraies récompenses du jeu depuis la base de données
-          real_rewards = Reward.limit(4)
+          exclusif_reward = Reward.by_reward_type('exclusif').order(Arel.sql('RANDOM()')).first
+          premium_reward  = Reward.by_reward_type('premium').where.not(id: exclusif_reward&.id).order(Arel.sql('RANDOM()')).first
+          rewards_to_show = [exclusif_reward, premium_reward].compact
         %>
-        <% real_rewards.each do |reward| %>
-          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
-            <!-- Image de la récompense -->
-            <div class="aspect-square relative">
-              <% if reward.image.present? %>
-                <%= image_tag "rewards/#{reward.image}", 
-                    alt: reward.name, 
-                    class: "w-full h-full object-cover",
-                    onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= reward.name %></h3>
-                    <p class="text-white/80 text-sm"><%= reward.reward_type.humanize %></p>
-                  </div>
-                </div>
-              <% else %>
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= reward.name %></h3>
-                    <p class="text-white/80 text-sm"><%= reward.reward_type.humanize %></p>
-                  </div>
+        <% rewards_to_show.each do |reward| %>
+          <% card_colors = reward.reward_type == 'exclusif' ? 'from-purple-600 to-pink-600' : 'from-yellow-500 to-orange-600' %>
+          <div class="bg-gradient-to-br <%= card_colors %> rounded-2xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all">
+            <div class="text-white">
+              <h3 class="text-2xl font-bold mb-2"><%= reward.reward_type.humanize %></h3>
+              <p class="text-white/90 mb-4"><%= reward.reward_description %></p>
+              <% if reward.content_type.present? %>
+                <div class="inline-block bg-white/20 text-white px-3 py-1 rounded-full text-xs font-semibold mb-2">
+                  <%= reward.content_type.humanize %>
                 </div>
               <% end %>
-              
-              <!-- Overlay avec titre -->
-              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
-                <div class="text-white">
-                  <h3 class="text-lg font-bold drop-shadow-lg"><%= reward.name %></h3>
-                  <div class="text-white/80 text-sm"><%= reward.reward_type.humanize %></div>
-                </div>
-              </div>
+              <div class="mt-2 text-white/80 text-sm">Condition: <%= reward.quantity_required %> <%= reward.badge_type.present? ? reward.badge_type.humanize : 'badges' %></div>
             </div>
           </div>
         <% end %>
@@ -266,6 +298,227 @@
     </div>
   </div>
 </div>
+
+<style>
+  /* Grille home pour 2 colonnes fixes, comme la page playlists */
+  .playlists-grid-home {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem; /* légèrement plus grand */
+  }
+  .playlist-item-home {
+    display: block;
+    height: 100%;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .playlist-category-title {
+    color: #7c3aed; /* violet */
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+  }
+  
+  /* Styles pour les cartes playlist home - format uniforme */
+  .playlist-image-container {
+    position: relative;
+    width: 100%;
+    height: 20rem;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: #000;
+  }
+  
+  .playlist-thumbnail {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Style spécifique supprimé - on utilise une autre image maintenant */
+  
+  .playlist-fallback {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #4b5563, #1f2937);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .playlist-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0.1), transparent);
+    z-index: 5;
+  }
+  
+  /* Overlay de titre supprimé pour la home */
+  
+  .playlist-category-text-simple {
+    color: #7c3aed; /* violet comme le logo jouer */
+    font-size: 1.875rem;
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  }
+  
+  .playlist-button-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 15;
+  }
+  
+  .playlist-button-container {
+    width: 100%;
+    padding: 1rem 1rem 1rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.3), transparent);
+    display: flex;
+    justify-content: center;
+  }
+  
+  .playlist-play-button {
+    background: #7c3aed;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: 900;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 2px solid #a855f7;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .playlist-play-button:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  }
+  /* Styles pour les badges dans la section récompenses */
+  .badge-card {
+    border-radius: 0.75rem;
+    padding: 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    background-position: center;
+    background-size: cover;
+    background-blend-mode: soft-light;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 3px solid transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .badge-card.gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+    border-color: #ffd700;
+  }
+  
+  .badge-card.silver {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%);
+    box-shadow: 0 4px 12px rgba(192, 192, 192, 0.6);
+    border-color: #c0c0c0;
+  }
+  
+  .badge-card.bronze {
+    background: linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%);
+    box-shadow: 0 4px 12px rgba(205, 127, 50, 0.6);
+    border-color: #cd7f32;
+  }
+  
+  .badge-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  .badge-icon svg {
+    width: 100%;
+    height: 100%;
+    color: #333;
+    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.3));
+  }
+  
+  .badge-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.25rem;
+    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
+  }
+  
+  .badge-level {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #555;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 10px;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .badge-points {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  
+  .badge-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+  
+  /* Styles spécifiques par type */
+  .badge-card.competitor {
+    border-color: #ff9800;
+  }
+  
+  .badge-card.engager {
+    border-color: #2196f3;
+  }
+  
+  .badge-card.critic {
+    border-color: #f44336;
+  }
+  
+  .badge-card.challenger {
+    border-color: #9c27b0;
+  }
+</style>
 
 <style>
   /* Animations avancées */
