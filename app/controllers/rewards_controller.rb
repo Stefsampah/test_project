@@ -183,34 +183,6 @@ class RewardsController < ApplicationController
     render 'partners'
   end
   
-  def video_details
-    @reward = current_user.rewards.find(params[:id])
-    
-    # Récupérer la playlist associée à la récompense
-    if @reward.content_type&.start_with?('challenge_reward_playlist')
-      playlist_title = case @reward.content_type
-                      when 'challenge_reward_playlist_1' then 'Challenge Reward Playlist 1'
-                      when 'challenge_reward_playlist_2' then 'Challenge Reward Playlist 2'
-                      when 'challenge_reward_playlist_3' then 'Challenge Reward Playlist 3'
-                      when 'challenge_reward_playlist_4' then 'Challenge Reward Playlist 4'
-                      when 'challenge_reward_playlist_5' then 'Challenge Reward Playlist 5'
-                      when 'challenge_reward_playlist_6' then 'Challenge Reward Playlist 6'
-                      when 'challenge_reward_playlist_7' then 'Challenge Reward Playlist 7'
-                      when 'challenge_reward_playlist_8' then 'Challenge Reward Playlist 8'
-                      when 'challenge_reward_playlist_9' then 'Challenge Reward Playlist 9'
-                      when 'challenge_reward_playlist_10' then 'Challenge Reward Playlist 10'
-                      when 'challenge_reward_playlist_11' then 'Challenge Reward Playlist 11'
-                      when 'challenge_reward_playlist_12' then 'Challenge Reward Playlist 12'
-                      when 'challenge_reward_playlist_13' then 'Challenge Reward Playlist 13'
-                      when 'challenge_reward_playlist_14' then 'Challenge Reward Playlist 14'
-                      when 'challenge_reward_playlist_15' then 'Challenge Reward Playlist 15'
-                      end
-      
-      @playlist = Playlist.find_by(title: playlist_title) if playlist_title
-    end
-    
-    render 'video_details'
-  end
 
   def exclusif_content
     @reward = current_user.rewards.find(params[:id])

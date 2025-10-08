@@ -29,19 +29,19 @@
       # Utiliser les variables définies par le contrôleur
       # @quantity et @reward_type sont déjà définis dans l'action reward_details
       
-      # Définir la vidéo Premium de manière cohérente
-      premium_video_id = nil
-      if @quantity == 9
-        user_id = current_user.id
-        premium_videos = [
-          '0tJz8JjPbHU', # Didi B Félicia
-          'QVvfSQP3JLM', # Didi B Bouaké
-          'JWrIfPCyedU', # Charles Doré
-          'ICvSOFEKbgs', # Miki Accor Arena
-          'ORfP-QudA1A', # Timeo
-          'VFvDwn2r5RI'  # Marine
-        ]
-        premium_video_id = premium_videos[user_id % premium_videos.length]
+      # Définir le contenu Premium selon le type
+      premium_content = nil
+      if @quantity == 9 && @sample_reward
+        case @sample_reward.content_type
+        when 'exclusive_photos'
+          premium_content = { type: 'photos', message: '📸 Galerie de photos exclusives disponible' }
+        when 'backstage_video'
+          premium_content = { type: 'video', video_id: '0tJz8JjPbHU', title: 'Vidéo Backstage Exclusive' }
+        when 'concert_footage'
+          premium_content = { type: 'video', video_id: 'QVvfSQP3JLM', title: 'Extrait Concert Exclusif' }
+        else
+          premium_content = { type: 'video', video_id: 'JWrIfPCyedU', title: 'Contenu Premium' }
+        end
       end
       
       if @sample_reward
@@ -364,17 +364,29 @@
             <% if @current_count && @current_count >= @quantity %>
               <% if @quantity == 3 %>
                 <!-- Pour les playlists challenge -->
-                <a class="playlist-button" href="/playlists/31/games/new">🎵 Écouter la playlist</a>
-                <a class="playlist-button" href="/rewards/32/video_details">🎵 Détails des vidéos</a>
+                <button class="playlist-button" onclick="launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                  🎵 Écouter la playlist
+                </button>
               <% else %>
                 <!-- Pour les autres types de récompenses -->
                 <% if @sample_reward && @sample_reward.reward_type == 'exclusif' %>
                   <%
                     video_id = case @sample_reward.content_type
                                when 'didi_b_nouvelle_generation' then '9ECNWJ1R0fg'
-                               when 'didi_b_interview' then 'dQw4w9WgXcQ'
+                               when 'didi_b_interview' then '9ECNWJ1R0fg'  # Didi B Interview
                                when 'himra_legendes_urbaines' then 'qB7kLilZWwg'
-                               else nil
+                               when 'zoh_cataleya_serge_dioman' then 'JWrIfPCyedU'  # Charles Doré
+                               when 'werenoi_cstar_session' then '0tJz8JjPbHU'  # Didi B Félicia
+                               when 'himra_top_boy_live' then 'qB7kLilZWwg'  # Latto Somebody
+                               when 'timar_zz_lequel' then 'ORfP-QudA1A'  # Timeo
+                               when 'octogone_philipayne' then 'VFvDwn2r5RI'  # Marine
+                               when 'podcast_exclusive' then '9ECNWJ1R0fg'  # Didi B Nouvelle Génération
+                               when 'blog_article' then 'JWrIfPCyedU'  # Charles Doré
+                               when 'documentary' then 'qB7kLilZWwg'  # Latto Somebody
+                               when 'reportage' then 'QVvfSQP3JLM'  # Didi B Bouaké
+                               when 'audio_comments' then 'ICvSOFEKbgs'  # Miki Accor Arena
+                               when 'studio_session' then '0tJz8JjPbHU'  # Didi B Félicia
+                               else '9ECNWJ1R0fg'  # Fallback par défaut
                                end
                   %>
                   <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
@@ -389,9 +401,19 @@
                   </button>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'premium' %>
                   <!-- Pour les récompenses premium -->
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= premium_video_id %>', '<%= content_title %>')">
-                    🎬 Regarder le contenu
+                  <% if premium_content && premium_content[:type] == 'photos' %>
+                    <button class="playlist-button" onclick="showPremiumGallery('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                      Afficher le contenu
+                    </button>
+                  <% elsif premium_content && premium_content[:type] == 'video' %>
+                    <button class="playlist-button" onclick="showExclusifVideo('<%= premium_content[:video_id] %>', '<%= premium_content[:title] %>')">
+                      🎬 Regarder la vidéo
                   </button>
+                  <% else %>
+                    <div class="text-center py-3 bg-gray-600/20 rounded-lg">
+                      <p class="text-gray-400 text-sm">Contenu en cours de préparation</p>
+                    </div>
+                  <% end %>
                 <% else %>
                   <a class="playlist-button" href="#">
                     <%= case content_type
@@ -409,17 +431,29 @@
               <!-- Si la récompense est débloquée, afficher les boutons même si la condition de badges n'est pas satisfaite -->
               <% if @quantity == 3 %>
                 <!-- Pour les playlists challenge -->
-                <a class="playlist-button" href="/playlists/31/games/new">🎵 Écouter la playlist</a>
-                <a class="playlist-button" href="/rewards/32/video_details">🎵 Détails des vidéos</a>
+                <button class="playlist-button" onclick="launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                  🎵 Écouter la playlist
+                </button>
               <% else %>
                 <!-- Pour les autres types de récompenses -->
                 <% if @sample_reward && @sample_reward.reward_type == 'exclusif' %>
                   <%
                     video_id = case @sample_reward.content_type
                                when 'didi_b_nouvelle_generation' then '9ECNWJ1R0fg'
-                               when 'didi_b_interview' then 'dQw4w9WgXcQ'
+                               when 'didi_b_interview' then '9ECNWJ1R0fg'  # Didi B Interview
                                when 'himra_legendes_urbaines' then 'qB7kLilZWwg'
-                               else nil
+                               when 'zoh_cataleya_serge_dioman' then 'JWrIfPCyedU'  # Charles Doré
+                               when 'werenoi_cstar_session' then '0tJz8JjPbHU'  # Didi B Félicia
+                               when 'himra_top_boy_live' then 'qB7kLilZWwg'  # Latto Somebody
+                               when 'timar_zz_lequel' then 'ORfP-QudA1A'  # Timeo
+                               when 'octogone_philipayne' then 'VFvDwn2r5RI'  # Marine
+                               when 'podcast_exclusive' then '9ECNWJ1R0fg'  # Didi B Nouvelle Génération
+                               when 'blog_article' then 'JWrIfPCyedU'  # Charles Doré
+                               when 'documentary' then 'qB7kLilZWwg'  # Latto Somebody
+                               when 'reportage' then 'QVvfSQP3JLM'  # Didi B Bouaké
+                               when 'audio_comments' then 'ICvSOFEKbgs'  # Miki Accor Arena
+                               when 'studio_session' then '0tJz8JjPbHU'  # Didi B Félicia
+                               else '9ECNWJ1R0fg'  # Fallback par défaut
                                end
                   %>
                   <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
@@ -434,9 +468,19 @@
                   </button>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'premium' %>
                   <!-- Pour les récompenses premium -->
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= premium_video_id %>', '<%= content_title %>')">
-                    🎬 Regarder le contenu
+                  <% if premium_content && premium_content[:type] == 'photos' %>
+                    <button class="playlist-button" onclick="showPremiumGallery('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                      Afficher le contenu
                   </button>
+                  <% elsif premium_content && premium_content[:type] == 'video' %>
+                    <button class="playlist-button" onclick="showExclusifVideo('<%= premium_content[:video_id] %>', '<%= premium_content[:title] %>')">
+                      🎬 Regarder la vidéo
+                    </button>
+                  <% else %>
+                    <div class="text-center py-3 bg-gray-600/20 rounded-lg">
+                      <p class="text-gray-400 text-sm">Contenu en cours de préparation</p>
+                    </div>
+                  <% end %>
                 <% elsif @sample_reward && @sample_reward.reward_type == 'ultime' %>
                   <!-- Pour les récompenses ultimes -->
                   <%
@@ -681,6 +725,340 @@ function showExclusifVideo(videoId, title) {
   
   // Afficher la modal
   modal.style.display = 'block';
+}
+
+// Configuration des playlists Challenge avec navigation
+const CHALLENGE_PLAYLISTS = [
+  { id: 'challenge_reward_playlist_1', videoId: 'qB7kLilZWwg', title: 'Challenge Reward Playlist 1', artist: 'Latto - Somebody' },
+  { id: 'challenge_reward_playlist_2', videoId: '9ECNWJ1R0fg', title: 'Challenge Reward Playlist 2', artist: 'Didi B Nouvelle Génération' },
+  { id: 'challenge_reward_playlist_3', videoId: '0tJz8JjPbHU', title: 'Challenge Reward Playlist 3', artist: 'Didi B Félicia' },
+  { id: 'challenge_reward_playlist_4', videoId: 'QVvfSQP3JLM', title: 'Challenge Reward Playlist 4', artist: 'Didi B Bouaké' },
+  { id: 'challenge_reward_playlist_5', videoId: 'JWrIfPCyedU', title: 'Challenge Reward Playlist 5', artist: 'Charles Doré' },
+  { id: 'challenge_reward_playlist_6', videoId: 'ICvSOFEKbgs', title: 'Challenge Reward Playlist Alternative 6', artist: 'Miki Accor Arena' },
+  { id: 'challenge_reward_playlist_7', videoId: 'ORfP-QudA1A', title: 'Challenge Reward Playlist Alternative 7', artist: 'Timeo' },
+  { id: 'challenge_reward_playlist_8', videoId: 'VFvDwn2r5RI', title: 'Challenge Reward Playlist Alternative 8', artist: 'Marine' },
+  { id: 'challenge_reward_playlist_9', videoId: 'qB7kLilZWwg', title: 'Challenge Reward Playlist Alternative 9', artist: 'Latto - Somebody' },
+  { id: 'challenge_reward_playlist_10', videoId: '9ECNWJ1R0fg', title: 'Challenge Reward Videos 10', artist: 'Didi B Nouvelle Génération' },
+  { id: 'challenge_reward_playlist_11', videoId: '0tJz8JjPbHU', title: 'Challenge Reward Videos 11', artist: 'Didi B Félicia' },
+  { id: 'challenge_reward_playlist_12', videoId: 'QVvfSQP3JLM', title: 'Challenge Reward Videos 12', artist: 'Didi B Bouaké' },
+  { id: 'challenge_reward_playlist_13', videoId: 'JWrIfPCyedU', title: 'Challenge Reward Videos 13', artist: 'Charles Doré' },
+  { id: 'challenge_reward_playlist_14', videoId: 'ICvSOFEKbgs', title: 'Challenge Reward Videos 14', artist: 'Miki Accor Arena' },
+  { id: 'challenge_reward_playlist_15', videoId: 'ORfP-QudA1A', title: 'Challenge Reward Videos 15', artist: 'Timeo' }
+];
+
+// Variable globale pour suivre la position actuelle
+let currentPlaylistIndex = 0;
+
+// Fonction pour lancer directement le contenu Challenge avec navigation
+function launchChallengeContent(contentType, title) {
+  console.log('🎵 Lancement direct du contenu challenge:', contentType, title);
+  
+  // Trouver l'index de la playlist actuelle
+  currentPlaylistIndex = CHALLENGE_PLAYLISTS.findIndex(playlist => playlist.id === contentType);
+  if (currentPlaylistIndex === -1) {
+    currentPlaylistIndex = 0; // Fallback
+  }
+  
+  // Lancer la vidéo avec navigation
+  showChallengeVideoWithNavigation();
+}
+
+// Fonction pour afficher la vidéo avec navigation
+function showChallengeVideoWithNavigation() {
+  const currentPlaylist = CHALLENGE_PLAYLISTS[currentPlaylistIndex];
+  const hasNext = currentPlaylistIndex < CHALLENGE_PLAYLISTS.length - 1;
+  const hasPrev = currentPlaylistIndex > 0;
+  
+  // Créer ou réutiliser la modal
+  let modal = document.getElementById('challengeVideoModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'challengeVideoModal';
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+    modal.innerHTML = `
+      <div style="background: white; border-radius: 12px; padding: 20px; max-width: 90vw; max-height: 90vh; width: 800px; position: relative;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <h3 class="challenge-video-title" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;"></h3>
+          <button onclick="closeChallengeVideoModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">&times;</button>
+        </div>
+        <div class="challenge-video-container" style="margin-bottom: 20px; min-height: 300px;"></div>
+        <div class="challenge-navigation" style="display: flex; justify-content: space-between; align-items: center;">
+          <button id="prevBtn" onclick="previousVideo()" style="background: #6b7280; color: white; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer;">
+            ⬅️ Précédent
+          </button>
+          <div style="text-align: center;">
+            <span id="currentTrack" style="font-size: 14px; color: #666;"></span>
+          </div>
+          <button id="nextBtn" onclick="nextVideo()" style="background: #6b7280; color: white; padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer;">
+            Suivant ➡️
+          </button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // Mettre à jour le contenu
+  const titleElement = modal.querySelector('.challenge-video-title');
+  const videoContainer = modal.querySelector('.challenge-video-container');
+  const currentTrackElement = modal.querySelector('#currentTrack');
+  const prevBtn = modal.querySelector('#prevBtn');
+  const nextBtn = modal.querySelector('#nextBtn');
+  
+  if (titleElement) titleElement.textContent = currentPlaylist.title;
+  if (currentTrackElement) {
+    currentTrackElement.textContent = `${currentPlaylistIndex + 1} / ${CHALLENGE_PLAYLISTS.length} - ${currentPlaylist.artist}`;
+  }
+  
+  // Gérer les boutons de navigation
+  if (prevBtn) {
+    prevBtn.disabled = !hasPrev;
+    prevBtn.style.opacity = hasPrev ? '1' : '0.5';
+  }
+  if (nextBtn) {
+    nextBtn.disabled = !hasNext;
+    nextBtn.style.opacity = hasNext ? '1' : '0.5';
+  }
+  
+  // Afficher la vidéo YouTube
+  if (videoContainer) {
+    console.log('🎬 Affichage vidéo:', currentPlaylist.videoId, currentPlaylist.title);
+    videoContainer.innerHTML = `
+      <div style="position: relative; width: 100%; height: 400px; background: #000; border-radius: 8px; overflow: hidden;">
+        <iframe 
+          src="https://www.youtube.com/embed/${currentPlaylist.videoId}?autoplay=1&rel=0&controls=1" 
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    `;
+  }
+  
+  // Afficher la modal
+  modal.style.display = 'flex';
+}
+
+// Fonction pour la vidéo suivante
+function nextVideo() {
+  if (currentPlaylistIndex < CHALLENGE_PLAYLISTS.length - 1) {
+    currentPlaylistIndex++;
+    showChallengeVideoWithNavigation();
+  }
+}
+
+// Fonction pour la vidéo précédente
+function previousVideo() {
+  if (currentPlaylistIndex > 0) {
+    currentPlaylistIndex--;
+    showChallengeVideoWithNavigation();
+  }
+}
+
+// Fonction pour fermer la modal vidéo Challenge
+function closeChallengeVideoModal() {
+  const modal = document.getElementById('challengeVideoModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Fonction pour afficher les playlists Challenge (supprimée - remplacée par launchChallengeContent)
+function showChallengePlaylist(contentType, title) {
+  console.log('🎵 Affichage playlist challenge:', contentType, title);
+  
+  // Créer une modal pour la playlist
+  let modal = document.getElementById('challengeModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'challengeModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white rounded-lg p-6 max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl font-bold text-gray-800"></h3>
+          <button onclick="closeChallengeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        <div class="challenge-content"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // Contenu selon le type de playlist
+  let content = '';
+  switch(contentType) {
+    case 'challenge_reward_playlist_1':
+      content = `
+        <div class="text-center">
+          <div class="text-6xl mb-4">🎵</div>
+          <h4 class="text-xl font-bold mb-4">Challenge Reward Playlist 1</h4>
+          <p class="text-gray-600 mb-4">Playlist exclusive débloquée via les récompenses challenge</p>
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <p class="text-sm text-gray-700">🎯 Cette playlist contient 10 titres exclusifs</p>
+            <p class="text-sm text-gray-700">🏆 Débloquée avec 3 badges Challenge</p>
+          </div>
+          <button class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+            🎮 Jouer à la playlist
+          </button>
+        </div>
+      `;
+      break;
+    default:
+      content = `
+        <div class="text-center">
+          <div class="text-6xl mb-4">🎵</div>
+          <h4 class="text-xl font-bold mb-4">${title}</h4>
+          <p class="text-gray-600 mb-4">Playlist exclusive débloquée via les récompenses challenge</p>
+          <div class="bg-gray-100 p-4 rounded-lg mb-4">
+            <p class="text-sm text-gray-700">🎯 Contenu exclusif disponible</p>
+            <p class="text-sm text-gray-700">🏆 Débloquée avec 3 badges Challenge</p>
+          </div>
+          <button class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600">
+            🎮 Jouer à la playlist
+          </button>
+        </div>
+      `;
+  }
+  
+  // Mettre à jour le contenu
+  const titleElement = modal.querySelector('h3');
+  const contentElement = modal.querySelector('.challenge-content');
+  
+  if (titleElement) titleElement.textContent = title;
+  if (contentElement) contentElement.innerHTML = content;
+  
+  // Afficher la modal
+  modal.style.display = 'flex';
+}
+
+// Fonction pour afficher les détails des vidéos Challenge
+function showChallengeDetails(contentType, title) {
+  console.log('🎵 Affichage détails challenge:', contentType, title);
+  
+  // Créer une modal pour les détails
+  let modal = document.getElementById('challengeModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'challengeModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white rounded-lg p-6 max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl font-bold text-gray-800"></h3>
+          <button onclick="closeChallengeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        <div class="challenge-content"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // Contenu des détails
+  let content = `
+    <div class="text-center">
+      <div class="text-6xl mb-4">📋</div>
+      <h4 class="text-xl font-bold mb-4">Détails des Vidéos</h4>
+      <p class="text-gray-600 mb-4">Informations sur les vidéos de la playlist</p>
+      <div class="bg-gray-100 p-4 rounded-lg mb-4 text-left">
+        <h5 class="font-bold mb-2">🎵 Contenu de la playlist :</h5>
+        <ul class="text-sm text-gray-700 space-y-1">
+          <li>• 10 titres exclusifs</li>
+          <li>• Mix de genres musicaux</li>
+          <li>• Versions alternatives</li>
+          <li>• Contenu premium</li>
+        </ul>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg mb-4">
+        <p class="text-sm text-blue-700">🏆 Cette playlist a été débloquée grâce à vos 3 badges Challenge !</p>
+      </div>
+    </div>
+  `;
+  
+  // Mettre à jour le contenu
+  const titleElement = modal.querySelector('h3');
+  const contentElement = modal.querySelector('.challenge-content');
+  
+  if (titleElement) titleElement.textContent = `${title} - Détails`;
+  if (contentElement) contentElement.innerHTML = content;
+  
+  // Afficher la modal
+  modal.style.display = 'flex';
+}
+
+// Fonction pour fermer la modal Challenge
+function closeChallengeModal() {
+  const modal = document.getElementById('challengeModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Fonction pour afficher la galerie premium (photos exclusives)
+function showPremiumGallery(contentType, title) {
+  console.log('📸 Affichage galerie premium:', contentType, title);
+  
+  // Images selon le type de contenu premium
+  let images = [];
+  let galleryTitle = '';
+  
+  switch(contentType) {
+    case 'exclusive_photos':
+      images = [
+        'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg',
+        'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', 
+        'https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg',
+        'https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg',
+        'https://img.youtube.com/vi/ORfP-QudA1A/maxresdefault.jpg',
+        'https://img.youtube.com/vi/VFvDwn2r5RI/maxresdefault.jpg'
+      ];
+      galleryTitle = '📸 Photos Exclusives d\'Artistes';
+      break;
+    default:
+      images = ['https://via.placeholder.com/300x200/FF69B4/FFFFFF?text=Photos+Exclusives'];
+      galleryTitle = '📸 Galerie Premium';
+  }
+  
+  // Créer ou réutiliser la modal
+  let modal = document.getElementById('ultimeModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'ultimeModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+    modal.innerHTML = `
+      <div class="bg-white rounded-lg p-6 max-w-4xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-2xl font-bold text-gray-800"></h3>
+          <button onclick="closeUltimeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        </div>
+        <h4 class="text-lg text-gray-600 mb-4"></h4>
+        <div class="ultime-gallery-container grid grid-cols-2 md:grid-cols-3 gap-4"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // Mettre à jour le contenu
+  const titleElement = modal.querySelector('h3');
+  const subtitleElement = modal.querySelector('h4');
+  const galleryContainer = modal.querySelector('.ultime-gallery-container');
+  
+  if (titleElement) titleElement.textContent = title;
+  if (subtitleElement) subtitleElement.textContent = galleryTitle;
+  if (galleryContainer) {
+    galleryContainer.innerHTML = images.map((img, index) => `
+      <div class="gallery-item">
+        <img src="${img}" 
+             alt="Photo ${index + 1}" 
+             class="gallery-image w-full h-48 object-cover rounded-lg"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200/FF69B4/FFFFFF?text=Photo+${index + 1}';">
+      </div>
+    `).join('');
+  }
+  
+  // Afficher la modal
+  modal.style.display = 'flex';
 }
 
 function showUltimeGallery(contentType, title) {

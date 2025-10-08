@@ -17,6 +17,9 @@
 /* Import des animations de récompenses */
 @import "reward_animations";
 
+/* Import des cartes de récompenses unifiées */
+@import "unified_reward_cards";
+
 /* Styles de base */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

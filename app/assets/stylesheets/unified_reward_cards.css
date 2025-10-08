@@ -1,0 +1,149 @@
+/* 🎫 Styles pour les cartes de récompenses unifiées - Tube'NPlay */
+
+.unified-reward-card {
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background: white;
+  margin: 0 auto;
+}
+
+.unified-reward-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #8b5cf6;
+}
+
+.unified-reward-card.unlocked {
+  border-color: #10b981;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1), 0 4px 6px -2px rgba(16, 185, 129, 0.05);
+}
+
+.unified-reward-card.unlocked:hover {
+  border-color: #059669;
+  box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.2), 0 10px 10px -5px rgba(16, 185, 129, 0.1);
+}
+
+/* Bannière de la carte */
+.reward-banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.reward-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+  z-index: 1;
+}
+
+/* Badge du type de récompense */
+.reward-type-badge {
+  z-index: 2;
+}
+
+/* Overlay avec titre */
+.reward-overlay {
+  z-index: 2;
+}
+
+/* Contenu de la carte */
+.reward-content {
+  position: relative;
+}
+
+/* Footer de la carte */
+.reward-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .unified-reward-card {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .reward-banner {
+    height: 150px;
+  }
+  
+  .reward-content {
+    padding: 15px;
+  }
+  
+  .reward-footer {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+/* Animations */
+@keyframes rewardCardPop {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.unified-reward-card {
+  animation: rewardCardPop 0.3s ease-out;
+}
+
+/* États spéciaux */
+.unified-reward-card.locked {
+  opacity: 0.7;
+  filter: grayscale(0.3);
+}
+
+.unified-reward-card.locked:hover {
+  transform: none;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Grille pour les cartes */
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 4rem; /* Espacement maximal */
+  padding: 3rem; /* Padding maximal */
+}
+
+@media (max-width: 768px) {
+  .rewards-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem; /* Espacement mobile maximal */
+    padding: 2rem; /* Padding mobile maximal */
+  }
+}
+
+/* Amélioration de la visibilité des images */
+.reward-banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.reward-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%); /* Overlay plus doux */
+  z-index: 1;
+}
