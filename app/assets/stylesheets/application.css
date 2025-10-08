@@ -14,6 +14,9 @@
  *= require_self
  */
 
+/* Import des animations de récompenses */
+@import "reward_animations";
+
 /* Styles de base */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

@@ -1,4 +1,6 @@
 class Reward < ApplicationRecord
+  include RewardAnimationTrigger
+  
   belongs_to :user
   
   validates :badge_type, presence: true

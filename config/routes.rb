@@ -97,4 +97,7 @@ Rails.application.routes.draw do
   post 'store/purchase_points', to: 'store#purchase_points', as: :purchase_points_store
   post 'store/unlock_playlist', to: 'store#unlock_playlist', as: :unlock_playlist_store
   post 'store/unlock_exclusive_content', to: 'store#unlock_exclusive_content', as: :unlock_exclusive_content_store
+  
+  # Route pour la démonstration des animations de récompenses
+  get 'reward_animations_demo', to: 'pages#reward_animations_demo', as: :reward_animations_demo
 end

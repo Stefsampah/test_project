@@ -5,6 +5,9 @@ import "controllers"
 // Import badge system
 import "./badge_system"
 
+// Import reward animations system
+import "./reward_animations"
+
 document.addEventListener('DOMContentLoaded', () => {
   const sections = document.querySelectorAll('.toggle-section');
 

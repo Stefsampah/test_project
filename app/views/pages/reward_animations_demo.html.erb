@@ -1,0 +1,1038 @@
+<!-- 🎉 Page de Démonstration des Animations de Récompenses - Tube'NPlay -->
+
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
+  <!-- Header -->
+  <div class="bg-black/20 backdrop-blur-sm border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-12 h-12 mr-4 object-contain" %>
+          <div>
+            <h1 class="text-3xl font-bold text-white">🎉 Animations de Récompenses</h1>
+            <p class="text-gray-300">Démonstration du système d'animations spectaculaires</p>
+          </div>
+        </div>
+        <%= link_to "← Retour", root_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenu principal -->
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    
+    <!-- Section de test des animations -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6">🎮 Testez les Animations</h2>
+      <p class="text-gray-300 mb-6">
+        Cliquez sur les boutons ci-dessous pour déclencher les différentes animations de récompenses.
+        Chaque animation comprend : notification popup → cadeau → explosion → félicitations !
+      </p>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button onclick="testRewardAnimation('challenge')" 
+                class="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          🎯 Challenge
+        </button>
+        
+        <button onclick="testRewardAnimation('exclusif')" 
+                class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          ⭐ Exclusif
+        </button>
+        
+        <button onclick="testRewardAnimation('premium')" 
+                class="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          👑 Premium
+        </button>
+        
+        <button onclick="testRewardAnimation('ultime')" 
+                class="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-6 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg">
+          🌈 Ultime
+        </button>
+      </div>
+      
+      <!-- Boutons de test -->
+      <div class="mt-6 text-center space-y-4">
+        <div>
+          <button onclick="testDirectAnimation()" 
+                  class="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg text-lg">
+            🚀 TEST DIRECT - Challenge
+          </button>
+          <p class="text-gray-400 text-sm mt-2">Animation complète avec explosion</p>
+        </div>
+        
+        <div>
+          <button onclick="testSimpleMessages()" 
+                  class="bg-gradient-to-r from-green-500 to-blue-600 hover:from-green-600 hover:to-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg text-lg">
+            🧪 TEST SIMPLE - Messages
+          </button>
+          <p class="text-gray-400 text-sm mt-2">Test simple pour vérifier l'affichage des messages</p>
+        </div>
+        
+        <div>
+          <button onclick="testCongratulationsDirect()" 
+                  class="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-8 py-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg text-lg">
+            🎉 TEST DIRECT - Félicitations
+          </button>
+          <p class="text-gray-400 text-sm mt-2">Test direct des messages de félicitations et carte</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section d'information sur les animations -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+      
+      <!-- Animation Sequence -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+        <h3 class="text-xl font-bold text-white mb-4">🎬 Séquence d'Animation</h3>
+        <div class="space-y-3">
+          <div class="flex items-center text-gray-300">
+            <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">1</span>
+            <span>Popup de notification apparaît en haut à droite</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">2</span>
+            <span>Cadeau animé apparaît au centre de l'écran</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">3</span>
+            <span>Cliquez sur le cadeau pour l'ouvrir</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">4</span>
+            <span>Explosion avec confettis et étincelles</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3">5</span>
+            <span>Message de félicitations avec effet pop</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Effets Visuels -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+        <h3 class="text-xl font-bold text-white mb-4">✨ Effets Visuels</h3>
+        <div class="space-y-3">
+          <div class="flex items-center text-gray-300">
+            <span class="text-2xl mr-3">🎊</span>
+            <span>Confettis colorés qui tombent</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="text-2xl mr-3">✨</span>
+            <span>Étincelles dorées flottantes</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="text-2xl mr-3">💥</span>
+            <span>Particules d'explosion radiales</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="text-2xl mr-3">🎁</span>
+            <span>Cadeau avec dégradé animé</span>
+          </div>
+          <div class="flex items-center text-gray-300">
+            <span class="text-2xl mr-3">🎉</span>
+            <span>Messages avec animations pop</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section intégration -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8">
+      <h3 class="text-xl font-bold text-white mb-4">🔧 Intégration dans l'Application</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <div class="bg-gray-800/50 rounded-lg p-4">
+          <h4 class="font-bold text-white mb-2">📱 Côté Client</h4>
+          <ul class="text-sm text-gray-300 space-y-1">
+            <li>• CSS animations avancées</li>
+            <li>• JavaScript pour les interactions</li>
+            <li>• Stimulus controller</li>
+            <li>• Effets de particules</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-800/50 rounded-lg p-4">
+          <h4 class="font-bold text-white mb-2">🖥️ Côté Serveur</h4>
+          <ul class="text-sm text-gray-300 space-y-1">
+            <li>• Helper Rails</li>
+            <li>• Intégration avec le modèle Reward</li>
+            <li>• Déclenchement automatique</li>
+            <li>• Gestion des états</li>
+          </ul>
+        </div>
+        
+        <div class="bg-gray-800/50 rounded-lg p-4">
+          <h4 class="font-bold text-white mb-2">🎯 Utilisation</h4>
+          <ul class="text-sm text-gray-300 space-y-1">
+            <li>• Déclenchement automatique</li>
+            <li>• Test manuel possible</li>
+            <li>• Responsive design</li>
+            <li>• Performance optimisée</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section code d'exemple -->
+    <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
+      <h3 class="text-xl font-bold text-white mb-4">💻 Code d'Exemple</h3>
+      <div class="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+        <pre class="text-green-400 text-sm"><code># Dans votre contrôleur Rails
+def unlock_reward
+  @reward = current_user.rewards.find(params[:id])
+  @reward.update!(unlocked: true, unlocked_at: Time.current)
+  
+  # Déclencher l'animation
+  render json: { 
+    success: true, 
+    animation: {
+      type: @reward.reward_type,
+      title: @reward.reward_description,
+      description: "Récompense débloquée !"
+    }
+  }
+end
+
+# Dans votre vue ERB
+&lt;%= show_reward_animation(@reward) %&gt;
+
+# JavaScript pour déclencher manuellement
+testRewardAnimation('challenge');</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Panel de test en mode développement -->
+<% if Rails.env.development? %>
+  <%= reward_animation_test_panel %>
+<% end %>
+
+<!-- Styles des animations intégrés directement -->
+<style>
+  /* 🎉 Système d'Animations de Récompenses - Tube'NPlay */
+
+  /* ===== POPUP DE NOTIFICATION ===== */
+  .reward-notification-popup {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transform: translateX(400px);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    border: 3px solid #ffd700;
+    animation: notificationGlow 2s infinite;
+  }
+
+  .reward-notification-popup.show {
+    transform: translateX(0);
+  }
+
+  .reward-notification-popup .notification-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: white;
+  }
+
+  .reward-notification-popup .notification-icon {
+    font-size: 2.5rem;
+    animation: bounce 1s infinite;
+  }
+
+  .reward-notification-popup .notification-text {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ===== ANIMATION DU CADEAU ===== */
+  .reward-gift-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    z-index: 10000;
+    transition: all 0.3s ease;
+  }
+
+  .reward-gift-container.show {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .reward-gift-box {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(45deg, #ff6b6b, #ffd93d, #6bcf7f, #4d9de0);
+    background-size: 400% 400%;
+    border-radius: 20px;
+    position: relative;
+    animation: giftGradient 3s ease infinite, giftFloat 2s ease-in-out infinite;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    border: 4px solid #ffd700;
+  }
+
+  .reward-gift-box::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #ffd700;
+    transform: translateY(-50%);
+    box-shadow: 0 0 20px #ffd700;
+  }
+
+  .reward-gift-box::after {
+    content: '🎁';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    animation: giftShine 2s ease-in-out infinite;
+  }
+
+  .reward-gift-ribbon {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff6b6b, #ff8e8e);
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 107, 107, 0.5);
+  }
+
+  /* ===== EXPLOSION ET EFFETS ===== */
+  .reward-explosion-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10001;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ff6b6b;
+    animation: confettiFall 3s linear infinite;
+  }
+
+  .confetti-piece:nth-child(2n) { background: #ff6b6b; animation-delay: 0.1s; }
+  .confetti-piece:nth-child(3n) { background: #4d9de0; animation-delay: 0.2s; }
+  .confetti-piece:nth-child(4n) { background: #6bcf7f; animation-delay: 0.3s; }
+  .confetti-piece:nth-child(5n) { background: #ffd93d; animation-delay: 0.4s; }
+  .confetti-piece:nth-child(6n) { background: #ff8e8e; animation-delay: 0.5s; }
+  .confetti-piece:nth-child(7n) { background: #a855f7; animation-delay: 0.6s; }
+  .confetti-piece:nth-child(8n) { background: #06b6d4; animation-delay: 0.7s; }
+
+  .sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: sparkleFloat 2s ease-in-out infinite;
+    box-shadow: 0 0 10px #ffd700;
+  }
+
+  /* ===== MESSAGES DE FÉLICITATIONS ===== */
+  .congratulations-message {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    z-index: 10002;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 50px;
+    border-radius: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border: 3px solid #ffd700;
+    animation: messagePop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+
+  .congratulations-message .reward-title {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    color: #ffd700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* ===== ANIMATIONS KEYFRAMES ===== */
+  @keyframes notificationGlow {
+    0%, 100% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 215, 0, 0.8); }
+  }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+  }
+
+  @keyframes giftGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes giftFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  @keyframes giftShine {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 10px rgba(255, 215, 0, 0.5)); }
+    50% { filter: brightness(1.5) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)); }
+  }
+
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(-100vh) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes sparkleFloat {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-30px) scale(1.5);
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes messagePop {
+    0% {
+      transform: translateX(-50%) scale(0) rotate(-10deg);
+      opacity: 0;
+    }
+    50% {
+      transform: translateX(-50%) scale(1.1) rotate(5deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(-50%) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes rewardCardPop {
+    0% {
+      transform: translate(-50%, -50%) scale(0) rotate(-15deg);
+      opacity: 0;
+    }
+    30% {
+      transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+      opacity: 1;
+    }
+    60% {
+      transform: translate(-50%, -50%) scale(0.9) rotate(-5deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  /* ===== EFFETS DE PARTICULES ===== */
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #ffd700;
+    border-radius: 50%;
+    animation: particleExplode 1.5s ease-out forwards;
+  }
+
+  .particle:nth-child(2n) { background: #ff6b6b; }
+  .particle:nth-child(3n) { background: #4d9de0; }
+  .particle:nth-child(4n) { background: #6bcf7f; }
+
+  @keyframes particleExplode {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(360deg) translate(var(--dx), var(--dy));
+      opacity: 0;
+    }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .reward-notification-popup {
+      right: 10px;
+      top: 10px;
+      padding: 15px;
+    }
+    
+    .reward-gift-box {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .reward-gift-box::after {
+      font-size: 3rem;
+    }
+    
+    .congratulations-message {
+      font-size: 1.5rem;
+      padding: 20px 30px;
+    }
+  }
+
+  /* Styles spécifiques à la page de démonstration */
+  .demo-button {
+    transition: all 0.3s ease;
+  }
+  
+  .demo-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .step-number {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+  
+  .code-block {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+  }
+</style>
+
+<!-- JavaScript des animations intégré directement -->
+<script>
+// 🎉 Système d'Animations de Récompenses - Tube'NPlay
+
+class RewardAnimationSystem {
+  constructor() {
+    this.isAnimating = false;
+    this.init();
+  }
+
+  init() {
+    console.log('🎉 Reward Animation System initialized');
+  }
+
+  // 🎯 Déclencher l'animation complète de récompense
+  triggerRewardAnimation(rewardData) {
+    if (this.isAnimating) return;
+    this.isAnimating = true;
+
+    const sequence = [
+      () => this.showNotification(rewardData),
+      () => this.showGift(rewardData),
+      () => this.explodeGift(rewardData),
+      () => this.showCongratulations(rewardData),
+      () => this.cleanup()
+    ];
+
+    this.executeSequence(sequence, 0);
+  }
+
+  // 📢 Afficher la notification popup
+  showNotification(rewardData) {
+    return new Promise((resolve) => {
+      const popup = document.createElement('div');
+      popup.className = 'reward-notification-popup';
+      popup.innerHTML = `
+        <div class="notification-content">
+          <div class="notification-icon">🎉</div>
+          <div class="notification-text">
+            <div>Nouvelle récompense disponible !</div>
+            <div style="font-size: 0.9rem; opacity: 0.9;">${rewardData.type}</div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(popup);
+
+      // Animation d'entrée
+      setTimeout(() => {
+        popup.classList.add('show');
+      }, 100);
+
+      // Auto-hide après 4 secondes
+      setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(popup);
+          resolve();
+        }, 500);
+      }, 4000);
+    });
+  }
+
+  // 🎁 Afficher le cadeau
+  showGift(rewardData) {
+    return new Promise((resolve) => {
+      const giftContainer = document.createElement('div');
+      giftContainer.className = 'reward-gift-container';
+      giftContainer.innerHTML = `
+        <div class="reward-gift-box" style="cursor: pointer;">
+          <div class="reward-gift-ribbon"></div>
+        </div>
+        <div style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); color: white; font-size: 1rem; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">
+          👆 Cliquez pour ouvrir !
+        </div>
+      `;
+
+      document.body.appendChild(giftContainer);
+
+      // Animation d'entrée
+      setTimeout(() => {
+        giftContainer.classList.add('show');
+      }, 100);
+
+      // Attacher l'événement de clic directement sur le cadeau
+      const giftBox = giftContainer.querySelector('.reward-gift-box');
+      giftBox.addEventListener('click', () => {
+        console.log('🎁 Cadeau cliqué ! Déclenchement de l\'explosion...');
+        // Stocker la référence pour l'explosion
+        this.giftContainer = giftContainer;
+        resolve();
+      });
+    });
+  }
+
+
+  // 💥 Explosion du cadeau
+  explodeGift(rewardData) {
+    return new Promise((resolve) => {
+      console.log('💥 Explosion du cadeau déclenchée...');
+      
+      // Animation de sortie du cadeau
+      this.giftContainer.style.transform = 'translate(-50%, -50%) scale(1.5)';
+      this.giftContainer.style.opacity = '0';
+      this.giftContainer.style.transition = 'all 0.3s ease';
+
+      // Créer l'explosion - CORRIGÉ
+      this.createExplosion();
+      this.createSparkles();
+      this.createParticles();
+
+      setTimeout(() => {
+        document.body.removeChild(this.giftContainer);
+        console.log('✅ Cadeau supprimé, résolution de l\'explosion');
+        resolve();
+      }, 2000); // Délai plus long pour laisser les confettis s'afficher
+    });
+  }
+
+  // 🎊 Créer l'explosion de confettis
+  createExplosion() {
+    const explosionContainer = document.createElement('div');
+    explosionContainer.className = 'reward-explosion-container';
+    document.body.appendChild(explosionContainer);
+
+    // Créer 100 confettis plus visibles
+    for (let i = 0; i < 100; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti-piece';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.animationDelay = Math.random() * 2 + 's';
+      confetti.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      confetti.style.width = (Math.random() * 15 + 8) + 'px';
+      confetti.style.height = (Math.random() * 15 + 8) + 'px';
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      confetti.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.8)';
+      explosionContainer.appendChild(confetti);
+    }
+
+    // Nettoyer après l'animation
+    setTimeout(() => {
+      document.body.removeChild(explosionContainer);
+    }, 6000);
+  }
+
+  // ✨ Créer les étincelles
+  createSparkles() {
+    const sparkleContainer = document.createElement('div');
+    sparkleContainer.className = 'reward-explosion-container';
+    document.body.appendChild(sparkleContainer);
+
+    // Créer 60 étincelles plus brillantes
+    for (let i = 0; i < 60; i++) {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = Math.random() * 100 + '%';
+      sparkle.style.top = Math.random() * 100 + '%';
+      sparkle.style.animationDelay = Math.random() * 1 + 's';
+      sparkle.style.width = (Math.random() * 8 + 4) + 'px';
+      sparkle.style.height = (Math.random() * 8 + 4) + 'px';
+      sparkle.style.boxShadow = '0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffd700';
+      sparkleContainer.appendChild(sparkle);
+    }
+
+    setTimeout(() => {
+      document.body.removeChild(sparkleContainer);
+    }, 4000);
+  }
+
+  // 🎆 Créer les particules d'explosion
+  createParticles() {
+    const particleContainer = document.createElement('div');
+    particleContainer.className = 'reward-explosion-container';
+    document.body.appendChild(particleContainer);
+
+    // Créer 40 particules plus visibles
+    for (let i = 0; i < 40; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = '50%';
+      particle.style.top = '50%';
+      particle.style.width = (Math.random() * 12 + 6) + 'px';
+      particle.style.height = (Math.random() * 12 + 6) + 'px';
+      particle.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.9)';
+      
+      const angle = (Math.PI * 2 * i) / 40;
+      const distance = 150 + Math.random() * 300;
+      const dx = Math.cos(angle) * distance;
+      const dy = Math.sin(angle) * distance;
+      
+      particle.style.setProperty('--dx', dx + 'px');
+      particle.style.setProperty('--dy', dy + 'px');
+      particle.style.animationDelay = Math.random() * 0.5 + 's';
+      
+      particleContainer.appendChild(particle);
+    }
+
+    setTimeout(() => {
+      document.body.removeChild(particleContainer);
+    }, 3000);
+  }
+
+  // 🎉 Afficher le message de félicitations
+  showCongratulations(rewardData) {
+    return new Promise((resolve) => {
+      console.log('🎉 Affichage du message de félicitations...');
+      
+      // Créer le message principal avec styles simples
+      const message = document.createElement('div');
+      message.innerHTML = `
+        <div style="font-size: 3rem; margin-bottom: 20px;">🎉 FÉLICITATIONS ! 🎉</div>
+        <div style="font-size: 2rem; margin-bottom: 15px; color: #ffd700;">
+          ${rewardData.title}
+        </div>
+        <div style="font-size: 1.2rem; margin-bottom: 20px; line-height: 1.4;">
+          ${rewardData.description}
+        </div>
+        <div style="font-size: 1rem; font-style: italic;">
+          Continuez à jouer pour débloquer plus de récompenses !
+        </div>
+      `;
+      
+      // Styles simples et robustes
+      message.style.position = 'fixed';
+      message.style.top = '20%';
+      message.style.left = '50%';
+      message.style.transform = 'translateX(-50%)';
+      message.style.zIndex = '99999';
+      message.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+      message.style.color = 'white';
+      message.style.padding = '40px 60px';
+      message.style.borderRadius = '25px';
+      message.style.fontSize = '2.5rem';
+      message.style.fontWeight = 'bold';
+      message.style.textAlign = 'center';
+      message.style.boxShadow = '0 30px 60px rgba(0, 0, 0, 0.5)';
+      message.style.border = '4px solid #ffd700';
+      message.style.maxWidth = '600px';
+      message.style.width = '90%';
+
+      document.body.appendChild(message);
+      console.log('✅ Message de félicitations ajouté au DOM');
+
+      // Créer l'affichage de la récompense découverte
+      setTimeout(() => {
+        this.showRewardDiscovery(rewardData);
+      }, 2000);
+
+      // Auto-hide après 6 secondes
+      setTimeout(() => {
+        message.style.opacity = '0';
+        message.style.transition = 'opacity 0.8s ease';
+        
+        setTimeout(() => {
+          if (document.body.contains(message)) {
+            document.body.removeChild(message);
+          }
+          resolve();
+        }, 800);
+      }, 6000);
+    });
+  }
+
+  // 🎁 Afficher la récompense découverte
+  showRewardDiscovery(rewardData) {
+    console.log('🎫 Affichage de la carte de récompense découverte...');
+    
+    const rewardCard = document.createElement('div');
+    rewardCard.innerHTML = `
+      <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 50%, #6bcf7f 100%); padding: 20px; text-align: center; border-radius: 15px 15px 0 0;">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🎫</div>
+        <div style="font-size: 1.5rem; font-weight: bold; color: white;">
+          RÉCOMPENSE DÉCOUVERTE !
+        </div>
+        <div style="position: absolute; top: 15px; right: 15px; background: #10b981; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+          ULTIME
+        </div>
+      </div>
+      <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; color: white;">
+        <h3 style="font-size: 1.8rem; font-weight: bold; margin-bottom: 10px; color: #ffd700;">
+          Invitation Concert VIP
+        </h3>
+        <p style="font-size: 1.1rem; margin-bottom: 15px; line-height: 1.4;">
+          Accès backstage exclusif + Rencontre avec l'artiste
+        </p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+          <div style="background: rgba(255, 255, 255, 0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;">
+            <span style="color: #ffd700; font-weight: bold;">12 badges</span> requis
+          </div>
+          <div style="background: #10b981; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">
+            DÉBLOQUÉ
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Styles simples et robustes
+    rewardCard.style.position = 'fixed';
+    rewardCard.style.top = '50%';
+    rewardCard.style.left = '50%';
+    rewardCard.style.transform = 'translate(-50%, -50%)';
+    rewardCard.style.zIndex = '99999';
+    rewardCard.style.borderRadius = '20px';
+    rewardCard.style.boxShadow = '0 25px 50px rgba(0, 0, 0, 0.4)';
+    rewardCard.style.border = '3px solid #ffd700';
+    rewardCard.style.maxWidth = '500px';
+    rewardCard.style.width = '90%';
+    rewardCard.style.overflow = 'hidden';
+
+    document.body.appendChild(rewardCard);
+    console.log('✅ Carte de récompense ajoutée au DOM');
+
+    // Auto-hide après 5 secondes
+    setTimeout(() => {
+      rewardCard.style.opacity = '0';
+      rewardCard.style.transition = 'opacity 0.6s ease';
+      
+      setTimeout(() => {
+        if (document.body.contains(rewardCard)) {
+          document.body.removeChild(rewardCard);
+        }
+      }, 600);
+    }, 5000);
+  }
+
+  // 🧹 Nettoyage final
+  cleanup() {
+    console.log('🧹 Nettoyage final...');
+    this.isAnimating = false;
+    this.giftContainer = null;
+    this.giftResolve = null;
+    console.log('✅ Nettoyage terminé');
+    return Promise.resolve();
+  }
+
+  // 🔄 Exécuter une séquence d'animations
+  async executeSequence(sequence, index) {
+    console.log(`🔄 Exécution de l'étape ${index + 1}/${sequence.length}`);
+    
+    if (index >= sequence.length) {
+      console.log('✅ Séquence terminée !');
+      return;
+    }
+    
+    try {
+      await sequence[index]();
+      console.log(`✅ Étape ${index + 1} terminée, passage à l'étape ${index + 2}`);
+      this.executeSequence(sequence, index + 1);
+    } catch (error) {
+      console.error(`❌ Erreur à l'étape ${index + 1}:`, error);
+    }
+  }
+
+  // 🎮 Méthode de test pour déclencher une animation
+  testAnimation(rewardType = 'challenge') {
+    const testData = {
+      type: rewardType.toUpperCase(),
+      title: this.getRewardTitle(rewardType),
+      description: this.getRewardDescription(rewardType)
+    };
+
+    this.triggerRewardAnimation(testData);
+  }
+
+  // 📝 Obtenir le titre de la récompense
+  getRewardTitle(type) {
+    const titles = {
+      challenge: 'Récompense Challenge Débloquée !',
+      exclusif: 'Récompense Exclusif Débloquée !',
+      premium: 'Récompense Premium Débloquée !',
+      ultime: 'Récompense Ultime Débloquée !'
+    };
+    return titles[type] || 'Récompense Débloquée !';
+  }
+
+  // 📄 Obtenir la description de la récompense
+  getRewardDescription(type) {
+    const descriptions = {
+      challenge: 'Vous avez débloqué une playlist exclusive !',
+      exclusif: 'Accès à du contenu premium spécial !',
+      premium: 'Contenu VIP et rencontres avec artistes !',
+      ultime: 'Récompense ultime - vous êtes un champion !'
+    };
+    return descriptions[type] || 'Nouvelle récompense disponible !';
+  }
+}
+
+// 🚀 Initialiser le système d'animations - VERSION CORRIGÉE
+function initializeRewardAnimations() {
+  console.log('🎉 Initialisation du système d\'animations...');
+  
+  if (!window.rewardAnimationSystem) {
+    window.rewardAnimationSystem = new RewardAnimationSystem();
+    console.log('✅ Système d\'animations créé');
+  }
+  
+  // Exposer les méthodes de test globalement
+  window.testRewardAnimation = (type) => {
+    console.log('🎉 Déclenchement de l\'animation:', type);
+    if (window.rewardAnimationSystem) {
+      window.rewardAnimationSystem.testAnimation(type);
+    } else {
+      console.error('❌ Système d\'animations non initialisé');
+    }
+  };
+  
+  console.log('🎉 Système d\'animations prêt !');
+  console.log('🎮 Testez avec: testRewardAnimation("challenge")');
+}
+
+// Fonction de test direct
+function testDirectAnimation() {
+  console.log('🚀 Test direct déclenché !');
+  
+  // Vérifier si le système existe
+  if (!window.rewardAnimationSystem) {
+    console.error('❌ Système d\'animations non trouvé, recréation...');
+    window.rewardAnimationSystem = new RewardAnimationSystem();
+  }
+  
+  // Déclencher l'animation directement
+  const testData = {
+    type: 'CHALLENGE',
+    title: 'Récompense Challenge Débloquée !',
+    description: 'Vous avez débloqué une playlist exclusive !'
+  };
+  
+  console.log('🎯 Déclenchement de l\'animation avec:', testData);
+  window.rewardAnimationSystem.triggerRewardAnimation(testData);
+}
+
+// Fonction de test simple pour les messages
+function testSimpleMessages() {
+  console.log('🧪 Test simple des messages...');
+  
+  // Test 1: Message de félicitations simple
+  const message = document.createElement('div');
+  message.innerHTML = '🎉 FÉLICITATIONS ! 🎉';
+  message.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: red;
+    color: white;
+    padding: 50px;
+    font-size: 3rem;
+    z-index: 99999;
+    border: 5px solid yellow;
+  `;
+  document.body.appendChild(message);
+  console.log('✅ Message simple ajouté');
+  
+  // Test 2: Carte de récompense simple
+  setTimeout(() => {
+    const card = document.createElement('div');
+    card.innerHTML = '🎫 INVITATION CONCERT VIP';
+    card.style.cssText = `
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: blue;
+      color: white;
+      padding: 30px;
+      font-size: 2rem;
+      z-index: 99999;
+      border: 5px solid gold;
+    `;
+    document.body.appendChild(card);
+    console.log('✅ Carte simple ajoutée');
+    
+    // Nettoyer après 5 secondes
+    setTimeout(() => {
+      if (document.body.contains(message)) document.body.removeChild(message);
+      if (document.body.contains(card)) document.body.removeChild(card);
+    }, 5000);
+  }, 2000);
+}
+
+// Fonction de test directe pour les messages de félicitations
+function testCongratulationsDirect() {
+  console.log('🎉 Test direct des messages de félicitations...');
+  
+  if (!window.rewardAnimationSystem) {
+    console.error('❌ Système d\'animations non trouvé');
+    return;
+  }
+  
+  const testData = {
+    type: 'CHALLENGE',
+    title: 'Récompense Challenge Débloquée !',
+    description: 'Vous avez débloqué une playlist exclusive !'
+  };
+  
+  // Appeler directement la fonction showCongratulations
+  window.rewardAnimationSystem.showCongratulations(testData);
+}
+
+// Initialiser immédiatement
+initializeRewardAnimations();
+
+// Également sur DOMContentLoaded au cas où
+document.addEventListener('DOMContentLoaded', initializeRewardAnimations);
+
+// Également sur turbo:load pour Rails
+document.addEventListener('turbo:load', initializeRewardAnimations);
+</script>
