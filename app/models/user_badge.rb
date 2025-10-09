@@ -1,4 +1,6 @@
 class UserBadge < ApplicationRecord
+  include BadgeAnimationTrigger
+  
   belongs_to :user
   belongs_to :badge
 

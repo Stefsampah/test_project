@@ -1,13 +1,5 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
+// 🎉 Système d'Animations de Récompenses - Tube'NPlay
 
-// Import badge system (temporairement commenté pour debug)
-// import "./badge_system"
-
-console.log('🚀 application.js chargé !');
-
-// 🎉 Système d'Animations de Récompenses - Tube'NPlay (intégré directement)
 class RewardAnimationSystem {
   constructor() {
     this.isAnimating = false;
@@ -570,22 +562,3 @@ document.addEventListener('turbo:load', () => {
     rewardData.remove();
   }
 });
-
-document.addEventListener('DOMContentLoaded', () => {
-  const sections = document.querySelectorAll('.toggle-section');
-
-  sections.forEach(section => {
-    section.addEventListener('click', () => {
-      // Désactive toutes les sections
-      sections.forEach(s => {
-        s.classList.remove('active-section');
-        s.querySelector('.details').classList.remove('visible');
-      });
-
-      // Active la section cliquée
-      section.classList.add('active-section');
-      section.querySelector('.details').classList.add('visible');
-    });
-  });
-});
-

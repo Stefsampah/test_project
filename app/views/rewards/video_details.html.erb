@@ -180,55 +180,28 @@
   }
 </style>
 
+<div data-controller="youtube-modal"></div>
+
 <script>
+// Fonctions de compatibilité pour les anciens appels
 function showYouTubeModal(videoId, title) {
-  // Créer la modal si elle n'existe pas
-  let modal = document.getElementById('youtube-modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.id = 'youtube-modal';
-    modal.className = 'youtube-modal';
-    modal.innerHTML = `
-      <div class="youtube-modal-content">
-        <span class="youtube-modal-close" onclick="closeYouTubeModal()">&times;</span>
-        <h3 style="color: white; margin-bottom: 15px;">${title}</h3>
-        <div class="youtube-iframe-container">
-          <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen>
-          </iframe>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-  } else {
-    // Mettre à jour le contenu de la modal existante
-    const iframe = modal.querySelector('iframe');
-    const titleElement = modal.querySelector('h3');
-    if (iframe) iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-    if (titleElement) titleElement.textContent = title;
+  const controller = document.querySelector('[data-controller*="youtube-modal"]');
+  if (controller && controller.stimulusController) {
+    controller.stimulusController.openModal({ params: { videoId, title } });
   }
-  
-  // Afficher la modal
-  modal.style.display = 'block';
 }
 
 function closeYouTubeModal() {
-  const modal = document.getElementById('youtube-modal');
-  if (modal) {
-    modal.style.display = 'none';
-    // Arrêter la vidéo en vidant la source de l'iframe
-    const iframe = modal.querySelector('iframe');
-    if (iframe) iframe.src = '';
+  const controller = document.querySelector('[data-controller*="youtube-modal"]');
+  if (controller && controller.stimulusController) {
+    controller.stimulusController.closeModal();
   }
 }
 
-// Fermer la modal en cliquant en dehors
-window.onclick = function(event) {
-  const modal = document.getElementById('youtube-modal');
-  if (event.target == modal) {
+// Ajouter l'écouteur global pour Escape
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
     closeYouTubeModal();
   }
-}
+});
 </script>

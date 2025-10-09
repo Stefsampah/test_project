@@ -858,11 +858,13 @@ function previousVideo() {
 
 // Fonction pour fermer la modal vidéo Challenge
 function closeChallengeVideoModal() {
-  const modal = document.getElementById('challengeVideoModal');
-  if (modal) {
-    modal.style.display = 'none';
+  const controller = document.querySelector('[data-controller*="youtube-modal"]');
+  if (controller && controller.stimulusController) {
+    controller.stimulusController.closeModal();
   }
 }
+
+<div data-controller="youtube-modal"></div>
 
 // Fonction pour afficher les playlists Challenge (supprimée - remplacée par launchChallengeContent)
 function showChallengePlaylist(contentType, title) {

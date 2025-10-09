@@ -20,6 +20,9 @@
 /* Import des cartes de récompenses unifiées */
 @import "unified_reward_cards";
 
+/* Import des modales YouTube */
+@import "youtube_modals";
+
 /* Styles de base */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

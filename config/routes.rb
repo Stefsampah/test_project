@@ -1,5 +1,20 @@
 Rails.application.routes.draw do
+  # Importmap routes
+  mount Importmap::Engine => "/importmap"
+  
   devise_for :users
+  
+  # Routes admin pour les animations
+  namespace :admin do
+    resources :animations, only: [:index] do
+      collection do
+        post :test_reward_animation
+        post :test_badge_animation
+        post :cleanup_test_data
+        get :trigger_animation_from_cache
+      end
+    end
+  end
   root 'pages#home'
   get 'check_user', to: 'tests#check_user'
   

@@ -504,12 +504,9 @@ function showYouTubeModal(videoId, title) {
 }
 
 function closeYouTubeModal() {
-  const modal = document.getElementById('youtube-modal');
-  if (modal) {
-    modal.style.display = 'none';
-    // Arrêter la vidéo en vidant la source de l'iframe
-    const iframe = modal.querySelector('iframe');
-    if (iframe) iframe.src = '';
+  const controller = document.querySelector('[data-controller*="youtube-modal"]');
+  if (controller && controller.stimulusController) {
+    controller.stimulusController.closeModal();
   }
 }
 
@@ -520,4 +517,6 @@ window.onclick = function(event) {
     closeYouTubeModal();
   }
 }
-</script> 
+</script>
+
+<div data-controller="youtube-modal"></div> 

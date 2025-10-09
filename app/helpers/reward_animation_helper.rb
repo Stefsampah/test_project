@@ -80,6 +80,28 @@ module RewardAnimationHelper
     end
   end
 
+  # 🏆 Déclencher l'animation de badge depuis le backend
+  def trigger_badge_animation_from_backend(user_badge)
+    return unless user_badge&.earned_at.present?
+    
+    # Déclencher l'animation via JavaScript
+    javascript_tag do
+      "setTimeout(() => {
+        if (window.rewardAnimationSystem) {
+          window.rewardAnimationSystem.triggerBadgeAnimation({
+            type: 'badge',
+            title: '#{j(user_badge.badge.name)}',
+            description: '#{j(get_badge_description(user_badge.badge))}',
+            level: '#{user_badge.badge.level}',
+            badge_type: '#{user_badge.badge.badge_type}',
+            points_required: #{user_badge.badge.points_required},
+            reward_type: '#{user_badge.badge.reward_type || 'standard'}'
+          });
+        }
+      }, 1000);".html_safe
+    end
+  end
+
   # 🎨 Styles pour les récompenses avec animations
   def animated_reward_card(reward, options = {})
     css_class = "reward-card animated-reward-card #{options[:class]}"
@@ -404,6 +426,22 @@ module RewardAnimationHelper
       "Récompense ultime - vous êtes un champion ! Accès à tout le contenu premium."
     else
       "Nouvelle récompense disponible ! Continuez à jouer pour en débloquer d'autres."
+    end
+  end
+
+  # 🏆 Obtenir la description pour l'animation de badge
+  def get_badge_description(badge)
+    case badge.badge_type
+    when 'competitor'
+      "Vous êtes un vrai compétiteur ! Continuez à jouer pour débloquer plus de badges."
+    when 'engager'
+      "Vous vous engagez dans le jeu ! Votre participation est remarquable."
+    when 'critic'
+      "Vous avez un œil critique ! Vos opinions comptent dans la communauté."
+    when 'challenger'
+      "Vous relevez tous les défis ! Vous êtes un champion du jeu."
+    else
+      "Nouveau badge débloqué ! Continuez à jouer pour en débloquer d'autres."
     end
   end
 end
