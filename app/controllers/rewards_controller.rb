@@ -1,5 +1,6 @@
 class RewardsController < ApplicationController
   before_action :authenticate_user!
+  helper_method :get_audio_comment_video_id
   
   def index
     redirect_to my_rewards_path
@@ -104,6 +105,7 @@ class RewardsController < ApplicationController
     
     @current_count = current_user.user_badges.count
     @progress = [(@current_count.to_f / @quantity * 100), 100].min
+    Rails.logger.info "🔍 DEBUG reward_details: @current_count=#{@current_count}, @quantity=#{@quantity}, condition=#{@current_count >= @quantity}"
     
     @reward_type = case @quantity
                    when 3 then 'challenge'
@@ -122,6 +124,7 @@ class RewardsController < ApplicationController
     @reward_description = generate_reward_description(@badge_type, @quantity, @reward_type, @category)
     
     @sample_reward = current_user.rewards.where(reward_type: @reward_type, unlocked: true).first
+    Rails.logger.info "🔍 DEBUG reward_details: @reward_type=#{@reward_type}, @sample_reward=#{@sample_reward&.content_type}"
     
     @bronze_count = current_user.user_badges.joins(:badge).where(badges: { level: 'bronze' }).count
     @silver_count = current_user.user_badges.joins(:badge).where(badges: { level: 'silver' }).count
@@ -709,5 +712,25 @@ class RewardsController < ApplicationController
         gradient_colors: 'from-purple-400 to-pink-500'
       }
     end
+  end
+
+  # Helper method pour obtenir un ID vidéo aléatoire pour audio_comments
+  public
+  def get_audio_comment_video_id
+    audio_comment_videos = [
+      'AWlwxYU9xc8', # Chappell Roan - The Subway
+      'QGjSPYPnd6w', # Lewis Capaldi
+      'xHgnQEfi-5U', # KATSEYE
+      '0zCfmYkDXR0', # JADE
+      'xLZTw5cLgM8', # Leigh-Anne
+      'm5Z5i0W9Kfc', # Say Now
+      'DP4inRFySSQ', # Glass Animals
+      'pbkHA3Kww28', # FKA twigs
+      'Itc585kiAUk'  # Elle Coves - Peace (TikTok ID utilisé comme fallback)
+    ]
+    
+    selected_video = audio_comment_videos.sample
+    Rails.logger.info "🎧 Audio comment video selected: #{selected_video}"
+    selected_video
   end
 end 

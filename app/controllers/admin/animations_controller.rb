@@ -1,5 +1,6 @@
 # 🎉 Contrôleur Admin pour tester les animations
-class AdminAnimationsController < ApplicationController
+module Admin
+  class AnimationsController < ApplicationController
   before_action :authenticate_user!
   before_action :ensure_admin!
 
@@ -18,7 +19,7 @@ class AdminAnimationsController < ApplicationController
       badge_type: 'unified',
       quantity_required: get_quantity_for_type(reward_type),
       reward_description: "Récompense #{reward_type.humanize} de test",
-      content_type: "test_#{reward_type}",
+      content_type: get_content_type_for_reward_type(reward_type),
       unlocked: false
     )
     
@@ -115,5 +116,16 @@ class AdminAnimationsController < ApplicationController
     when 'gold' then 2000
     else 500
     end
+  end
+
+  def get_content_type_for_reward_type(reward_type)
+    case reward_type
+    when 'challenge' then 'challenge_reward_playlist_1'
+    when 'exclusif' then 'podcast_exclusive'
+    when 'premium' then 'backstage_video'
+    when 'ultime' then 'personal_voice_message'
+    else 'challenge_reward_playlist_1'
+    end
+  end
   end
 end

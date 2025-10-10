@@ -6,14 +6,11 @@ Rails.application.routes.draw do
   
   # Routes admin pour les animations
   namespace :admin do
-    resources :animations, only: [:index] do
-      collection do
-        post :test_reward_animation
-        post :test_badge_animation
-        post :cleanup_test_data
-        get :trigger_animation_from_cache
-      end
-    end
+    get 'animations', to: 'animations#index'
+    post 'animations/test_reward_animation', to: 'animations#test_reward_animation'
+    post 'animations/test_badge_animation', to: 'animations#test_badge_animation'
+    post 'animations/cleanup_test_data', to: 'animations#cleanup_test_data'
+    get 'animations/trigger_animation_from_cache', to: 'animations#trigger_animation_from_cache'
   end
   root 'pages#home'
   get 'check_user', to: 'tests#check_user'

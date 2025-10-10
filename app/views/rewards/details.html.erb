@@ -1,3 +1,11 @@
+<!-- DEBUG: Variables disponibles -->
+<script>
+console.log('🔍 DEBUG: @sample_reward:', '<%= @sample_reward&.reward_type %>', '<%= @sample_reward&.content_type %>');
+console.log('🔍 DEBUG: JavaScript fonctionne dans cette vue');
+console.log('🔍 DEBUG: DOM ready:', document.readyState);
+console.log('🔍 DEBUG: Turbo:', typeof Turbo);
+</script>
+
 <div class="min-h-screen bg-gray-900">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Header avec logo -->
@@ -361,6 +369,8 @@
             
           <!-- Bouton d'action -->
           <div class="text-center mt-auto space-y-4">
+            <!-- DEBUG: Section bouton -->
+            <script>console.log('🔍 DEBUG: Section bouton atteinte, @current_count=<%= @current_count %>, @quantity=<%= @quantity %>');</script>
             <% if @current_count && @current_count >= @quantity %>
               <% if @quantity == 3 %>
                 <!-- Pour les playlists challenge -->
@@ -384,18 +394,19 @@
                                when 'blog_article' then 'JWrIfPCyedU'  # Charles Doré
                                when 'documentary' then 'qB7kLilZWwg'  # Latto Somebody
                                when 'reportage' then 'QVvfSQP3JLM'  # Didi B Bouaké
-                               when 'audio_comments' then 'ICvSOFEKbgs'  # Miki Accor Arena
+                               when 'audio_comments' then get_audio_comment_video_id
                                when 'studio_session' then '0tJz8JjPbHU'  # Didi B Félicia
                                else '9ECNWJ1R0fg'  # Fallback par défaut
                                end
                   %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
+                  <button class="playlist-button" onclick="console.log('Video ID:', '<%= video_id %>', 'Title:', '<%= content_title %>'); showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
                     <%= case content_type
                         when /challenge_reward_playlist_/ then '🎵 Écouter la playlist'
                         when /studio/ then '🎹 Regarder la session'
                         when /live/ then '🎤 Regarder le live'
                         when /interview/ then '🎙️ Écouter l\'interview'
                         when /documentary/ then '📹 Regarder le documentaire'
+                        when 'audio_comments' then '🎧 Écouter les commentaires'
                         else '🎬 Regarder le contenu'
                         end %>
                   </button>
@@ -422,6 +433,7 @@
                         when /live/ then '🎤 Regarder le live'
                         when /interview/ then '🎙️ Écouter l\'interview'
                         when /documentary/ then '📹 Regarder le documentaire'
+                        when 'audio_comments' then '🎧 Écouter les commentaires'
                         else '🎬 Regarder le contenu'
                         end %>
                   </a>
@@ -451,18 +463,19 @@
                                when 'blog_article' then 'JWrIfPCyedU'  # Charles Doré
                                when 'documentary' then 'qB7kLilZWwg'  # Latto Somebody
                                when 'reportage' then 'QVvfSQP3JLM'  # Didi B Bouaké
-                               when 'audio_comments' then 'ICvSOFEKbgs'  # Miki Accor Arena
+                               when 'audio_comments' then get_audio_comment_video_id
                                when 'studio_session' then '0tJz8JjPbHU'  # Didi B Félicia
                                else '9ECNWJ1R0fg'  # Fallback par défaut
                                end
                   %>
-                  <button class="playlist-button" onclick="showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
+                  <button class="playlist-button" onclick="console.log('Video ID:', '<%= video_id %>', 'Title:', '<%= content_title %>'); showExclusifVideo('<%= video_id %>', '<%= content_title %>')">
                     <%= case content_type
                         when /challenge_reward_playlist_/ then '🎵 Écouter la playlist'
                         when /studio/ then '🎹 Regarder la session'
                         when /live/ then '🎤 Regarder le live'
                         when /interview/ then '🎙️ Écouter l\'interview'
                         when /documentary/ then '📹 Regarder le documentaire'
+                        when 'audio_comments' then '🎧 Écouter les commentaires'
                         else '🎬 Regarder le contenu'
                         end %>
                   </button>
@@ -502,6 +515,7 @@
                         when /live/ then '🎤 Regarder le live'
                         when /interview/ then '🎙️ Écouter l\'interview'
                         when /documentary/ then '📹 Regarder le documentaire'
+                        when 'audio_comments' then '🎧 Écouter les commentaires'
                         else '🎬 Regarder le contenu'
                         end %>
                   </a>
@@ -690,6 +704,7 @@ const ULTIME_IMAGES = {
 };
 
 function showExclusifVideo(videoId, title) {
+  console.log('🎬 showExclusifVideo called with:', videoId, title);
   if (!videoId) {
     alert('Vidéo non disponible pour le moment');
     return;

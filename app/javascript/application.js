@@ -6,6 +6,51 @@ import "controllers"
 // import "./badge_system"
 
 console.log('🚀 application.js chargé !');
+console.log('🔍 DEBUG: DOM ready state:', document.readyState);
+
+// Fonction globale pour les modales de récompenses
+window.showExclusifVideo = function(videoId, title) {
+  console.log('🎬 showExclusifVideo called with:', videoId, title);
+  if (!videoId) {
+    alert('Vidéo non disponible pour le moment');
+    return;
+  }
+
+  // Créer la modal si elle n'existe pas
+  let modal = document.getElementById('exclusif-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'exclusif-modal';
+    modal.className = 'exclusif-modal';
+    modal.innerHTML = `
+      <div class="exclusif-modal-content">
+        <span class="exclusif-modal-close" onclick="closeExclusifModal()">&times;</span>
+        <h3>${title}</h3>
+        <div class="exclusif-video-container">
+          <iframe 
+            width="560" 
+            height="315" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  // Afficher la modal
+  modal.style.display = 'block';
+};
+
+window.closeExclusifModal = function() {
+  const modal = document.getElementById('exclusif-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+};
 
 // 🎉 Système d'Animations de Récompenses - Tube'NPlay (intégré directement)
 class RewardAnimationSystem {
@@ -542,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 🎯 Déclencher une animation depuis le backend (via Turbo)
 document.addEventListener('turbo:load', () => {
+  console.log('🔍 DEBUG: Turbo load event déclenché');
   console.log('🎉 Turbo:load détecté, réinitialisation du système d\'animations...');
   
   // Réinitialiser le système d'animations si nécessaire
