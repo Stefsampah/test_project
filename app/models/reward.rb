@@ -169,21 +169,21 @@ class Reward < ApplicationRecord
     available_rewards = case level
     when 'challenge'
       [
-        { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-        { content_type: 'challenge_reward_playlist_6', name: 'Challenge Reward Playlist Alternative 6', description: 'Sixième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
-        { content_type: 'challenge_reward_playlist_7', name: 'Challenge Reward Playlist Alternative 7', description: 'Septième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎤' },
-        { content_type: 'challenge_reward_playlist_8', name: 'Challenge Reward Playlist Alternative 8', description: 'Huitième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎧' },
-        { content_type: 'challenge_reward_playlist_9', name: 'Challenge Reward Playlist Alternative 9', description: 'Neuvième playlist exclusive débloquée via les récompenses challenge - Versions alternatives', icon: '🎧' },
-        { content_type: 'challenge_reward_playlist_10', name: 'Challenge Reward Videos 10', description: 'Playlist exclusive de 10 titres hip-hop et R&B débloquée via les récompenses challenge', icon: '🎵' },
-        { content_type: 'challenge_reward_playlist_11', name: 'Challenge Reward Videos 11', description: 'Playlist exclusive de remixes débloquée via les récompenses challenge', icon: '🎛️' },
-        { content_type: 'challenge_reward_playlist_12', name: 'Challenge Reward Videos 12', description: 'Playlist exclusive de versions alternatives débloquée via les récompenses challenge', icon: '🎵' },
-        { content_type: 'challenge_reward_playlist_13', name: 'Challenge Reward Videos 13', description: 'Playlist exclusive de versions live débloquée via les récompenses challenge', icon: '🎤' },
-        { content_type: 'challenge_reward_playlist_14', name: 'Challenge Reward Videos 14', description: 'Playlist exclusive de versions instrumentales débloquée via les récompenses challenge', icon: '🎧' },
-        { content_type: 'challenge_reward_playlist_15', name: 'Challenge Reward Videos 15', description: 'Playlist exclusive de versions exclusives débloquée via les récompenses challenge', icon: '⭐' }
+        { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist Challenge 1', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Playlist Challenge 2', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Playlist Challenge 3', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Playlist Challenge 4', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Playlist Challenge 5', icon: '🏆' },
+        { content_type: 'challenge_reward_playlist_6', name: 'Challenge Reward Playlist Alternative 6', description: 'Playlist Alternative 6', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_7', name: 'Challenge Reward Playlist Alternative 7', description: 'Playlist Alternative 7', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_8', name: 'Challenge Reward Playlist Alternative 8', description: 'Playlist Alternative 8', icon: '🎧' },
+        { content_type: 'challenge_reward_playlist_9', name: 'Challenge Reward Playlist Alternative 9', description: 'Playlist Alternative 9', icon: '🎧' },
+        { content_type: 'challenge_reward_playlist_10', name: 'Challenge Reward Videos 10', description: 'Playlist Hip-Hop R&B', icon: '🎵' },
+        { content_type: 'challenge_reward_playlist_11', name: 'Challenge Reward Videos 11', description: 'Playlist Remixes', icon: '🎛️' },
+        { content_type: 'challenge_reward_playlist_12', name: 'Challenge Reward Videos 12', description: 'Playlist Alternatives', icon: '🎵' },
+        { content_type: 'challenge_reward_playlist_13', name: 'Challenge Reward Videos 13', description: 'Playlist Live', icon: '🎤' },
+        { content_type: 'challenge_reward_playlist_14', name: 'Challenge Reward Videos 14', description: 'Playlist Instrumentale', icon: '🎧' },
+        { content_type: 'challenge_reward_playlist_15', name: 'Challenge Reward Videos 15', description: 'Playlist Exclusive', icon: '⭐' }
       ]
     when 'exclusif'
       [
@@ -264,11 +264,11 @@ class Reward < ApplicationRecord
       available_rewards = case level
       when 'challenge'
         [
-          { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' },
-          { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge', icon: '🏆' }
+          { content_type: 'challenge_reward_playlist_1', name: 'Challenge Reward Playlist 1', description: 'Playlist Challenge 1', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_2', name: 'Challenge Reward Playlist 2', description: 'Playlist Challenge 2', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_3', name: 'Challenge Reward Playlist 3', description: 'Playlist Challenge 3', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_4', name: 'Challenge Reward Playlist 4', description: 'Playlist Challenge 4', icon: '🏆' },
+          { content_type: 'challenge_reward_playlist_5', name: 'Challenge Reward Playlist 5', description: 'Playlist Challenge 5', icon: '🏆' }
         ]
       when 'exclusif'
         [
@@ -492,8 +492,8 @@ class Reward < ApplicationRecord
       puts "🎭 Vidéo Backstage débloquée comme récompense premium pour #{user.email}"
     when 'concert_footage'
       puts "🎪 Extrait Concert débloqué comme récompense premium pour #{user.email}"
-    
-    # Sessions Studio
+      
+      # Sessions Studio
     when 'himra_number_one_live'
       puts "🎹 HIMRA - NUMBER ONE (Live Version) débloquée comme récompense premium pour #{user.email}"
     when 'didi_b_nouvelle_generation'
@@ -732,11 +732,11 @@ class Reward < ApplicationRecord
     case reward_type
     when 'challenge'
       available_rewards = [
-        { content_type: 'challenge_reward_playlist_1', description: 'Playlist exclusive débloquée via les récompenses challenge' },
-        { content_type: 'challenge_reward_playlist_2', description: 'Deuxième playlist exclusive débloquée via les récompenses challenge' },
-        { content_type: 'challenge_reward_playlist_3', description: 'Troisième playlist exclusive débloquée via les récompenses challenge' },
-        { content_type: 'challenge_reward_playlist_4', description: 'Quatrième playlist exclusive débloquée via les récompenses challenge' },
-        { content_type: 'challenge_reward_playlist_5', description: 'Cinquième playlist exclusive débloquée via les récompenses challenge' }
+        { content_type: 'challenge_reward_playlist_1', description: 'Playlist Challenge 1' },
+        { content_type: 'challenge_reward_playlist_2', description: 'Playlist Challenge 2' },
+        { content_type: 'challenge_reward_playlist_3', description: 'Playlist Challenge 3' },
+        { content_type: 'challenge_reward_playlist_4', description: 'Playlist Challenge 4' },
+        { content_type: 'challenge_reward_playlist_5', description: 'Playlist Challenge 5' }
       ]
     when 'exclusif'
       available_rewards = [

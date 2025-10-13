@@ -136,50 +136,49 @@
   </div>
 
   <!-- Section Badges avec vrais badges du jeu -->
-  <div class="py-20 bg-gradient-to-r from-yellow-600/20 to-orange-600/20">
+  <div class="py-20 pb-32 bg-gradient-to-r from-yellow-600/20 to-orange-600/20">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4">Collectionnez vos Badges</h2>
       </div>
       
-      <!-- Vrais badges du jeu avec images -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <!-- Vrais badges du jeu avec format identique à la page badges -->
+      <div class="badge-container-home">
         <% 
           # Utiliser les vrais badges du jeu depuis la base de données
           real_badges = Badge.limit(4)
         %>
         <% real_badges.each do |badge| %>
-          <div class="group relative overflow-hidden rounded-2xl transform hover:scale-105 transition-all duration-300 shadow-2xl">
-            <!-- Image du badge -->
-            <div class="aspect-square relative">
-              <% if badge.image.present? %>
-                <%= image_tag "badges/#{badge.image}", 
-                    alt: badge.name, 
-                    class: "w-full h-full object-cover",
-                    onerror: "this.style.display='none'; this.nextElementSibling.style.display='flex';" %>
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center" style="display: none;">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= badge.name %></h3>
-                    <p class="text-white/80 text-sm"><%= badge.points_required %> points</p>
-                  </div>
-                </div>
-              <% else %>
-                <div class="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                  <div class="text-center">
-                    <h3 class="text-white text-lg font-bold"><%= badge.name %></h3>
-                    <p class="text-white/80 text-sm"><%= badge.points_required %> points</p>
-                  </div>
-                </div>
+          <% 
+            badge_class = "badge-card-home #{badge.badge_type}"
+            badge_class += " bronze" if badge.level == "bronze"
+            badge_class += " silver" if badge.level == "silver"
+            badge_class += " gold" if badge.level == "gold"
+          %>
+          <div class="<%= badge_class %>">
+            <div class="badge-icon-home">
+              <% case badge.badge_type %>
+              <% when "competitor" %>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+              <% when "engager" %>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
+                </svg>
+              <% when "critic" %>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
+                </svg>
+              <% when "challenger" %>
+                <svg fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path>
+                </svg>
               <% end %>
-              
-              <!-- Overlay avec titre -->
-              <div class="absolute inset-0 bg-black bg-opacity-40 flex items-end p-4">
-                <div class="text-white">
-                  <h3 class="text-lg font-bold drop-shadow-lg"><%= badge.name %></h3>
-                  <div class="text-white/80 text-sm"><%= badge.points_required %> points</div>
-                </div>
-              </div>
             </div>
+            <div class="badge-name-home"><%= badge.name %></div>
+            <div class="badge-level-home"><%= badge.level.upcase %></div>
+            <div class="badge-points-home"><%= badge.points_required %> points</div>
           </div>
         <% end %>
       </div>
@@ -187,31 +186,69 @@
   </div>
 
   <!-- Section Récompenses avec vraies récompenses du jeu -->
-  <div class="py-20 bg-gray-900/80">
+  <div class="pt-32 pb-32 bg-gray-900/80">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4">Débloquez des Récompenses</h2>
       </div>
       
-      <!-- Deux cartes de récompenses aléatoires (1 exclusif, 1 premium) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Quatre récompenses avec vrais visuels -->
+      <div class="reward-visual-container">
         <% 
+          # Sélectionner 4 récompenses de différents types
+          challenge_reward = Reward.by_reward_type('challenge').order(Arel.sql('RANDOM()')).first
           exclusif_reward = Reward.by_reward_type('exclusif').order(Arel.sql('RANDOM()')).first
-          premium_reward  = Reward.by_reward_type('premium').where.not(id: exclusif_reward&.id).order(Arel.sql('RANDOM()')).first
-          rewards_to_show = [exclusif_reward, premium_reward].compact
+          premium_reward = Reward.by_reward_type('premium').order(Arel.sql('RANDOM()')).first
+          ultime_reward = Reward.by_reward_type('ultime').order(Arel.sql('RANDOM()')).first
+          rewards_to_show = [challenge_reward, exclusif_reward, premium_reward, ultime_reward].compact
         %>
         <% rewards_to_show.each do |reward| %>
-          <% card_colors = reward.reward_type == 'exclusif' ? 'from-purple-600 to-pink-600' : 'from-yellow-500 to-orange-600' %>
-          <div class="bg-gradient-to-br <%= card_colors %> rounded-2xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all">
-            <div class="text-white">
-              <h3 class="text-2xl font-bold mb-2"><%= reward.reward_type.humanize %></h3>
-              <p class="text-white/90 mb-4"><%= reward.reward_description %></p>
-              <% if reward.content_type.present? %>
-                <div class="inline-block bg-white/20 text-white px-3 py-1 rounded-full text-xs font-semibold mb-2">
-                  <%= reward.content_type.humanize %>
+          <% 
+            # Définir les visuels selon le type de récompense
+            case reward.reward_type
+            when "challenge"
+              background_image = "https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg" # Didi B
+              overlay_gradient = "rgba(255,165,0,0.7) 0%, rgba(255,140,0,0.7) 100%"
+              bottom_color = "#FF8C00"
+              badge_color = "#10b981"
+            when "exclusif"
+              background_image = "https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg" # Didi B Bouaké
+              overlay_gradient = "rgba(138,43,226,0.7) 0%, rgba(75,0,130,0.7) 100%"
+              bottom_color = "#8A2BE2"
+              badge_color = "#10b981"
+            when "premium"
+              background_image = "https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg" # Charles Doré
+              overlay_gradient = "rgba(205,127,50,0.7) 0%, rgba(184,134,11,0.7) 100%"
+              bottom_color = "#CD7F32"
+              badge_color = "#10b981"
+            when "ultime"
+              background_image = "https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg" # Miki
+              overlay_gradient = "rgba(255,105,180,0.7) 0%, rgba(255,20,147,0.7) 100%"
+              bottom_color = "#FF69B4"
+              badge_color = "#10b981"
+            end
+          %>
+          <div class="reward-visual-card">
+            <!-- Section visuelle avec image de fond -->
+            <div class="reward-visual-section" style="background-image: url('<%= background_image %>');">
+              <div class="reward-overlay" style="background: linear-gradient(<%= overlay_gradient %>);"></div>
+              <div class="reward-badge" style="background-color: <%= badge_color %>;">
+                <%= reward.reward_type.upcase %>
+              </div>
+              <div class="reward-visual-content">
+                <h3 class="reward-visual-title"><%= reward.reward_type.humanize %></h3>
+                <p class="reward-visual-condition"><%= reward.quantity_required %> badges requis</p>
+              </div>
+            </div>
+            
+            <!-- Section inférieure avec couleur unie -->
+            <div class="reward-bottom-section" style="background-color: <%= bottom_color %>;">
+              <p class="reward-description"><%= reward.reward_description %></p>
+              <div class="reward-buttons">
+                <button class="reward-condition-btn" style="background-color: <%= bottom_color %>;"><%= reward.quantity_required %> badges requis</button>
+                <button class="reward-unlocked-btn">DÉBLOQUÉ</button>
                 </div>
-              <% end %>
-              <div class="mt-2 text-white/80 text-sm">Condition: <%= reward.quantity_required %> <%= reward.badge_type.present? ? reward.badge_type.humanize : 'badges' %></div>
+              <button class="reward-content-btn">Afficher le contenu →</button>
             </div>
           </div>
         <% end %>
@@ -220,36 +257,64 @@
   </div>
 
   <!-- Section Boutique avec vrais produits -->
-  <div class="py-20 bg-gradient-to-r from-green-600/20 to-blue-600/20">
+  <div class="pt-32 pb-32 bg-gradient-to-r from-green-600/20 to-blue-600/20">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4">Boutique Premium</h2>
       </div>
       
-      <!-- Vrais produits de la boutique -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Points -->
-        <div class="bg-gradient-to-br from-yellow-500 to-orange-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
-          <h3 class="text-2xl font-bold text-white mb-4">Points Premium</h3>
-          <div class="text-4xl font-bold text-white mb-2">1000 pts</div>
-          <div class="text-white/80 mb-6">Débloquez du contenu exclusif</div>
-          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">3.99€</div>
+      <!-- Quatre produits boutique avec vrais visuels -->
+      <div class="shop-visual-container">
+        <!-- Pack 1000 Points -->
+        <div class="shop-visual-card">
+          <div class="shop-visual-section" style="background-image: url('/assets/store/lovepik.png');">
+            <div class="shop-visual-content">
+              <h3 class="shop-visual-title">Pack 1000 Points</h3>
+              <p class="shop-visual-price">3.99 €</p>
+            </div>
+          </div>
+          <div class="shop-bottom-section" style="background-color: #F59E0B;">
+            <button class="shop-buy-btn">💰 Acheter maintenant</button>
+          </div>
         </div>
-        
+
+        <!-- Pack 5000 Points -->
+        <div class="shop-visual-card">
+          <div class="shop-visual-section" style="background-image: url('/assets/store/trove_of_coins.png');">
+            <div class="shop-visual-content">
+              <h3 class="shop-visual-title">Pack 5000 Points</h3>
+              <p class="shop-visual-price">4.99 €</p>
+            </div>
+          </div>
+          <div class="shop-bottom-section" style="background-color: #F59E0B;">
+            <button class="shop-buy-btn">💰 Acheter maintenant</button>
+          </div>
+        </div>
+
         <!-- Abonnement VIP -->
-        <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
-          <h3 class="text-2xl font-bold text-white mb-4">Abonnement VIP</h3>
-          <div class="text-4xl font-bold text-white mb-2">Accès Total</div>
-          <div class="text-white/80 mb-6">Toutes les playlists premium</div>
-          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">9.99€/mois</div>
+        <div class="shop-visual-card">
+          <div class="shop-visual-section" style="background-image: url('/assets/store/6070880.jpg');">
+            <div class="shop-visual-content">
+              <h3 class="shop-visual-title">Abonnement VIP</h3>
+              <p class="shop-visual-price">9.99 €</p>
+            </div>
+          </div>
+          <div class="shop-bottom-section" style="background-color: #F59E0B;">
+            <button class="shop-buy-btn">👑 S'abonner maintenant</button>
+          </div>
         </div>
-        
-        <!-- Playlist Premium -->
-        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-8 text-center transform hover:scale-105 transition-all shadow-2xl">
-          <h3 class="text-2xl font-bold text-white mb-4">Playlist Premium</h3>
-          <div class="text-4xl font-bold text-white mb-2">500 points</div>
-          <div class="text-white/80 mb-6">Contenu exclusif et inédit</div>
-          <div class="bg-white/20 rounded-full px-6 py-3 text-white font-bold">Points</div>
+
+        <!-- Achat Playlist -->
+        <div class="shop-visual-card">
+          <div class="shop-visual-section" style="background-image: url('https://img.youtube.com/vi/0tJz8JjPbHU/hqdefault.jpg');">
+            <div class="shop-visual-content">
+              <h3 class="shop-visual-title">Playlist Premium</h3>
+              <p class="shop-visual-price">500 points</p>
+            </div>
+          </div>
+          <div class="shop-bottom-section" style="background-color: #06B6D4;">
+            <button class="shop-buy-btn">🎶 Acheter maintenant</button>
+          </div>
         </div>
       </div>
     </div>
@@ -411,8 +476,16 @@
     transform: translateY(-2px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.4);
   }
-  /* Styles pour les badges dans la section récompenses */
-  .badge-card {
+  /* Styles pour les badges dans la section homepage */
+  .badge-container-home {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .badge-card-home {
     border-radius: 0.75rem;
     padding: 1rem;
     position: relative;
@@ -428,27 +501,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 200px;
   }
   
-  .badge-card.gold {
+  .badge-card-home.gold {
     background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%);
     box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
     border-color: #ffd700;
   }
   
-  .badge-card.silver {
+  .badge-card-home.silver {
     background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%);
     box-shadow: 0 4px 12px rgba(192, 192, 192, 0.6);
     border-color: #c0c0c0;
   }
   
-  .badge-card.bronze {
+  .badge-card-home.bronze {
     background: linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%);
     box-shadow: 0 4px 12px rgba(205, 127, 50, 0.6);
     border-color: #cd7f32;
   }
   
-  .badge-icon {
+  .badge-icon-home {
     width: 50px;
     height: 50px;
     margin: 0 auto 0.5rem;
@@ -460,11 +534,310 @@
     padding: 10px;
   }
   
-  .badge-icon svg {
+  .badge-icon-home svg {
     width: 100%;
     height: 100%;
     color: #333;
-    filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.3));
+  }
+  
+  .badge-name-home {
+    font-weight: bold;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+  }
+  
+  .badge-level-home {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #333;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    border-radius: 10px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  
+  .badge-points-home {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 2px 8px;
+    display: inline-block;
+  }
+  
+  .badge-card-home:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+  
+  /* Styles spécifiques par type */
+  .badge-card-home.competitor {
+    border-color: #ff9800;
+  }
+  
+  .badge-card-home.engager {
+    border-color: #2196f3;
+  }
+  
+  .badge-card-home.critic {
+    border-color: #f44336;
+  }
+  
+  .badge-card-home.challenger {
+    border-color: #9c27b0;
+  }
+
+  /* Styles pour les vrais visuels de récompenses */
+  .reward-visual-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .reward-visual-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .reward-visual-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+  
+  .reward-visual-section {
+    position: relative;
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .reward-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  .reward-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background-color: #10b981;
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.65rem;
+    font-weight: bold;
+    z-index: 3;
+  }
+  
+  .reward-visual-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+  }
+  
+  .reward-visual-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 0 0.2rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .reward-visual-condition {
+    font-size: 0.75rem;
+    margin: 0;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  }
+  
+  .reward-bottom-section {
+    padding: 0.75rem;
+    color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .reward-description {
+    font-size: 0.75rem;
+    margin: 0;
+    line-height: 1.3;
+    flex: 1;
+  }
+  
+  .reward-buttons {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0.75rem 0;
+  }
+  
+  .reward-condition-btn {
+    background-color: inherit;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.65rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .reward-condition-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .reward-unlocked-btn {
+    background-color: #10b981;
+    color: white;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.65rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .reward-unlocked-btn:hover {
+    background-color: #059669;
+  }
+  
+  .reward-content-btn {
+    width: 100%;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: auto;
+  }
+  
+  .reward-content-btn:hover {
+    background-color: #2563eb;
+  }
+
+  /* Styles pour les vrais visuels de boutique */
+  .shop-visual-container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .shop-visual-card {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .shop-visual-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+  
+  .shop-visual-section {
+    position: relative;
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0.75rem;
+    flex-shrink: 0;
+  }
+  
+  .shop-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  .shop-visual-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+  }
+  
+  .shop-visual-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 0 0.2rem 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  .shop-visual-price {
+    font-size: 0.9rem;
+    margin: 0;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    color: #FDE047;
+  }
+  
+  .shop-bottom-section {
+    padding: 0.75rem;
+    color: white;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .shop-buy-btn {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .shop-buy-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
   
   .badge-name {
