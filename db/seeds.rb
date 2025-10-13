@@ -921,7 +921,7 @@ released_vol2_videos = [
   { title: 'Loved You Better ft. Dean Lewis', youtube_id: '2XGO7NWwbnU' },
   { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
   { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
-  { title: 'Si tu pars', youtube_id: 'XILS3CclI1k' },
+  { title: 'Vanessa Paradis - Bouquet final', youtube_id: '4is-XrHM6RY' },
   { title: 'Other Side of Love', youtube_id: 'S76hEZ7nHN0' },
   { title: 'Grand-mère', youtube_id: 'lgdWKEtrBaU' },
   { title: 'Vampire Bat', youtube_id: 'H4hyhP-Dguw' },
