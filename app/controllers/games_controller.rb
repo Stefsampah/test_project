@@ -116,7 +116,7 @@ class GamesController < ApplicationController
       end
     else
       # Continuer le jeu (affichez la vue normale du jeu)
-      render :show
+      render :show, layout: 'shorts'
     end
   end
 

@@ -11,9 +11,9 @@
 }
 
 .unified-reward-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  border-color: #8b5cf6;
+  transform: translateY(-8px) scale(1.05);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
 }
 
 .unified-reward-card.unlocked {

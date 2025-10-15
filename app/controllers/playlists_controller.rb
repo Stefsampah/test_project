@@ -108,5 +108,8 @@ class PlaylistsController < ApplicationController
     else
       @current_video = @playlist.videos.first
     end
+    
+    # Utiliser le layout spécial pour les shorts
+    render layout: 'shorts'
   end
 end

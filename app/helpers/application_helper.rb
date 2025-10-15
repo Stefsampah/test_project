@@ -6,7 +6,7 @@ module ApplicationHelper
   def get_premium_preview_image
     # Images aléatoires pour les récompenses premium (9 badges)
     # Utiliser l'ID de l'utilisateur pour une sélection cohérente
-    user_id = defined?(current_user) ? current_user.id : 1
+    user_id = (defined?(current_user) && current_user) ? current_user.id : 1
     premium_images = [
       'https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg', # Didi B Félicia
       'https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg', # Didi B Bouaké
@@ -23,7 +23,7 @@ module ApplicationHelper
   def get_ultime_preview_image
     # Images pour les récompenses ultimes (12 badges) - sélection cohérente
     # Utiliser l'ID de l'utilisateur pour une sélection cohérente
-    user_id = defined?(current_user) ? current_user.id : 1
+    user_id = (defined?(current_user) && current_user) ? current_user.id : 1
     ultime_images = [
       # Backstage réel
       '/assets/rewards/ultime/backstage_real/backstage_concert_1.jpg',

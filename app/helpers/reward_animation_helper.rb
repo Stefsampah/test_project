@@ -116,6 +116,8 @@ module RewardAnimationHelper
 
   # 🎫 Carte de récompense avec design cohérent
   def unified_reward_card(reward, options = {})
+    # Option pour désactiver les boutons d'action (utilisé sur la homepage)
+    disable_actions = options[:disable_actions] || false
     # Gérer les objets Reward et les hash temporaires
     if reward.respond_to?(:unlocked?)
       is_unlocked = reward.unlocked?
@@ -223,8 +225,8 @@ module RewardAnimationHelper
       '🎁'
     end
     
-    # Design exactement identique à la carte d'animation
-    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: white; margin: 0 auto; max-width: 400px; width: 100%;" do
+    # Design exactement identique à la carte d'animation avec effets de survol
+    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: white; margin: 0 auto; max-width: 400px; width: 100%; cursor: pointer;" do
       # Bannière avec image - IDENTIQUE à l'animation
       content_tag(:div, style: "height: 200px; position: relative; overflow: hidden; background: linear-gradient(135deg, #{get_gradient_colors(reward_type)});") do
         # Image de fond
@@ -254,18 +256,24 @@ module RewardAnimationHelper
             is_unlocked ? 'DÉBLOQUÉ' : 'VERROUILLÉ'
           end
         end +
-        # Bouton "Afficher le contenu" si débloqué
-        (is_unlocked ? 
+        # Bouton "Afficher le contenu" si débloqué (sauf si désactivé)
+        (disable_actions ? 
           content_tag(:div, style: "margin-top: 15px; text-align: center;") do
-            link_to "Afficher le contenu →", get_reward_details_path(badge_requirement), 
-                    style: "background: #3b82f6; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-decoration: none; display: inline-block; transition: all 0.3s ease;",
-                    onmouseover: "this.style.background='#2563eb'; this.style.transform='scale(1.05)';",
-                    onmouseout: "this.style.background='#3b82f6'; this.style.transform='scale(1)';"
-          end : 
-          content_tag(:div, style: "margin-top: 15px; text-align: center;") do
-            content_tag(:span, "🔒 Collectez #{badge_requirement - (reward.respond_to?(:user_badges_count) ? reward.user_badges_count : 0)} badge(s) supplémentaires", 
-                       style: "color: #9ca3af; font-size: 0.8rem;")
-          end
+            content_tag(:span, "🎁 Récompense disponible", 
+                       style: "color: #10b981; font-size: 0.8rem; font-weight: bold;")
+          end :
+          (is_unlocked ? 
+            content_tag(:div, style: "margin-top: 15px; text-align: center;") do
+              link_to "Afficher le contenu →", get_reward_details_path(badge_requirement), 
+                      style: "background: #3b82f6; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-decoration: none; display: inline-block; transition: all 0.3s ease;",
+                      onmouseover: "this.style.background='#2563eb'; this.style.transform='scale(1.05)';",
+                      onmouseout: "this.style.background='#3b82f6'; this.style.transform='scale(1)';"
+            end : 
+            content_tag(:div, style: "margin-top: 15px; text-align: center;") do
+              content_tag(:span, "🔒 Collectez #{badge_requirement - (reward.respond_to?(:user_badges_count) ? reward.user_badges_count : 0)} badge(s) supplémentaires", 
+                         style: "color: #9ca3af; font-size: 0.8rem;")
+            end
+          )
         )
       end
     end

@@ -6,29 +6,29 @@
     <div class="text-center px-4">
       <!-- Nom de l'app -->
       <h1 class="text-5xl font-bold text-white mb-8 drop-shadow-2xl">
-        Tube<span class="text-cyan-400 animate-pulse">'N</span>Play
+        Tube<span class="animate-pulse" style="color: #7c3aed;">'N</span>Play
       </h1>
       
-      <p class="text-2xl md:text-3xl text-white/90 mb-12 drop-shadow-lg">
+      <p class="text-2xl md:text-3xl mb-12 drop-shadow-lg" style="color: #7c3aed;">
         L'expérience musicale ultime
       </p>
       
       <!-- CTA Buttons -->
       <div class="flex flex-col sm:flex-row gap-6 justify-center">
         <% if user_signed_in? %>
-          <%= link_to playlists_path, class: "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-            🎵 JOUER MAINTENANT
+          <%= link_to playlists_path, class: "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+            COMMENCER
           <% end %>
         <% else %>
-          <%= link_to new_user_registration_path, class: "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-            🚀 COMMENCER
+          <%= link_to new_user_registration_path, class: "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+            COMMENCER
           <% end %>
         <% end %>
       </div>
       
       <!-- Logo agrandi en bas -->
       <div class="mt-16">
-        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-32 h-32 mx-auto object-contain drop-shadow-2xl" %>
+        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-48 h-48 mx-auto object-contain drop-shadow-2xl" %>
       </div>
     </div>
   </div>
@@ -113,8 +113,7 @@
                 </div>
               <% end %>
               
-              <!-- Overlay dégradé -->
-              <div class="playlist-overlay"></div>
+              <!-- Overlay dégradé supprimé pour un rendu uniforme -->
               
               <!-- Titre retiré de l'overlay; affiché au-dessus -->
 
@@ -192,65 +191,57 @@
         <h2 class="text-5xl font-bold text-white mb-4">Débloquez des Récompenses</h2>
       </div>
       
-      <!-- Quatre récompenses avec vrais visuels -->
-      <div class="reward-visual-container">
+      <!-- Quatre récompenses avec cartes unifiées identiques aux autres sections -->
+      <div class="rewards-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem; max-width: 800px; margin: 0 auto;">
         <% 
-          # Sélectionner 4 récompenses de différents types
-          challenge_reward = Reward.by_reward_type('challenge').order(Arel.sql('RANDOM()')).first
-          exclusif_reward = Reward.by_reward_type('exclusif').order(Arel.sql('RANDOM()')).first
-          premium_reward = Reward.by_reward_type('premium').order(Arel.sql('RANDOM()')).first
-          ultime_reward = Reward.by_reward_type('ultime').order(Arel.sql('RANDOM()')).first
-          rewards_to_show = [challenge_reward, exclusif_reward, premium_reward, ultime_reward].compact
+          # Utiliser les mêmes données que dans les autres sections
+          reward_types = [
+            { 
+              quantity: 3, 
+              level: 'challenge', 
+              color: 'from-yellow-400 to-yellow-600', 
+              icon: '🥉',
+              content: 'Playlists Spéciales, Versions acoustiques, Remix spéciaux',
+              visual: 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
+            },
+            { 
+              quantity: 6, 
+              level: 'exclusif', 
+              color: 'from-gray-400 to-gray-600', 
+              icon: '🥈',
+              content: 'Contenu exclusif des blogs et médias spécialisés, podcasts, documentaires, reportages, commentaires audio, vidéo session studio',
+              visual: 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
+            },
+            { 
+              quantity: 9, 
+              level: 'premium', 
+              color: 'from-orange-400 to-orange-600', 
+              icon: '🥇',
+              content: 'Rencontres artistes, Backstage virtuel, Sessions privées, Contenu premium exclusif',
+              visual: get_premium_preview_image
+            },
+            { 
+              quantity: 12, 
+              level: 'ultime', 
+              color: 'from-pink-400 to-purple-600', 
+              icon: '🌈',
+              content: 'Rencontre privée, Backstage réel, Expériences VIP, Accès exclusif total',
+              visual: get_ultime_preview_image
+            }
+          ]
         %>
-        <% rewards_to_show.each do |reward| %>
+        
+        <% reward_types.each do |reward_info| %>
           <% 
-            # Définir les visuels selon le type de récompense
-            case reward.reward_type
-            when "challenge"
-              background_image = "https://img.youtube.com/vi/0tJz8JjPbHU/maxresdefault.jpg" # Didi B
-              overlay_gradient = "rgba(255,165,0,0.7) 0%, rgba(255,140,0,0.7) 100%"
-              bottom_color = "#FF8C00"
-              badge_color = "#10b981"
-            when "exclusif"
-              background_image = "https://img.youtube.com/vi/QVvfSQP3JLM/maxresdefault.jpg" # Didi B Bouaké
-              overlay_gradient = "rgba(138,43,226,0.7) 0%, rgba(75,0,130,0.7) 100%"
-              bottom_color = "#8A2BE2"
-              badge_color = "#10b981"
-            when "premium"
-              background_image = "https://img.youtube.com/vi/JWrIfPCyedU/maxresdefault.jpg" # Charles Doré
-              overlay_gradient = "rgba(205,127,50,0.7) 0%, rgba(184,134,11,0.7) 100%"
-              bottom_color = "#CD7F32"
-              badge_color = "#10b981"
-            when "ultime"
-              background_image = "https://img.youtube.com/vi/ICvSOFEKbgs/maxresdefault.jpg" # Miki
-              overlay_gradient = "rgba(255,105,180,0.7) 0%, rgba(255,20,147,0.7) 100%"
-              bottom_color = "#FF69B4"
-              badge_color = "#10b981"
-            end
+            # Créer un hash temporaire pour le helper - simuler comme débloqué pour la démo
+            temp_reward = {
+              reward_type: reward_info[:level],
+              unlocked: true, # Pour la démo sur la homepage
+              quantity_required: reward_info[:quantity],
+              reward_description: reward_info[:content]
+            }
           %>
-          <div class="reward-visual-card">
-            <!-- Section visuelle avec image de fond -->
-            <div class="reward-visual-section" style="background-image: url('<%= background_image %>');">
-              <div class="reward-overlay" style="background: linear-gradient(<%= overlay_gradient %>);"></div>
-              <div class="reward-badge" style="background-color: <%= badge_color %>;">
-                <%= reward.reward_type.upcase %>
-              </div>
-              <div class="reward-visual-content">
-                <h3 class="reward-visual-title"><%= reward.reward_type.humanize %></h3>
-                <p class="reward-visual-condition"><%= reward.quantity_required %> badges requis</p>
-              </div>
-            </div>
-            
-            <!-- Section inférieure avec couleur unie -->
-            <div class="reward-bottom-section" style="background-color: <%= bottom_color %>;">
-              <p class="reward-description"><%= reward.reward_description %></p>
-              <div class="reward-buttons">
-                <button class="reward-condition-btn" style="background-color: <%= bottom_color %>;"><%= reward.quantity_required %> badges requis</button>
-                <button class="reward-unlocked-btn">DÉBLOQUÉ</button>
-                </div>
-              <button class="reward-content-btn">Afficher le contenu →</button>
-            </div>
-          </div>
+          <%= unified_reward_card(temp_reward, disable_actions: true) %>
         <% end %>
       </div>
     </div>
@@ -331,19 +322,19 @@
       </h2>
       
       <% if user_signed_in? %>
-        <%= link_to playlists_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-16 py-8 rounded-full text-3xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          COMMENCER MAINTENANT
+        <%= link_to playlists_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+          GO
         <% end %>
       <% else %>
-        <%= link_to new_user_registration_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-16 py-8 rounded-full text-3xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          REJOINDRE LA COMMUNAUTÉ
+        <%= link_to new_user_registration_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
+          GO
         <% end %>
       <% end %>
     </div>
   </div>
 
-  <!-- Footer minimaliste -->
-  <div class="bg-gray-900 py-8">
+  <!-- Footer minimaliste - caché sur la homepage -->
+  <div class="bg-gray-900 py-8" style="display: none;">
     <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
       <div class="flex items-center">
         <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
@@ -377,6 +368,14 @@
     height: 100%;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .playlist-item-home:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10;
   }
   .playlist-category-title {
     color: #7c3aed; /* violet */
@@ -421,15 +420,7 @@
     text-align: center;
   }
   
-  .playlist-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.4), rgba(0,0,0,0.1), transparent);
-    z-index: 5;
-  }
+  /* Overlay supprimé pour un rendu uniforme des images */
   
   /* Overlay de titre supprimé pour la home */
   
@@ -591,158 +582,7 @@
     border-color: #9c27b0;
   }
 
-  /* Styles pour les vrais visuels de récompenses */
-  .reward-visual-container {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .reward-visual-card {
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    height: 280px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .reward-visual-card:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  
-  .reward-visual-section {
-    position: relative;
-    height: 160px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0.75rem;
-    flex-shrink: 0;
-  }
-  
-  .reward-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-  
-  .reward-badge {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background-color: #10b981;
-    color: white;
-    padding: 0.2rem 0.5rem;
-    border-radius: 0.75rem;
-    font-size: 0.65rem;
-    font-weight: bold;
-    z-index: 3;
-  }
-  
-  .reward-visual-content {
-    position: relative;
-    z-index: 2;
-    color: white;
-  }
-  
-  .reward-visual-title {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0 0 0.2rem 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-  
-  .reward-visual-condition {
-    font-size: 0.75rem;
-    margin: 0;
-    opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  }
-  
-  .reward-bottom-section {
-    padding: 0.75rem;
-    color: white;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .reward-description {
-    font-size: 0.75rem;
-    margin: 0;
-    line-height: 1.3;
-    flex: 1;
-  }
-  
-  .reward-buttons {
-    display: flex;
-    gap: 0.4rem;
-    margin: 0.75rem 0;
-  }
-  
-  .reward-condition-btn {
-    background-color: inherit;
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.4rem;
-    font-size: 0.65rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .reward-condition-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .reward-unlocked-btn {
-    background-color: #10b981;
-    color: white;
-    border: none;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.4rem;
-    font-size: 0.65rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .reward-unlocked-btn:hover {
-    background-color: #059669;
-  }
-  
-  .reward-content-btn {
-    width: 100%;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.4rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: auto;
-  }
-  
-  .reward-content-btn:hover {
-    background-color: #2563eb;
-  }
+  /* Styles pour les récompenses unifiées - maintenant gérés par le helper unified_reward_card */
 
   /* Styles pour les vrais visuels de boutique */
   .shop-visual-container {

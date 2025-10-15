@@ -1,0 +1,491 @@
+<div class="shorts-container">
+  <div class="shorts-player">
+    <!-- Vidéo de test -->
+    <div class="shorts-video" style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; overflow: hidden !important; z-index: 1 !important;">
+      <iframe 
+        id="youtube-iframe"
+        src="https://www.youtube.com/embed/uQjVJKBrGHo?controls=0&modestbranding=1&rel=0&playsinline=1&fs=0&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=http://192.168.1.213:3000&mute=0&loop=1&playlist=uQjVJKBrGHo&enablejsapi=1"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen="false"
+        style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; border: none !important; margin: 0 !important; padding: 0 !important; max-width: none !important; max-height: none !important; transform: scale(2) !important; z-index: 1 !important;">
+      </iframe>
+    </div>
+
+    <!-- Contrôles et informations -->
+    <div class="shorts-controls">
+      <div class="shorts-info">
+        <h2>Test Plein Écran</h2>
+        <p>GAWA – Lesky (Vidéo de votre jeu)</p>
+        <button id="play-video-btn" class="play-video-button">▶️ Lire la vidéo</button>
+        <div id="video-status" style="color: white; margin-top: 10px; font-size: 0.9rem;">Cliquez sur la vidéo pour la lire</div>
+      </div>
+      
+      <div class="shorts-actions">
+        <button class="action-btn dislike">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
+            <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+        <button class="action-btn like">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-icon">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Reset complet pour plein écran */
+* {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+html, body {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 99999 !important;
+}
+
+/* Masquer toutes les barres de navigation */
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  touch-action: none !important;
+}
+
+/* Forcer le plein écran sur tous les éléments */
+.shorts-container,
+.shorts-player {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 99999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+  max-height: none !important;
+  background: #000 !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Conteneur vidéo - Forcer plein écran */
+.shorts-video {
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  height: 100svh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+}
+
+/* Styles ultra-agressifs pour forcer le plein écran */
+.shorts-video iframe,
+#youtube-iframe,
+iframe {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  transform: scale(2) !important;
+  object-fit: cover !important;
+  z-index: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Forcer tous les éléments iframe */
+iframe[src*="youtube"] {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  min-width: 100vw !important;
+  min-height: 100vh !important;
+  transform: scale(2) !important;
+  z-index: 1 !important;
+}
+
+/* Contrôles et overlay */
+.shorts-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  padding: 20px;
+  z-index: 10;
+}
+
+.shorts-info h2 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.shorts-info p {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+}
+
+.shorts-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.action-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn.dislike {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.action-btn.like {
+  background: rgba(34,197,94,0.8);
+  color: white;
+}
+
+.action-btn:hover {
+  transform: scale(1.1);
+}
+
+.action-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.play-video-button {
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.play-video-button:hover {
+  background: white;
+  transform: scale(1.05);
+}
+
+
+/* Masquer les éléments de navigation */
+nav, .nav, .main-content, .flash {
+  display: none !important;
+}
+
+/* Styles pour mobile - masquer les barres de navigation */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    height: -webkit-fill-available !important;
+  }
+  
+  .shorts-container,
+  .shorts-player {
+    height: -webkit-fill-available !important;
+  }
+}
+
+/* Masquer les barres de navigation sur iOS */
+@media screen and (max-width: 768px) {
+  html, body {
+    height: 100vh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+  
+  .shorts-container,
+  .shorts-player {
+    height: 100vh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+}
+</style>
+
+<script>
+// Solution ULTRA-AGRESSIVE pour forcer le plein écran sur mobile
+(function() {
+  // Fonction pour calculer la vraie hauteur de l'écran
+  function getTrueScreenHeight() {
+    // Essayer différentes méthodes pour obtenir la vraie hauteur
+    const methods = [
+      () => window.screen.height,
+      () => window.screen.availHeight,
+      () => window.outerHeight,
+      () => window.innerHeight + (window.outerHeight - window.innerHeight),
+      () => document.documentElement.clientHeight,
+      () => document.body.clientHeight
+    ];
+    
+    let maxHeight = 0;
+    methods.forEach(method => {
+      try {
+        const height = method();
+        if (height > maxHeight) maxHeight = height;
+      } catch (e) {}
+    });
+    
+    return maxHeight || window.innerHeight;
+  }
+  
+  // Fonction pour forcer le plein écran
+  function forceFullscreen() {
+    const trueHeight = getTrueScreenHeight();
+    const trueWidth = window.screen.width || window.innerWidth;
+    
+    console.log('Forcing fullscreen:', { trueWidth, trueHeight, innerWidth: window.innerWidth, innerHeight: window.innerHeight });
+    
+    // Forcer les styles sur html et body
+    document.documentElement.style.cssText = `
+      width: ${trueWidth}px !important;
+      height: ${trueHeight}px !important;
+      overflow: hidden !important;
+      background: #000 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 99999 !important;
+    `;
+    
+    document.body.style.cssText = `
+      width: ${trueWidth}px !important;
+      height: ${trueHeight}px !important;
+      overflow: hidden !important;
+      background: #000 !important;
+      color: white !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 99999 !important;
+      touch-action: none !important;
+    `;
+    
+    // Forcer les styles sur les conteneurs
+    const containers = document.querySelectorAll('.shorts-container, .shorts-player');
+    containers.forEach(container => {
+      container.style.cssText = `
+        width: ${trueWidth}px !important;
+        height: ${trueHeight}px !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 99999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        background: #000 !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
+        touch-action: none !important;
+      `;
+    });
+    
+    // Masquer tous les éléments de navigation
+    const hideElements = ['nav', '.nav', '.main-content', '.flash', 'header', 'footer'];
+    hideElements.forEach(selector => {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(el => {
+        el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; width: 0 !important; margin: 0 !important; padding: 0 !important;';
+      });
+    });
+  }
+  
+  // Appliquer immédiatement
+  forceFullscreen();
+  
+  // Appliquer au chargement du DOM
+  document.addEventListener('DOMContentLoaded', forceFullscreen);
+  
+  // Appliquer en continu toutes les 50ms
+  setInterval(forceFullscreen, 50);
+  
+  // Appliquer sur tous les événements de redimensionnement
+  ['resize', 'orientationchange', 'focus', 'blur'].forEach(event => {
+    window.addEventListener(event, forceFullscreen);
+  });
+  
+  // Masquer les barres de navigation avec scroll seulement
+  function hideBrowserBars() {
+    window.scrollTo(0, 1);
+  }
+  
+  // Masquer les barres du navigateur
+  hideBrowserBars();
+  setInterval(hideBrowserBars, 2000);
+  
+  // Gérer la vidéo et le plein écran
+  document.addEventListener('DOMContentLoaded', function() {
+    const playBtn = document.getElementById('play-video-btn');
+    const iframe = document.getElementById('youtube-iframe');
+    
+    // Fonction pour forcer les styles de l'iframe
+    function forceIframeStyles() {
+      // Forcer tous les iframes YouTube
+      const allIframes = document.querySelectorAll('iframe[src*="youtube"], #youtube-iframe, iframe');
+      allIframes.forEach(function(iframe) {
+        if (iframe) {
+          iframe.style.setProperty('width', '100vw', 'important');
+          iframe.style.setProperty('height', '100vh', 'important');
+          iframe.style.setProperty('position', 'fixed', 'important');
+          iframe.style.setProperty('top', '0', 'important');
+          iframe.style.setProperty('left', '0', 'important');
+          iframe.style.setProperty('right', '0', 'important');
+          iframe.style.setProperty('bottom', '0', 'important');
+          iframe.style.setProperty('border', 'none', 'important');
+          iframe.style.setProperty('margin', '0', 'important');
+          iframe.style.setProperty('padding', '0', 'important');
+          iframe.style.setProperty('max-width', 'none', 'important');
+          iframe.style.setProperty('max-height', 'none', 'important');
+          iframe.style.setProperty('min-width', '100vw', 'important');
+          iframe.style.setProperty('min-height', '100vh', 'important');
+          iframe.style.setProperty('transform', 'scale(2)', 'important');
+          iframe.style.setProperty('z-index', '1', 'important');
+          iframe.style.setProperty('display', 'block', 'important');
+          iframe.style.setProperty('visibility', 'visible', 'important');
+          iframe.style.setProperty('opacity', '1', 'important');
+        }
+      });
+      
+      // Forcer aussi les styles sur le conteneur parent
+      const videoContainer = document.querySelector('.shorts-video');
+      if (videoContainer) {
+        videoContainer.style.setProperty('width', '100vw', 'important');
+        videoContainer.style.setProperty('height', '100vh', 'important');
+        videoContainer.style.setProperty('position', 'fixed', 'important');
+        videoContainer.style.setProperty('top', '0', 'important');
+        videoContainer.style.setProperty('left', '0', 'important');
+        videoContainer.style.setProperty('right', '0', 'important');
+        videoContainer.style.setProperty('bottom', '0', 'important');
+        videoContainer.style.setProperty('overflow', 'hidden', 'important');
+        videoContainer.style.setProperty('z-index', '1', 'important');
+      }
+    }
+    
+    // Observer les changements sur l'iframe
+    if (iframe) {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+            // YouTube a modifié les styles, on les remet
+            setTimeout(forceIframeStyles, 10);
+          }
+        });
+      });
+      
+      observer.observe(iframe, {
+        attributes: true,
+        attributeFilter: ['style']
+      });
+    }
+    
+    // Gérer le bouton de lecture
+    if (playBtn && iframe) {
+      playBtn.addEventListener('click', function() {
+        // Ajouter autoplay à l'URL sans casser les styles
+        const currentSrc = iframe.src;
+        if (!currentSrc.includes('autoplay=1')) {
+          iframe.src = currentSrc + '&autoplay=1';
+        }
+        
+        // Masquer le bouton
+        playBtn.style.display = 'none';
+        document.getElementById('video-status').textContent = 'Vidéo en cours de lecture';
+        
+        // Forcer les styles après modification de l'URL
+        setTimeout(forceIframeStyles, 100);
+      });
+    }
+    
+    // Maintenir le plein écran en continu
+    setInterval(function() {
+      forceFullscreen();
+      
+      // Maintenir les styles de l'iframe
+      forceIframeStyles();
+    }, 500);
+    
+    // Forcer les styles de l'iframe encore plus fréquemment
+    setInterval(function() {
+      forceIframeStyles();
+    }, 1);
+  });
+  
+})();
+</script>
+

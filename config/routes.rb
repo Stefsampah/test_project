@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   end
   root 'pages#home'
   get 'check_user', to: 'tests#check_user'
+  get 'test_fullscreen', to: 'pages#test_fullscreen'
   
   # Route temporaire pour gérer les anciens liens GET vers sign_out
   get '/users/sign_out', to: 'application#sign_out_redirect'

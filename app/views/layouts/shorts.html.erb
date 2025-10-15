@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tube'NPlay - Shorts</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,viewport-fit=cover,minimal-ui">
+    <%= favicon_link_tag "logo/Copilot_20251006_162220.png" %>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+    
+    <style>
+      /* Reset COMPLET - Override tout */
+      * {
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+        border: none !important;
+        outline: none !important;
+      }
+      
+      html {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        height: 100svh !important;
+        overflow: hidden !important;
+        background: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+        font-size: 16px !important;
+        -webkit-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+      }
+      
+      body {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        height: 100svh !important;
+        overflow: hidden !important;
+        background: #000 !important;
+        color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        font-family: system-ui, -apple-system, sans-serif !important;
+        -webkit-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+        touch-action: none !important;
+      }
+      
+      /* Masquer TOUS les éléments de navigation et layout */
+      nav, .nav, .main-content, .flash, header, footer, .header, .footer {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      
+      /* Forcer le plein écran ABSOLU - Version mobile ultra-optimisée */
+      .shorts-container {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important; /* Dynamic viewport height */
+        height: 100svh !important; /* Small viewport height */
+        height: 100lvh !important; /* Large viewport height */
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 99999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        background: #000 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
+        touch-action: none !important;
+        -webkit-touch-callout: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      
+      .shorts-player {
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        height: 100svh !important;
+        height: 100lvh !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 99999 !important;
+        overflow: hidden !important;
+        background: #000 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
+        touch-action: none !important;
+        -webkit-touch-callout: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      
+      .shorts-end {
+        width: 100vw !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        background: #000 !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+      }
+      
+      /* Override Tailwind et autres frameworks */
+      .min-h-screen, .max-w-6xl, .mx-auto, .px-4, .sm\\:px-6, .lg\\:px-8, .py-4, .sm\\:py-0 {
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+      }
+      
+      /* Styles pour mobile - masquer les barres de navigation */
+      @supports (-webkit-touch-callout: none) {
+        html, body {
+          height: -webkit-fill-available !important;
+        }
+        
+        .shorts-container,
+        .shorts-player,
+        .shorts-end {
+          height: -webkit-fill-available !important;
+        }
+      }
+      
+      /* Masquer les barres de navigation sur iOS */
+      @media screen and (max-width: 768px) {
+        html, body {
+          height: 100vh !important;
+          height: calc(var(--vh, 1vh) * 100) !important;
+        }
+        
+        .shorts-container,
+        .shorts-player,
+        .shorts-end {
+          height: 100vh !important;
+          height: calc(var(--vh, 1vh) * 100) !important;
+        }
+      }
+      
+      /* Masquer les éléments de debug et développement */
+      .debug, .development, .rails, .turbo {
+        display: none !important;
+      }
+    </style>
+  </head>
+
+  <body>
+    <%= yield %>
+    
+    <script>
+      // Forcer le plein écran IMMÉDIATEMENT - Version ultra-agressive
+      (function() {
+        // Calculer la vraie hauteur de l'écran mobile
+        function getTrueViewportHeight() {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', vh + 'px');
+          return window.innerHeight;
+        }
+        
+        const trueHeight = getTrueViewportHeight();
+        
+        // Masquer TOUT immédiatement avec les nouvelles unités viewport
+        document.documentElement.style.cssText = `
+          width: 100vw !important; 
+          height: ${trueHeight}px !important; 
+          height: 100dvh !important; 
+          height: 100svh !important; 
+          overflow: hidden !important; 
+          background: #000 !important; 
+          margin: 0 !important; 
+          padding: 0 !important; 
+          position: fixed !important; 
+          top: 0 !important; 
+          left: 0 !important; 
+          z-index: 99999 !important;
+          -webkit-text-size-adjust: 100% !important;
+          -ms-text-size-adjust: 100% !important;
+        `;
+        
+        document.body.style.cssText = `
+          width: 100vw !important; 
+          height: ${trueHeight}px !important; 
+          height: 100dvh !important; 
+          height: 100svh !important; 
+          overflow: hidden !important; 
+          background: #000 !important; 
+          color: white !important; 
+          margin: 0 !important; 
+          padding: 0 !important; 
+          position: fixed !important; 
+          top: 0 !important; 
+          left: 0 !important; 
+          z-index: 99999 !important;
+          -webkit-text-size-adjust: 100% !important;
+          -ms-text-size-adjust: 100% !important;
+          touch-action: none !important;
+        `;
+        
+        // Masquer tous les éléments de navigation
+        const hideElements = ['nav', '.nav', '.main-content', '.flash', 'header', 'footer', '.header', '.footer'];
+        hideElements.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; width: 0 !important; margin: 0 !important; padding: 0 !important;';
+          });
+        });
+        
+        // Forcer le plein écran des conteneurs avec les nouvelles unités
+        const containers = document.querySelectorAll('.shorts-container, .shorts-player, .shorts-end');
+        containers.forEach(container => {
+          container.style.cssText = `
+            width: 100vw !important; 
+            height: ${trueHeight}px !important; 
+            height: 100dvh !important; 
+            height: 100svh !important; 
+            position: fixed !important; 
+            top: 0 !important; 
+            left: 0 !important; 
+            right: 0 !important;
+            bottom: 0 !important;
+            z-index: 99999 !important; 
+            margin: 0 !important; 
+            padding: 0 !important; 
+            border-radius: 0 !important; 
+            box-shadow: none !important; 
+            max-width: none !important; 
+            max-height: none !important; 
+            background: #000 !important;
+            touch-action: none !important;
+            -webkit-touch-callout: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          `;
+        });
+      })();
+      
+      // Forcer le plein écran au chargement du DOM
+      document.addEventListener('DOMContentLoaded', function() {
+        // Double vérification - masquer tout
+        document.documentElement.style.cssText = 'width: 100vw !important; height: 100vh !important; overflow: hidden !important; background: #000 !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important;';
+        document.body.style.cssText = 'width: 100vw !important; height: 100vh !important; overflow: hidden !important; background: #000 !important; color: white !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important;';
+        
+        // Masquer tous les éléments de navigation
+        const hideElements = ['nav', '.nav', '.main-content', '.flash', 'header', 'footer', '.header', '.footer'];
+        hideElements.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            el.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; width: 0 !important; margin: 0 !important; padding: 0 !important;';
+          });
+        });
+        
+        // Forcer le plein écran des conteneurs
+        const containers = document.querySelectorAll('.shorts-container, .shorts-player, .shorts-end');
+        containers.forEach(container => {
+          container.style.cssText = 'width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important; margin: 0 !important; padding: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: none !important; max-height: none !important; background: #000 !important;';
+        });
+        
+        // Masquer les barres de navigation du navigateur
+        if (window.innerHeight < window.screen.height) {
+          document.body.style.height = window.screen.height + 'px';
+        }
+        
+        // Calculer la hauteur réelle de l'écran sur mobile
+        function setVH() {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', vh + 'px');
+        }
+        
+        setVH();
+        window.addEventListener('resize', setVH);
+        window.addEventListener('orientationchange', setVH);
+        
+        // Forcer le scroll pour masquer les barres de navigation
+        window.scrollTo(0, 1);
+        setTimeout(() => window.scrollTo(0, 1), 100);
+        setTimeout(() => window.scrollTo(0, 1), 500);
+        setTimeout(() => window.scrollTo(0, 1), 1000);
+      });
+      
+      // Forcer le plein écran en continu
+      setInterval(function() {
+        const containers = document.querySelectorAll('.shorts-container, .shorts-player, .shorts-end');
+        containers.forEach(container => {
+          container.style.cssText = 'width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important; margin: 0 !important; padding: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: none !important; max-height: none !important; background: #000 !important;';
+        });
+        
+        document.body.style.cssText = 'width: 100vw !important; height: 100vh !important; overflow: hidden !important; background: #000 !important; color: white !important; margin: 0 !important; padding: 0 !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important;';
+      }, 1000);
+    </script>
+  </body>
+</html>

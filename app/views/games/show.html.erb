@@ -1,32 +1,95 @@
-<div class="min-h-screen bg-gray-900 py-4 sm:py-0">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- En-tête avec logo -->
-    <div class="text-center mb-8">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5.14v14l11-7-11-7z"/>
-            </svg>
-          </div>
-        </div>
-        <h1 class="text-2xl font-bold text-white ml-2">
-          <%= @playlist.title %>
-        </h1>
-      </div>
-    </div>
+<style>
+/* Reset complet pour plein écran */
+* {
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
 
-    <div class="shorts-container">
+html, body {
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 99999 !important;
+}
+
+/* Masquer toutes les barres de navigation */
+body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Forcer le plein écran sur tous les éléments */
+.shorts-container,
+.shorts-player {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 99999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Masquer les éléments de navigation */
+nav, .nav, .main-content, .flash {
+  display: none !important;
+}
+
+/* Styles pour mobile - masquer les barres de navigation */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    height: -webkit-fill-available !important;
+  }
+  
+  .shorts-container,
+  .shorts-player {
+    height: -webkit-fill-available !important;
+  }
+}
+
+/* Masquer les barres de navigation sur iOS */
+@media screen and (max-width: 768px) {
+  html, body {
+    height: 100vh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+  
+  .shorts-container,
+  .shorts-player {
+    height: 100vh !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+}
+</style>
+
+<div class="shorts-container">
       <% if @game.current_video %>
         <div class="shorts-player">
           <!-- Vidéo -->
           <div class="shorts-video">
             <iframe 
-              src="https://www.youtube.com/embed/<%= @game.current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0"
+              src="https://www.youtube.com/embed/<%= @game.current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=0&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=http://localhost:3000&mute=0&loop=1&playlist=<%= @game.current_video.youtube_id %>"
               title="YouTube video player"
               frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen>
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen="false"
+              style="width: 100% !important; height: 100% !important; position: absolute !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important;">
             </iframe>
           </div>
 
@@ -76,8 +139,6 @@
         Retour aux playlists
       <% end %>
     </div>
-  </div>
-</div>
 
 <style>
 /* Reset et base */
@@ -108,31 +169,41 @@ body {
   z-index: 9999;
 }
 
-/* Player vidéo */
+/* Player vidéo - Plein écran comme les shorts YouTube */
 .shorts-player {
-  width: 360px;  /* Format 9:16 pour mobile */
-  height: 640px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  background: #000;
-  box-shadow: 0 0 25px rgba(0,0,0,0.5);
+  width: 100vw !important;
+  height: 100vh !important;
+  position: relative !important;
+  overflow: hidden !important;
+  background: #000 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  max-width: none !important;
+  max-height: none !important;
 }
 
-/* Conteneur vidéo */
+/* Conteneur vidéo - Forcer plein écran */
 .shorts-video {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
 }
 
 .shorts-video iframe {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  object-fit: cover;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  object-fit: cover !important;
 }
 
 /* Contrôles et overlay */
@@ -256,13 +327,169 @@ body {
   box-shadow: 0 5px 15px rgba(255,75,138,0.3);
 }
 
-/* Responsive */
-@media (max-width: 400px) {
+/* Responsive - Optimisation pour tous les écrans */
+@media (max-width: 768px) {
+  /* Mobile - Plein écran FORCÉ */
   .shorts-player,
   .shorts-end {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    max-width: none !important;
+    max-height: none !important;
   }
 }
-</style> 
+</style>
+
+<script>
+// Forcer le plein écran immédiatement
+document.addEventListener('DOMContentLoaded', function() {
+  // Masquer toutes les barres de navigation
+  document.body.style.height = '100vh';
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+  document.body.style.top = '0';
+  document.body.style.left = '0';
+  document.body.style.width = '100vw';
+  
+  // Masquer les éléments de navigation
+  const navElements = document.querySelectorAll('nav, .nav, .main-content, .flash');
+  navElements.forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  // Forcer le plein écran du player
+  const player = document.querySelector('.shorts-player');
+  const container = document.querySelector('.shorts-container');
+  
+  if (player) {
+    player.style.width = '100vw';
+    player.style.height = '100vh';
+    player.style.borderRadius = '0';
+    player.style.boxShadow = 'none';
+    player.style.position = 'fixed';
+    player.style.top = '0';
+    player.style.left = '0';
+    player.style.zIndex = '99999';
+  }
+  
+  if (container) {
+    container.style.width = '100vw';
+    container.style.height = '100vh';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.zIndex = '99999';
+  }
+  
+  // Masquer les barres de navigation du navigateur
+  if (window.innerHeight < window.screen.height) {
+    document.body.style.height = window.screen.height + 'px';
+  }
+  
+  // Calculer la hauteur réelle de l'écran sur mobile
+  function setVH() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', setVH);
+});
+
+// Masquer les barres de navigation sur mobile après un délai
+setTimeout(function() {
+  if ('scrollBehavior' in document.documentElement.style) {
+    window.scrollTo(0, 1);
+  }
+  
+  // Forcer le plein écran
+  const player = document.querySelector('.shorts-player');
+  if (player) {
+    player.style.width = '100vw';
+    player.style.height = '100vh';
+    player.style.borderRadius = '0';
+    player.style.boxShadow = 'none';
+  }
+}, 1000);
+
+// Forcer le plein écran en continu pour maintenir l'affichage
+setInterval(function() {
+  // Empêcher YouTube de sortir du plein écran
+  const iframe = document.querySelector('iframe');
+  if (iframe) {
+    iframe.style.width = '100% !important';
+    iframe.style.height = '100% !important';
+    iframe.style.position = 'absolute !important';
+    iframe.style.top = '0 !important';
+    iframe.style.left = '0 !important';
+    iframe.style.border = 'none !important';
+    iframe.style.pointerEvents = 'none !important';
+  }
+  
+  // Maintenir le plein écran du conteneur
+  const container = document.querySelector('.shorts-container');
+  const player = document.querySelector('.shorts-player');
+  
+  if (container) {
+    container.style.cssText = 'width: 100vw !important; height: 100vh !important; height: 100dvh !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important; margin: 0 !important; padding: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: none !important; max-height: none !important; background: #000 !important; display: flex !important; justify-content: center !important; align-items: center !important; transform: translateZ(0) !important; will-change: transform !important;';
+  }
+  
+  if (player) {
+    player.style.cssText = 'width: 100vw !important; height: 100vh !important; height: 100dvh !important; position: fixed !important; top: 0 !important; left: 0 !important; z-index: 99999 !important; overflow: hidden !important; background: #000 !important; border-radius: 0 !important; box-shadow: none !important; max-width: none !important; max-height: none !important; margin: 0 !important; padding: 0 !important; transform: translateZ(0) !important; will-change: transform !important;';
+  }
+}, 100);
+
+// Empêcher la mise en pause et forcer la lecture continue
+document.addEventListener('DOMContentLoaded', function() {
+  // Empêcher les clics sur l'iframe qui pourraient mettre en pause
+  const iframe = document.querySelector('iframe');
+  if (iframe) {
+    // Masquer complètement l'iframe pour empêcher l'interaction
+    iframe.style.pointerEvents = 'none';
+    iframe.style.userSelect = 'none';
+    iframe.style.webkitUserSelect = 'none';
+    iframe.style.mozUserSelect = 'none';
+    iframe.style.msUserSelect = 'none';
+  }
+  
+  // Empêcher les touches d'espace et autres qui pourraient mettre en pause
+  document.addEventListener('keydown', function(e) {
+    // Empêcher la barre d'espace (pause/play)
+    if (e.code === 'Space' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+    
+    // Empêcher les touches de média
+    if (e.code === 'MediaPlayPause' || e.code === 'MediaStop') {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+  
+  // Empêcher les clics sur la vidéo
+  document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'IFRAME' || e.target.closest('iframe')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  }, true);
+  
+  // Empêcher le menu contextuel
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    return false;
+  });
+  
+  // Empêcher le glisser-déposer
+  document.addEventListener('dragstart', function(e) {
+    e.preventDefault();
+    return false;
+  });
+});
+</script> 
