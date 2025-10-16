@@ -32,9 +32,12 @@ class GamesController < ApplicationController
     
     if existing_game
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+      return
     else
       @game = Game.new(playlist: @playlist, user: current_user)
     end
+    
+    render layout: 'shorts'
   end
 
   def create
@@ -104,7 +107,7 @@ class GamesController < ApplicationController
       # Vérifier si c'est une playlist récompense
       if reward_playlist?(@playlist)
         # Pour les playlists récompenses, afficher seulement un message de félicitations
-        render :reward_results
+        render :reward_results, layout: 'shorts'
       else
         # Calcul de la position dans le classement pour les playlists normales
         scores = Score.where(playlist: @playlist).order(points: :desc)
@@ -112,7 +115,7 @@ class GamesController < ApplicationController
         @position = user_score_index ? user_score_index + 1 : scores.count + 1
 
         # Affiche la vue des résultats normaux
-        render :results
+        render :results, layout: 'shorts'
       end
     else
       # Continuer le jeu (affichez la vue normale du jeu)
@@ -128,7 +131,7 @@ class GamesController < ApplicationController
     # Vérifier si c'est une playlist récompense
     if reward_playlist?(@playlist)
       # Pour les playlists récompenses, rediriger vers reward_results
-      render :reward_results
+      render :reward_results, layout: 'shorts'
       return
     end
     
@@ -151,6 +154,8 @@ class GamesController < ApplicationController
     scores = Score.where(playlist: @playlist).order(points: :desc)
     user_score_index = scores.pluck(:user_id).index(current_user.id)
     @position = user_score_index ? user_score_index + 1 : scores.count + 1
+    
+    render layout: 'shorts'
   end
 
   def reward_results
@@ -161,6 +166,8 @@ class GamesController < ApplicationController
     swipes = @game.swipes.includes(:video)
     @liked_videos = swipes.where(action: "like").map(&:video)
     @not_liked_videos = @playlist.videos - @liked_videos
+    
+    render layout: 'shorts'
   end
 
   def swipe
