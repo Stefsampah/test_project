@@ -8,10 +8,11 @@
       
       <div class="shorts-video">
         <iframe
-          src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0"
+          src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=http://localhost:3000&mute=0&showinfo=0"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
+          allowfullscreen="true"
+          style="width: 100vw !important; height: calc(100vh - 80px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
         </iframe>
       </div>
 

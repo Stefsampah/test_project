@@ -18,17 +18,46 @@
         --url-bar-height: 60px !important;
       }
       
-      /* Ligne de référence pour marquer la limite de l'URL */
+      /* Ligne de référence pour marquer la limite de l'URL - CACHÉE */
       .url-limit-line {
-        position: fixed !important;
-        bottom: var(--url-bar-height) !important;
-        left: 0 !important;
-        right: 0 !important;
-        height: 2px !important;
-        background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet) !important;
-        z-index: 99999 !important;
-        pointer-events: none !important;
-        box-shadow: 0 0 10px rgba(255,255,255,0.8) !important;
+        display: none !important;
+      }
+      
+      /* Supprimer complètement toutes les bordures et barres */
+      .url-limit-line,
+      .rainbow-line,
+      .yellow-band,
+      .color-band,
+      .border,
+      .outline {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        width: 0 !important;
+        border: none !important;
+        outline: none !important;
+      }
+      
+      /* Forcer la suppression de tous les styles de fond et bordures */
+      * {
+        background-color: transparent !important;
+        border-color: transparent !important;
+        border-width: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* Exception pour les boutons seulement */
+      .action-btn {
+        background: rgba(239,68,68,0.9) !important;
+        border: 8px solid rgba(255,255,255,1) !important;
+        box-shadow: 0 20px 60px rgba(239,68,68,1) !important;
+      }
+      
+      .action-btn.like {
+        background: rgba(34,197,94,0.9) !important;
+        box-shadow: 0 20px 60px rgba(34,197,94,1) !important;
       }
       
       /* Cibler la div background spécifique pour définir la limite */
@@ -145,20 +174,25 @@
         overflow-y: auto !important;
       }
 
-      /* Conteneur vidéo - S'arrêter exactement au-dessus de la ligne URL */
+      /* Styles ultra-agressifs pour forcer le plein écran complet */
       .shorts-video {
         width: 100vw !important;
         height: calc(100svh - var(--url-bar-height)) !important;
         height: calc(100dvh - var(--url-bar-height)) !important;
         height: calc(100vh - var(--url-bar-height)) !important;
-        position: absolute !important;
+        position: fixed !important;
         top: 0 !important;
         left: 0 !important;
         overflow: hidden !important;
         z-index: 1 !important;
+        /* Forcer le remplissage complet */
+        background: #000 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
-      /* Styles ultra-agressifs pour forcer le plein écran - S'arrêter à la ligne URL */
+      /* Styles pour forcer le plein écran - S'arrêter à la ligne URL */
       .shorts-video iframe,
       #youtube-iframe,
       iframe {
@@ -182,12 +216,18 @@
         min-height: calc(100svh - var(--url-bar-height)) !important;
         min-height: calc(100dvh - var(--url-bar-height)) !important;
         min-height: calc(100vh - var(--url-bar-height)) !important;
-        transform: scale(2) !important;
+        /* Utiliser un scale pour forcer le remplissage complet */
+        transform: scale(1.2) !important;
+        transform-origin: center center !important;
         object-fit: cover !important;
         z-index: 1 !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
+        /* Forcer le remplissage complet de l'écran */
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
       }
 
       /* Forcer tous les éléments iframe - S'arrêter à la ligne URL */
@@ -212,19 +252,29 @@
         min-height: calc(100svh - var(--url-bar-height)) !important;
         min-height: calc(100dvh - var(--url-bar-height)) !important;
         min-height: calc(100vh - var(--url-bar-height)) !important;
-        transform: scale(2) !important;
+        /* Utiliser un scale pour forcer le remplissage complet */
+        transform: scale(1.2) !important;
+        transform-origin: center center !important;
         z-index: 1 !important;
+        /* Forcer le remplissage complet */
+        background-size: cover !important;
+        background-position: center !important;
+        background-repeat: no-repeat !important;
+        /* Contourner les limitations de ratio d'aspect de YouTube */
+        aspect-ratio: unset !important;
+        object-fit: cover !important;
+        object-position: center !important;
       }
 
-      /* Contrôles et overlay - Positionnés au-dessus de la ligne URL */
+      /* Contrôles et overlay - Superposés sur l'image au bas, au-dessus de la limite URL */
       .shorts-controls {
         position: fixed !important;
-        bottom: calc(var(--url-bar-height) + 20px) !important;
+        bottom: 60px !important;
         left: 0 !important;
         right: 0 !important;
-        background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
-        padding: 20px !important;
-        z-index: 9999 !important;
+        background: transparent !important;
+        padding: 20px 20px 30px 20px !important;
+        z-index: 999999 !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -232,56 +282,87 @@
       }
 
       .shorts-info {
-        margin-bottom: 20px !important;
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-      }
-
-      .shorts-info h2 {
-        color: white !important;
-        font-size: 1.2rem !important;
         margin-bottom: 5px !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
+        text-align: left !important;
+        padding: 0 20px !important;
+        z-index: 9999999 !important;
+        position: relative !important;
       }
 
-      .shorts-info p {
-        color: rgba(255,255,255,0.8) !important;
-        font-size: 0.9rem !important;
+      .shorts-info h2 {
+        color: white !important;
+        font-size: 1.8rem !important;
+        font-weight: 900 !important;
+        margin-bottom: 10px !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
+        line-height: 1.2 !important;
+        text-shadow: 0 6px 12px rgba(0,0,0,1) !important;
+        background: transparent !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        backdrop-filter: none !important;
+        border: none !important;
+      }
+
+      .shorts-info p {
+        color: rgba(255,255,255,1) !important;
+        font-size: 1.3rem !important;
+        font-weight: 700 !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+        text-shadow: 0 4px 8px rgba(0,0,0,1) !important;
+        background: transparent !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        backdrop-filter: none !important;
+        border: none !important;
       }
 
       .shorts-actions {
         display: flex !important;
-        gap: 15px !important;
-        margin-top: 15px !important;
+        gap: 30px !important;
+        margin-top: 5px !important;
         justify-content: center !important;
         visibility: visible !important;
         opacity: 1 !important;
-        z-index: 10000 !important;
+        z-index: 10000000 !important;
+        padding: 0 20px !important;
+        position: relative !important;
+        /* Forcer l'affichage des boutons */
+        height: auto !important;
+        min-height: 120px !important;
       }
 
       .action-btn {
-        width: 50px !important;
-        height: 50px !important;
+        width: 120px !important;
+        height: 120px !important;
         border-radius: 50% !important;
-        border: none !important;
+        border: 8px solid rgba(255,255,255,1) !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         cursor: pointer !important;
         transition: all 0.3s ease !important;
-        background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
         position: relative !important;
-        z-index: 10001 !important;
+        z-index: 10000000 !important;
         visibility: visible !important;
         opacity: 1 !important;
+        box-shadow: 0 20px 50px rgba(0,0,0,1) !important;
+        backdrop-filter: blur(20px) !important;
+        /* Styles de débogage pour forcer la visibilité */
+        min-width: 120px !important;
+        min-height: 120px !important;
+        max-width: 120px !important;
+        max-height: 120px !important;
       }
 
       .action-btn input[type="submit"] {
@@ -301,25 +382,40 @@
       }
 
       .action-btn.dislike {
-        background: rgba(255,0,0,0.8) !important;
+        background: rgba(239,68,68,1) !important;
         color: white !important;
-        border: none !important;
+        border: 8px solid rgba(255,255,255,1) !important;
+        box-shadow: 0 20px 60px rgba(239,68,68,1) !important;
       }
 
       .action-btn.like {
-        background: rgba(138,43,226,0.8) !important;
+        background: rgba(34,197,94,1) !important;
         color: white !important;
-        border: none !important;
+        border: 8px solid rgba(255,255,255,1) !important;
+        box-shadow: 0 20px 60px rgba(34,197,94,1) !important;
       }
 
       .action-btn:hover {
-        transform: scale(1.1) !important;
+        transform: scale(1.2) !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.8) !important;
+        border-color: rgba(255,255,255,0.9) !important;
+      }
+
+      .action-btn.dislike:hover {
+        box-shadow: 0 8px 25px rgba(239,68,68,0.6) !important;
+        background: rgba(239,68,68,1) !important;
+      }
+
+      .action-btn.like:hover {
+        box-shadow: 0 8px 25px rgba(34,197,94,0.6) !important;
+        background: rgba(34,197,94,1) !important;
       }
 
       .action-icon {
-        width: 24px !important;
-        height: 24px !important;
+        width: 50px !important;
+        height: 50px !important;
         color: white !important;
+        filter: drop-shadow(0 5px 10px rgba(0,0,0,1)) !important;
       }
 
       .action-btn.dislike .action-icon {
