@@ -14,7 +14,7 @@ gem "importmap-rails"
 gem "sqlite3", "~> 1.4"
 
 # Use the Puma web server
-gem "puma", "~> 4.3"
+gem "puma", "~> 7.1"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
