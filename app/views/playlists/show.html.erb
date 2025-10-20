@@ -12,7 +12,7 @@
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen="true"
-          style="width: 100vw !important; height: calc(100vh - 80px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
+          style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
         </iframe>
       </div>
 
@@ -117,32 +117,36 @@ html {
   object-fit: cover;
 }
 
-/* Contrôles et overlay - Plus discrets */
+/* Contrôles et overlay - Superposés sur la vidéo */
 .shorts-controls {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 15px 20px 25px 20px; /* Plus d'espace en bas pour les contrôles système */
-  background: linear-gradient(transparent, rgba(0,0,0,0.4)); /* Overlay plus léger */
-  z-index: 10;
+  padding: 20px 20px 30px 20px; /* Espace pour les barres de navigation */
+  background: linear-gradient(transparent, rgba(0,0,0,0.6)); /* Overlay plus visible */
+  z-index: 100;
+  pointer-events: auto;
 }
 
-/* Informations vidéo */
+/* Informations vidéo - Superposées sur la vidéo */
 .shorts-info {
   margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .shorts-info h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 4px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 6px;
   color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 .shorts-info p {
-  font-size: 0.9rem;
-  color: rgba(255,255,255,0.8);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
 }
 
 /* Boutons d'action */
@@ -164,10 +168,12 @@ html {
   font-size: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(12px);
   color: white;
-  border: 2px solid rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 101;
 }
 
 .action-btn.like {
