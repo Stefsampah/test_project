@@ -5,7 +5,19 @@ class ProfilesController < ApplicationController
     @user = current_user
     @scores = current_user.scores.includes(:playlist)
     @badges = current_user.user_badges.includes(:badge)
-    @badges = current_user.user_badges.includes(:badge)
+    
+    # Statistiques des badges par niveau
+    @bronze_count = @badges.joins(:badge).where(badges: { level: 'bronze' }).count
+    @silver_count = @badges.joins(:badge).where(badges: { level: 'silver' }).count
+    @gold_count = @badges.joins(:badge).where(badges: { level: 'gold' }).count
+    @total_badges = @badges.count
+    
+    # Statistiques des récompenses par type
+    @challenge_count = @user.rewards.where(reward_type: 'challenge', unlocked: true).count
+    @exclusif_count = @user.rewards.where(reward_type: 'exclusif', unlocked: true).count
+    @premium_count = @user.rewards.where(reward_type: 'premium', unlocked: true).count
+    @ultime_count = @user.rewards.where(reward_type: 'ultime', unlocked: true).count
+    @total_rewards = @user.rewards.where(unlocked: true).count
   end
 
   def edit
