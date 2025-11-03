@@ -225,8 +225,11 @@ module RewardAnimationHelper
       '🎁'
     end
     
+    # Ajouter margin-top pour Exclusif, Premium et Ultime
+    margin_top = ['exclusif', 'premium', 'ultime'].include?(reward_type) ? 'margin-top: 20px;' : ''
+    
     # Design exactement identique à la carte d'animation avec effets de survol
-    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: white; margin: 0 auto; max-width: 400px; width: 100%; cursor: pointer;" do
+    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: white; margin: 0 auto; #{margin_top} max-width: 400px; width: 100%; cursor: pointer;" do
       # Bannière avec image - IDENTIQUE à l'animation
       content_tag(:div, style: "height: 200px; position: relative; overflow: hidden; background: linear-gradient(135deg, #{get_gradient_colors(reward_type)});") do
         # Image de fond

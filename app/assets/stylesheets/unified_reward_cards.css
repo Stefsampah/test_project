@@ -8,6 +8,7 @@
   overflow: hidden;
   background: white;
   margin: 0 auto;
+  margin-bottom: 0 !important; /* S'assurer qu'il n'y a pas de marge en bas conflictuelle */
 }
 
 .unified-reward-card:hover {
@@ -117,17 +118,38 @@
 
 /* Grille pour les cartes */
 .rewards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 4rem; /* Espacement maximal */
-  padding: 3rem; /* Padding maximal */
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)) !important;
+  gap: 5rem !important; /* Espacement très visible entre toutes les cartes */
+  row-gap: 5rem !important; /* Espacement vertical très visible (80px) */
+  column-gap: 5rem !important; /* Espacement horizontal très visible */
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Forcer l'espacement sur les cartes dans la grille - supprimer toutes les marges */
+.rewards-grid > .unified-reward-card {
+  margin: 0 !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Ajouter un margin-top de 20px sur les cartes Exclusif, Premium et Ultime */
+/* Ces cartes sont normalement aux positions 2, 3 et 4 dans la grille */
+.rewards-grid > .unified-reward-card:nth-child(2),
+.rewards-grid > .unified-reward-card:nth-child(3),
+.rewards-grid > .unified-reward-card:nth-child(4) {
+  margin-top: 20px !important;
 }
 
 @media (max-width: 768px) {
   .rewards-grid {
-    grid-template-columns: 1fr;
-    gap: 3rem; /* Espacement mobile maximal */
-    padding: 2rem; /* Padding mobile maximal */
+    grid-template-columns: 1fr !important;
+    gap: 4rem !important; /* Espacement mobile très visible (64px) */
+    row-gap: 4rem !important; /* Espacement vertical mobile très visible */
+    column-gap: 4rem !important; /* Espacement horizontal mobile très visible */
+    padding: 1.5rem 1rem;
   }
 }
 
