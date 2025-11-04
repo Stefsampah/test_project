@@ -1,21 +1,16 @@
 <div class="results-container">
+  <div class="results-scrollable-wrapper">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- En-tête avec logo -->
-    <div class="text-center mb-8">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5.14v14l11-7-11-7z"/>
-            </svg>
-          </div>
-        </div>
-        <h1 class="text-2xl font-bold text-white ml-2">Résultats</h1>
+    <div class="text-center mb-4">
+      <div class="flex items-center justify-center" style="margin-bottom: 10px;">
+        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
+        <h1 class="text-2xl font-bold text-white">Tube'NPlay</h1>
       </div>
     </div>
 
     <!-- Score Card -->
-    <div class="bg-blue-600 rounded-lg p-8 mb-8 transform hover:scale-105 transition-all duration-300">
+    <div class="bg-blue-600 rounded-lg p-8 mb-8 transform hover:scale-105 transition-all duration-300" style="margin-top: 20px;">
       <div class="text-center">
         <h2 class="text-3xl font-light text-white mb-2">What a Beam!</h2>
         <p class="text-xl text-white/80 mb-6">You've made amazing progress in this playlist.</p>
@@ -218,6 +213,79 @@
       </button>
     </div>
 
+    <!-- Padding supplémentaire pour permettre de scroller plus bas -->
+    <div style="height: 40px;"></div>
 
   </div>
+  </div>
 </div>
+
+<style>
+  /* Permettre le scroll vertical sur mobile pour la page results */
+  @media screen and (max-width: 768px) {
+    .results-scrollable-wrapper {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      position: relative !important;
+      touch-action: pan-y !important;
+    }
+    
+    /* S'assurer que le contenu interne peut dépasser et être scrollable */
+    .results-scrollable-wrapper > div {
+      min-height: calc(100vh + 1px) !important;
+      overflow: visible !important;
+      padding-bottom: 100px !important;
+    }
+  }
+</style>
+
+<script>
+  // Forcer le scroll sur mobile - Version optimisée sans boucle infinie
+  (function() {
+    let scrollInitialized = false;
+    
+    function forceScroll() {
+      if (scrollInitialized || window.innerWidth > 768) return;
+      
+      const container = document.querySelector('.results-container');
+      const wrapper = container ? container.querySelector('.results-scrollable-wrapper') : null;
+      
+      if (wrapper && wrapper.style.overflowY !== 'auto') {
+        wrapper.style.setProperty('width', '100vw', 'important');
+        wrapper.style.setProperty('height', '100vh', 'important');
+        wrapper.style.setProperty('min-height', '100vh', 'important');
+        wrapper.style.setProperty('overflow-y', 'auto', 'important');
+        wrapper.style.setProperty('overflow-x', 'hidden', 'important');
+        wrapper.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+        wrapper.style.setProperty('touch-action', 'pan-y', 'important');
+        
+        // S'assurer que le contenu interne peut dépasser
+        const innerContent = wrapper.querySelector('div');
+        if (innerContent) {
+          innerContent.style.setProperty('min-height', 'calc(100vh + 1px)', 'important');
+          innerContent.style.setProperty('overflow', 'visible', 'important');
+          innerContent.style.setProperty('padding-bottom', '100px', 'important');
+        }
+        
+        scrollInitialized = true;
+      }
+    }
+    
+    // Exécuter une seule fois au chargement
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(forceScroll, 200);
+      });
+    } else {
+      setTimeout(forceScroll, 200);
+    }
+    
+    window.addEventListener('load', function() {
+      setTimeout(forceScroll, 300);
+    });
+  })();
+</script>
