@@ -133,7 +133,7 @@
                       </div>
                     <% else %>
                       <!-- Code YouTube normal pour autres playlists -->
-                      <% thumbnail_id = playlist.videos.first&.youtube_id %>
+                      <% thumbnail_id = playlist.valid_thumbnail_id %>
                       <% if thumbnail_id %>
                         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                              alt="<%= playlist.title %>" 
@@ -270,7 +270,7 @@
                 
                 <!-- Section image avec thumbnail YouTube - FORCÉ PREMIÈRE VIDÉO -->
                 <div class="playlist-image-section">
-                  <% thumbnail_id = playlist.videos.first&.youtube_id %>
+                  <% thumbnail_id = playlist.valid_thumbnail_id %>
                   <% if thumbnail_id %>
                      <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg?v=20250115" 
                          alt="<%= playlist.title %>" 
@@ -362,7 +362,7 @@
               
               <!-- Section image avec thumbnail YouTube - FORCÉ PREMIÈRE VIDÉO -->
               <div class="playlist-image-section">
-                <% thumbnail_id = playlist.videos.first&.youtube_id %>
+                <% thumbnail_id = playlist.valid_thumbnail_id %>
                 <% if thumbnail_id %>
                   <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/maxresdefault.jpg" 
                        alt="<%= playlist.title %>" 

@@ -918,6 +918,7 @@ released_vol2_playlist = Playlist.find_or_create_by!(title: 'RELEASED vol.2') do
 end
 
 released_vol2_videos = [
+  { title: 'Si tu pars', youtube_id: '0Rl8lrbCyKM' },
   { title: 'Loved You Better ft. Dean Lewis', youtube_id: '2XGO7NWwbnU' },
   { title: 'Arrêt de bus ft. Niska', youtube_id: 'XwN54DkXJno' },
   { title: 'Gabriela (Young Miko Remix)', youtube_id: 'rXU7je1_Ons' },
@@ -926,7 +927,7 @@ released_vol2_videos = [
   { title: 'Grand-mère', youtube_id: 'lgdWKEtrBaU' },
   { title: 'Vampire Bat', youtube_id: 'H4hyhP-Dguw' },
   { title: 'Fineshyt', youtube_id: 'shRJSgx48es' },
-  { title: 'NO CAP', youtube_id: '-Q4kCS4u9b8' },
+  { title: 'NO CAP', youtube_id: 'Q4kCS4u9b8' },
   { title: 'Rain', youtube_id: '1If-cXUeVws' }
 ]
 

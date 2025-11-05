@@ -26,7 +26,7 @@
         </div>
       <% end %>
       
-      <% thumbnail_id = playlist.videos.first&.youtube_id %>
+      <% thumbnail_id = playlist.valid_thumbnail_id %>
       <% if thumbnail_id %>
         <!-- Système anti-casse : essayer plusieurs formats YouTube -->
         <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg" 

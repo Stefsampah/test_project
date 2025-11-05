@@ -121,7 +121,7 @@
                   <% end %>
                   
                   <!-- Thumbnail YouTube avec fallback robuste - FORCÉ PREMIÈRE VIDÉO -->
-                  <% thumbnail_id = playlist.videos.first&.youtube_id %>
+                  <% thumbnail_id = playlist.valid_thumbnail_id %>
                   <% if thumbnail_id %>
                     <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg"
                          alt="<%= playlist.title %>"

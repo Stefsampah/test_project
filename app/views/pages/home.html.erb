@@ -81,17 +81,14 @@
               <div class="playlist-category-title"><%= (playlist.category.presence || 'HITS').upcase %></div>
             </div>
             <% 
-              # Essayer de trouver une vidéo avec youtube_id valide
-              videos_with_id = playlist.videos.select { |v| v.youtube_id.present? }
-              
-              if playlist.title&.include?("Futurs Hits") && videos_with_id.size > 1
-                # Pour la playlist Futurs Hits (qui contient Triangle des Bermudes), prendre la 2ème vidéo
-                video_with_id = videos_with_id[1]
+              # Pour Futurs Hits, utiliser la 2ème vidéo valide si disponible
+              if playlist.title&.include?("Futurs Hits")
+                valid_videos = playlist.videos.select { |v| v.youtube_id.present? && v.youtube_id.length >= 10 && !v.youtube_id.start_with?('-') }
+                video_with_id = valid_videos.size > 1 ? valid_videos[1] : valid_videos.first
                 thumbnail_id = video_with_id&.youtube_id
               else
-                # Pour les autres playlists, prendre la première vidéo
-                video_with_id = videos_with_id.first
-                thumbnail_id = video_with_id&.youtube_id
+                # Pour les autres playlists, utiliser la méthode valid_thumbnail_id
+                thumbnail_id = playlist.valid_thumbnail_id
               end
             %>
             <div class="playlist-image-container">

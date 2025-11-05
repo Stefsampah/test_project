@@ -20,9 +20,17 @@ class Playlist < ApplicationRecord
     premium? ? 500 : 0
   end
   
+  # Méthode pour obtenir le premier youtube_id valide de la playlist
+  # Un ID YouTube valide doit être présent, avoir au moins 10 caractères et ne pas commencer par un tiret
+  def valid_thumbnail_id
+    valid_videos = videos.select { |v| v.youtube_id.present? && v.youtube_id.length >= 10 && !v.youtube_id.start_with?('-') }
+    # Retourner le premier ID valide trouvé
+    valid_videos.first&.youtube_id
+  end
+  
   # Méthode pour obtenir le thumbnail de la première vidéo de la playlist (stable)
   def first_thumbnail
-    videos.first&.youtube_id
+    valid_thumbnail_id || videos.first&.youtube_id
   end
   
   # Méthode pour obtenir le thumbnail de la première vidéo de la playlist (stable)

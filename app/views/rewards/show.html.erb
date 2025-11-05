@@ -233,13 +233,13 @@
           <!-- Bannière de la playlist avec thumbnail aléatoire -->
           <div class="playlist-thumbnail relative flex items-center justify-center overflow-hidden">
             <% 
-              # Utiliser la première vidéo de la playlist pour le thumbnail (stable)
-              first_video = @playlist.videos.first
-              if first_video && first_video.youtube_id.present?
+              # Utiliser la méthode valid_thumbnail_id pour obtenir un ID valide
+              thumbnail_id = @playlist.valid_thumbnail_id
+              if thumbnail_id
                 # Essayer plusieurs qualités de thumbnail
-                thumbnail_url = "https://img.youtube.com/vi/#{first_video.youtube_id}/maxresdefault.jpg"
+                thumbnail_url = "https://img.youtube.com/vi/#{thumbnail_id}/maxresdefault.jpg"
                 # Fallback si maxresdefault n'existe pas
-                fallback_url = "https://img.youtube.com/vi/#{first_video.youtube_id}/hqdefault.jpg"
+                fallback_url = "https://img.youtube.com/vi/#{thumbnail_id}/hqdefault.jpg"
               else
                 thumbnail_url = nil
                 fallback_url = nil
@@ -250,7 +250,7 @@
             <% if thumbnail_url %>
               <div class="absolute inset-0 w-full h-full">
            <img src="<%= thumbnail_url %>?v=20250115"
-                alt="<%= first_video.title %>"
+                alt="<%= @playlist.title %>"
                 class="w-full h-full object-cover"
                 style="opacity: 0.7;"
                 onerror="this.onerror=null; this.src='<%= fallback_url %>?v=20250115'; this.style.opacity='0.7';"
