@@ -14,6 +14,8 @@
   flex-direction: column;
   width: 100%;
   max-width: 400px;
+  min-height: 400px; /* Hauteur minimale totale identique pour toutes les cartes */
+  height: auto;
 }
 
 .unified-reward-card:hover {
@@ -90,6 +92,43 @@
 /* Contenu de la carte */
 .reward-content {
   position: relative;
+  min-height: 140px; /* Hauteur minimale identique pour toutes les cartes */
+  flex: 1; /* Prendre tout l'espace disponible */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px !important; /* Padding identique pour toutes les cartes */
+  box-sizing: border-box;
+}
+
+/* Texte de description - limite la hauteur pour uniformiser */
+.reward-content p {
+  max-height: 60px; /* Hauteur maximale pour le texte de description */
+  min-height: 40px; /* Hauteur minimale pour uniformiser l'espacement */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limite à 2 lignes maximum */
+  -webkit-box-orient: vertical;
+  margin-bottom: 12px !important; /* Marge identique pour toutes les cartes */
+  margin-top: 0 !important;
+  line-height: 1.4;
+  font-size: 0.95rem !important;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+
+/* Conteneur des badges et statut - cibler tous les divs sauf le dernier */
+.reward-content > div:not(:last-child) {
+  margin-top: 15px !important;
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
+}
+
+/* Message de récompense disponible ou bouton - dernier div */
+.reward-content > div:last-child {
+  margin-top: 15px !important;
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
 }
 
 /* Footer de la carte */

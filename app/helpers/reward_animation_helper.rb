@@ -246,9 +246,9 @@ module RewardAnimationHelper
         end
       end +
       # Contenu de la carte - COULEUR SELON LE TYPE
-      content_tag(:div, class: "reward-content", style: "background: linear-gradient(135deg, #{get_content_gradient(reward_type)}); padding: 18px; color: white;") do
-        content_tag(:p, reward_description, style: "font-size: 0.95rem; margin-bottom: 12px; line-height: 1.4; opacity: 0.9;") +
-        content_tag(:div, style: "display: flex; justify-content: space-between; align-items: center; margin-top: 15px;") do
+      content_tag(:div, class: "reward-content", style: "background: linear-gradient(135deg, #{get_content_gradient(reward_type)}); color: white;") do
+        content_tag(:p, reward_description) +
+        content_tag(:div, style: "display: flex; justify-content: space-between; align-items: center;") do
           content_tag(:div, style: "background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 15px; font-size: 0.8rem;") do
             content_tag(:span, "#{badge_requirement} badges", style: "color: #ffd700; font-weight: bold;") + " requis"
           end +
@@ -258,18 +258,18 @@ module RewardAnimationHelper
         end +
         # Bouton "Afficher le contenu" si débloqué (sauf si désactivé)
         (disable_actions ? 
-          content_tag(:div, style: "margin-top: 15px; text-align: center;") do
+          content_tag(:div, style: "text-align: center;") do
             content_tag(:span, "🎁 Récompense disponible", 
                        style: "color: #10b981; font-size: 0.8rem; font-weight: bold;")
           end :
           (is_unlocked ? 
-            content_tag(:div, style: "margin-top: 15px; text-align: center;") do
+            content_tag(:div, style: "text-align: center;") do
               link_to "Afficher le contenu →", get_reward_details_path(badge_requirement), 
                       style: "background: #3b82f6; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-decoration: none; display: inline-block; transition: all 0.3s ease;",
                       onmouseover: "this.style.background='#2563eb'; this.style.transform='scale(1.05)';",
                       onmouseout: "this.style.background='#3b82f6'; this.style.transform='scale(1)';"
             end : 
-            content_tag(:div, style: "margin-top: 15px; text-align: center;") do
+            content_tag(:div, style: "text-align: center;") do
               content_tag(:span, "🔒 Collectez #{badge_requirement - (reward.respond_to?(:user_badges_count) ? reward.user_badges_count : 0)} badge(s) supplémentaires", 
                          style: "color: #9ca3af; font-size: 0.8rem;")
             end
@@ -385,7 +385,7 @@ module RewardAnimationHelper
     when 'exclusif'
       'linear-gradient(45deg, rgba(168,85,247,0.3) 0%, rgba(124,58,237,0.3) 100%)' # Violet - réduit
     when 'premium'
-      'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(8,145,178,0.3) 100%)' # Bleu - réduit (identique à Ultime)
+      'linear-gradient(45deg, rgba(34,197,94,0.3) 0%, rgba(22,163,74,0.3) 100%)' # Vert - réduit (correspond au contenu)
     when 'ultime'
       'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(8,145,178,0.3) 100%)' # Bleu - réduit
     else
