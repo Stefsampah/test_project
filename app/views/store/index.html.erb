@@ -5,10 +5,28 @@
       <h1 class="text-4xl font-bold text-white mb-4">🛍️ Boutique</h1>
       <p class="text-xl text-gray-300">Découvrez nos offres exclusives et débloquez de nouveaux contenus</p>
       
-      <!-- Affichage du solde de points -->
-      <div class="mt-6 inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full">
-        <span class="text-2xl mr-2">💰</span>
-        <span class="text-white font-semibold text-lg">Votre solde : <%= @user_points %> points</span>
+      <!-- Affichage du solde de points avec détail -->
+      <div class="mt-6">
+        <div class="inline-flex flex-col items-center px-6 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl shadow-lg">
+          <div class="flex items-center mb-2">
+            <span class="text-2xl mr-2">💰</span>
+            <span class="text-white font-semibold text-xl">Votre solde total : <%= @user_points %> points</span>
+          </div>
+          <div class="flex items-center gap-4 text-sm text-purple-100 mt-2">
+            <div class="flex items-center">
+              <span class="mr-1">💳</span>
+              <span>Points achetés : <%= current_user.purchased_points %> pts</span>
+            </div>
+            <span class="text-purple-300">•</span>
+            <div class="flex items-center">
+              <span class="mr-1">🎮</span>
+              <span>Points de jeu : <%= current_user.game_points %> pts</span>
+            </div>
+          </div>
+          <div class="mt-2 text-xs text-purple-200 italic">
+            Seuls les points achetés peuvent être utilisés pour débloquer des playlists premium. Les points de jeu servent aux badges et récompenses.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -97,14 +115,15 @@
         <div class="playlists-grid">
           <% @premium_playlists.each do |playlist| %>
             <% 
-              # Déterminer si la playlist est débloquée
+              # Déterminer si la playlist est débloquée (uniquement via UserPlaylistUnlock)
               is_unlocked = false
               if user_signed_in?
-                is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist) || 
-                              current_user.total_points >= playlist.points_required
+                # Une playlist est "déjà achetée" uniquement si elle a un UserPlaylistUnlock
+                is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist)
               end
               unlocked = params[:unlocked_playlist_id].present? && playlist.id.to_s == params[:unlocked_playlist_id].to_s
-              can_access = !playlist.premium? || is_unlocked || unlocked
+              # L'utilisateur peut accéder s'il a déjà débloqué OU s'il a assez de points pour acheter
+              can_access = !playlist.premium? || is_unlocked || unlocked || (current_user.total_points >= playlist.points_required)
             %>
             <div class="playlist-item premium-playlist" data-category="<%= playlist.category || 'Premium' %>">
               <div class="playlist-card-uniform">

@@ -15,10 +15,11 @@ class StoreController < ApplicationController
     ]
 
     # Exclure les playlists Challenge Reward (récompenses gagnées, pas achetées)
+    # ET les playlists exclusives (débloquées uniquement via badges)
     reward_playlist_ids = Playlist.where("LOWER(title) LIKE ? OR LOWER(title) LIKE ? OR LOWER(title) LIKE ?", 
                                          "%reward%", "%récompense%", "%challenge%").pluck(:id)
     
-    @premium_playlists = Playlist.where(premium: true)
+    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil])
                                  .where.not(id: reward_playlist_ids)
                                  .order(:title)
     

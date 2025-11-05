@@ -374,7 +374,7 @@ console.log('🔍 DEBUG: Turbo:', typeof Turbo);
             <% if @current_count && @current_count >= @quantity %>
               <% if @quantity == 3 %>
                 <!-- Pour les playlists challenge -->
-                <button class="playlist-button" onclick="launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                <button class="playlist-button" onclick="console.log('🔍 Bouton cliqué:', '<%= @sample_reward.content_type %>', '<%= content_title %>'); launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
                   🎵 Écouter la playlist
                 </button>
               <% else %>
@@ -443,7 +443,7 @@ console.log('🔍 DEBUG: Turbo:', typeof Turbo);
               <!-- Si la récompense est débloquée, afficher les boutons même si la condition de badges n'est pas satisfaite -->
               <% if @quantity == 3 %>
                 <!-- Pour les playlists challenge -->
-                <button class="playlist-button" onclick="launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
+                <button class="playlist-button" onclick="console.log('🔍 Bouton cliqué (unlocked):', '<%= @sample_reward.content_type %>', '<%= content_title %>'); launchChallengeContent('<%= @sample_reward.content_type %>', '<%= content_title %>')">
                   🎵 Écouter la playlist
                 </button>
               <% else %>
@@ -768,9 +768,17 @@ let currentPlaylistIndex = 0;
 function launchChallengeContent(contentType, title) {
   console.log('🎵 Lancement direct du contenu challenge:', contentType, title);
   
+  // Vérifier que les playlists sont définies
+  if (!CHALLENGE_PLAYLISTS || CHALLENGE_PLAYLISTS.length === 0) {
+    console.error('❌ CHALLENGE_PLAYLISTS n\'est pas défini');
+    alert('Erreur : Les playlists ne sont pas disponibles. Veuillez recharger la page.');
+    return;
+  }
+  
   // Trouver l'index de la playlist actuelle
   currentPlaylistIndex = CHALLENGE_PLAYLISTS.findIndex(playlist => playlist.id === contentType);
   if (currentPlaylistIndex === -1) {
+    console.warn('⚠️ Playlist non trouvée:', contentType, '- Utilisation de la première playlist');
     currentPlaylistIndex = 0; // Fallback
   }
   
@@ -780,7 +788,23 @@ function launchChallengeContent(contentType, title) {
 
 // Fonction pour afficher la vidéo avec navigation
 function showChallengeVideoWithNavigation() {
+  console.log('🎬 showChallengeVideoWithNavigation appelée, index:', currentPlaylistIndex);
+  
+  if (!CHALLENGE_PLAYLISTS || CHALLENGE_PLAYLISTS.length === 0) {
+    console.error('❌ CHALLENGE_PLAYLISTS vide ou non défini');
+    alert('Erreur : Les playlists ne sont pas disponibles.');
+    return;
+  }
+  
   const currentPlaylist = CHALLENGE_PLAYLISTS[currentPlaylistIndex];
+  if (!currentPlaylist) {
+    console.error('❌ Playlist non trouvée à l\'index:', currentPlaylistIndex);
+    alert('Erreur : Playlist non trouvée.');
+    return;
+  }
+  
+  console.log('✅ Playlist trouvée:', currentPlaylist);
+  
   const hasNext = currentPlaylistIndex < CHALLENGE_PLAYLISTS.length - 1;
   const hasPrev = currentPlaylistIndex > 0;
   
@@ -794,7 +818,7 @@ function showChallengeVideoWithNavigation() {
       <div style="background: white; border-radius: 12px; padding: 20px; max-width: 90vw; max-height: 90vh; width: 800px; position: relative;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <h3 class="challenge-video-title" style="font-size: 1.5rem; font-weight: bold; color: #333; margin: 0;"></h3>
-          <button onclick="closeChallengeVideoModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer;">&times;</button>
+          <button onclick="closeChallengeVideoModal()" style="background: none; border: none; font-size: 24px; color: #666; cursor: pointer; z-index: 10000;">&times;</button>
         </div>
         <div class="challenge-video-container" style="margin-bottom: 20px; min-height: 300px;"></div>
         <div class="challenge-navigation" style="display: flex; justify-content: space-between; align-items: center;">
@@ -810,6 +834,12 @@ function showChallengeVideoWithNavigation() {
         </div>
       </div>
     `;
+    // Fermer la modal en cliquant à l'extérieur
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeChallengeVideoModal();
+      }
+    });
     document.body.appendChild(modal);
   }
   
@@ -873,13 +903,14 @@ function previousVideo() {
 
 // Fonction pour fermer la modal vidéo Challenge
 function closeChallengeVideoModal() {
-  const controller = document.querySelector('[data-controller*="youtube-modal"]');
-  if (controller && controller.stimulusController) {
-    controller.stimulusController.closeModal();
+  const modal = document.getElementById('challengeVideoModal');
+  if (modal) {
+    modal.style.display = 'none';
+    // Arrêter la vidéo en vidant la source de l'iframe
+    const iframe = modal.querySelector('iframe');
+    if (iframe) iframe.src = '';
   }
 }
-
-<div data-controller="youtube-modal"></div>
 
 // Fonction pour afficher les playlists Challenge (supprimée - remplacée par launchChallengeContent)
 function showChallengePlaylist(contentType, title) {
@@ -1163,14 +1194,18 @@ function closeUltimeGalleryModal() {
 }
 
 // Fermer la modal en cliquant en dehors
-window.onclick = function(event) {
-  const modal = document.getElementById('exclusif-modal');
-  if (event.target == modal) {
+window.addEventListener('click', function(event) {
+  const exclusifModal = document.getElementById('exclusif-modal');
+  if (event.target == exclusifModal) {
     closeExclusifModal();
   }
   const ultimeGalleryModal = document.getElementById('ultime-gallery-modal');
   if (event.target == ultimeGalleryModal) {
     closeUltimeGalleryModal();
   }
-}
+  const challengeVideoModal = document.getElementById('challengeVideoModal');
+  if (event.target == challengeVideoModal) {
+    closeChallengeVideoModal();
+  }
+});
 </script> 

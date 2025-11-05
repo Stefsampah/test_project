@@ -213,7 +213,7 @@
   
   .filter-btn.active {
     color: #ffffff;
-    background: #3b82f6;
+    background: #9333ea;
   }
   
   /* Styles pour les tags de catégories */
@@ -232,6 +232,12 @@
     align-items: center;
     justify-content: center;
   width: 100% !important;
+  }
+  
+  .category-tag.bg-purple-600 {
+    background-color: #9333ea !important;
+    color: #ffffff !important;
+    border-color: #7c3aed !important;
   }
   
   .category-tag:hover {
@@ -533,7 +539,7 @@ h3.text-lg.font-bold.text-white,
             });
             
             // Réinitialiser les tags de catégories
-            categoryTags.forEach(t => t.classList.remove('bg-cyan-600', 'text-white'));
+            categoryTags.forEach(t => t.classList.remove('bg-purple-600', 'text-white'));
             categoryTags.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
           } else if (filter === 'my') {
             // Afficher seulement "Mes playlists"
@@ -551,7 +557,7 @@ h3.text-lg.font-bold.text-white,
             
             // Réinitialiser les tags de catégories dans "Mes playlists"
             const myCategoryFilters = document.querySelectorAll('.my-category-filter');
-            myCategoryFilters.forEach(t => t.classList.remove('bg-cyan-600', 'text-white'));
+            myCategoryFilters.forEach(t => t.classList.remove('bg-purple-600', 'text-white'));
             myCategoryFilters.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
           }
         });
@@ -574,11 +580,11 @@ h3.text-lg.font-bold.text-white,
         console.log('=== FILTRE CLIQUE ===');
         console.log('Catégorie sélectionnée:', category);
         
-        // Mettre à jour les tags
-        categoryTags.forEach(t => t.classList.remove('bg-cyan-600', 'text-white'));
+        // Mettre à jour les tags - état actif en violet
+        categoryTags.forEach(t => t.classList.remove('bg-purple-600', 'text-white'));
         categoryTags.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
         this.classList.remove('bg-gray-800', 'text-gray-300');
-        this.classList.add('bg-cyan-600', 'text-white');
+        this.classList.add('bg-purple-600', 'text-white');
         
         // Filtrer les playlists dans la liste unifiée
         const allPlaylistItems = document.querySelectorAll('#all-playlists-section .playlist-item');
@@ -625,11 +631,11 @@ h3.text-lg.font-bold.text-white,
       filter.addEventListener('click', function() {
         const category = this.getAttribute('data-my-category');
         
-        // Mettre à jour les filtres
-        myCategoryFilters.forEach(f => f.classList.remove('bg-cyan-600', 'text-white'));
+        // Mettre à jour les filtres - état actif en violet
+        myCategoryFilters.forEach(f => f.classList.remove('bg-purple-600', 'text-white'));
         myCategoryFilters.forEach(f => f.classList.add('bg-gray-800', 'text-gray-300'));
         this.classList.remove('bg-gray-800', 'text-gray-300');
-        this.classList.add('bg-cyan-600', 'text-white');
+        this.classList.add('bg-purple-600', 'text-white');
         
         // Filtrer les playlists
         myPlaylistItems.forEach(item => {

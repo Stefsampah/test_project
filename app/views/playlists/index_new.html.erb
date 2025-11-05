@@ -580,7 +580,7 @@
   
   .filter-btn.active {
     color: #ffffff;
-    background: #3b82f6;
+    background: #9333ea;
   }
   
   /* Styles pour uniformiser les images */
@@ -711,6 +711,12 @@
     text-overflow: ellipsis !important;
     min-width: 0 !important;
   }
+  
+  .category-tag.bg-purple-600 {
+    background-color: #9333ea !important;
+    color: #ffffff !important;
+    border-color: #7c3aed !important;
+  }
 }
 
 </style>
@@ -719,6 +725,7 @@
   document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const playlistSections = document.querySelectorAll('.playlist-section');
+    const categoryTags = document.querySelectorAll('.category-tag');
     
     filterButtons.forEach(button => {
       button.addEventListener('click', function() {
@@ -727,6 +734,12 @@
         // Mettre à jour les boutons
         filterButtons.forEach(btn => btn.classList.remove('active'));
         this.classList.add('active');
+        
+        // Réinitialiser les tags de catégories
+        categoryTags.forEach(t => {
+          t.classList.remove('bg-purple-600', 'text-white');
+          t.classList.add('bg-gray-800', 'text-gray-300');
+        });
         
         // Filtrer les sections
         playlistSections.forEach(section => {
@@ -744,6 +757,48 @@
             } else {
               section.style.display = 'none';
             }
+          }
+        });
+      });
+    });
+    
+    // Gestion des tags de catégories
+    categoryTags.forEach(tag => {
+      tag.addEventListener('click', function() {
+        const category = this.getAttribute('data-category');
+        
+        // Mettre à jour les tags - état actif en violet
+        categoryTags.forEach(t => {
+          t.classList.remove('bg-purple-600', 'text-white');
+          t.classList.add('bg-gray-800', 'text-gray-300');
+        });
+        this.classList.remove('bg-gray-800', 'text-gray-300');
+        this.classList.add('bg-purple-600', 'text-white');
+        
+        // Filtrer les playlists par catégorie
+        const allPlaylists = document.querySelectorAll('.playlist-card-new-layout');
+        allPlaylists.forEach(playlist => {
+          const playlistCategory = playlist.getAttribute('data-category');
+          const playlistType = playlist.getAttribute('data-type');
+          let shouldShow = false;
+          
+          if (category === 'Standards') {
+            shouldShow = playlistType === 'standard' || !playlistType;
+          } else if (category === 'Premium') {
+            shouldShow = playlistType === 'premium';
+          } else if (category === 'Exclusives') {
+            shouldShow = playlistCategory === 'Exclusives';
+          } else {
+            // Filtrer par catégorie musicale
+            const categoryElement = playlist.querySelector('.inline-block');
+            const categoryText = categoryElement ? categoryElement.textContent.trim() : '';
+            shouldShow = categoryText === category || playlistCategory === category;
+          }
+          
+          // Trouver la section parente
+          const parentSection = playlist.closest('.playlist-section');
+          if (parentSection && parentSection.id !== 'my-playlists-section') {
+            playlist.style.display = shouldShow ? 'block' : 'none';
           }
         });
       });
