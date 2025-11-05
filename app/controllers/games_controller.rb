@@ -155,7 +155,8 @@ class GamesController < ApplicationController
     user_score_index = scores.pluck(:user_id).index(current_user.id)
     @position = user_score_index ? user_score_index + 1 : scores.count + 1
     
-    render layout: 'shorts'
+    # Utiliser le layout par défaut au lieu de 'shorts' pour afficher tous les éléments visuels correctement
+    render layout: 'application'
   end
 
   def reward_results

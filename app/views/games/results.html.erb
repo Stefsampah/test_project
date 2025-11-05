@@ -1,143 +1,134 @@
-<div class="results-container">
-  <div class="results-scrollable-wrapper">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- En-tête avec logo -->
-    <div class="text-center mb-4">
-      <div class="flex items-center justify-center" style="margin-bottom: 10px;">
-        <%= image_tag "logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
-        <h1 class="text-2xl font-bold text-white">Tube'NPlay</h1>
-      </div>
-    </div>
-
-    <!-- Score Card -->
-    <div class="bg-blue-600 rounded-lg p-8 mb-8 transform hover:scale-105 transition-all duration-300" style="margin-top: 20px;">
+<div class="min-h-screen bg-gray-900">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+    <!-- Score Card - Remontée au maximum -->
+    <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 sm:p-8 mb-8 transform hover:scale-[1.02] transition-all duration-300 shadow-xl">
       <div class="text-center">
-        <h2 class="text-3xl font-light text-white mb-2">What a Beam!</h2>
-        <p class="text-xl text-white/80 mb-6">You've made amazing progress in this playlist.</p>
+        <h2 class="text-2xl sm:text-3xl font-light text-white mb-2">What a Beam!</h2>
+        <p class="text-base sm:text-xl text-white/80 mb-4 sm:mb-6">You've made amazing progress in this playlist.</p>
         
-        <div class="flex items-center justify-center mb-8">
-          <div class="mr-6">
+        <div class="flex items-center justify-center mb-8 flex-col sm:flex-row">
+          <div class="mb-4 sm:mb-0 sm:mr-6 flex-shrink-0">
             <% if current_user&.avatar&.attached? %>
-              <%= image_tag current_user.avatar, class: "h-24 w-24 rounded-full border-4 border-white/30" %>
+              <%= image_tag current_user.avatar, class: "h-20 w-20 sm:h-16 sm:w-16 rounded-full border-2 sm:border-3 border-white object-cover object-center" %>
             <% else %>
-              <div class="h-24 w-24 rounded-full border-4 border-white/30 bg-gray-700 flex items-center justify-center">
-                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <div class="h-20 w-20 sm:h-16 sm:w-16 rounded-full border-2 sm:border-3 border-white bg-purple-800 flex items-center justify-center">
+                <svg class="w-10 h-10 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               </div>
             <% end %>
           </div>
-          <div>
-            <h2 class="text-5xl font-bold text-white mb-2"><%= current_user.game_points %> points</h2>
-            <p class="text-2xl font-light text-white/80">Position: <%= @position %>th Place!</p>
+          <div class="text-center sm:text-left">
+            <h2 class="text-2xl sm:text-5xl font-bold text-white mb-2"><%= current_user.game_points %> points</h2>
+            <p class="text-lg sm:text-2xl font-light text-white">Position: <%= @position %>th Place!</p>
           </div>
         </div>
 
         <!-- Détail du score global -->
-        <div class="bg-white/10 rounded-lg p-6 mb-8 max-w-2xl mx-auto">
-          <h3 class="text-xl font-bold text-white mb-4 text-center">Détail du Score Global</h3>
+        <div class="bg-white rounded-lg p-6 mb-8 max-w-2xl mx-auto border-2 border-purple-600 shadow-lg">
+          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">Détail du Score Global</h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="text-center">
-              <div class="text-2xl font-bold text-blue-400"><%= current_user.regularity_points %></div>
-              <div class="text-sm text-white/80">Régularité</div>
-              <div class="text-xs text-white/60">(<%= current_user.playlists_per_day %> playlists/jour × 20)</div>
+              <div class="text-2xl font-bold text-purple-600"><%= current_user.regularity_points %></div>
+              <div class="text-sm text-gray-700">Régularité</div>
+              <div class="text-xs text-gray-500">(<%= current_user.playlists_per_day %> playlists/jour × 20)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-green-400"><%= current_user.listening_points %></div>
-              <div class="text-sm text-white/80">Temps d'écoute</div>
-              <div class="text-xs text-white/60">(<%= current_user.swipes.count %> swipes × 1.5)</div>
+              <div class="text-2xl font-bold text-purple-600"><%= current_user.listening_points %></div>
+              <div class="text-sm text-gray-700">Temps d'écoute</div>
+              <div class="text-xs text-gray-500">(<%= current_user.swipes.count %> swipes × 1.5)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-purple-400"><%= current_user.critical_opinions_points %></div>
-              <div class="text-sm text-white/80">Critique constructive</div>
-              <div class="text-xs text-white/60">(<%= current_user.likes_count + current_user.dislikes_count %> actions + bonus)</div>
+              <div class="text-2xl font-bold text-purple-600"><%= current_user.critical_opinions_points %></div>
+              <div class="text-sm text-gray-700">Critique constructive</div>
+              <div class="text-xs text-gray-500">(<%= current_user.likes_count + current_user.dislikes_count %> actions + bonus)</div>
             </div>
           </div>
         </div>
 
         <!-- Nouvelles métriques alignées avec le système de badges -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
-          <!-- Win Ratio -->
-          <div class="bg-white/10 rounded-lg p-4">
+          <!-- Win Ratio - VIOLET -->
+          <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-4 border-2 border-white shadow-lg">
             <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
               </svg>
               <h3 class="text-lg font-bold text-white ml-2">Win Ratio</h3>
             </div>
-            <div class="text-2xl font-bold text-green-400">
+            <div class="text-2xl font-bold text-white">
               <%= current_user.win_ratio %>%
             </div>
-            <p class="text-white/80 text-sm">de victoires</p>
+            <p class="text-white/90 text-sm">de victoires</p>
           </div>
 
-          <!-- Games Played -->
-          <div class="bg-white/10 rounded-lg p-4">
+          <!-- Games Played - NOIR -->
+          <div class="bg-black rounded-lg p-4 border-2 border-white shadow-lg">
             <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
               </svg>
               <h3 class="text-lg font-bold text-white ml-2">Parties</h3>
             </div>
-            <div class="text-2xl font-bold text-blue-400">
+            <div class="text-2xl font-bold text-white">
               <%= current_user.games.count %>
             </div>
-            <p class="text-white/80 text-sm">jouées</p>
+            <p class="text-white/90 text-sm">jouées</p>
           </div>
 
-          <!-- Top 3 Count -->
-          <div class="bg-white/10 rounded-lg p-4">
+          <!-- Top 3 Count - BLANC -->
+          <div class="bg-white rounded-lg p-4 border-2 border-purple-600 shadow-lg">
             <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
               </svg>
-              <h3 class="text-lg font-bold text-white ml-2">Top 3</h3>
+              <h3 class="text-lg font-bold text-gray-900 ml-2">Top 3</h3>
             </div>
-            <div class="text-2xl font-bold text-yellow-400">
+            <div class="text-2xl font-bold text-purple-600">
               <%= current_user.top_3_finishes_count %>
             </div>
-            <p class="text-white/80 text-sm">fois</p>
+            <p class="text-gray-600 text-sm">fois</p>
           </div>
 
-          <!-- Unique Playlists -->
-          <div class="bg-white/10 rounded-lg p-4">
+          <!-- Unique Playlists - NOIR -->
+          <div class="bg-black rounded-lg p-4 border-2 border-white shadow-lg">
             <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
               </svg>
               <h3 class="text-lg font-bold text-white ml-2">Playlists</h3>
             </div>
-            <div class="text-2xl font-bold text-purple-400">
+            <div class="text-2xl font-bold text-white">
               <%= current_user.unique_playlists_played_count %>
             </div>
-            <p class="text-white/80 text-sm">uniques</p>
+            <p class="text-white/90 text-sm">uniques</p>
           </div>
         </div>
 
         <!-- Progression vers les badges -->
-        <div class="bg-white/10 rounded-lg p-6">
+        <div class="bg-black rounded-lg p-6 border-2 border-white shadow-lg">
           <h3 class="text-xl font-bold text-white mb-4 text-center">Progression vers les badges</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <% current_user.next_badges.each do |badge_type, data| %>
               <% if data[:badge] %>
-                <div class="bg-white/5 rounded-lg p-4">
+                <div class="bg-white/10 rounded-lg p-4 border border-white/30">
                   <div class="flex items-center justify-between mb-2">
                     <h4 class="text-lg font-semibold text-white"><%= data[:badge].name %></h4>
-                    <span class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-600 text-white px-2 py-1 rounded text-xs">
+                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">
                       <%= badge_type.capitalize %>
                     </span>
                   </div>
                   <div class="mb-2">
-                    <div class="flex justify-between text-sm text-white/80 mb-1">
+                    <div class="flex justify-between text-sm text-white mb-1">
                       <span>Progression</span>
                       <span><%= data[:current_score] %> / <%= data[:badge].points_required %></span>
                     </div>
                     <div class="w-full bg-gray-700 rounded-full h-2">
                       <% progress = (data[:current_score].to_f / data[:badge].points_required * 100).round %>
-                      <div class="bg-<%= badge_type == 'competitor' ? 'amber' : (badge_type == 'engager' ? 'blue' : (badge_type == 'critic' ? 'red' : 'purple')) %>-500 h-2 rounded-full" style="width: <%= [progress, 100].min %>%"></div>
+                      <div class="bg-purple-500 h-2 rounded-full" style="width: <%= [progress, 100].min %>%"></div>
                     </div>
                   </div>
-                  <p class="text-xs text-white/60">
+                  <p class="text-xs text-white/70">
                     <% if data[:points_needed] > 0 %>
                       Il vous manque <%= data[:points_needed] %> points
                     <% else %>
@@ -154,32 +145,32 @@
 
     <!-- Songs Section -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <!-- SONGS LIKED -->
-      <div class="bg-purple-600 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <h3 class="text-2xl font-light text-white mb-6 text-center">SONGS LIKED</h3>
+      <!-- SONGS LIKED - VIOLET -->
+      <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white">
+        <h3 class="text-2xl font-bold text-white mb-6 text-center">SONGS LIKED</h3>
         <div class="space-y-4">
           <% if @liked_videos.present? %>
             <% @liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4">
+              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20">
                 <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-white/80">+2 points</span>
+                <span class="text-purple-200 font-semibold">+2 points</span>
               </div>
             <% end %>
           <% else %>
-            <div class="text-white/80 text-center">No liked songs yet.</div>
+            <div class="text-white/90 text-center">No liked songs yet.</div>
           <% end %>
         </div>
       </div>
 
-      <!-- SONGS NO LIKED -->
-      <div class="bg-blue-600 rounded-lg p-6 transform hover:scale-105 transition-all duration-300">
-        <h3 class="text-2xl font-light text-white mb-6 text-center">SONGS NO LIKED</h3>
+      <!-- SONGS NO LIKED - NOIR -->
+      <div class="bg-black rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white">
+        <h3 class="text-2xl font-bold text-white mb-6 text-center">SONGS NO LIKED</h3>
         <div class="space-y-4">
           <% if @not_liked_videos.present? %>
             <% @not_liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4">
+              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20">
                 <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-white/80">+1 point</span>
+                <span class="text-purple-300 font-semibold">+1 point</span>
               </div>
             <% end %>
           <% else %>
@@ -192,12 +183,12 @@
     <!-- Boutons -->
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
       <button onclick="window.location.href='<%= scores_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all focus:outline-none transform hover:scale-105">
+          class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white/30">
         <span>View Party Leaderboard</span>
       </button>
 
       <button onclick="window.location.href='<%= badges_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-yellow-600 hover:bg-yellow-700 transition-all focus:outline-none transform hover:scale-105">
+          class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-purple-600 bg-white hover:bg-purple-50 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-purple-600">
         <span>Voir mes badges</span>
         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -205,7 +196,7 @@
       </button>
 
       <button onclick="window.location.href='<%= playlists_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-white/20 hover:bg-white/30 transition-all focus:outline-none transform hover:scale-105">
+          class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-black hover:bg-gray-900 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white">
         <span>Next</span>
         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -217,75 +208,4 @@
     <div style="height: 40px;"></div>
 
   </div>
-  </div>
 </div>
-
-<style>
-  /* Permettre le scroll vertical sur mobile pour la page results */
-  @media screen and (max-width: 768px) {
-    .results-scrollable-wrapper {
-      width: 100vw !important;
-      height: 100vh !important;
-      max-height: 100vh !important;
-      overflow-y: auto !important;
-      overflow-x: hidden !important;
-      -webkit-overflow-scrolling: touch !important;
-      position: relative !important;
-      touch-action: pan-y !important;
-    }
-    
-    /* S'assurer que le contenu interne peut dépasser et être scrollable */
-    .results-scrollable-wrapper > div {
-      min-height: calc(100vh + 1px) !important;
-      overflow: visible !important;
-      padding-bottom: 100px !important;
-    }
-  }
-</style>
-
-<script>
-  // Forcer le scroll sur mobile - Version optimisée sans boucle infinie
-  (function() {
-    let scrollInitialized = false;
-    
-    function forceScroll() {
-      if (scrollInitialized || window.innerWidth > 768) return;
-      
-      const container = document.querySelector('.results-container');
-      const wrapper = container ? container.querySelector('.results-scrollable-wrapper') : null;
-      
-      if (wrapper && wrapper.style.overflowY !== 'auto') {
-        wrapper.style.setProperty('width', '100vw', 'important');
-        wrapper.style.setProperty('height', '100vh', 'important');
-        wrapper.style.setProperty('min-height', '100vh', 'important');
-        wrapper.style.setProperty('overflow-y', 'auto', 'important');
-        wrapper.style.setProperty('overflow-x', 'hidden', 'important');
-        wrapper.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
-        wrapper.style.setProperty('touch-action', 'pan-y', 'important');
-        
-        // S'assurer que le contenu interne peut dépasser
-        const innerContent = wrapper.querySelector('div');
-        if (innerContent) {
-          innerContent.style.setProperty('min-height', 'calc(100vh + 1px)', 'important');
-          innerContent.style.setProperty('overflow', 'visible', 'important');
-          innerContent.style.setProperty('padding-bottom', '100px', 'important');
-        }
-        
-        scrollInitialized = true;
-      }
-    }
-    
-    // Exécuter une seule fois au chargement
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        setTimeout(forceScroll, 200);
-      });
-    } else {
-      setTimeout(forceScroll, 200);
-    }
-    
-    window.addEventListener('load', function() {
-      setTimeout(forceScroll, 300);
-    });
-  })();
-</script>
