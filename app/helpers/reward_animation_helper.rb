@@ -225,32 +225,29 @@ module RewardAnimationHelper
       '🎁'
     end
     
-    # Ajouter margin-top pour Exclusif, Premium et Ultime
-    margin_top = ['exclusif', 'premium', 'ultime'].include?(reward_type) ? 'margin-top: 20px;' : ''
-    
     # Design exactement identique à la carte d'animation avec effets de survol
-    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: white; margin: 0 auto; #{margin_top} max-width: 400px; width: 100%; cursor: pointer;" do
+    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: transparent; margin: 0 auto; max-width: 400px; width: 100%; cursor: pointer;" do
       # Bannière avec image - IDENTIQUE à l'animation
-      content_tag(:div, style: "height: 200px; position: relative; overflow: hidden; background: linear-gradient(135deg, #{get_gradient_colors(reward_type)});") do
-        # Image de fond
-        content_tag(:div, '', style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('#{background_image}') center/cover; opacity: 0.8;") +
-        # Overlay de couleur selon le type
-        content_tag(:div, '', style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #{get_overlay_color(reward_type)};") +
-        # Badge du type
-        content_tag(:div, style: "position: absolute; top: 15px; right: 15px;") do
+      content_tag(:div, class: "reward-banner-container", style: "height: 180px; position: relative; overflow: hidden;") do
+        # Image de fond avec classe pour ciblage CSS - fond noir pour éviter les espaces blancs
+        content_tag(:div, '', class: "reward-banner-image", style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-image: url('#{background_image}'); background-size: cover; background-position: center center; background-repeat: no-repeat; background-color: #000; opacity: 0.8;") +
+        # Overlay de couleur selon le type - z-index 1 pour être au-dessus de l'image
+        content_tag(:div, '', style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #{get_overlay_color(reward_type)}; z-index: 1;") +
+        # Badge du type - z-index 2 pour être au-dessus de tout
+        content_tag(:div, style: "position: absolute; top: 15px; right: 15px; z-index: 2;") do
           content_tag(:span, reward_type.upcase, style: "background: #{is_unlocked ? '#10b981' : '#6b7280'}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;")
         end +
-        # Overlay avec titre - IDENTIQUE à l'animation
-        content_tag(:div, style: "position: absolute; inset: 0; background: rgba(0,0,0,0.2); display: flex; align-items: end; padding: 20px;") do
+        # Overlay avec titre - IDENTIQUE à l'animation - z-index 2 pour être au-dessus
+        content_tag(:div, style: "position: absolute; inset: 0; background: rgba(0,0,0,0.2); display: flex; align-items: end; padding: 15px; z-index: 2;") do
           content_tag(:div) do
-            content_tag(:h3, reward_type.humanize, style: "font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8);") +
-            content_tag(:div, "#{badge_requirement} badges requis", style: "color: rgba(255,255,255,0.8); font-size: 0.9rem;")
+            content_tag(:h3, reward_type.humanize, style: "font-size: 1.25rem; font-weight: bold; margin-bottom: 4px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8);") +
+            content_tag(:div, "#{badge_requirement} badges requis", style: "color: rgba(255,255,255,0.8); font-size: 0.85rem;")
           end
         end
       end +
       # Contenu de la carte - COULEUR SELON LE TYPE
-      content_tag(:div, style: "background: linear-gradient(135deg, #{get_content_gradient(reward_type)}); padding: 20px; color: white;") do
-        content_tag(:p, reward_description, style: "font-size: 1rem; margin-bottom: 15px; line-height: 1.4; opacity: 0.9;") +
+      content_tag(:div, class: "reward-content", style: "background: linear-gradient(135deg, #{get_content_gradient(reward_type)}); padding: 18px; color: white;") do
+        content_tag(:p, reward_description, style: "font-size: 0.95rem; margin-bottom: 12px; line-height: 1.4; opacity: 0.9;") +
         content_tag(:div, style: "display: flex; justify-content: space-between; align-items: center; margin-top: 15px;") do
           content_tag(:div, style: "background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 15px; font-size: 0.8rem;") do
             content_tag(:span, "#{badge_requirement} badges", style: "color: #ffd700; font-weight: bold;") + " requis"
@@ -388,7 +385,7 @@ module RewardAnimationHelper
     when 'exclusif'
       'linear-gradient(45deg, rgba(168,85,247,0.3) 0%, rgba(124,58,237,0.3) 100%)' # Violet - réduit
     when 'premium'
-      'linear-gradient(45deg, rgba(34,197,94,0.3) 0%, rgba(22,163,74,0.3) 100%)' # Vert - réduit
+      'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(8,145,178,0.3) 100%)' # Bleu - réduit (identique à Ultime)
     when 'ultime'
       'linear-gradient(45deg, rgba(59,130,246,0.3) 0%, rgba(8,145,178,0.3) 100%)' # Bleu - réduit
     else

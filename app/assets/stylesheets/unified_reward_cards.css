@@ -5,10 +5,15 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   border: 2px solid transparent;
   transition: all 0.3s ease;
-  overflow: hidden;
-  background: white;
+  overflow: hidden !important;
+  background: transparent;
   margin: 0 auto;
-  margin-bottom: 0 !important; /* S'assurer qu'il n'y a pas de marge en bas conflictuelle */
+  margin-bottom: 0 !important;
+  /* Forcer les dimensions cohérentes pour toutes les cartes */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
 }
 
 .unified-reward-card:hover {
@@ -31,6 +36,34 @@
 .reward-banner {
   position: relative;
   overflow: hidden;
+}
+
+.reward-banner-container {
+  position: relative;
+  overflow: hidden !important;
+  min-height: 180px;
+  max-height: 180px;
+  height: 180px;
+  /* Masquer le gradient de fond derrière l'image */
+  background: transparent !important;
+  flex-shrink: 0;
+}
+
+/* Image de fond - garantit qu'elle couvre toujours toute la zone */
+.reward-banner-image {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  /* Fond noir pour éviter les espaces blancs si l'image ne couvre pas complètement */
+  background-color: #000 !important;
+  z-index: 0 !important;
 }
 
 .reward-banner::before {
@@ -74,12 +107,51 @@
     margin: 0;
   }
   
-  .reward-banner {
-    height: 150px;
+  .reward-banner-container {
+    height: 120px !important;
+    min-height: 120px !important;
+    max-height: 120px !important;
+    /* Forcer le conteneur à masquer tout débordement */
+    overflow: hidden !important;
+    position: relative !important;
+  }
+  
+  .reward-banner-image {
+    width: 100% !important;
+    height: 100% !important;
+    background-size: cover !important;
+    background-position: center bottom !important;
+    background-repeat: no-repeat !important;
+    background-color: #000 !important;
+    z-index: 0 !important;
+  }
+  
+  /* Réduire le padding du titre en mobile pour s'adapter à la bannière plus petite */
+  .reward-banner-container > div[style*="align-items: end"] {
+    padding: 12px !important;
+  }
+  
+  .reward-banner-container h3 {
+    font-size: 1.1rem !important;
+    margin-bottom: 3px !important;
+  }
+  
+  .reward-banner-container div[style*="badges requis"] {
+    font-size: 0.75rem !important;
   }
   
   .reward-content {
-    padding: 15px;
+    padding: 12px;
+  }
+  
+  /* Réduire les tailles de police en mobile pour un rendu plus compact */
+  .reward-content p {
+    font-size: 0.9rem !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .reward-content h3 {
+    font-size: 1.25rem !important;
   }
   
   .reward-footer {
@@ -135,14 +207,6 @@
   margin-top: 0 !important;
 }
 
-/* Ajouter un margin-top de 20px sur les cartes Exclusif, Premium et Ultime */
-/* Ces cartes sont normalement aux positions 2, 3 et 4 dans la grille */
-.rewards-grid > .unified-reward-card:nth-child(2),
-.rewards-grid > .unified-reward-card:nth-child(3),
-.rewards-grid > .unified-reward-card:nth-child(4) {
-  margin-top: 20px !important;
-}
-
 @media (max-width: 768px) {
   .rewards-grid {
     grid-template-columns: 1fr !important;
@@ -153,19 +217,4 @@
   }
 }
 
-/* Amélioration de la visibilité des images */
-.reward-banner {
-  position: relative;
-  overflow: hidden;
-}
-
-.reward-banner::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.2) 100%); /* Overlay plus doux */
-  z-index: 1;
-}
+/* Règles déjà définies plus haut - pas de duplication nécessaire */
