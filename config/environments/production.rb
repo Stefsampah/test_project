@@ -30,6 +30,14 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
+  # Headers de sécurité
+  config.action_dispatch.default_headers = {
+    'X-Frame-Options' => 'SAMEORIGIN',
+    'X-Content-Type-Options' => 'nosniff',
+    'X-XSS-Protection' => '1; mode=block',
+    'Referrer-Policy' => 'strict-origin-when-cross-origin'
+  }
+
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
 
@@ -55,19 +63,28 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # Utilise la variable d'environnement MAILER_DOMAIN ou HOST, sinon example.com par défaut
+  production_host = ENV.fetch('MAILER_DOMAIN') { ENV.fetch('HOST', 'example.com') }
+  config.action_mailer.default_url_options = { 
+    host: production_host,
+    protocol: 'https'
+  }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  # Configuration SMTP pour la production
+  # Priorité: Variables d'environnement > Credentials Rails
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS') { Rails.application.credentials.dig(:smtp, :address) || 'smtp.gmail.com' },
+    port: ENV.fetch('SMTP_PORT', '587').to_i,
+    domain: ENV.fetch('SMTP_DOMAIN') { production_host },
+    user_name: ENV.fetch('SMTP_USER_NAME') { Rails.application.credentials.dig(:smtp, :user_name) },
+    password: ENV.fetch('SMTP_PASSWORD') { Rails.application.credentials.dig(:smtp, :password) },
+    authentication: ENV.fetch('SMTP_AUTHENTICATION', 'plain').to_sym,
+    enable_starttls_auto: ENV.fetch('SMTP_ENABLE_STARTTLS', 'true') == 'true'
+  }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
