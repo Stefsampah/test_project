@@ -4,6 +4,18 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  # Validation email renforcée
+  validates :email, presence: true, uniqueness: { case_sensitive: false }
+  validates :email, format: { 
+    with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i,
+    message: "doit être une adresse email valide"
+  }
+  validates :email, length: { maximum: 255 }
+  validate :email_domain_validity
+
+  # Normaliser l'email avant sauvegarde
+  before_save :normalize_email
+
   has_many :games
   has_many :swipes
   has_many :scores
@@ -398,5 +410,39 @@ class User < ApplicationRecord
     BadgeService.assign_badges(self)
     # Vérifier et débloquer les récompenses digitales après attribution des badges
     Reward.check_and_create_rewards_for_user(self)
+  end
+
+  # Normaliser l'email : lowercase et trim
+  def normalize_email
+    self.email = email.to_s.downcase.strip if email.present?
+  end
+
+  # Valider le domaine de l'email
+  def email_domain_validity
+    return unless email.present?
+
+    # Domaines invalides courants à rejeter
+    invalid_domains = [
+      'example.com',
+      'test.com',
+      'invalid.com',
+      'localhost',
+      'domain.com'
+    ]
+
+    domain = email.split('@').last&.downcase
+    if domain && invalid_domains.include?(domain)
+      errors.add(:email, "ne peut pas utiliser le domaine #{domain}")
+    end
+
+    # Vérifier que le domaine a au moins un point (ex: gmail.com)
+    if domain && !domain.include?('.')
+      errors.add(:email, "doit contenir un domaine valide")
+    end
+
+    # Vérifier que le domaine n'est pas trop court (au moins 3 caractères)
+    if domain && domain.length < 3
+      errors.add(:email, "le domaine de l'email est invalide")
+    end
   end
 end
