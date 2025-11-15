@@ -103,9 +103,18 @@
             # Sinon, créer une nouvelle partie
             playlist_game_path = new_playlist_game_path(@playlist)
           end
+          
+          # Vérifier s'il y a une autre partie en cours (différente de celle-ci)
+          other_game_in_progress = should_disable_actions? && (!existing_game || current_game_in_progress&.id != existing_game.id)
         %>
-        <%= link_to "🎵 Lancer la Playlist", playlist_game_path, 
-            class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg" %>
+        <% if other_game_in_progress %>
+          <div class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-gray-400 bg-gray-600 cursor-not-allowed opacity-60">
+            🎵 Partie en cours - Reprenez votre partie d'abord
+          </div>
+        <% else %>
+          <%= link_to "🎵 Lancer la Playlist", playlist_game_path, 
+              class: "inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 transition-all focus:outline-none transform hover:scale-105 shadow-lg" %>
+        <% end %>
       </div>
     <% end %>
   </div>

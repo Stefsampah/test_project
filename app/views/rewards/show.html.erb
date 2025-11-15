@@ -347,9 +347,18 @@
                   # Sinon, créer une nouvelle partie
                   playlist_game_path = new_playlist_game_path(@playlist)
                 end
+                
+                # Vérifier s'il y a une autre partie en cours (différente de celle-ci)
+                other_game_in_progress = should_disable_actions? && (!existing_game || current_game_in_progress&.id != existing_game.id)
               %>
-              <%= link_to "🎵 Écouter la playlist", playlist_game_path, 
-                  class: "playlist-button" %>
+              <% if other_game_in_progress %>
+                <div class="playlist-button" style="opacity: 0.6; cursor: not-allowed; pointer-events: none;">
+                  🎵 Partie en cours - Reprenez votre partie d'abord
+                </div>
+              <% else %>
+                <%= link_to "🎵 Écouter la playlist", playlist_game_path, 
+                    class: "playlist-button" %>
+              <% end %>
               
               <!-- Bouton Détails des vidéos -->
               <%= link_to "🎵 Détails des vidéos", video_details_reward_path(@reward), 

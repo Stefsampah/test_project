@@ -57,4 +57,16 @@ module ApplicationHelper
   def has_game_in_progress?
     current_game_in_progress.present?
   end
+
+  # Vérifie si les actions doivent être désactivées (partie en cours non reprise)
+  def should_disable_actions?
+    return false unless user_signed_in?
+    
+    # Vérifier si on est sur une page de jeu (dans ce cas, ne pas désactiver)
+    is_game_page = request.path.match?(%r{/playlists/\d+/games(/\d+)?(/swipe|/results)?$})
+    return false if is_game_page
+    
+    # Désactiver si une partie est en cours
+    has_game_in_progress?
+  end
 end

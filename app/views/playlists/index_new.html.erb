@@ -94,8 +94,19 @@
                 <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
            <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
              <!-- Lien global sur toute la carte si l'utilisateur peut y accéder ET n'a pas encore joué -->
-             <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
-               <span style="display: none;">Jouer à <%= playlist.title %></span>
+             <% if should_disable_actions? %>
+               <!-- Overlay désactivé si partie en cours -->
+               <div class="absolute inset-0 bg-black/70 z-50 flex flex-col items-center justify-center cursor-not-allowed">
+                 <svg class="w-12 h-12 text-yellow-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                 </svg>
+                 <p class="text-white font-bold text-lg">Partie en cours</p>
+                 <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
+               </div>
+             <% else %>
+               <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
+                 <span style="display: none;">Jouer à <%= playlist.title %></span>
+               <% end %>
              <% end %>
                   <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
                     <!-- Overlay pour indiquer que c'est déjà joué -->
@@ -258,8 +269,19 @@
                   <!-- Playlist premium non débloquée - pas de lien -->
                 <% elsif user_signed_in? %>
                   <!-- Playlist accessible - lien vers le jeu -->
-                  <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
-                    <span style="display: none;">Jouer à <%= playlist.title %></span>
+                  <% if should_disable_actions? %>
+                    <!-- Overlay désactivé si partie en cours -->
+                    <div class="absolute inset-0 bg-black/70 z-50 flex flex-col items-center justify-center cursor-not-allowed">
+                      <svg class="w-12 h-12 text-yellow-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                      </svg>
+                      <p class="text-white font-bold text-lg">Partie en cours</p>
+                      <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
+                    </div>
+                  <% else %>
+                    <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
+                      <span style="display: none;">Jouer à <%= playlist.title %></span>
+                    <% end %>
                   <% end %>
              <% else %>
                <!-- Utilisateur non connecté - lien vers connexion -->
@@ -346,8 +368,19 @@
             <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
               <!-- Lien global sur toute la carte si pas encore joué -->
               <% if !current_user.scores.exists?(playlist: playlist) %>
-                <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
-                  <span style="display: none;">Jouer à <%= playlist.title %></span>
+                <% if should_disable_actions? %>
+                  <!-- Overlay désactivé si partie en cours -->
+                  <div class="absolute inset-0 bg-black/70 z-50 flex flex-col items-center justify-center cursor-not-allowed">
+                    <svg class="w-12 h-12 text-yellow-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="text-white font-bold text-lg">Partie en cours</p>
+                    <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
+                  </div>
+                <% else %>
+                  <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                    <span style="display: none;">Jouer à <%= playlist.title %></span>
+                  <% end %>
                 <% end %>
               <% else %>
                 <!-- Overlay pour indiquer que c'est déjà joué -->

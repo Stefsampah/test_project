@@ -118,7 +118,13 @@
               <div class="playlist-button-overlay">
                 <div class="playlist-button-container">
                   <% if user_signed_in? %>
-                    <%= link_to 'JOUER', new_playlist_game_path(playlist), class: 'playlist-play-button' %>
+                    <% if should_disable_actions? %>
+                      <div class="playlist-play-button" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">
+                        PARTIE EN COURS
+                      </div>
+                    <% else %>
+                      <%= link_to 'JOUER', new_playlist_game_path(playlist), class: 'playlist-play-button' %>
+                    <% end %>
                   <% else %>
                     <%= link_to 'JOUER', new_user_session_path, class: 'playlist-play-button' %>
                   <% end %>
