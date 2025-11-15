@@ -1,4 +1,6 @@
 class GamesController < ApplicationController
+  layout 'shorts', only: [:show, :swipe, :results, :reward_results]
+  
   before_action :authenticate_user!
   before_action :set_playlist, only: [:new, :create, :show, :swipe, :results]
   before_action :set_game, only: [:show, :swipe, :results]
@@ -186,47 +188,62 @@ class GamesController < ApplicationController
 
     Rails.logger.info "Vidéo actuelle : #{video&.title} | Utilisateur : #{current_user&.id} | Action : #{action}"
 
-    # Créer le swipe
-    swipe = @game.swipes.create!(
-      user: current_user,
-      video: video,
-      action: action,
-      liked: liked_value,
-      playlist: @playlist
-    )
+    # Utiliser une transaction avec retry pour gérer les verrouillages SQLite
+    retries = 3
+    begin
+      ActiveRecord::Base.transaction do
+        # Créer le swipe
+        swipe = @game.swipes.create!(
+          user: current_user,
+          video: video,
+          action: action,
+          liked: liked_value,
+          playlist: @playlist
+        )
 
-    # Pour les playlists récompenses, pas de système de points
-    # Pour les playlists normales, calculer et sauvegarder les points
-    unless reward_playlist?(@playlist)
-      # Calcul des points en fonction de l'action (seulement pour les playlists normales)
-      points = action == "like" ? 2 : 1
+        # Pour les playlists récompenses, pas de système de points
+        # Pour les playlists normales, calculer et sauvegarder les points
+        unless reward_playlist?(@playlist)
+          # Calcul des points en fonction de l'action (seulement pour les playlists normales)
+          points = action == "like" ? 2 : 1
 
-      # Mettre à jour ou créer le score (seulement pour cette partie)
-      score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
-      
-      # Calculer le score total de cette partie seulement
-      game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
-      score.points = game_score
-      score.save!
-    end
+          # Mettre à jour ou créer le score (seulement pour cette partie)
+          score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
+          
+          # Calculer le score total de cette partie seulement
+          game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
+          score.points = game_score
+          score.save!
+        end
 
-    @game.reload
+        @game.reload
 
-    next_video = @game.next_video
-    Rails.logger.info "Vidéo suivante : #{next_video&.title}"
+        next_video = @game.next_video
+        Rails.logger.info "Vidéo suivante : #{next_video&.title}"
 
-    # Marquer le jeu comme terminé s'il n'y a plus de vidéos
-    if !next_video && @game.completed?
-      @game.update(completed_at: Time.current)
-    end
+        # Marquer le jeu comme terminé s'il n'y a plus de vidéos
+        if !next_video && @game.completed?
+          @game.update(completed_at: Time.current)
+        end
 
-    if next_video
-      redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
-    else
-      if reward_playlist?(@playlist)
-        redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist récompense !"
+        if next_video
+          redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
+        else
+          if reward_playlist?(@playlist)
+            redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist récompense !"
+          else
+            redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+          end
+        end
+      end
+    rescue ActiveRecord::StatementInvalid => e
+      if e.message.include?('database is locked') && retries > 0
+        retries -= 1
+        sleep(0.1 * (3 - retries)) # Attendre progressivement plus longtemps
+        retry
       else
-        redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+        Rails.logger.error "Erreur lors du swipe : #{e.message}"
+        redirect_to playlist_game_path(@game.playlist, @game), alert: "Erreur lors de l'enregistrement. Veuillez réessayer."
       end
     end
   end

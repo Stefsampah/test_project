@@ -45,4 +45,16 @@ module ApplicationHelper
     # Sélection basée sur l'ID utilisateur pour la cohérence
     ultime_images[user_id % ultime_images.length]
   end
+
+  # Retourne la dernière partie en cours de l'utilisateur (non terminée)
+  def current_game_in_progress
+    return nil unless user_signed_in?
+    
+    current_user.games.where(completed_at: nil).order(created_at: :desc).first
+  end
+
+  # Vérifie si l'utilisateur a une partie en cours
+  def has_game_in_progress?
+    current_game_in_progress.present?
+  end
 end
