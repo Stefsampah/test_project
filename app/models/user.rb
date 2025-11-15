@@ -13,8 +13,9 @@ class User < ApplicationRecord
   validates :email, length: { maximum: 255 }
   validate :email_domain_validity
 
-  # Normaliser l'email avant sauvegarde
-  before_save :normalize_email
+  # Normaliser l'email avant validation pour éviter les erreurs de validation
+  # sur les emails avec espaces (ex: " user@gmail.com ")
+  before_validation :normalize_email
 
   has_many :games
   has_many :swipes
