@@ -1,19 +1,16 @@
-feat: Notification persistante pour reprendre les parties en cours
+feat: Mise à jour utilisateurs et amélioration du branding
 
-- Ajout de méthodes helper pour détecter les parties non terminées
-  * `current_game_in_progress` : retourne la dernière partie en cours
-  * `has_game_in_progress?` : vérifie si l'utilisateur a une partie active
+- Mise à jour du username de user@tubenplay.com en "Jordan"
+- Ajout des avatars pour Driss, Ja et Jordan depuis app/assets/images/players/
+- Mise en violet du "N" dans le titre Tube'NPlay sur toutes les pages
+- Création de scripts utilitaires pour la gestion des utilisateurs et avatars
 
-- Notification persistante avec bouton "Reprendre la partie"
-  * Affichage automatique sur toutes les pages (sauf pages de jeu)
-  * Affiche le nom de la playlist concernée
-  * Bouton qui redirige directement vers la partie en cours
-  * Style responsive et adaptatif
-
-- Amélioration du layout pour garantir l'affichage plein écran
-  * Layout 'shorts' forcé pour les actions show, swipe, results
-  * Garantit l'affichage plein écran lors de la reprise d'une partie
-
-L'utilisateur voit maintenant systématiquement une notification quand il
-quitte une partie sans la terminer, avec un bouton pour reprendre facilement
-où il s'était arrêté.
+Détails:
+- Username: user@tubenplay.com → Jordan
+- Avatars ajoutés via Active Storage pour Driss, Ja et Jordan
+- Titre Tube'NPlay avec "N" en violet (#9333ea) dans:
+  * Layout principal (navigation)
+  * Page d'accueil (hero section et footer)
+- Scripts créés:
+  * mettre_a_jour_utilisateurs.rb - Vérification et mise à jour des utilisateurs
+  * ajouter_avatars.rb - Ajout d'avatars depuis app/assets/images/players/
