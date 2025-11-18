@@ -1,31 +1,19 @@
 <!-- Nouvelle vue des playlists avec système de catégories et thumbnails YouTube -->
-<div class="min-h-screen bg-gray-900 py-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- En-tête avec logo -->
-    <div class="text-center mb-12">
-      <div class="flex items-center justify-center mb-6">
-        <div class="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center">
-          <div class="w-8 h-8 text-cyan-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5.14v14l11-7-11-7z"/>
-            </svg>
-          </div>
-        </div>
-        <h1 class="text-4xl font-bold text-white ml-4">Playlists</h1>
-      </div>
-      <p class="text-gray-300 max-w-2xl mx-auto">
-        Découvrez notre sélection de playlists musicales ivoiriennes et votez pour vos chansons préférées.
-      </p>
+<div class="min-h-screen bg-gray-900 py-0">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- En-tête harmonisé -->
+    <div class="text-center mb-4">
+      <h1 class="text-2xl font-bold text-white">Playlists</h1>
     </div>
 
     <!-- Boutons de filtrage -->
     <div class="flex justify-center mb-8">
-      <div class="bg-gray-800 rounded-lg p-1 flex space-x-1">
-        <button id="all-playlists-btn" class="filter-btn active px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="all">
+      <div class="flex space-x-2">
+        <button id="all-playlists-btn" class="filter-btn active px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors" data-filter="all">
           Toutes les playlists
         </button>
         <% if user_signed_in? %>
-          <button id="my-playlists-btn" class="filter-btn px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="my">
+          <button id="my-playlists-btn" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" data-filter="my">
             Mes playlists
           </button>
         <% end %>
@@ -600,20 +588,27 @@
     background: rgba(255, 255, 255, 0.05);
   }
   
-  /* Styles pour les boutons de filtrage */
-  .filter-btn {
-    color: #9ca3af;
-    background: transparent;
-  }
-  
-  .filter-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
+  /* Styles pour les boutons de filtrage - exactement comme page scores */
   .filter-btn.active {
-    color: #ffffff;
-    background: #9333ea;
+    background-color: #9333ea;
+  }
+  
+  /* Harmonisation des titres principaux - même style que page scores */
+  h1.text-2xl.font-bold.text-white {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+  }
+  
+  .playlist-section {
+    transition: all 0.3s ease;
+  }
+  
+  /* Responsive improvements - même que page scores */
+  @media (max-width: 640px) {
+    .playlist-section {
+      margin-bottom: 1.5rem;
+    }
   }
   
   /* Styles pour uniformiser les images */
@@ -697,36 +692,8 @@
   overflow-x: hidden;
 }
 
-/* Mobile viewport fixes */
+/* Mobile viewport fixes - seulement pour les catégories, pas pour html/body */
 @media (max-width: 768px) {
-  /* Limiter le scroll horizontal */
-  html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-  }
-  
-  .min-h-screen {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
-  }
-  
-  .max-w-7xl {
-    max-width: 100vw !important;
-    overflow-x: hidden !important;
-  }
-  
-  /* Centrer les playlists proportionnellement */
-  .grid {
-    justify-items: center !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
-  
-  .playlist-card-new-layout {
-    max-width: 100% !important;
-    width: 100% !important;
-  }
-  
   /* Categories grid mobile - 3 rangées */
   .categories-grid {
     grid-template-columns: repeat(3, 1fr) !important;

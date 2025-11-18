@@ -167,9 +167,15 @@
           padding: 0.25rem;
         }
         
-        .logo svg {
+        .logo svg,
+        .logo img {
           width: 24px;
           height: 24px;
+        }
+        
+        .nav-content {
+          height: auto;
+          min-height: 47px;
         }
       }
     </style>
@@ -266,13 +272,13 @@
       <% is_game_page = request.path.match?(%r{/playlists/\d+/games(/\d+)?(/swipe|/results)?$}) %>
       <% unless is_game_page %>
         <div class="flash" id="game-in-progress-notification">
-          <div class="flash-notice" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-            <span style="flex: 1; min-width: 200px;">
+          <div class="flash-notice" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-size: 1rem;">
+            <span style="flex: 1; min-width: 200px; font-size: 1rem;">
               🎮 Vous avez une partie en cours : <strong><%= game.playlist.title %></strong>
             </span>
             <%= link_to "Reprendre la partie", playlist_game_path(game.playlist, game), 
                 class: "bg-white text-green-600 px-4 py-2 rounded font-semibold hover:bg-gray-100 transition-colors",
-                style: "text-decoration: none; white-space: nowrap; flex-shrink: 0;" %>
+                style: "text-decoration: none; white-space: nowrap; flex-shrink: 0; font-size: 1rem;" %>
           </div>
         </div>
       <% end %>
