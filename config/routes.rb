@@ -112,4 +112,7 @@ Rails.application.routes.draw do
   
   # Route pour la démonstration des animations de récompenses
   get 'reward_animations_demo', to: 'pages#reward_animations_demo', as: :reward_animations_demo
+  
+  # Route pour les propositions de design des cartes de récompenses
+  get 'reward_cards_proposals', to: 'pages#reward_cards_proposals', as: :reward_cards_proposals
 end

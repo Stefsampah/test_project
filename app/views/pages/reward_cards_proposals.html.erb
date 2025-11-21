@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propositions Design Cartes Récompenses - Tube'NPlay</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .game-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Animation de brillance */
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(200%) translateY(200%) rotate(45deg); }
+    }
+    
+    .shine-effect::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+      );
+      animation: shine 3s infinite;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    /* Effet de particules */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(5deg); }
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 50%;
+      animation: float 3s infinite;
+    }
+    
+    /* Styles pour chaque type de récompense */
+    .reward-or { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); }
+    .reward-ultime { background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%); }
+    .reward-premium { background: linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 50%, #808080 100%); }
+    .reward-exclusif { background: linear-gradient(135deg, #cd7f32 0%, #b87333 50%, #9c6b2a 100%); }
+    .reward-challenge { background: linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%); }
+    
+    /* Bordure décorative */
+    .decorative-border {
+      position: absolute;
+      inset: 0;
+      border: 3px solid;
+      border-radius: 16px;
+      pointer-events: none;
+    }
+    
+    .border-or { border-color: rgba(251, 191, 36, 0.8); }
+    .border-ultime { border-color: rgba(251, 191, 36, 0.8); }
+    .border-premium { border-color: rgba(192, 192, 192, 0.8); }
+    .border-exclusif { border-color: rgba(205, 127, 50, 0.8); }
+    .border-challenge { border-color: rgba(251, 146, 60, 0.8); }
+    
+    /* Clip supérieur style pass VIP */
+    .vip-clip {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 20px;
+      background: inherit;
+      border-radius: 0 0 8px 8px;
+      border: 2px solid rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Texte avec ombre portée */
+    .text-shadow-glow {
+      text-shadow: 
+        0 0 10px rgba(0, 0, 0, 0.8),
+        0 2px 4px rgba(0, 0, 0, 0.6),
+        0 0 20px currentColor;
+    }
+    
+    /* Icônes animées */
+    .icon-bounce {
+      animation: float 2s ease-in-out infinite;
+    }
+    
+    /* Badge mystère */
+    .mystery-badge {
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 8px 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    
+    /* Pattern de fond subtil */
+    .pattern-overlay {
+      position: absolute;
+      inset: 0;
+      opacity: 0.1;
+      background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.1) 20px);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-4xl font-bold text-white text-center mb-4" style="font-family: 'Orbitron', sans-serif;">
+      🎮 PROPOSITIONS DESIGN CARTES RÉCOMPENSES 🎮
+    </h1>
+    <p class="text-gray-400 text-center mb-12">Style gaming inspiré des passes VIP - Cliquez sur une carte pour voir l'effet</p>
+    
+    <!-- PROPOSITION 1: Style Pass VIP Classique -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6" style="font-family: 'Orbitron', sans-serif;">
+        PROPOSITION 1: Pass VIP Classique
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Challenge (Orange) -->
+        <div class="game-card reward-challenge shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-challenge"></div>
+          <div class="decorative-border border-challenge"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <!-- En-tête -->
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-2 icon-bounce">🎯</div>
+              <div class="mystery-badge text-white mb-4">CHALLENGE</div>
+              <div class="text-white text-2xl font-bold text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif;">
+                ???
+              </div>
+              <div class="text-orange-200 text-sm">3 badges requis</div>
+            </div>
+            
+            <!-- Contenu mystère -->
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-4xl mb-3">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">Contenu mystérieux</div>
+                <div class="text-white/60 text-xs mt-2">À découvrir en jouant</div>
+              </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-bold mb-2">EVENT PASS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Exclusif (Bronze) -->
+        <div class="game-card reward-exclusif shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-exclusif"></div>
+          <div class="decorative-border border-exclusif"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-2 icon-bounce">⭐</div>
+              <div class="mystery-badge text-white mb-4">EXCLUSIF</div>
+              <div class="text-white text-2xl font-bold text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif;">
+                ???
+              </div>
+              <div class="text-orange-200 text-sm">6 badges requis</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-4xl mb-3">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">Contenu mystérieux</div>
+                <div class="text-white/60 text-xs mt-2">À découvrir en jouant</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-bold mb-2">EXCLUSIVE ACCESS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Premium (Argent) -->
+        <div class="game-card reward-premium shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-premium"></div>
+          <div class="decorative-border border-premium"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-2 icon-bounce">👑</div>
+              <div class="mystery-badge text-white mb-4">PREMIUM</div>
+              <div class="text-white text-2xl font-bold text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif;">
+                ???
+              </div>
+              <div class="text-gray-200 text-sm">9 badges requis</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-4xl mb-3">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">Contenu mystérieux</div>
+                <div class="text-white/60 text-xs mt-2">À découvrir en jouant</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-bold mb-2">FULL ACCESS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Ultime (Or) -->
+        <div class="game-card reward-ultime shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-ultime"></div>
+          <div class="decorative-border border-ultime"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-2 icon-bounce">🎫</div>
+              <div class="mystery-badge text-white mb-4">ULTIME</div>
+              <div class="text-white text-2xl font-bold text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif;">
+                ???
+              </div>
+              <div class="text-yellow-200 text-sm">12 badges requis</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-4xl mb-3">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">Contenu mystérieux</div>
+                <div class="text-white/60 text-xs mt-2">À découvrir en jouant</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-bold mb-2">VIP PASS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PROPOSITION 2: Style Gaming avec Effets -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6" style="font-family: 'Orbitron', sans-serif;">
+        PROPOSITION 2: Style Gaming avec Effets
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Challenge -->
+        <div class="game-card reward-challenge shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-challenge"></div>
+          <div class="decorative-border border-challenge"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-7xl mb-3 icon-bounce" style="filter: drop-shadow(0 0 20px rgba(251, 146, 60, 0.8));">🎯</div>
+              <div class="mystery-badge text-white mb-4" style="box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);">
+                CHALLENGE
+              </div>
+              <div class="text-white text-3xl font-black text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif; letter-spacing: 4px;">
+                ???
+              </div>
+              <div class="text-orange-200 text-sm font-bold">3 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-5xl mb-4" style="filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));">🔒</div>
+                <div class="text-white/90 text-base font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-black mb-2 tracking-widest">EVENT PASS</div>
+              <div class="h-2 bg-white/40 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-400 rounded-full" style="width: 25%; animation: pulse 2s infinite;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Exclusif -->
+        <div class="game-card reward-exclusif shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-exclusif"></div>
+          <div class="decorative-border border-exclusif"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-7xl mb-3 icon-bounce" style="filter: drop-shadow(0 0 20px rgba(205, 127, 50, 0.8));">⭐</div>
+              <div class="mystery-badge text-white mb-4" style="box-shadow: 0 0 20px rgba(205, 127, 50, 0.5);">
+                EXCLUSIF
+              </div>
+              <div class="text-white text-3xl font-black text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif; letter-spacing: 4px;">
+                ???
+              </div>
+              <div class="text-orange-200 text-sm font-bold">6 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-5xl mb-4" style="filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));">🔒</div>
+                <div class="text-white/90 text-base font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-black mb-2 tracking-widest">EXCLUSIVE ACCESS</div>
+              <div class="h-2 bg-white/40 rounded-full overflow-hidden">
+                <div class="h-full bg-orange-600 rounded-full" style="width: 50%; animation: pulse 2s infinite;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Premium -->
+        <div class="game-card reward-premium shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-premium"></div>
+          <div class="decorative-border border-premium"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-7xl mb-3 icon-bounce" style="filter: drop-shadow(0 0 20px rgba(192, 192, 192, 0.8));">👑</div>
+              <div class="mystery-badge text-white mb-4" style="box-shadow: 0 0 20px rgba(192, 192, 192, 0.5);">
+                PREMIUM
+              </div>
+              <div class="text-white text-3xl font-black text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif; letter-spacing: 4px;">
+                ???
+              </div>
+              <div class="text-gray-200 text-sm font-bold">9 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-5xl mb-4" style="filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));">🔒</div>
+                <div class="text-white/90 text-base font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-black mb-2 tracking-widest">FULL ACCESS</div>
+              <div class="h-2 bg-white/40 rounded-full overflow-hidden">
+                <div class="h-full bg-gray-300 rounded-full" style="width: 75%; animation: pulse 2s infinite;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Ultime -->
+        <div class="game-card reward-ultime shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-ultime"></div>
+          <div class="decorative-border border-ultime"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-7xl mb-3 icon-bounce" style="filter: drop-shadow(0 0 30px rgba(251, 191, 36, 1));">🎫</div>
+              <div class="mystery-badge text-white mb-4" style="box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);">
+                ULTIME
+              </div>
+              <div class="text-white text-3xl font-black text-shadow-glow mb-2" style="font-family: 'Orbitron', sans-serif; letter-spacing: 4px;">
+                ???
+              </div>
+              <div class="text-yellow-200 text-sm font-bold">12 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-5xl mb-4" style="filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));">🔒</div>
+                <div class="text-white/90 text-base font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/90 text-xs font-black mb-2 tracking-widest">VIP PASS</div>
+              <div class="h-2 bg-white/40 rounded-full overflow-hidden">
+                <div class="h-full bg-yellow-400 rounded-full" style="width: 100%; animation: pulse 2s infinite;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PROPOSITION 3: Style Minimaliste Gaming -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6" style="font-family: 'Orbitron', sans-serif;">
+        PROPOSITION 3: Style Minimaliste Gaming
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Challenge -->
+        <div class="game-card reward-challenge shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-challenge"></div>
+          <div class="decorative-border border-challenge"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center">
+              <div class="text-8xl mb-4 icon-bounce">🎯</div>
+              <div class="text-white text-4xl font-black mb-4" style="font-family: 'Orbitron', sans-serif; letter-spacing: 6px;">
+                CHALLENGE
+              </div>
+              <div class="mystery-badge text-white mb-6">
+                ???
+              </div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-6xl mb-4">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">3 badges requis</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-white/70 text-xs font-bold tracking-widest">EVENT PASS</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Exclusif -->
+        <div class="game-card reward-exclusif shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-exclusif"></div>
+          <div class="decorative-border border-exclusif"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center">
+              <div class="text-8xl mb-4 icon-bounce">⭐</div>
+              <div class="text-white text-4xl font-black mb-4" style="font-family: 'Orbitron', sans-serif; letter-spacing: 6px;">
+                EXCLUSIF
+              </div>
+              <div class="mystery-badge text-white mb-6">
+                ???
+              </div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-6xl mb-4">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">6 badges requis</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-white/70 text-xs font-bold tracking-widest">EXCLUSIVE ACCESS</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Premium -->
+        <div class="game-card reward-premium shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-premium"></div>
+          <div class="decorative-border border-premium"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center">
+              <div class="text-8xl mb-4 icon-bounce">👑</div>
+              <div class="text-white text-4xl font-black mb-4" style="font-family: 'Orbitron', sans-serif; letter-spacing: 6px;">
+                PREMIUM
+              </div>
+              <div class="mystery-badge text-white mb-6">
+                ???
+              </div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-6xl mb-4">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">9 badges requis</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-white/70 text-xs font-bold tracking-widest">FULL ACCESS</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Ultime -->
+        <div class="game-card reward-ultime shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-ultime"></div>
+          <div class="decorative-border border-ultime"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center">
+              <div class="text-8xl mb-4 icon-bounce">🎫</div>
+              <div class="text-white text-4xl font-black mb-4" style="font-family: 'Orbitron', sans-serif; letter-spacing: 6px;">
+                ULTIME
+              </div>
+              <div class="mystery-badge text-white mb-6">
+                ???
+              </div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-6xl mb-4">🔒</div>
+                <div class="text-white/80 text-sm font-semibold">12 badges requis</div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-white/70 text-xs font-bold tracking-widest">VIP PASS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- PROPOSITION 4: Style Card Game avec Bordure Ornée -->
+    <div class="mb-16">
+      <h2 class="text-2xl font-bold text-white mb-6" style="font-family: 'Orbitron', sans-serif;">
+        PROPOSITION 4: Style Card Game avec Bordure Ornée
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Challenge -->
+        <div class="game-card reward-challenge shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-challenge"></div>
+          <div class="decorative-border border-challenge" style="border-width: 4px; border-style: double;"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-3 icon-bounce">🎯</div>
+              <div class="text-white text-2xl font-black mb-2" style="font-family: 'Orbitron', sans-serif;">
+                CHALLENGE
+              </div>
+              <div class="mystery-badge text-white mb-4">
+                ???
+              </div>
+              <div class="text-orange-200 text-xs font-bold mb-4">3 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center w-full">
+                <div class="text-5xl mb-4">🔒</div>
+                <div class="text-white/90 text-sm font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+                <div class="mt-4 flex justify-center gap-2">
+                  <div class="w-2 h-2 bg-orange-400 rounded-full"></div>
+                  <div class="w-2 h-2 bg-orange-300 rounded-full"></div>
+                  <div class="w-2 h-2 bg-orange-400 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/80 text-xs font-black tracking-widest mb-2">EVENT PASS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Exclusif -->
+        <div class="game-card reward-exclusif shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-exclusif"></div>
+          <div class="decorative-border border-exclusif" style="border-width: 4px; border-style: double;"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-3 icon-bounce">⭐</div>
+              <div class="text-white text-2xl font-black mb-2" style="font-family: 'Orbitron', sans-serif;">
+                EXCLUSIF
+              </div>
+              <div class="mystery-badge text-white mb-4">
+                ???
+              </div>
+              <div class="text-orange-200 text-xs font-bold mb-4">6 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center w-full">
+                <div class="text-5xl mb-4">🔒</div>
+                <div class="text-white/90 text-sm font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+                <div class="mt-4 flex justify-center gap-2">
+                  <div class="w-2 h-2 bg-orange-600 rounded-full"></div>
+                  <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
+                  <div class="w-2 h-2 bg-orange-600 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/80 text-xs font-black tracking-widest mb-2">EXCLUSIVE ACCESS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Premium -->
+        <div class="game-card reward-premium shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-premium"></div>
+          <div class="decorative-border border-premium" style="border-width: 4px; border-style: double;"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-3 icon-bounce">👑</div>
+              <div class="text-white text-2xl font-black mb-2" style="font-family: 'Orbitron', sans-serif;">
+                PREMIUM
+              </div>
+              <div class="mystery-badge text-white mb-4">
+                ???
+              </div>
+              <div class="text-gray-200 text-xs font-bold mb-4">9 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center w-full">
+                <div class="text-5xl mb-4">🔒</div>
+                <div class="text-white/90 text-sm font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+                <div class="mt-4 flex justify-center gap-2">
+                  <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                  <div class="w-2 h-2 bg-gray-200 rounded-full"></div>
+                  <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/80 text-xs font-black tracking-widest mb-2">FULL ACCESS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Ultime -->
+        <div class="game-card reward-ultime shine-effect" style="min-height: 400px;">
+          <div class="vip-clip border-ultime"></div>
+          <div class="decorative-border border-ultime" style="border-width: 4px; border-style: double;"></div>
+          <div class="pattern-overlay"></div>
+          <div class="p-6 h-full flex flex-col justify-between relative z-10">
+            <div class="text-center mb-4">
+              <div class="text-6xl mb-3 icon-bounce">🎫</div>
+              <div class="text-white text-2xl font-black mb-2" style="font-family: 'Orbitron', sans-serif;">
+                ULTIME
+              </div>
+              <div class="mystery-badge text-white mb-4">
+                ???
+              </div>
+              <div class="text-yellow-200 text-xs font-bold mb-4">12 BADGES REQUIS</div>
+            </div>
+            <div class="flex-1 flex items-center justify-center">
+              <div class="text-center w-full">
+                <div class="text-5xl mb-4">🔒</div>
+                <div class="text-white/90 text-sm font-bold mb-2">MYSTÈRE</div>
+                <div class="text-white/70 text-xs">Débloquez pour révéler</div>
+                <div class="mt-4 flex justify-center gap-2">
+                  <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                  <div class="w-2 h-2 bg-yellow-300 rounded-full"></div>
+                  <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <div class="text-white/80 text-xs font-black tracking-widest mb-2">VIP PASS</div>
+              <div class="h-1 bg-white/30 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-12">
+      <p class="text-gray-400 text-sm">Passez la souris sur les cartes pour voir les effets d'interaction</p>
+    </div>
+  </div>
+</body>
+</html>
+

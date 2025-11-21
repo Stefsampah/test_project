@@ -8,6 +8,11 @@ class PagesController < ApplicationController
     # Accessible à tous pour les tests
   end
 
+  def reward_cards_proposals
+    # Page de propositions de design pour les cartes de récompenses
+    # Accessible à tous pour les tests
+  end
+
   def test_fullscreen
     # Page de test pour le plein écran
     # Accessible à tous pour les tests
