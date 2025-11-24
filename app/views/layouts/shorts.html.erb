@@ -103,6 +103,14 @@
         -ms-text-size-adjust: 100% !important;
       }
       
+      /* Permettre le scroll sur les pages de résultats */
+      html.results-page, body.results-page {
+        overflow: auto !important;
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+      }
+      
       body {
         width: 100vw !important;
         height: 100vh !important;
@@ -142,8 +150,6 @@
       
       /* Forcer le plein écran ABSOLU - Version mobile ultra-optimisée */
       .shorts-container,
-      .results-container,
-      .reward-results-container,
       .new-game-container,
       .play-container {
         width: 100vw !important;
@@ -173,6 +179,114 @@
         -webkit-touch-callout: none !important;
         -webkit-tap-highlight-color: transparent !important;
         overflow-y: auto !important;
+      }
+      
+      /* Pages de résultats - permettre le scroll avec respect des safe areas */
+      .results-container,
+      .reward-results-container {
+        width: 100vw !important;
+        min-height: 100vh !important;
+        min-height: 100dvh !important;
+        min-height: 100svh !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        z-index: 99999 !important;
+        margin: 0 !important;
+        padding-top: env(safe-area-inset-top, 0px) !important;
+        padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        max-width: none !important;
+        max-height: none !important;
+        background: #000 !important;
+        display: block !important;
+        transform: none !important;
+        will-change: auto !important;
+        touch-action: auto !important;
+        -webkit-touch-callout: default !important;
+        -webkit-tap-highlight-color: auto !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+        height: auto !important;
+      }
+      
+      /* Contenu interne avec padding pour éviter le débordement */
+      .results-container > div,
+      .reward-results-container > div {
+        padding-top: max(env(safe-area-inset-top, 0px), 20px) !important;
+        padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px) !important;
+        box-sizing: border-box !important;
+        max-width: 100vw !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+        height: auto !important;
+        min-height: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      /* Empêcher le débordement horizontal */
+      .results-container *,
+      .reward-results-container * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      
+      /* Forcer la visibilité des listes de chansons */
+      .results-container .space-y-4,
+      .results-container .space-y-4 > * {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: block !important;
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      
+      .results-container .space-y-4 > div {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        word-wrap: break-word !important;
+      }
+      
+      .results-container .space-y-4 span {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+      }
+      
+      
+      /* Assurer que le contenu respecte les limites du viewport */
+      @supports (height: 100dvh) {
+        .results-container,
+        .reward-results-container {
+          min-height: 100dvh !important;
+        }
+      }
+      
+      @supports (height: 100svh) {
+        .results-container,
+        .reward-results-container {
+          min-height: 100svh !important;
+        }
       }
 
       /* Styles ultra-agressifs pour forcer le plein écran complet */
@@ -536,6 +650,171 @@
     <div class="url-limit-line"></div>
     
     <script>
+      // Détecter si on est sur une page de résultats et permettre le scroll
+      (function() {
+        function enableScrollForResults() {
+          const resultsContainer = document.querySelector('.results-container, .reward-results-container');
+          if (resultsContainer) {
+            // Calculer les safe areas
+            const safeAreaTop = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0') || 0;
+            const safeAreaBottom = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom') || '0') || 0;
+            
+            // Utiliser la hauteur du viewport dynamique (sans les barres du navigateur)
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+            
+            // Permettre le scroll sur html et body pour les pages de résultats
+            document.documentElement.classList.add('results-page');
+            document.body.classList.add('results-page');
+            document.documentElement.style.cssText = `
+              width: 100% !important;
+              height: auto !important;
+              min-height: ${viewportHeight}px !important;
+              overflow: auto !important;
+              background: #000 !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              position: relative !important;
+              z-index: 1 !important;
+            `;
+            document.body.style.cssText = `
+              width: 100% !important;
+              height: auto !important;
+              min-height: ${viewportHeight}px !important;
+              overflow: visible !important;
+              background: #000 !important;
+              color: white !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              position: relative !important;
+              z-index: 1 !important;
+              -webkit-overflow-scrolling: touch !important;
+              touch-action: auto !important;
+            `;
+            
+            // Ajuster le conteneur de résultats pour respecter les safe areas
+            if (resultsContainer) {
+              const containerPaddingTop = Math.max(safeAreaTop, 20);
+              const containerPaddingBottom = Math.max(safeAreaBottom, 20);
+              resultsContainer.style.cssText = `
+                width: 100vw !important;
+                min-height: ${viewportHeight}px !important;
+                position: relative !important;
+                padding-top: ${containerPaddingTop}px !important;
+                padding-bottom: ${containerPaddingBottom}px !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                box-sizing: border-box !important;
+                overflow-y: visible !important;
+              `;
+              
+              // Ajuster le contenu interne
+              const innerContent = resultsContainer.querySelector('> div');
+              if (innerContent) {
+                const currentPaddingTop = parseInt(getComputedStyle(innerContent).paddingTop) || 0;
+                const currentPaddingBottom = parseInt(getComputedStyle(innerContent).paddingBottom) || 0;
+                innerContent.style.cssText += `
+                  padding-top: ${Math.max(containerPaddingTop, currentPaddingTop)}px !important;
+                  padding-bottom: ${Math.max(containerPaddingBottom, currentPaddingBottom)}px !important;
+                  box-sizing: border-box !important;
+                `;
+              }
+            }
+            
+            return true;
+          }
+          return false;
+        }
+        
+        // Fonction pour calculer et appliquer les safe areas
+        function applySafeAreas() {
+          const resultsContainer = document.querySelector('.results-container, .reward-results-container');
+          if (!resultsContainer) return;
+          
+          // Calculer la hauteur réelle du viewport visible
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const screenHeight = window.screen.height;
+          
+          // Calculer les safe areas en comparant la hauteur de l'écran avec le viewport
+          // La différence indique la hauteur des barres du navigateur
+          const browserBarsHeight = screenHeight - viewportHeight;
+          
+          // Estimer les safe areas
+          // Top : généralement la barre de statut (44px sur iOS, variable sur Android)
+          const safeAreaTop = Math.max(
+            parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top')) || 0,
+            44 // Minimum pour la barre de statut
+          );
+          
+          // Bottom : la barre d'URL du navigateur (généralement 60-80px)
+          const safeAreaBottom = Math.max(
+            parseInt(getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-bottom')) || 0,
+            Math.max(browserBarsHeight - safeAreaTop, 60) // Au moins 60px pour la barre d'URL
+          );
+          
+          // Appliquer les safe areas au conteneur
+          resultsContainer.style.paddingTop = `${safeAreaTop}px`;
+          resultsContainer.style.paddingBottom = `${safeAreaBottom}px`;
+          resultsContainer.style.minHeight = `${viewportHeight}px`;
+          resultsContainer.style.height = 'auto';
+          resultsContainer.style.maxHeight = 'none';
+          resultsContainer.style.boxSizing = 'border-box';
+          resultsContainer.style.overflowY = 'auto';
+          resultsContainer.style.overflowX = 'hidden';
+          resultsContainer.style.position = 'relative';
+          resultsContainer.style.display = 'block';
+          resultsContainer.style.visibility = 'visible';
+          resultsContainer.style.opacity = '1';
+          
+              // Ajuster le contenu interne pour qu'il ne déborde pas
+              const innerContent = resultsContainer.querySelector('> div');
+              if (innerContent) {
+                // Ne pas écraser les paddings existants, juste s'assurer qu'ils ne sont pas trop petits
+                const currentPaddingTop = parseInt(getComputedStyle(innerContent).paddingTop) || 0;
+                const currentPaddingBottom = parseInt(getComputedStyle(innerContent).paddingBottom) || 0;
+                
+                // Utiliser le padding existant s'il est suffisant, sinon utiliser les safe areas
+                innerContent.style.paddingTop = `${Math.max(safeAreaTop / 2, currentPaddingTop)}px`;
+                innerContent.style.paddingBottom = `${Math.max(safeAreaBottom / 2, currentPaddingBottom)}px`;
+                innerContent.style.boxSizing = 'border-box';
+                innerContent.style.maxWidth = '100%';
+                innerContent.style.overflowX = 'hidden';
+                innerContent.style.overflowY = 'visible';
+                innerContent.style.height = 'auto';
+                innerContent.style.minHeight = 'auto';
+                
+                // Forcer la visibilité de tous les éléments enfants
+                const allChildren = innerContent.querySelectorAll('*');
+                allChildren.forEach(child => {
+                  child.style.visibility = 'visible';
+                  child.style.opacity = '1';
+                  if (getComputedStyle(child).display === 'none') {
+                    child.style.display = '';
+                  }
+                });
+              }
+        }
+        
+        // Vérifier immédiatement
+        if (enableScrollForResults()) {
+          applySafeAreas();
+          return; // Si on est sur une page de résultats, ne pas exécuter le reste du script
+        }
+        
+        // Vérifier après le chargement du DOM
+        document.addEventListener('DOMContentLoaded', function() {
+          if (enableScrollForResults()) {
+            applySafeAreas();
+            return;
+          }
+        });
+        
+        // Réappliquer sur resize/orientation change
+        window.addEventListener('resize', applySafeAreas);
+        window.addEventListener('orientationchange', function() {
+          setTimeout(applySafeAreas, 100);
+        });
+      })();
+      
       // Solution ULTRA-AGRESSIVE pour forcer le plein écran sur mobile
       (function() {
         // Fonction pour calculer la vraie hauteur de l'écran

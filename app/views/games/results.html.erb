@@ -1,5 +1,5 @@
-<div class="min-h-screen bg-gray-900">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+<div class="results-container min-h-screen bg-gray-900" style="padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8" style="padding-top: max(env(safe-area-inset-top, 0px), 1.5rem); padding-bottom: max(env(safe-area-inset-bottom, 0px), 2rem);">
     <!-- Score Card - Remontée au maximum -->
     <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 sm:p-8 mb-8 transform hover:scale-[1.02] transition-all duration-300 shadow-xl">
       <div class="text-center">
@@ -144,37 +144,37 @@
     </div>
 
     <!-- Songs Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" style="visibility: visible !important; opacity: 1 !important; display: grid !important;">
       <!-- SONGS LIKED - VIOLET -->
-      <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white">
-        <h3 class="text-2xl font-bold text-white mb-6 text-center">SONGS LIKED</h3>
-        <div class="space-y-4">
+      <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+        <h3 class="text-2xl font-bold text-white mb-6 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">SONGS LIKED</h3>
+        <div class="space-y-4" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
           <% if @liked_videos.present? %>
             <% @liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20">
-                <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-purple-200 font-semibold">+2 points</span>
+              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20" style="visibility: visible !important; opacity: 1 !important; display: flex !important; height: auto !important; min-height: auto !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; word-wrap: break-word !important;">
+                <span class="text-white font-medium flex-1 pr-2" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; word-wrap: break-word !important; overflow-wrap: break-word !important; max-width: 70% !important;"><%= video.title %></span>
+                <span class="text-purple-200 font-semibold flex-shrink-0" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; white-space: nowrap !important;">+2 points</span>
               </div>
             <% end %>
           <% else %>
-            <div class="text-white/90 text-center">No liked songs yet.</div>
+            <div class="text-white/90 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">No liked songs yet.</div>
           <% end %>
         </div>
       </div>
 
       <!-- SONGS NO LIKED - NOIR -->
-      <div class="bg-black rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white">
-        <h3 class="text-2xl font-bold text-white mb-6 text-center">SONGS NO LIKED</h3>
-        <div class="space-y-4">
+      <div class="bg-black rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+        <h3 class="text-2xl font-bold text-white mb-6 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">SONGS NO LIKED</h3>
+        <div class="space-y-4" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
           <% if @not_liked_videos.present? %>
             <% @not_liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20">
-                <span class="text-white font-medium"><%= video.title %></span>
-                <span class="text-purple-300 font-semibold">+1 point</span>
+              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20" style="visibility: visible !important; opacity: 1 !important; display: flex !important; height: auto !important; min-height: auto !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; word-wrap: break-word !important;">
+                <span class="text-white font-medium flex-1 pr-2" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; word-wrap: break-word !important; overflow-wrap: break-word !important; max-width: 70% !important;"><%= video.title %></span>
+                <span class="text-purple-300 font-semibold flex-shrink-0" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; white-space: nowrap !important;">+1 point</span>
               </div>
             <% end %>
           <% else %>
-            <div class="text-white/80 text-center">No disliked songs yet.</div>
+            <div class="text-white/80 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">No disliked songs yet.</div>
           <% end %>
         </div>
       </div>
