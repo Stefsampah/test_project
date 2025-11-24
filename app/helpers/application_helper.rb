@@ -69,4 +69,10 @@ module ApplicationHelper
     # Désactiver si une partie est en cours
     has_game_in_progress?
   end
+  
+  # Helper spécifique pour new_playlist_game_path avec gestion du locale
+  def new_playlist_game_path_with_locale(playlist)
+    playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
+    new_playlist_game_path(playlist_id: playlist_id)
+  end
 end

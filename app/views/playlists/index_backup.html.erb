@@ -213,7 +213,7 @@
             <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
               <% if can_access && !(user_signed_in? && current_user.scores.exists?(playlist: playlist)) %>
                 <!-- Lien global sur toute la carte si l'utilisateur peut y accéder ET n'a pas encore joué -->
-                <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card" do %>
                   <span style="display: none;">Jouer à <%= playlist.title %></span>
                 <% end %>
               <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
@@ -322,7 +322,7 @@
           <div class="group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout">
             <!-- Lien global sur toute la carte si l'utilisateur est connecté ET n'a pas encore joué -->
             <% if user_signed_in? && !current_user.scores.exists?(playlist: playlist) %>
-              <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+              <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card" do %>
                 <span style="display: none;">Jouer à <%= playlist.title %></span>
               <% end %>
             <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
@@ -428,7 +428,7 @@
               <div class="my-playlist-item group relative rounded-xl overflow-hidden shadow-xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl mb-6 playlist-card-new-layout" data-category="<%= playlist.category || 'Other' %>">
               <!-- Lien global sur toute la carte si pas encore joué -->
               <% if !current_user.scores.exists?(playlist: playlist) %>
-                <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card" do %>
                   <span style="display: none;">Jouer à <%= playlist.title %></span>
                 <% end %>
               <% else %>

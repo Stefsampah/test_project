@@ -81,7 +81,7 @@
     <% elsif user_signed_in? %>
       <!-- Playlist accessible - bouton vers le jeu -->
       <button class="absolute inset-0 z-30 bg-transparent border-none cursor-pointer" 
-              onclick="window.location.href='<%= new_playlist_game_path(playlist) %>'">
+              onclick="window.location.href='<%= new_playlist_game_path_with_locale(playlist) %>'">
         <span style="display: none;">Jouer à <%= playlist.title %></span>
       </button>
     <% else %>

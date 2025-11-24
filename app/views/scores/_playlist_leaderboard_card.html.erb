@@ -51,11 +51,11 @@ cover_url = found_image ? asset_path("playlists/#{found_image}") : asset_path('p
           Partie en cours
         </div>
       <% else %>
-        <%= link_to "Jouer la playlist", new_playlist_game_path(playlist), class: "px-6 py-2 rounded-full bg-yellow-400 text-black text-lg font-bold shadow-lg hover:bg-yellow-300 transition w-full text-center" %>
+        <%= link_to "Jouer la playlist", new_playlist_game_path_with_locale(playlist), class: "px-6 py-2 rounded-full bg-yellow-400 text-black text-lg font-bold shadow-lg hover:bg-yellow-300 transition w-full text-center" %>
       <% end %>
     </div>
   </div>
   <% unless should_disable_actions? %>
-    <%= link_to '', new_playlist_game_path(playlist), class: 'absolute inset-0 z-20', style: 'pointer-events: auto;' %>
+    <%= link_to '', new_playlist_game_path_with_locale(playlist), class: 'absolute inset-0 z-20', style: 'pointer-events: auto;' %>
   <% end %>
 </div> 

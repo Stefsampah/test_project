@@ -152,7 +152,7 @@
                  <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
                </div>
              <% else %>
-               <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
+               <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card", data: { turbo: false } do %>
                  <span style="display: none;">Jouer à <%= playlist.title %></span>
                <% end %>
              <% end %>
@@ -327,7 +327,7 @@
                       <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
                     </div>
                   <% else %>
-                    <%= link_to new_playlist_game_path(playlist), class: "clickable-card", data: { turbo: false } do %>
+                    <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card", data: { turbo: false } do %>
                       <span style="display: none;">Jouer à <%= playlist.title %></span>
                     <% end %>
                   <% end %>
@@ -426,7 +426,7 @@
                     <p class="text-gray-300 text-sm mt-1 text-center px-4">Reprenez votre partie avant de commencer une nouvelle</p>
                   </div>
                 <% else %>
-                  <%= link_to new_playlist_game_path(playlist), class: "clickable-card" do %>
+                  <%= link_to new_playlist_game_path_with_locale(playlist), class: "clickable-card" do %>
                     <span style="display: none;">Jouer à <%= playlist.title %></span>
                   <% end %>
                 <% end %>

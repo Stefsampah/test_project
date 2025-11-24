@@ -129,7 +129,7 @@
               <div class="playlist-button-overlay">
                 <div class="playlist-button-container">
                   <% if user_signed_in? %>
-                      <%= link_to 'JOUER', new_playlist_game_path(playlist), class: 'playlist-play-button' %>
+                      <%= link_to 'JOUER', new_playlist_game_path_with_locale(playlist), class: 'playlist-play-button' %>
                   <% else %>
                     <%= link_to 'JOUER', new_user_session_path, class: 'playlist-play-button' %>
                   <% end %>

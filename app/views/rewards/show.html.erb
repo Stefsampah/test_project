@@ -345,7 +345,7 @@
                   playlist_game_path = playlist_game_path(@playlist, existing_game)
                 else
                   # Sinon, créer une nouvelle partie
-                  playlist_game_path = new_playlist_game_path(@playlist)
+                  playlist_game_path = new_playlist_game_path_with_locale(@playlist)
                 end
                 
                 # Vérifier s'il y a une autre partie en cours (différente de celle-ci)
