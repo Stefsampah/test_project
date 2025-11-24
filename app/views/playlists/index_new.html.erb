@@ -63,18 +63,18 @@
     
     <!-- En-tête harmonisé -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">Playlists</h1>
+      <h1 class="text-2xl font-bold text-white"><%= t('playlists.title') %></h1>
     </div>
 
     <!-- Boutons de filtrage -->
     <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
         <button id="all-playlists-btn" class="filter-btn active px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors" data-filter="all">
-          Toutes les playlists
+          <%= t('playlists.all_playlists') %>
         </button>
         <% if user_signed_in? %>
           <button id="my-playlists-btn" class="filter-btn px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" data-filter="my">
-            Mes playlists
+            <%= t('playlists.my_playlists') %>
           </button>
         <% end %>
       </div>

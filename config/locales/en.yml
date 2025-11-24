@@ -1,31 +1,125 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  # Navigation
+  nav:
+    home: "Home"
+    playlists: "Playlists"
+    scores: "Leaderboard"
+    badges: "Badges"
+    rewards: "Rewards"
+    profile: "Profile"
+    sign_in: "Sign In"
+    sign_out: "Sign Out"
+    sign_up: "Sign Up"
+    store: "Store"
+  
+  # Homepage
+  home:
+    title: "Tube'NPlay"
+    subtitle: "Your love of music deserves rewards worthy of it"
+    description: "Your musical passion transformed into an interactive adventure. Swipe, win, unlock. The music game that turns your listening into rewards. From exclusive playlists to VIP experiences, each game brings you closer to the grail. Your love of music deserves rewards worthy of it!"
+    discover_playlists: "Discover our Playlists"
+    collect_badges: "Collect your Badges"
+    unlock_rewards: "Unlock Rewards"
+    start: "START"
+  
+  # Playlists
+  playlists:
+    title: "Playlists"
+    all_playlists: "All playlists"
+    my_playlists: "My playlists"
+    play: "PLAY"
+    game_in_progress: "You have a game in progress"
+    resume_game: "Resume game"
+    premium: "Premium Playlists"
+    standard: "Standard Playlists"
+    exclusive: "Exclusive Playlists"
+  
+  # Scores
+  scores:
+    title: "Leaderboard"
+    all_scores: "All scores"
+    my_scores: "My scores"
+    position: "Position"
+    points: "points"
+    top_players: "Top Players"
+    detail_global_score: "Global Score Details"
+    regularity: "Regularity"
+    listening_time: "Listening Time"
+    constructive_criticism: "Constructive Criticism"
+    playlists_per_day: "playlists/day"
+    swipes: "swipes"
+    actions: "actions"
+    win_ratio: "Win Ratio"
+    victories: "of victories"
+    games: "Games"
+    played: "played"
+    top_3: "Top 3"
+    times: "times"
+    unique_playlists: "Playlists"
+    unique: "unique"
+    progress_to_badges: "Progress towards badges"
+    progression: "Progression"
+    points_needed: "You need %{count} more points"
+    badge_available: "Badge available!"
+    no_liked_songs: "No liked songs yet."
+    no_disliked_songs: "No disliked songs yet."
+    plus_points: "+%{count} points"
+    plus_point: "+1 point"
+  
+  # Badges
+  badges:
+    title: "Badges"
+    my_badges: "My Badges"
+    all_badges: "All Badges"
+    points_required: "points required"
+    level: "Level"
+  
+  # Rewards
+  rewards:
+    title: "Rewards"
+    my_rewards: "My Rewards"
+    all_rewards: "All Rewards"
+    check_new_rewards: "Check New Rewards"
+    challenge: "CHALLENGE"
+    exclusif: "EXCLUSIVE"
+    premium: "PREMIUM"
+    ultime: "ULTIMATE"
+    badges_required: "badges required"
+    unlocked_rewards: "My Unlocked Rewards"
+    rewards_earned: "Rewards you have earned"
+    my_achievements: "My Achievements"
+    badges_collected: "Badges collected"
+    rewards_unlocked: "Rewards unlocked"
+    gold_badges: "Gold Badges"
+    global_progress: "Global progress"
+  
+  # Games
+  games:
+    game_in_progress: "You have a game in progress"
+    resume_game: "Resume game"
+    playlist_completed: "Playlist completed!"
+    back_to_playlists: "Back to playlists"
+    songs_liked: "SONGS LIKED"
+    songs_no_liked: "SONGS NOT LIKED"
+    view_leaderboard: "View Party Leaderboard"
+    see_my_badges: "See my badges"
+    next: "Next"
+    points: "points"
+    what_a_beam: "What a Beam!"
+    amazing_progress: "You've made amazing progress in this playlist."
+    position_place: "Position: %{position}th Place!"
+    th: "th"
+  
+  # Common
+  common:
+    loading: "Loading..."
+    error: "An error occurred"
+    success: "Success"
+    cancel: "Cancel"
+    confirm: "Confirm"
+    save: "Save"
+    edit: "Edit"
+    delete: "Delete"
+    back: "Back"
+    next: "Next"
+    previous: "Previous"

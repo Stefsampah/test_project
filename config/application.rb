@@ -23,5 +23,10 @@ module TestProject
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    
+    # Configuration i18n - Français et Anglais
+    config.i18n.available_locales = [:fr, :en]
+    config.i18n.default_locale = :fr
+    config.i18n.fallbacks = true
   end
 end

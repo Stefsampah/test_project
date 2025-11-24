@@ -1,0 +1,125 @@
+fr:
+  # Navigation
+  nav:
+    home: "Accueil"
+    playlists: "Playlists"
+    scores: "Classements"
+    badges: "Badges"
+    rewards: "Récompenses"
+    profile: "Profil"
+    sign_in: "Connexion"
+    sign_out: "Déconnexion"
+    sign_up: "Inscription"
+    store: "Boutique"
+  
+  # Homepage
+  home:
+    title: "Tube'NPlay"
+    subtitle: "Votre amour de la musique mérite des récompenses à la hauteur"
+    description: "Votre passion musicale transformée en aventure interactive. Swippez, gagnez, débloquez. Le jeu musical qui transforme vos écoutes en récompenses. Des playlists exclusives aux expériences VIP, chaque partie vous rapproche du graal. Votre amour de la musique mérite des récompenses à la hauteur !"
+    discover_playlists: "Découvrez nos Playlists"
+    collect_badges: "Collectionnez vos Badges"
+    unlock_rewards: "Débloquez des Récompenses"
+    start: "COMMENCER"
+  
+  # Playlists
+  playlists:
+    title: "Playlists"
+    all_playlists: "Toutes les playlists"
+    my_playlists: "Mes playlists"
+    play: "JOUER"
+    game_in_progress: "Vous avez une partie en cours"
+    resume_game: "Reprendre la partie"
+    premium: "Playlists Premium"
+    standard: "Playlists Standard"
+    exclusive: "Playlists Exclusives"
+  
+  # Scores
+  scores:
+    title: "Classements"
+    all_scores: "Tous les scores"
+    my_scores: "Mes scores"
+    position: "Position"
+    points: "points"
+    top_players: "Top Players"
+    detail_global_score: "Détail du Score Global"
+    regularity: "Régularité"
+    listening_time: "Temps d'écoute"
+    constructive_criticism: "Critique constructive"
+    playlists_per_day: "playlists/jour"
+    swipes: "swipes"
+    actions: "actions"
+    win_ratio: "Win Ratio"
+    victories: "de victoires"
+    games: "Parties"
+    played: "jouées"
+    top_3: "Top 3"
+    times: "fois"
+    unique_playlists: "Playlists"
+    unique: "uniques"
+    progress_to_badges: "Progression vers les badges"
+    progression: "Progression"
+    points_needed: "Il vous manque %{count} points"
+    badge_available: "Badge disponible !"
+    no_liked_songs: "No liked songs yet."
+    no_disliked_songs: "No disliked songs yet."
+    plus_points: "+%{count} points"
+    plus_point: "+1 point"
+  
+  # Badges
+  badges:
+    title: "Badges"
+    my_badges: "Mes Badges"
+    all_badges: "Tous les Badges"
+    points_required: "points requis"
+    level: "Niveau"
+  
+  # Rewards
+  rewards:
+    title: "Récompenses"
+    my_rewards: "Mes Récompenses"
+    all_rewards: "Toutes les Récompenses"
+    check_new_rewards: "Vérifier les Nouvelles Récompenses"
+    challenge: "CHALLENGE"
+    exclusif: "EXCLUSIF"
+    premium: "PREMIUM"
+    ultime: "ULTIME"
+    badges_required: "badges requis"
+    unlocked_rewards: "Mes Récompenses Débloquées"
+    rewards_earned: "Récompenses que vous avez gagnées"
+    my_achievements: "Mes Accomplissements"
+    badges_collected: "Badges collectés"
+    rewards_unlocked: "Récompenses débloquées"
+    gold_badges: "Badges Gold"
+    global_progress: "Progression globale"
+  
+  # Games
+  games:
+    game_in_progress: "Vous avez une partie en cours"
+    resume_game: "Reprendre la partie"
+    playlist_completed: "Playlist terminée !"
+    back_to_playlists: "Retour aux playlists"
+    songs_liked: "SONGS LIKED"
+    songs_no_liked: "SONGS NO LIKED"
+    view_leaderboard: "View Party Leaderboard"
+    see_my_badges: "Voir mes badges"
+    next: "Next"
+    points: "points"
+    what_a_beam: "What a Beam!"
+    amazing_progress: "You've made amazing progress in this playlist."
+    position_place: "Position: %{position}th Place!"
+    th: "th"
+  
+  # Common
+  common:
+    loading: "Chargement..."
+    error: "Une erreur est survenue"
+    success: "Succès"
+    cancel: "Annuler"
+    confirm: "Confirmer"
+    save: "Enregistrer"
+    edit: "Modifier"
+    delete: "Supprimer"
+    back: "Retour"
+    next: "Suivant"
+    previous: "Précédent"

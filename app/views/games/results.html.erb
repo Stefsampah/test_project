@@ -3,8 +3,8 @@
     <!-- Score Card - Remontée au maximum -->
     <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 sm:p-8 mb-8 transform hover:scale-[1.02] transition-all duration-300 shadow-xl">
       <div class="text-center">
-        <h2 class="text-2xl sm:text-3xl font-light text-white mb-2">What a Beam!</h2>
-        <p class="text-base sm:text-xl text-white/80 mb-4 sm:mb-6">You've made amazing progress in this playlist.</p>
+        <h2 class="text-2xl sm:text-3xl font-light text-white mb-2"><%= t('games.what_a_beam') %></h2>
+        <p class="text-base sm:text-xl text-white/80 mb-4 sm:mb-6"><%= t('games.amazing_progress') %></p>
         
         <div class="flex items-center justify-center mb-8 flex-col sm:flex-row">
           <div class="mb-4 sm:mb-0 sm:mr-6 flex-shrink-0">
@@ -20,28 +20,28 @@
           </div>
           <div class="text-center sm:text-left">
             <h2 class="text-2xl sm:text-5xl font-bold text-white mb-2"><%= current_user.game_points %> points</h2>
-            <p class="text-lg sm:text-2xl font-light text-white">Position: <%= @position %>th Place!</p>
+            <p class="text-lg sm:text-2xl font-light text-white"><%= t('games.position_place', position: @position) %></p>
           </div>
         </div>
 
         <!-- Détail du score global -->
         <div class="bg-white rounded-lg p-6 mb-8 max-w-2xl mx-auto border-2 border-purple-600 shadow-lg">
-          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">Détail du Score Global</h3>
+          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center"><%= t('scores.detail_global_score') %></h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="text-center">
               <div class="text-2xl font-bold text-purple-600"><%= current_user.regularity_points %></div>
-              <div class="text-sm text-gray-700">Régularité</div>
-              <div class="text-xs text-gray-500">(<%= current_user.playlists_per_day %> playlists/jour × 20)</div>
+              <div class="text-sm text-gray-700"><%= t('scores.regularity') %></div>
+              <div class="text-xs text-gray-500">(<%= current_user.playlists_per_day %> <%= t('scores.playlists_per_day') %> × 20)</div>
             </div>
             <div class="text-center">
               <div class="text-2xl font-bold text-purple-600"><%= current_user.listening_points %></div>
-              <div class="text-sm text-gray-700">Temps d'écoute</div>
-              <div class="text-xs text-gray-500">(<%= current_user.swipes.count %> swipes × 1.5)</div>
+              <div class="text-sm text-gray-700"><%= t('scores.listening_time') %></div>
+              <div class="text-xs text-gray-500">(<%= current_user.swipes.count %> <%= t('scores.swipes') %> × 1.5)</div>
             </div>
             <div class="text-center">
               <div class="text-2xl font-bold text-purple-600"><%= current_user.critical_opinions_points %></div>
-              <div class="text-sm text-gray-700">Critique constructive</div>
-              <div class="text-xs text-gray-500">(<%= current_user.likes_count + current_user.dislikes_count %> actions + bonus)</div>
+              <div class="text-sm text-gray-700"><%= t('scores.constructive_criticism') %></div>
+              <div class="text-xs text-gray-500">(<%= current_user.likes_count + current_user.dislikes_count %> <%= t('scores.actions') %> + bonus)</div>
             </div>
           </div>
         </div>
@@ -54,12 +54,12 @@
               <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
               </svg>
-              <h3 class="text-lg font-bold text-white ml-2">Win Ratio</h3>
+              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.win_ratio') %></h3>
             </div>
             <div class="text-2xl font-bold text-white">
               <%= current_user.win_ratio %>%
             </div>
-            <p class="text-white/90 text-sm">de victoires</p>
+            <p class="text-white/90 text-sm"><%= t('scores.victories') %></p>
           </div>
 
           <!-- Games Played - NOIR -->
@@ -68,12 +68,12 @@
               <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
               </svg>
-              <h3 class="text-lg font-bold text-white ml-2">Parties</h3>
+              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.games') %></h3>
             </div>
             <div class="text-2xl font-bold text-white">
               <%= current_user.games.count %>
             </div>
-            <p class="text-white/90 text-sm">jouées</p>
+            <p class="text-white/90 text-sm"><%= t('scores.played') %></p>
           </div>
 
           <!-- Top 3 Count - BLANC -->
@@ -82,12 +82,12 @@
               <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
               </svg>
-              <h3 class="text-lg font-bold text-gray-900 ml-2">Top 3</h3>
+              <h3 class="text-lg font-bold text-gray-900 ml-2"><%= t('scores.top_3') %></h3>
             </div>
             <div class="text-2xl font-bold text-purple-600">
               <%= current_user.top_3_finishes_count %>
             </div>
-            <p class="text-gray-600 text-sm">fois</p>
+            <p class="text-gray-600 text-sm"><%= t('scores.times') %></p>
           </div>
 
           <!-- Unique Playlists - NOIR -->
@@ -96,18 +96,18 @@
               <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
               </svg>
-              <h3 class="text-lg font-bold text-white ml-2">Playlists</h3>
+              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.unique_playlists') %></h3>
             </div>
             <div class="text-2xl font-bold text-white">
               <%= current_user.unique_playlists_played_count %>
             </div>
-            <p class="text-white/90 text-sm">uniques</p>
+            <p class="text-white/90 text-sm"><%= t('scores.unique') %></p>
           </div>
         </div>
 
         <!-- Progression vers les badges -->
         <div class="bg-black rounded-lg p-6 border-2 border-white shadow-lg">
-          <h3 class="text-xl font-bold text-white mb-4 text-center">Progression vers les badges</h3>
+          <h3 class="text-xl font-bold text-white mb-4 text-center"><%= t('scores.progress_to_badges') %></h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <% current_user.next_badges.each do |badge_type, data| %>
               <% if data[:badge] %>
@@ -120,7 +120,7 @@
                   </div>
                   <div class="mb-2">
                     <div class="flex justify-between text-sm text-white mb-1">
-                      <span>Progression</span>
+                      <span><%= t('scores.progression') %></span>
                       <span><%= data[:current_score] %> / <%= data[:badge].points_required %></span>
                     </div>
                     <div class="w-full bg-gray-700 rounded-full h-2">
@@ -130,9 +130,9 @@
                   </div>
                   <p class="text-xs text-white/70">
                     <% if data[:points_needed] > 0 %>
-                      Il vous manque <%= data[:points_needed] %> points
+                      <%= t('scores.points_needed', count: data[:points_needed]) %>
                     <% else %>
-                      Badge disponible !
+                      <%= t('scores.badge_available') %>
                     <% end %>
                   </p>
                 </div>
@@ -184,12 +184,12 @@
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
       <button onclick="window.location.href='<%= scores_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white/30">
-        <span>View Party Leaderboard</span>
+        <span><%= t('games.view_leaderboard') %></span>
       </button>
 
       <button onclick="window.location.href='<%= badges_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-purple-600 bg-white hover:bg-purple-50 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-purple-600">
-        <span>Voir mes badges</span>
+        <span><%= t('games.see_my_badges') %></span>
         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
         </svg>
@@ -197,7 +197,7 @@
 
       <button onclick="window.location.href='<%= playlists_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-black hover:bg-gray-900 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white">
-        <span>Next</span>
+        <span><%= t('games.next') %></span>
         <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>

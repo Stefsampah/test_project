@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   # Importmap routes
   mount Importmap::Engine => "/importmap"
   
-  devise_for :users
+  # Gestion de la langue - scope pour toutes les routes
+  scope "(:locale)", locale: /fr|en/ do
+    devise_for :users
   
   # Routes admin pour les animations
   namespace :admin do
@@ -115,4 +117,8 @@ Rails.application.routes.draw do
   
   # Route pour les propositions de design des cartes de récompenses
   get 'reward_cards_proposals', to: 'pages#reward_cards_proposals', as: :reward_cards_proposals
+  end # Fin du scope locale
+  
+  # Route pour changer la langue (hors scope pour éviter les conflits)
+  get '/locale/:locale', to: 'application#change_locale', as: :change_locale
 end
