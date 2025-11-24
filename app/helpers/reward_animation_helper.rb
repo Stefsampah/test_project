@@ -211,70 +211,87 @@ module RewardAnimationHelper
       'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg' # Image par défaut
     end
     
-    # Icône selon le type
-    reward_icon = case reward_type
+    # Design Proposition 3 - Style Minimaliste Gaming
+    reward_bg_class = case reward_type
     when 'challenge'
-      '🎯'
+      'reward-challenge'
     when 'exclusif'
-      '⭐'
+      'reward-exclusif'
     when 'premium'
-      '👑'
+      'reward-premium'
     when 'ultime'
-      '🎫'
+      'reward-ultime'
     else
-      '🎁'
+      'reward-challenge'
     end
     
-    # Design exactement identique à la carte d'animation avec effets de survol
-    content_tag :div, class: "unified-reward-card #{'unlocked' if is_unlocked}", style: "border-radius: 12px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 2px solid transparent; transition: all 0.3s ease; overflow: hidden; background: transparent; margin: 0 auto; max-width: 400px; width: 100%; cursor: pointer;" do
-      # Bannière avec image - IDENTIQUE à l'animation
-      content_tag(:div, class: "reward-banner-container", style: "height: 180px; position: relative; overflow: hidden;") do
-        # Image de fond avec classe pour ciblage CSS - fond noir pour éviter les espaces blancs
-        content_tag(:div, '', class: "reward-banner-image", style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; background-image: url('#{background_image}'); background-size: cover; background-position: center center; background-repeat: no-repeat; background-color: #000; opacity: 0.8;") +
-        # Overlay de couleur selon le type - z-index 1 pour être au-dessus de l'image
-        content_tag(:div, '', style: "position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #{get_overlay_color(reward_type)}; z-index: 1;") +
-        # Badge du type - z-index 2 pour être au-dessus de tout
-        content_tag(:div, style: "position: absolute; top: 15px; right: 15px; z-index: 2;") do
-          content_tag(:span, reward_type.upcase, style: "background: #{is_unlocked ? '#10b981' : '#6b7280'}; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;")
+    border_class = case reward_type
+    when 'challenge'
+      'border-challenge'
+    when 'exclusif'
+      'border-exclusif'
+    when 'premium'
+      'border-premium'
+    when 'ultime'
+      'border-ultime'
+    else
+      'border-challenge'
+    end
+    
+    pass_text = case reward_type
+    when 'challenge'
+      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
+    when 'exclusif'
+      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
+    when 'premium'
+      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
+    when 'ultime'
+      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
+    else
+      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
+    end
+    
+    title_style = reward_type == 'challenge' ? 
+      "font-family: 'Orbitron', sans-serif; letter-spacing: 3px; transform: translateX(-10px); white-space: nowrap; display: inline-block; font-size: 1.875rem; font-weight: 900;" :
+      "font-family: 'Orbitron', sans-serif; letter-spacing: 6px; font-size: 2.25rem; font-weight: 900;"
+    
+    # Couleur de fond selon le type
+    background_gradient = case reward_type
+    when 'challenge'
+      'linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%)'
+    when 'exclusif'
+      'linear-gradient(135deg, #cd7f32 0%, #b87333 50%, #9c6b2a 100%)'
+    when 'premium'
+      'linear-gradient(135deg, #c0c0c0 0%, #a8a8a8 50%, #808080 100%)'
+    when 'ultime'
+      'linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)'
+    else
+      'linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ea580c 100%)'
+    end
+    
+    content_tag :div, class: "game-card #{reward_bg_class} shine-effect unified-reward-card #{'unlocked' if is_unlocked}", style: "min-height: 400px; border-radius: 16px; overflow: hidden; transition: all 0.3s ease; cursor: pointer; position: relative; background: #{background_gradient}; margin-bottom: 20px;" do
+      # VIP Clip
+      content_tag(:div, '', class: "vip-clip #{border_class}", style: "position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 60px; height: 20px; background: inherit; border-radius: 0 0 8px 8px; border: 2px solid rgba(0, 0, 0, 0.3); box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); z-index: 5;") +
+      # Bordure décorative
+      content_tag(:div, '', class: "decorative-border #{border_class}", style: "position: absolute; inset: 0; border: 3px solid; border-radius: 16px; pointer-events: none; z-index: 1;") +
+      # Contenu principal
+      content_tag(:div, style: "padding: 1.5rem; height: 100%; display: flex; flex-direction: column; justify-content: space-between; position: relative; z-index: 10;") do
+        # En-tête avec titre
+        content_tag(:div, style: reward_type == 'challenge' ? "text-align: center; padding: 0 15px; overflow: visible; width: 100%;" : "text-align: center;") do
+          content_tag(:div, reward_type.upcase, style: "color: white; margin-bottom: 1rem; #{title_style}") +
+          content_tag(:div, '???', class: "mystery-badge", style: "background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 12px; padding: 8px 16px; font-weight: 700; letter-spacing: 2px; display: inline-block; color: white; margin-bottom: 1.5rem;")
         end +
-        # Overlay avec titre - IDENTIQUE à l'animation - z-index 2 pour être au-dessus
-        content_tag(:div, style: "position: absolute; inset: 0; background: rgba(0,0,0,0.2); display: flex; align-items: end; padding: 15px; z-index: 2;") do
-          content_tag(:div) do
-            content_tag(:h3, reward_type.humanize, style: "font-size: 1.25rem; font-weight: bold; margin-bottom: 4px; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.8);") +
-            content_tag(:div, "#{badge_requirement} badges requis", style: "color: rgba(255,255,255,0.8); font-size: 0.85rem;")
-          end
-        end
-      end +
-      # Contenu de la carte - COULEUR SELON LE TYPE
-      content_tag(:div, class: "reward-content", style: "background: linear-gradient(135deg, #{get_content_gradient(reward_type)}); color: white;") do
-        content_tag(:p, reward_description) +
-        content_tag(:div, style: "display: flex; justify-content: space-between; align-items: center;") do
-          content_tag(:div, style: "background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 15px; font-size: 0.8rem;") do
-            content_tag(:span, "#{badge_requirement} badges", style: "color: #ffd700; font-weight: bold;") + " requis"
-          end +
-          content_tag(:div, style: "background: #{is_unlocked ? '#10b981' : '#6b7280'}; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;") do
-            is_unlocked ? 'DÉBLOQUÉ' : 'VERROUILLÉ'
-          end
-        end +
-        # Bouton "Afficher le contenu" si débloqué (sauf si désactivé)
-        (disable_actions ? 
+        # Contenu central avec cadenas
+        content_tag(:div, style: "flex: 1; display: flex; align-items: center; justify-content: center;") do
           content_tag(:div, style: "text-align: center;") do
-            content_tag(:span, "🎁 Récompense disponible", 
-                       style: "color: #10b981; font-size: 0.8rem; font-weight: bold;")
-          end :
-          (is_unlocked ? 
-            content_tag(:div, style: "text-align: center;") do
-              link_to "Afficher le contenu →", get_reward_details_path(badge_requirement), 
-                      style: "background: #3b82f6; color: white; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: bold; text-decoration: none; display: inline-block; transition: all 0.3s ease;",
-                      onmouseover: "this.style.background='#2563eb'; this.style.transform='scale(1.05)';",
-                      onmouseout: "this.style.background='#3b82f6'; this.style.transform='scale(1)';"
-            end : 
-            content_tag(:div, style: "text-align: center;") do
-              content_tag(:span, "🔒 Collectez #{badge_requirement - (reward.respond_to?(:user_badges_count) ? reward.user_badges_count : 0)} badge(s) supplémentaires", 
-                         style: "color: #9ca3af; font-size: 0.8rem;")
-            end
-          )
-        )
+            content_tag(:div, '🔒', style: "font-size: 3.75rem; margin-bottom: 1rem;") +
+            content_tag(:div, "#{badge_requirement} badges requis", style: "color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; font-weight: 600;")
+          end
+        end +
+        # Footer avec description recommandée
+          content_tag(:div, style: "text-align: center;") do
+          content_tag(:div, pass_text, style: "color: rgba(255, 255, 255, 0.9); font-size: 0.875rem; font-weight: 500; line-height: 1.4; padding: 0 0.5rem;")
+        end
       end
     end
   end
@@ -301,13 +318,13 @@ module RewardAnimationHelper
   def get_reward_description(reward)
     case reward.reward_type
     when 'challenge'
-      'Contenu exclusif à découvrir...'
+      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
     when 'exclusif'
-      'Accès à des contenus rares...'
+      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
     when 'premium'
-      'Expériences VIP uniques...'
+      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
     when 'ultime'
-      'Récompense ultime mystérieuse...'
+      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
     else
       'Contenu exclusif à découvrir'
     end
@@ -333,13 +350,13 @@ module RewardAnimationHelper
   def get_reward_description_from_type(reward_type)
     case reward_type
     when 'challenge'
-      'Contenu exclusif à découvrir...'
+      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
     when 'exclusif'
-      'Accès à des contenus rares...'
+      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
     when 'premium'
-      'Expériences VIP uniques...'
+      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
     when 'ultime'
-      'Récompense ultime mystérieuse...'
+      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
     else
       'Contenu exclusif à découvrir'
     end

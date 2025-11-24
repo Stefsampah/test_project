@@ -118,13 +118,7 @@
               <div class="playlist-button-overlay">
                 <div class="playlist-button-container">
                   <% if user_signed_in? %>
-                    <% if should_disable_actions? %>
-                      <div class="playlist-play-button" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;">
-                        PARTIE EN COURS
-                      </div>
-                    <% else %>
                       <%= link_to 'JOUER', new_playlist_game_path(playlist), class: 'playlist-play-button' %>
-                    <% end %>
                   <% else %>
                     <%= link_to 'JOUER', new_user_session_path, class: 'playlist-play-button' %>
                   <% end %>
@@ -194,8 +188,8 @@
         <h2 class="text-5xl font-bold text-white mb-4">Débloquez des Récompenses</h2>
       </div>
       
-      <!-- Quatre récompenses avec cartes unifiées identiques aux autres sections -->
-      <div class="rewards-grid" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem; max-width: 800px; margin: 0 auto;">
+      <!-- Quatre récompenses avec cartes Proposition 3 - une par rangée -->
+      <div class="rewards-grid-home" style="display: flex; flex-direction: column; gap: 2rem; max-width: 500px; margin: 0 auto;">
         <% 
           # Utiliser les mêmes données que dans les autres sections
           reward_types = [
@@ -204,7 +198,7 @@
               level: 'challenge', 
               color: 'from-yellow-400 to-yellow-600', 
               icon: '🥉',
-              content: 'Playlists Spéciales, Versions acoustiques, Remix spéciaux',
+              content: 'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.',
               visual: 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
             },
             { 
@@ -212,7 +206,7 @@
               level: 'exclusif', 
               color: 'from-gray-400 to-gray-600', 
               icon: '🥈',
-              content: 'Contenu exclusif des blogs et médias spécialisés, podcasts, documentaires, reportages, commentaires audio, vidéo session studio',
+              content: 'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.',
               visual: 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
             },
             { 
@@ -220,7 +214,7 @@
               level: 'premium', 
               color: 'from-orange-400 to-orange-600', 
               icon: '🥇',
-              content: 'Rencontres artistes, Backstage virtuel, Sessions privées, Contenu premium exclusif',
+              content: 'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.',
               visual: get_premium_preview_image
             },
             { 
@@ -228,7 +222,7 @@
               level: 'ultime', 
               color: 'from-pink-400 to-purple-600', 
               icon: '🌈',
-              content: 'Rencontre privée, Backstage réel, Expériences VIP, Accès exclusif total',
+              content: 'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.',
               visual: get_ultime_preview_image
             }
           ]
@@ -239,12 +233,14 @@
             # Créer un hash temporaire pour le helper - simuler comme débloqué pour la démo
             temp_reward = {
               reward_type: reward_info[:level],
-              unlocked: true, # Pour la démo sur la homepage
+              unlocked: false, # Verrouillées pour la démo sur la homepage
               quantity_required: reward_info[:quantity],
               reward_description: reward_info[:content]
             }
           %>
+          <div style="width: 100%;">
           <%= unified_reward_card(temp_reward, disable_actions: true) %>
+          </div>
         <% end %>
       </div>
     </div>

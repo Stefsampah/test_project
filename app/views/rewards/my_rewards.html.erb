@@ -47,7 +47,7 @@
           Récompenses que vous avez gagnées
         </h3>
         
-        <div class="rewards-grid">
+        <div class="rewards-grid-my-rewards">
           <% 
             reward_types = [
               { 
@@ -92,6 +92,9 @@
             
             <% if has_reward %>
               <% 
+                # Récupérer la vraie récompense de l'utilisateur
+                user_reward = current_user.rewards.where(reward_type: reward_info[:level], unlocked: true).first
+                
                 # Créer un hash temporaire pour le helper
                 temp_reward = {
                   reward_type: reward_info[:level],
@@ -100,7 +103,11 @@
                   reward_description: reward_info[:content]
                 }
               %>
-              <%= unified_reward_card(temp_reward) %>
+              <%= link_to reward_details_path(badge_type: 'unified', quantity: reward_info[:quantity]), 
+                  style: "text-decoration: none; display: block;", 
+                  class: "reward-card-link" do %>
+                <%= unified_reward_card(temp_reward, disable_actions: true) %>
+              <% end %>
             <% end %>
           <% end %>
         </div>
@@ -201,8 +208,8 @@
 
 
     <!-- Bouton pour vérifier les nouvelles récompenses -->
-    <div class="text-center">
-      <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200" %>
+    <div class="text-center mb-8 px-4">
+      <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "check-rewards-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200 inline-block" %>
     </div>
 <style>
   /* Harmonisation des titres principaux */
@@ -235,6 +242,65 @@
     }
     100% {
       background-position: 0% 50%;
+    }
+  }
+  
+  /* Style pour les liens des cartes de récompenses */
+  .reward-card-link {
+    text-decoration: none;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  
+  .reward-card-link:hover {
+    transform: scale(1.02);
+  }
+  
+  .reward-card-link:hover .unified-reward-card {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Style spécifique pour la grille de récompenses sur my_rewards */
+  .rewards-grid-my-rewards {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0 !important;
+    max-width: 500px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  
+  .rewards-grid-my-rewards .reward-card-link {
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .rewards-grid-my-rewards .unified-reward-card {
+    margin: 0 !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .rewards-grid-my-rewards .unified-reward-card:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  /* Style pour le bouton "Vérifier les Nouvelles Récompenses" */
+  .check-rewards-btn {
+    white-space: nowrap;
+    word-wrap: normal;
+    display: inline-block;
+    text-align: center;
+    min-width: fit-content;
+  }
+  
+  @media (max-width: 640px) {
+    .check-rewards-btn {
+      font-size: 0.875rem;
+      padding: 0.75rem 1rem;
+      white-space: normal;
+      line-height: 1.5;
+      width: auto;
+      max-width: 100%;
     }
   }
 </style> 
