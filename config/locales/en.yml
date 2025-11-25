@@ -377,6 +377,8 @@ en:
       payment_processing_error: "❌ Error processing payment"
       invalid_session: "❌ Invalid session"
       payment_cancelled: "❌ Payment cancelled"
+      invalid_playlist: "❌ Invalid playlist"
+      playlist_not_found: "❌ Playlist not found"
   
   # Profile
   profile:

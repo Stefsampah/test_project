@@ -4,4 +4,9 @@ Rails.configuration.stripe = {
   secret_key: ENV['STRIPE_SECRET_KEY']
 }
 
-Stripe.api_key = Rails.configuration.stripe[:secret_key]
+# Configurer l'API Stripe uniquement si la clé est présente
+if Rails.configuration.stripe[:secret_key].present?
+  Stripe.api_key = Rails.configuration.stripe[:secret_key]
+else
+  Rails.logger.warn "⚠️ STRIPE_SECRET_KEY n'est pas configurée. Les paiements Stripe ne fonctionneront pas."
+end

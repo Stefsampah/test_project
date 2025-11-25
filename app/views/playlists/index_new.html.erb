@@ -1,6 +1,144 @@
 <!-- Nouvelle vue des playlists avec système de catégories et thumbnails YouTube -->
 <style>
   /* Styles spécifiques aux playlists uniquement - les styles de navigation sont dans le layout */
+  
+  /* FORCER les mêmes dimensions que page scores - garantir que rien ne modifie la notification ou le menu */
+  #game-in-progress-notification {
+    max-width: 1200px !important;
+    margin: 1rem auto !important;
+    padding: 0 1rem !important;
+  }
+  
+  #game-in-progress-notification .flash-notice {
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    margin-bottom: 1rem !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+    line-height: 1.5 !important;
+    box-sizing: border-box !important;
+    min-height: 48px !important;
+  }
+  
+  #game-in-progress-notification .flash-notice span {
+    font-size: 1rem !important;
+    flex: 1 !important;
+    min-width: 200px !important;
+    line-height: 1.5 !important;
+  }
+  
+  #game-in-progress-notification .flash-notice a {
+    font-size: 1rem !important;
+    padding: 0.5rem 1rem !important;
+    line-height: 1.5 !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    text-decoration: none !important;
+    align-self: flex-end !important;
+  }
+  
+  /* Garantir les mêmes dimensions pour le menu mobile */
+  .mobile-menu {
+    display: none !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    background-color: #1f2937 !important;
+    border-radius: 0 0 0.5rem 0.5rem !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1001 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+  }
+  
+  .mobile-menu.show {
+    display: flex !important;
+    padding: 1rem 0 !important;
+  }
+  
+  .mobile-menu .nav-link {
+    padding: 0.75rem 1rem !important;
+    border-radius: 0 !important;
+    font-size: 1rem !important;
+  }
+  
+  /* Garantir les mêmes dimensions pour nav-content */
+  .nav-content {
+    height: auto !important;
+    min-height: 47px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+  
+  @media (max-width: 1024px) {
+    .nav-content {
+      height: auto !important;
+      min-height: 47px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+    }
+    
+    .mobile-menu {
+      display: none !important;
+      flex-direction: column !important;
+      padding: 0 !important;
+      background-color: #1f2937 !important;
+      border-radius: 0 0 0.5rem 0.5rem !important;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+      z-index: 1001 !important;
+      position: absolute !important;
+      top: 100% !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      max-height: 300px !important;
+      overflow-y: auto !important;
+    }
+    
+    .mobile-menu.show {
+      display: flex !important;
+      padding: 1rem 0 !important;
+    }
+    
+    .mobile-menu .nav-link {
+      padding: 0.75rem 1rem !important;
+      border-radius: 0 !important;
+      font-size: 1rem !important;
+    }
+    
+    #game-in-progress-notification {
+      max-width: 1200px !important;
+      margin: 1rem auto !important;
+      padding: 0 1rem !important;
+    }
+    
+    #game-in-progress-notification .flash-notice {
+      padding: 0.75rem 1rem !important;
+      font-size: 1rem !important;
+      margin-bottom: 1rem !important;
+      display: flex !important;
+      align-items: flex-start !important;
+      justify-content: space-between !important;
+      gap: 1rem !important;
+      flex-wrap: wrap !important;
+      line-height: 1.5 !important;
+      box-sizing: border-box !important;
+      min-height: 48px !important;
+    }
+    
+    #game-in-progress-notification .flash-notice a {
+      align-self: flex-end !important;
+    }
+  }
 </style>
 <div class="min-h-screen bg-gray-900 py-0">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,7 +148,7 @@
       <h1 class="text-2xl font-bold text-white"><%= t('playlists.title') %></h1>
     </div>
 
-    <!-- Boutons de filtrage -->
+    <!-- Filtres centrés -->
     <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
         <button id="all-playlists-btn" class="filter-btn active px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors" data-filter="all">
@@ -24,16 +162,17 @@
       </div>
     </div>
 
-    <!-- Tags de catégories -->
+    <!-- Tags de catégories - Style page scores -->
     <div id="categories-section" class="mb-12">
-      <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 <%= t('playlists.filters.by_category') %></h2>
-      <div class="categories-grid mb-8">
+      <div class="flex justify-center mb-8">
+        <div class="flex flex-wrap justify-center gap-2">
         <% ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'].each do |category| %>
-          <% category_key = category.parameterize(separator: '_').underscore %>
-          <button class="category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
-            <%= t("playlists.categories.#{category_key}", default: category) %>
+            <% category_key = category.parameterize(separator: '_').underscore %>
+            <button class="category-tag px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" data-category="<%= category %>">
+              <%= t("playlists.categories.#{category_key}", default: category) %>
           </button>
         <% end %>
+        </div>
       </div>
     </div>
 
@@ -491,16 +630,13 @@
     overflow: hidden;
   }
   
-  /* Categories grid responsive */
-  .categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.75rem;
-    max-width: 100%;
-    overflow: hidden;
+  /* Category tags - Style page scores */
+  .category-tag.active {
+    background-color: #9333ea;
+    color: white;
   }
   
-  /* Mobile viewport fixes */
+  /* Mobile viewport fixes - seulement pour les cartes de playlists */
   @media (max-width: 768px) {
     .playlist-card-new-layout {
       max-width: 100% !important;
@@ -511,28 +647,8 @@
       max-width: 100% !important;
     }
     
-    .flex {
-      flex-wrap: wrap !important;
-    }
-    
     .grid {
       max-width: 100% !important;
-    }
-    
-    /* Categories grid mobile - 3 colonnes */
-    .categories-grid {
-      grid-template-columns: repeat(3, 1fr) !important;
-      gap: 0.5rem !important;
-      max-width: 100% !important;
-    }
-    
-    .category-tag {
-      font-size: 0.75rem !important;
-      padding: 0.5rem 0.75rem !important;
-      text-align: center !important;
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
     }
   }
   
@@ -593,22 +709,17 @@
     background: rgba(255, 255, 255, 0.05);
   }
   
-  /* Styles pour les boutons de filtrage - exactement comme page scores */
-  .filter-btn.active {
-    background-color: #9333ea;
-  }
-  
-  /* Harmonisation des titres principaux - même style que page scores */
+  /* Harmonisation des titres principaux - exactement comme page scores */
   h1.text-2xl.font-bold.text-white {
     font-size: 1.5rem !important;
     font-weight: 700 !important;
     line-height: 1.2 !important;
   }
   
-  /* Harmonisation des espacements - exactement comme page scores */
-  /* Ne pas forcer margin: 0 ou padding: 0 pour laisser les classes Tailwind fonctionner naturellement */
-  
-  /* Styles de navigation et notification déplacés en haut de la page pour priorité maximale */
+  /* Styles pour les boutons de filtrage - exactement comme page scores */
+  .filter-btn.active {
+    background-color: #9333ea;
+  }
   
   .playlist-section {
     transition: all 0.3s ease;
@@ -619,48 +730,6 @@
     .playlist-section {
       margin-bottom: 1.5rem;
     }
-    
-    /* Garantir les mêmes espacements en mobile */
-    h1.text-2xl.font-bold.text-white {
-      font-size: 1.5rem !important;
-      font-weight: 700 !important;
-      line-height: 1.2 !important;
-    }
-    
-  .filter-btn {
-      font-size: 0.875rem !important;
-      padding: 0.5rem 1rem !important;
-    }
-  }
-  
-  /* Media query pour tablette - garantir les mêmes espacements */
-  @media (max-width: 1024px) {
-    h1.text-2xl.font-bold.text-white {
-      font-size: 1.5rem !important;
-      font-weight: 700 !important;
-      line-height: 1.2 !important;
-    }
-    
-    .filter-btn {
-      font-size: 0.875rem !important;
-      padding: 0.5rem 1rem !important;
-    }
-    
-  }
-  
-  /* Media query pour mobile - garantir les mêmes espacements */
-  @media (max-width: 768px) {
-    h1.text-2xl.font-bold.text-white {
-      font-size: 1.5rem !important;
-      font-weight: 700 !important;
-      line-height: 1.2 !important;
-    }
-    
-    .filter-btn {
-      font-size: 0.875rem !important;
-      padding: 0.5rem 1rem !important;
-    }
-    
   }
   
   /* Styles pour uniformiser les images */
@@ -744,31 +813,10 @@
   overflow-x: hidden;
 }
 
-/* Mobile viewport fixes - seulement pour les catégories, pas pour html/body */
-@media (max-width: 768px) {
-  /* Categories grid mobile - 3 rangées */
-  .categories-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 0.5rem !important;
-    max-width: 100% !important;
-    overflow-x: hidden !important;
-  }
-  
-  .category-tag {
-    font-size: 0.75rem !important;
-    padding: 0.5rem 0.75rem !important;
-    text-align: center !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    min-width: 0 !important;
-  }
-  
-  .category-tag.bg-purple-600 {
+/* Category tags active state - Style page scores */
+.category-tag.active {
     background-color: #9333ea !important;
-    color: #ffffff !important;
-    border-color: #7c3aed !important;
-  }
+  color: white !important;
 }
 
 </style>
@@ -789,8 +837,7 @@
         
         // Réinitialiser les tags de catégories
         categoryTags.forEach(t => {
-          t.classList.remove('bg-purple-600', 'text-white');
-          t.classList.add('bg-gray-800', 'text-gray-300');
+          t.classList.remove('active');
         });
         
         // Filtrer les sections
@@ -819,13 +866,11 @@
       tag.addEventListener('click', function() {
         const category = this.getAttribute('data-category');
         
-        // Mettre à jour les tags - état actif en violet
+        // Mettre à jour les tags - état actif
         categoryTags.forEach(t => {
-          t.classList.remove('bg-purple-600', 'text-white');
-          t.classList.add('bg-gray-800', 'text-gray-300');
+          t.classList.remove('active');
         });
-        this.classList.remove('bg-gray-800', 'text-gray-300');
-        this.classList.add('bg-purple-600', 'text-white');
+        this.classList.add('active');
         
         // Filtrer les playlists par catégorie
         const allPlaylists = document.querySelectorAll('.playlist-card-new-layout');

@@ -40,8 +40,8 @@ class StoreController < ApplicationController
     
     if @selected_pack
       begin
-        # Vérifier si on est en mode simulation
-        if Rails.configuration.stripe[:secret_key].include?('ABC123')
+        # Vérifier si on est en mode simulation (clé contient "ABC123" ou est nil/vide)
+        if Rails.configuration.stripe[:secret_key].blank? || Rails.configuration.stripe[:secret_key].include?('ABC123')
           # Mode simulation - simuler l'achat
           current_points = current_user.points || 0
           new_points = current_points + @selected_pack[:points]
@@ -93,8 +93,8 @@ class StoreController < ApplicationController
     
     if subscription_type == "vip"
       begin
-        # Vérifier si on est en mode simulation
-        if Rails.configuration.stripe[:secret_key].include?('ABC123')
+        # Vérifier si on est en mode simulation (clé contient "ABC123" ou est nil/vide)
+        if Rails.configuration.stripe[:secret_key].blank? || Rails.configuration.stripe[:secret_key].include?('ABC123')
           # Mode simulation - simuler l'achat
           current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
           
@@ -145,7 +145,11 @@ class StoreController < ApplicationController
   end
 
   def confirm_playlist_purchase
-    @playlist = Playlist.find(params[:playlist_id])
+    playlist_id = params[:playlist_id].to_i
+    return redirect_to store_path, alert: t('store.messages.invalid_playlist') if playlist_id.zero?
+    
+    @playlist = Playlist.find_by(id: playlist_id)
+    return redirect_to store_path, alert: t('store.messages.playlist_not_found') unless @playlist
     
     user_points = current_user.total_points || 0
     
