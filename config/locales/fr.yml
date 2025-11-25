@@ -361,11 +361,11 @@ fr:
     no_premium_playlists: "Aucune playlist premium disponible pour le moment."
     back_to_playlists: "Retour aux playlists"
     messages:
-      purchase_simulated: "✅ Achat simulé réussi ! Vous avez désormais %{points} points ! (Mode simulation - configurez Stripe pour les vrais paiements)"
+      purchase_simulated: "✅ Achat simulé réussi ! Vous avez désormais %{points} points ! (Mode simulation - configurez PayPal pour les vrais paiements)"
       card_error: "❌ Erreur de carte: %{message}"
       purchase_error: "❌ Erreur lors de l'achat. Veuillez réessayer."
       invalid_pack: "❌ Pack de points invalide."
-      vip_subscription_simulated: "✅ Abonnement VIP simulé activé ! Toutes les playlists premium sont maintenant débloquées. (Mode simulation - configurez Stripe pour les vrais paiements) <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>"
+      vip_subscription_simulated: "✅ Abonnement VIP simulé activé ! Toutes les playlists premium sont maintenant débloquées. (Mode simulation - configurez PayPal pour les vrais paiements) <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>"
       subscription_error: "❌ Erreur lors de l'achat. Veuillez réessayer."
       invalid_subscription: "❌ Type d'abonnement invalide."
       playlist_unlocked: "Playlist débloquée avec succès !"

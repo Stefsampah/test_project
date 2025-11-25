@@ -51,8 +51,8 @@ gem 'google-api-client'
 # Environment variables
 gem 'dotenv-rails'
 
-# Stripe for payments
-gem 'stripe'
+# PayPal for payments (via API REST directe)
+# Pas de gem nécessaire, utilisation de HTTP requests
 
 # Use Redis adapter to run Action Cable in production
 gem "redis", ">= 4.0.1"

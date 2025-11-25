@@ -361,7 +361,7 @@ en:
     no_premium_playlists: "No premium playlists available at the moment."
     back_to_playlists: "Back to playlists"
     messages:
-      purchase_simulated: "✅ Simulated purchase successful! You now have %{points} points! (Simulation mode - configure Stripe for real payments)"
+      purchase_simulated: "✅ Simulated purchase successful! You now have %{points} points! (Simulation mode - configure PayPal for real payments)"
       card_error: "❌ Card error: %{message}"
       purchase_error: "❌ Error during purchase. Please try again."
       invalid_pack: "❌ Invalid points pack."

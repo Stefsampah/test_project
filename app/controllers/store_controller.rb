@@ -40,8 +40,8 @@ class StoreController < ApplicationController
     
     if @selected_pack
       begin
-        # Vérifier si on est en mode simulation (clé contient "ABC123" ou est nil/vide)
-        if Rails.configuration.stripe[:secret_key].blank? || Rails.configuration.stripe[:secret_key].include?('ABC123')
+        # Vérifier si PayPal est configuré
+        if Rails.configuration.paypal[:client_id].blank? || Rails.configuration.paypal[:client_secret].blank?
           # Mode simulation - simuler l'achat
           current_points = current_user.points || 0
           new_points = current_points + @selected_pack[:points]
@@ -51,36 +51,35 @@ class StoreController < ApplicationController
           
           redirect_to store_path, notice: t('store.messages.purchase_simulated', points: new_points)
         else
-          # Mode réel - utiliser Stripe
-          session = Stripe::Checkout::Session.create({
-            payment_method_types: ['card'],
-            line_items: [{
-              price_data: {
-                currency: 'eur',
-                product_data: {
-                  name: @selected_pack[:name],
-                  description: @selected_pack[:description]
-                },
-                unit_amount: (@selected_pack[:price] * 100).to_i, # Convertir en centimes
-              },
-              quantity: 1,
-            }],
-            mode: 'payment',
-            success_url: store_success_url + "?session_id={CHECKOUT_SESSION_ID}",
+          # Mode réel - utiliser PayPal
+          result = PayPalService.create_payment(
+            amount: @selected_pack[:price],
+            currency: 'EUR',
+            description: @selected_pack[:name],
+            return_url: store_execute_url(payment_type: 'points', pack_id: pack_id),
             cancel_url: store_cancel_url,
             metadata: {
               user_id: current_user.id,
               pack_id: pack_id,
-              points: @selected_pack[:points]
+              points: @selected_pack[:points],
+              payment_type: 'points'
             }
-          })
+          )
           
-          redirect_to session.url, allow_other_host: true
+          if result[:success]
+            # Stocker le payment_id en session pour la vérification
+            session[:paypal_payment_id] = result[:payment_id]
+            session[:paypal_pack_id] = pack_id
+            session[:paypal_points] = @selected_pack[:points]
+            
+            redirect_to result[:approval_url], allow_other_host: true
+          else
+            Rails.logger.error "Erreur création paiement PayPal: #{result[:error]}"
+            redirect_to store_path, alert: t('store.messages.purchase_error')
+          end
         end
-      rescue Stripe::CardError => e
-        redirect_to store_path, alert: t('store.messages.card_error', message: e.message)
       rescue => e
-        Rails.logger.error "Erreur Stripe: #{e.message}"
+        Rails.logger.error "Erreur PayPal: #{e.message}"
         redirect_to store_path, alert: t('store.messages.purchase_error')
       end
     else
@@ -93,8 +92,8 @@ class StoreController < ApplicationController
     
     if subscription_type == "vip"
       begin
-        # Vérifier si on est en mode simulation (clé contient "ABC123" ou est nil/vide)
-        if Rails.configuration.stripe[:secret_key].blank? || Rails.configuration.stripe[:secret_key].include?('ABC123')
+        # Vérifier si PayPal est configuré
+        if Rails.configuration.paypal[:client_id].blank? || Rails.configuration.paypal[:client_secret].blank?
           # Mode simulation - simuler l'achat
           current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
           
@@ -102,35 +101,33 @@ class StoreController < ApplicationController
           
           redirect_to playlists_path, notice: t('store.messages.vip_subscription_simulated').html_safe
         else
-          # Mode réel - utiliser Stripe
-          session = Stripe::Checkout::Session.create({
-            payment_method_types: ['card'],
-            line_items: [{
-              price_data: {
-                currency: 'eur',
-                product_data: {
-                  name: "Abonnement VIP",
-                  description: "Débloque toutes les playlists premium"
-                },
-                unit_amount: 999, # 9.99€ en centimes
-              },
-              quantity: 1,
-            }],
-            mode: 'payment',
-            success_url: store_success_url + "?session_id={CHECKOUT_SESSION_ID}",
+          # Mode réel - utiliser PayPal
+          result = PayPalService.create_payment(
+            amount: 9.99,
+            currency: 'EUR',
+            description: t('store.subscriptions.vip.name'),
+            return_url: store_execute_url(payment_type: 'subscription', subscription_type: 'vip'),
             cancel_url: store_cancel_url,
             metadata: {
               user_id: current_user.id,
-              subscription_type: 'vip'
+              subscription_type: 'vip',
+              payment_type: 'subscription'
             }
-          })
+          )
           
-          redirect_to session.url, allow_other_host: true
+          if result[:success]
+            # Stocker le payment_id en session pour la vérification
+            session[:paypal_payment_id] = result[:payment_id]
+            session[:paypal_subscription_type] = 'vip'
+            
+            redirect_to result[:approval_url], allow_other_host: true
+          else
+            Rails.logger.error "Erreur création paiement PayPal: #{result[:error]}"
+            redirect_to store_path, alert: t('store.messages.subscription_error')
+          end
         end
-      rescue Stripe::CardError => e
-        redirect_to store_path, alert: t('store.messages.card_error', message: e.message)
       rescue => e
-        Rails.logger.error "Erreur Stripe: #{e.message}"
+        Rails.logger.error "Erreur PayPal: #{e.message}"
         redirect_to store_path, alert: t('store.messages.subscription_error')
       end
     else
@@ -190,43 +187,76 @@ class StoreController < ApplicationController
     render json: { status: 'success', message: 'Contenu exclusif débloqué avec succès' }
   end
 
-  # Page de succès après paiement Stripe
-  def success
-    session_id = params[:session_id]
+  # Exécuter le paiement PayPal après approbation
+  def execute_payment
+    payment_id = params[:paymentId] || session[:paypal_payment_id]
+    payer_id = params[:PayerID]
+    payment_type = params[:payment_type] || 'points'
     
-    if session_id
-      begin
-        # Récupérer les détails de la session Stripe
-        checkout_session = Stripe::Checkout::Session.retrieve(session_id)
-        
-        if checkout_session.payment_status == 'paid'
-          # Traiter le paiement selon le type
-          if checkout_session.metadata['subscription_type'] == 'vip'
-            # Activer l'abonnement VIP
-            current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
-            Rails.logger.info "Abonnement VIP activé: User #{current_user.id}"
-            redirect_to playlists_path, notice: t('store.messages.vip_subscription_activated').html_safe
-          else
-            # Ajouter les points
-            points = checkout_session.metadata['points'].to_i
-            current_points = current_user.points || 0
-            current_user.update!(points: current_points + points)
-            Rails.logger.info "Points ajoutés: User #{current_user.id} a reçu #{points} points"
-            redirect_to store_path, notice: t('store.messages.payment_success', points: points)
-          end
+    if payment_id.blank? || payer_id.blank?
+      redirect_to store_path, alert: t('store.messages.invalid_session')
+      return
+    end
+    
+    begin
+      result = PayPalService.execute_payment(payment_id: payment_id, payer_id: payer_id)
+      
+      if result[:success]
+        # Traiter le paiement selon le type
+        if payment_type == 'subscription' || session[:paypal_subscription_type] == 'vip'
+          # Activer l'abonnement VIP
+          current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
+          Rails.logger.info "Abonnement VIP activé: User #{current_user.id}"
+          
+          # Nettoyer la session
+          session.delete(:paypal_payment_id)
+          session.delete(:paypal_subscription_type)
+          
+          redirect_to playlists_path, notice: t('store.messages.vip_subscription_activated').html_safe
         else
-          redirect_to store_path, alert: t('store.messages.payment_not_confirmed')
+          # Ajouter les points
+          points = session[:paypal_points] || params[:pack_id] ? get_points_for_pack(params[:pack_id] || session[:paypal_pack_id]) : 0
+          current_points = current_user.points || 0
+          current_user.update!(points: current_points + points)
+          Rails.logger.info "Points ajoutés: User #{current_user.id} a reçu #{points} points"
+          
+          # Nettoyer la session
+          session.delete(:paypal_payment_id)
+          session.delete(:paypal_pack_id)
+          session.delete(:paypal_points)
+          
+          redirect_to store_path, notice: t('store.messages.payment_success', points: points)
         end
-      rescue Stripe::InvalidRequestError => e
-        Rails.logger.error "Session Stripe invalide: #{e.message}"
-        redirect_to store_path, alert: t('store.messages.invalid_payment_session')
-      rescue => e
-        Rails.logger.error "Erreur lors du traitement du paiement: #{e.message}"
+      else
+        Rails.logger.error "Erreur exécution paiement PayPal: #{result[:error]}"
         redirect_to store_path, alert: t('store.messages.payment_processing_error')
       end
-    else
-      redirect_to store_path, alert: t('store.messages.invalid_session')
+    rescue => e
+      Rails.logger.error "Erreur lors du traitement du paiement: #{e.message}"
+      redirect_to store_path, alert: t('store.messages.payment_processing_error')
     end
+  end
+
+  # Page de succès après paiement PayPal (pour compatibilité)
+  def success
+    # Rediriger vers execute_payment si nécessaire
+    if params[:paymentId] && params[:PayerID]
+      redirect_to store_execute_url(paymentId: params[:paymentId], PayerID: params[:PayerID], payment_type: params[:payment_type])
+    else
+      redirect_to store_path, notice: t('store.messages.payment_success', points: 0)
+    end
+  end
+
+  private
+
+  def get_points_for_pack(pack_id)
+    packs = {
+      '0' => 100,
+      '1' => 500,
+      '2' => 1000,
+      '3' => 5000
+    }
+    packs[pack_id.to_s] || 0
   end
 
   # Page d'annulation de paiement

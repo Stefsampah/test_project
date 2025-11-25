@@ -97,9 +97,10 @@ Rails.application.routes.draw do
   get  'store/buy_playlist/:playlist_id', to: 'store#buy_playlist', as: :buy_playlist_store
   post 'store/confirm_playlist_purchase/:playlist_id', to: 'store#confirm_playlist_purchase', as: :confirm_playlist_purchase_store
   
-  # Routes Stripe Checkout
+  # Routes PayPal Checkout
   get 'store/success', to: 'store#success', as: :store_success
   get 'store/cancel', to: 'store#cancel', as: :store_cancel
+  get 'store/execute', to: 'store#execute_payment', as: :store_execute
   
   # Gestion des abonnements VIP
   get 'subscriptions', to: 'subscriptions#index'
