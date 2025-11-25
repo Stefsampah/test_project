@@ -76,7 +76,7 @@
                     </div>
                   <% elsif reward.content_type&.start_with?('documentary_exclusive') %>
                     <!-- Thumbnail pour les documentaires -->
-                    <div class="w-full h-full bg-gradient-to-r from-green-500 to-blue-600 flex items-center justify-center relative overflow-hidden">
+                    <div class="w-full h-full bg-gradient-to-r from-purple-500 to-blue-600 flex items-center justify-center relative overflow-hidden">
                       <div class="absolute inset-0 bg-black/20"></div>
                       <div class="relative z-10 text-white text-4xl">🎬</div>
                       <!-- Overlay play button -->
@@ -254,8 +254,8 @@
             </div>
             
             <% if @current_badge_count && @current_badge_count >= 6 %>
-              <div class="text-center py-4 bg-green-500/20 rounded-lg">
-                <p class="text-green-400 font-bold">🎉 Vous pouvez débloquer des récompenses exclusives !</p>
+              <div class="text-center py-4 bg-purple-500/20 rounded-lg">
+                <p class="text-purple-400 font-bold">🎉 Vous pouvez débloquer des récompenses exclusives !</p>
               </div>
             <% else %>
               <div class="text-center py-4 bg-yellow-500/20 rounded-lg">

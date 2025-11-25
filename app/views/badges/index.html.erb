@@ -2,17 +2,17 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">Système de Badges</h1>
+      <h1 class="text-2xl font-bold text-white"><%= t('badges.system_title') %></h1>
     </div>
 
     <!-- Navigation entre les pages de badges -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-md shadow-sm" role="group">
         <a href="<%= my_badges_path %>" class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
-          Mes badges
+          <%= t('badges.my_badges') %>
         </a>
         <a href="<%= all_badges_path %>" class="px-6 py-3 text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
-          Tous les badges
+          <%= t('badges.all_badges') %>
         </a>
 
       </div>
@@ -31,28 +31,28 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">Badges Competitor</h2>
-            <p class="text-amber-200">Récompense l'excellence en compétition</p>
+            <h2 class="text-xl font-bold text-white"><%= t('badges.types.competitor') %></h2>
+            <p class="text-amber-200"><%= t('badges.descriptions.competitor') %></p>
           </div>
         </div>
         <div class="bg-black bg-opacity-20 rounded-lg p-4 mb-4">
-          <p class="text-white">Les badges Competitor sont attribués aux joueurs qui excellent dans les compétitions, avec un bon ratio de victoires et un score élevé.</p>
+          <p class="text-white"><%= t('badges.details.competitor') %></p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-amber-800 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-amber-300 font-semibold mb-1">Bronze</h3>
-            <p class="text-white text-sm mb-2">Niveau Débutant</p>
-            <span class="bg-amber-900 text-amber-300 text-xs font-semibold px-2.5 py-1 rounded">100 points</span>
+            <h3 class="text-amber-300 font-semibold mb-1"><%= t('badges.levels.bronze') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.beginner') %></p>
+            <span class="bg-amber-900 text-amber-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 100) %></span>
           </div>
           <div class="bg-gray-500 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-gray-300 font-semibold mb-1">Silver</h3>
-            <p class="text-white text-sm mb-2">Niveau Intermédiaire</p>
-            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded">500 points</span>
+            <h3 class="text-gray-300 font-semibold mb-1"><%= t('badges.levels.silver') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.intermediate') %></p>
+            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 500) %></span>
           </div>
           <div class="bg-yellow-600 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-yellow-300 font-semibold mb-1">Gold</h3>
-            <p class="text-white text-sm mb-2">Niveau Expert</p>
-            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded">1000 points</span>
+            <h3 class="text-yellow-300 font-semibold mb-1"><%= t('badges.levels.gold') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.expert') %></p>
+            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 1000) %></span>
           </div>
         </div>
       </div>
@@ -66,28 +66,28 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">Badges Engager</h2>
-            <p class="text-blue-200">Récompense l'engagement communautaire</p>
+            <h2 class="text-xl font-bold text-white"><%= t('badges.types.engager') %></h2>
+            <p class="text-blue-200"><%= t('badges.descriptions.engager') %></p>
           </div>
         </div>
         <div class="bg-black bg-opacity-20 rounded-lg p-4 mb-4">
-          <p class="text-white">Les badges Engager sont attribués aux joueurs qui participent activement à la communauté, en votant, en aimant et en interagissant avec le contenu.</p>
+          <p class="text-white"><%= t('badges.details.engager') %></p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-blue-800 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-blue-300 font-semibold mb-1">Bronze</h3>
-            <p class="text-white text-sm mb-2">Niveau Débutant</p>
-            <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-1 rounded">150 points</span>
+            <h3 class="text-blue-300 font-semibold mb-1"><%= t('badges.levels.bronze') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.beginner') %></p>
+            <span class="bg-blue-900 text-blue-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 150) %></span>
           </div>
           <div class="bg-gray-500 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-gray-300 font-semibold mb-1">Silver</h3>
-            <p class="text-white text-sm mb-2">Niveau Intermédiaire</p>
-            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded">600 points</span>
+            <h3 class="text-gray-300 font-semibold mb-1"><%= t('badges.levels.silver') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.intermediate') %></p>
+            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 600) %></span>
           </div>
           <div class="bg-yellow-600 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-yellow-300 font-semibold mb-1">Gold</h3>
-            <p class="text-white text-sm mb-2">Niveau Expert</p>
-            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded">1200 points</span>
+            <h3 class="text-yellow-300 font-semibold mb-1"><%= t('badges.levels.gold') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.expert') %></p>
+            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 1200) %></span>
           </div>
         </div>
       </div>
@@ -101,28 +101,28 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">Badges Critic</h2>
-            <p class="text-red-200">Récompense les critiques constructives</p>
+            <h2 class="text-xl font-bold text-white"><%= t('badges.types.critic') %></h2>
+            <p class="text-red-200"><%= t('badges.descriptions.critic') %></p>
           </div>
         </div>
         <div class="bg-black bg-opacity-20 rounded-lg p-4 mb-4">
-          <p class="text-white">Les badges Critic sont attribués aux joueurs qui fournissent des critiques constructives et des analyses pertinentes sur les playlists et les chansons.</p>
+          <p class="text-white"><%= t('badges.details.critic') %></p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-red-800 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-red-300 font-semibold mb-1">Bronze</h3>
-            <p class="text-white text-sm mb-2">Niveau Débutant</p>
-            <span class="bg-red-900 text-red-300 text-xs font-semibold px-2.5 py-1 rounded">120 points</span>
+            <h3 class="text-red-300 font-semibold mb-1"><%= t('badges.levels.bronze') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.beginner') %></p>
+            <span class="bg-red-900 text-red-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 120) %></span>
           </div>
           <div class="bg-gray-500 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-gray-300 font-semibold mb-1">Silver</h3>
-            <p class="text-white text-sm mb-2">Niveau Intermédiaire</p>
-            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded">550 points</span>
+            <h3 class="text-gray-300 font-semibold mb-1"><%= t('badges.levels.silver') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.intermediate') %></p>
+            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 550) %></span>
           </div>
           <div class="bg-yellow-600 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-yellow-300 font-semibold mb-1">Gold</h3>
-            <p class="text-white text-sm mb-2">Niveau Expert</p>
-            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded">1100 points</span>
+            <h3 class="text-yellow-300 font-semibold mb-1"><%= t('badges.levels.gold') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.expert') %></p>
+            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 1100) %></span>
           </div>
         </div>
       </div>
@@ -136,28 +136,28 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">Badges Challenger</h2>
-            <p class="text-purple-200">Récompense les défis relevés</p>
+            <h2 class="text-xl font-bold text-white"><%= t('badges.types.challenger') %></h2>
+            <p class="text-purple-200"><%= t('badges.descriptions.challenger') %></p>
           </div>
         </div>
         <div class="bg-black bg-opacity-20 rounded-lg p-4 mb-4">
-          <p class="text-white">Les badges Challenger sont attribués aux joueurs qui relèvent des défis spéciaux et accomplissent des missions difficiles sur la plateforme.</p>
+          <p class="text-white"><%= t('badges.details.challenger') %></p>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div class="bg-purple-800 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-purple-300 font-semibold mb-1">Bronze</h3>
-            <p class="text-white text-sm mb-2">Niveau Débutant</p>
-            <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-1 rounded">200 points</span>
+            <h3 class="text-purple-300 font-semibold mb-1"><%= t('badges.levels.bronze') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.beginner') %></p>
+            <span class="bg-purple-900 text-purple-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 200) %></span>
           </div>
           <div class="bg-gray-500 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-gray-300 font-semibold mb-1">Silver</h3>
-            <p class="text-white text-sm mb-2">Niveau Intermédiaire</p>
-            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded">700 points</span>
+            <h3 class="text-gray-300 font-semibold mb-1"><%= t('badges.levels.silver') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.intermediate') %></p>
+            <span class="bg-gray-700 text-gray-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 700) %></span>
           </div>
           <div class="bg-yellow-600 bg-opacity-30 rounded-lg p-3 text-center">
-            <h3 class="text-yellow-300 font-semibold mb-1">Gold</h3>
-            <p class="text-white text-sm mb-2">Niveau Expert</p>
-            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded">1500 points</span>
+            <h3 class="text-yellow-300 font-semibold mb-1"><%= t('badges.levels.gold') %></h3>
+            <p class="text-white text-sm mb-2"><%= t('badges.levels.expert') %></p>
+            <span class="bg-yellow-900 text-yellow-300 text-xs font-semibold px-2.5 py-1 rounded"><%= t('badges.points_label', count: 1500) %></span>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
 
     <!-- Comment gagner des badges -->
     <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg p-6 mb-12">
-      <h2 class="text-2xl font-light text-white mb-4">Comment gagner des badges ?</h2>
+      <h2 class="text-2xl font-light text-white mb-4"><%= t('badges.how_to_earn') %></h2>
       <div class="bg-black bg-opacity-20 rounded-lg p-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-white bg-opacity-10 rounded-lg p-4">
@@ -173,50 +173,50 @@
               <svg class="w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
-              <h3 class="text-lg font-semibold text-white">Participez aux playlists</h3>
+              <h3 class="text-lg font-semibold text-white"><%= t('badges.earn_methods.participate.title') %></h3>
             </div>
-            <p class="text-gray-300">Gagnez des points Competitor en participant aux compétitions de playlists et en obtenant de bons scores.</p>
+            <p class="text-gray-300"><%= t('badges.earn_methods.participate.description') %></p>
           </div>
           <div class="bg-white bg-opacity-10 rounded-lg p-4">
             <div class="flex items-center mb-2">
               <svg class="w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
-              <h3 class="text-lg font-semibold text-white">Interagissez avec la communauté</h3>
+              <h3 class="text-lg font-semibold text-white"><%= t('badges.earn_methods.interact.title') %></h3>
             </div>
-            <p class="text-gray-300">Gagnez des points Engager en votant, aimant et interagissant avec le contenu et les autres utilisateurs.</p>
+            <p class="text-gray-300"><%= t('badges.earn_methods.interact.description') %></p>
           </div>
           <div class="bg-white bg-opacity-10 rounded-lg p-4">
             <div class="flex items-center mb-2">
               <svg class="w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
-              <h3 class="text-lg font-semibold text-white">Rédigez des critiques</h3>
+              <h3 class="text-lg font-semibold text-white"><%= t('badges.earn_methods.review.title') %></h3>
             </div>
-            <p class="text-gray-300">Gagnez des points Critic en rédigeant des critiques constructives et des analyses pertinentes sur les playlists et les chansons.</p>
+            <p class="text-gray-300"><%= t('badges.earn_methods.review.description') %></p>
           </div>
           <div class="bg-white bg-opacity-10 rounded-lg p-4">
             <div class="flex items-center mb-2">
               <svg class="w-5 h-5 mr-2 text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
               </svg>
-              <h3 class="text-lg font-semibold text-white">Relevez des défis</h3>
+              <h3 class="text-lg font-semibold text-white"><%= t('badges.earn_methods.challenge.title') %></h3>
             </div>
-            <p class="text-gray-300">Gagnez des points Challenger en relevant des défis spéciaux et en accomplissant des missions difficiles sur la plateforme.</p>
+            <p class="text-gray-300"><%= t('badges.earn_methods.challenge.description') %></p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Récompenses disponibles -->
-    <div class="bg-gradient-to-r from-green-600 to-teal-600 rounded-lg p-6">
-      <h2 class="text-2xl font-light text-white mb-4">Récompenses disponibles</h2>
+    <div class="bg-gradient-to-r from-purple-600 to-teal-600 rounded-lg p-6">
+      <h2 class="text-2xl font-light text-white mb-4"><%= t('badges.available_rewards') %></h2>
       <div class="bg-black bg-opacity-20 rounded-lg p-4 mb-4">
-        <p class="text-white">Chaque badge débloque une récompense spécifique que vous pouvez réclamer. Les badges de niveau supérieur offrent des récompenses plus intéressantes.</p>
+        <p class="text-white"><%= t('badges.rewards_description') %></p>
       </div>
       <div class="flex justify-center">
         <a href="<%= all_badges_path %>" class="inline-flex items-center px-6 py-3 text-sm font-medium rounded-full text-white bg-white/20 hover:bg-white/30 transition-all focus:outline-none">
-          <span>Voir tous les badges</span>
+          <span><%= t('badges.view_all_badges') %></span>
           <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>

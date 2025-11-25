@@ -141,7 +141,7 @@ module RewardAnimationHelper
     when 'exclusif'
       'from-purple-500 to-violet-600' # Violet
     when 'premium'
-      'from-green-500 to-emerald-600' # Vert
+      'from-purple-500 to-rose-500' # Violet
     when 'ultime'
       'from-blue-500 to-cyan-600' # Bleu
     else
@@ -238,18 +238,7 @@ module RewardAnimationHelper
       'border-challenge'
     end
     
-    pass_text = case reward_type
-    when 'challenge'
-      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
-    when 'exclusif'
-      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
-    when 'premium'
-      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
-    when 'ultime'
-      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
-    else
-      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
-    end
+    pass_text = I18n.t("rewards.descriptions.#{reward_type}", default: I18n.t('rewards.descriptions.challenge'))
     
     title_style = reward_type == 'challenge' ? 
       "font-family: 'Orbitron', sans-serif; letter-spacing: 3px; transform: translateX(-10px); white-space: nowrap; display: inline-block; font-size: 1.875rem; font-weight: 900;" :
@@ -285,7 +274,7 @@ module RewardAnimationHelper
         content_tag(:div, style: "flex: 1; display: flex; align-items: center; justify-content: center;") do
           content_tag(:div, style: "text-align: center;") do
             content_tag(:div, '🔒', style: "font-size: 3.75rem; margin-bottom: 1rem;") +
-            content_tag(:div, "#{badge_requirement} badges requis", style: "color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; font-weight: 600;")
+            content_tag(:div, I18n.t('rewards.badges_required_with_count', count: badge_requirement), style: "color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; font-weight: 600;")
           end
         end +
         # Footer avec description recommandée
@@ -300,66 +289,22 @@ module RewardAnimationHelper
 
   # 📝 Obtenir le titre de la récompense
   def get_reward_title(reward)
-    case reward.reward_type
-    when 'challenge'
-      'Challenge'
-    when 'exclusif'
-      'Exclusif'
-    when 'premium'
-      'Premium'
-    when 'ultime'
-      'Ultime'
-    else
-      reward.reward_type.humanize
-    end
+    I18n.t("rewards.titles.#{reward.reward_type}", default: reward.reward_type.humanize)
   end
 
   # 📄 Obtenir la description de la récompense
   def get_reward_description(reward)
-    case reward.reward_type
-    when 'challenge'
-      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
-    when 'exclusif'
-      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
-    when 'premium'
-      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
-    when 'ultime'
-      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
-    else
-      'Contenu exclusif à découvrir'
-    end
+    I18n.t("rewards.descriptions.#{reward.reward_type}", default: I18n.t('rewards.descriptions.default'))
   end
 
   # 📝 Obtenir le titre de la récompense depuis le type
   def get_reward_title_from_type(reward_type)
-    case reward_type
-    when 'challenge'
-      'Challenge'
-    when 'exclusif'
-      'Exclusif'
-    when 'premium'
-      'Premium'
-    when 'ultime'
-      'Ultime'
-    else
-      reward_type.humanize
-    end
+    I18n.t("rewards.titles.#{reward_type}", default: reward_type.humanize)
   end
 
   # 📄 Obtenir la description de la récompense depuis le type
   def get_reward_description_from_type(reward_type)
-    case reward_type
-    when 'challenge'
-      'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.'
-    when 'exclusif'
-      'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.'
-    when 'premium'
-      'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.'
-    when 'ultime'
-      'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.'
-    else
-      'Contenu exclusif à découvrir'
-    end
+    I18n.t("rewards.descriptions.#{reward_type}", default: I18n.t('rewards.descriptions.default'))
   end
 
   # 🔗 Obtenir le chemin vers les détails de récompense
@@ -386,7 +331,7 @@ module RewardAnimationHelper
     when 'exclusif'
       '#a855f7 0%, #7c3aed 100%' # Violet
     when 'premium'
-      '#22c55e 0%, #16a34a 100%' # Vert
+      '#a855f7 0%, #7c3aed 100%' # Vert
     when 'ultime'
       '#3b82f6 0%, #0891b2 100%' # Bleu
     else
@@ -418,7 +363,7 @@ module RewardAnimationHelper
     when 'exclusif'
       '#a855f7 0%, #7c3aed 100%' # Violet
     when 'premium'
-      '#22c55e 0%, #16a34a 100%' # Vert
+      '#a855f7 0%, #7c3aed 100%' # Vert
     when 'ultime'
       '#3b82f6 0%, #0891b2 100%' # Bleu
     else

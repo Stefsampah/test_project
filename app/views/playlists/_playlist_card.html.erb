@@ -21,8 +21,8 @@
           <svg fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
           </svg>
-          <div class="overlay-title">Contenu Premium</div>
-          <div class="overlay-subtitle">500 points requis pour débloquer</div>
+          <div class="overlay-title"><%= t('playlists.overlay.premium_title') %></div>
+          <div class="overlay-subtitle"><%= t('playlists.overlay.premium_subtitle') %></div>
         </div>
       <% end %>
       
@@ -55,24 +55,24 @@
       
       <div class="playlist-tags-uniform">
         <% if is_unlocked %>
-          <span class="playlist-tag-uniform" style="background-color: #ff0000; color: white;">DÉBLOQUÉE</span>
+          <span class="playlist-tag-uniform" style="background-color: #ff0000; color: white;"><%= t('playlists.badges.unlocked') %></span>
         <% elsif playlist.premium? %>
-          <span class="playlist-tag-uniform" style="background-color: #ff00ff; color: white;">PREMIUM</span>
+          <span class="playlist-tag-uniform" style="background-color: #ff00ff; color: white;"><%= t('playlists.badges.premium') %></span>
         <% elsif playlist.exclusive? %>
-          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;">EXCLUSIF</span>
+          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;"><%= t('playlists.badges.exclusive') %></span>
         <% end %>
         <% if playlist.category.present? %>
           <span class="playlist-tag-uniform" style="background-color: #374151; color: #9ca3af;"><%= playlist.category.upcase %></span>
         <% end %>
         <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-          <span class="playlist-tag-uniform" style="background-color: #10b981; color: white;">JOUÉE</span>
+          <span class="playlist-tag-uniform" style="background-color: #9333ea; color: white;"><%= t('playlists.badges.played') %></span>
         <% end %>
       </div>
       
-      <div class="playlist-description-uniform"><%= playlist.description %></div>
+      <div class="playlist-description-uniform"><%= translated_playlist_description(playlist) %></div>
       
       <div class="playlist-footer-uniform">
-        <span><%= pluralize(playlist.videos.count, 'titre') %></span>
+        <span><%= t('playlists.tracks_count', count: playlist.videos.count) %></span>
       </div>
     </div>
     

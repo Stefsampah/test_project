@@ -16,10 +16,10 @@
     </div>
 
     <!-- Mes Accomplissements -->
-    <div class="bg-gradient-to-r from-green-500/20 to-emerald-600/20 backdrop-blur-sm rounded-xl p-6 mb-8 border border-green-400/30">
+    <div class="bg-gradient-to-r from-purple-500/20 to-pink-600/20 backdrop-blur-sm rounded-xl p-6 mb-8 border border-purple-400/30">
       <h2 class="text-2xl font-bold text-white mb-4">🎉 <%= t('rewards.my_achievements') %></h2>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg p-4 text-center">
+        <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4 text-center">
           <div class="text-3xl font-bold text-white"><%= current_user.user_badges.count %></div>
           <div class="text-sm text-gray-200"><%= t('rewards.badges_collected') %></div>
         </div>
@@ -116,9 +116,9 @@
         <% if current_user.rewards.where(unlocked: true).count == 0 %>
           <div class="text-center py-12">
             <div class="text-6xl mb-4">🔒</div>
-            <h3 class="text-xl font-bold text-white mb-4">Aucune récompense débloquée</h3>
-            <p class="text-gray-300 mb-6">Collectez des badges en jouant aux playlists pour débloquer vos premières récompenses !</p>
-            <%= link_to "Jouer pour gagner des badges", playlists_path, 
+            <h3 class="text-xl font-bold text-white mb-4"><%= t('rewards.no_rewards_unlocked') %></h3>
+            <p class="text-gray-300 mb-6"><%= t('rewards.collect_badges_message') %></p>
+            <%= link_to t('rewards.play_to_earn_badges'), playlists_path, 
                 class: "inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
           </div>
         <% end %>
@@ -127,14 +127,14 @@
 
     <!-- Progression vers la prochaine récompense -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold text-white mb-4">📊 Progression</h2>
+      <h2 class="text-2xl font-bold text-white mb-4">📊 <%= t('rewards.progression') %></h2>
       <div class="flex items-center justify-between mb-4">
         <div class="text-sm text-gray-300">
-          <span class="font-semibold text-white"><%= @total_badges %></span> badges obtenus
+          <span class="font-semibold text-white"><%= @total_badges %></span> <%= t('rewards.badges_earned') %>
         </div>
         <div class="text-sm text-gray-300">
           <% if @next_level && @next_level != 'completed' %>
-            Prochaine récompense : <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-400"><%= @next_level.humanize %></span>
+            <%= t('rewards.next_reward') %>: <span class="font-semibold text-<%= @next_level == 'challenge' ? 'yellow' : @next_level == 'exclusif' ? 'gray' : @next_level == 'premium' ? 'orange' : 'pink' %>-400"><%= t("rewards.levels.#{@next_level}") %></span>
           <% else %>
             <% 
               # Vérifier si toutes les récompenses sont réellement débloquées
@@ -146,9 +146,9 @@
               all_unlocked = challenge_unlocked && exclusif_unlocked && premium_unlocked && ultime_unlocked
             %>
             <% if all_unlocked %>
-              <span class="text-green-400 font-semibold">Toutes les récompenses débloquées !</span>
+              <span class="text-purple-400 font-semibold"><%= t('rewards.all_rewards_unlocked') %></span>
             <% else %>
-              Continuez à collecter des badges !
+              <%= t('rewards.keep_collecting_badges') %>
             <% end %>
           <% end %>
         </div>
@@ -159,7 +159,7 @@
           <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-2.5 rounded-full" style="width: <%= (@progress[0].to_f / @progress[1] * 100).round %>%"></div>
         </div>
         <div class="text-xs text-gray-400 mt-2">
-          <%= @progress[0] %> / <%= @progress[1] %> badges
+          <%= @progress[0] %> / <%= @progress[1] %> <%= t('badges.title').downcase %>
         </div>
       <% end %>
     </div>
@@ -167,7 +167,7 @@
     <!-- Prochaine récompense accessible -->
     <% if @next_accessible_reward %>
       <div class="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm rounded-xl p-6 mb-8 border border-orange-400/30">
-        <h3 class="text-xl font-bold text-white mb-4">🎯 Prochaine récompense accessible</h3>
+        <h3 class="text-xl font-bold text-white mb-4">🎯 <%= t('rewards.next_accessible_reward') %></h3>
         <div class="reward-card bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg overflow-hidden border border-orange-400 transform hover:scale-105 transition-all duration-200">
           <div class="p-6">
             <div class="flex items-center justify-between mb-4">
@@ -175,19 +175,19 @@
                 <div class="text-4xl mr-4"><%= @next_accessible_reward[:icon] %></div>
                 <div>
                   <h4 class="text-2xl font-bold text-white"><%= @next_accessible_reward[:name] %></h4>
-                  <p class="text-orange-100">Récompense en cours d'acquisition</p>
+                  <p class="text-orange-100"><%= t('rewards.reward_in_progress') %></p>
                 </div>
               </div>
               <div class="text-right">
                 <div class="text-3xl font-bold text-white"><%= @next_accessible_reward[:current_badges] %>/<%= @next_accessible_reward[:quantity] %></div>
-                <div class="text-sm text-orange-100">badges</div>
+                <div class="text-sm text-orange-100"><%= t('badges.title').downcase %></div>
               </div>
             </div>
             
             <!-- Barre de progression -->
             <div class="w-full">
               <div class="flex justify-between text-xs text-orange-100 mb-1">
-                <span>Progression</span>
+                <span><%= t('rewards.progression') %></span>
                 <span><%= @next_accessible_reward[:progress_percentage].round %>%</span>
               </div>
               <div class="w-full bg-orange-300 rounded-full h-3">
@@ -198,7 +198,7 @@
             
             <div class="mt-4 text-center">
               <span class="bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold">
-                Continuez à collecter des badges pour débloquer cette récompense !
+                <%= t('rewards.keep_collecting_to_unlock') %>
               </span>
             </div>
           </div>
@@ -209,7 +209,7 @@
 
     <!-- Bouton pour vérifier les nouvelles récompenses -->
     <div class="text-center mb-8 px-4">
-      <%= link_to "🔄 Vérifier les Nouvelles Récompenses", unlock_rewards_path, method: :post, class: "check-rewards-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200 inline-block" %>
+      <%= link_to "🔄 #{t('rewards.check_new_rewards')}", unlock_rewards_path, method: :post, class: "check-rewards-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition duration-200 inline-block" %>
     </div>
 <style>
   /* Harmonisation des titres principaux */

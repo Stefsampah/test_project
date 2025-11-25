@@ -9,7 +9,7 @@
 
     <!-- Alertes -->
     <% if flash[:success] %>
-      <div class="bg-green-600 text-white p-4 rounded-lg mb-6">
+      <div class="bg-purple-600 text-white p-4 rounded-lg mb-6">
         ✅ <%= flash[:success] %>
       </div>
     <% end %>
@@ -103,7 +103,7 @@
 
         <!-- Engager -->
         <div class="bg-gray-700 rounded-lg p-4">
-          <h3 class="text-lg font-semibold mb-3 text-green-400">🎮 Engager</h3>
+          <h3 class="text-lg font-semibold mb-3 text-purple-400">🎮 Engager</h3>
           <div class="grid grid-cols-3 gap-2">
             <%= link_to admin_animations_test_badge_animation_path(type: 'engager', level: 'bronze'), 
                 method: :post, 
@@ -162,7 +162,7 @@
                     <div class="text-sm text-gray-400"><%= reward.reward_type.humanize %></div>
                   </div>
                   <div class="text-right">
-                    <div class="text-sm <%= reward.unlocked? ? 'text-green-400' : 'text-gray-400' %>">
+                    <div class="text-sm <%= reward.unlocked? ? 'text-purple-400' : 'text-gray-400' %>">
                       <%= reward.unlocked? ? '✅ Débloqué' : '🔒 Verrouillé' %>
                     </div>
                     <% if reward.unlocked_at %>
@@ -193,7 +193,7 @@
                     <div class="text-sm text-gray-400"><%= user_badge.badge.badge_type.humanize %></div>
                   </div>
                   <div class="text-right">
-                    <div class="text-sm text-green-400">✅ Gagné</div>
+                    <div class="text-sm text-purple-400">✅ Gagné</div>
                     <% if user_badge.earned_at %>
                       <div class="text-xs text-gray-500">
                         <%= user_badge.earned_at.strftime("%d/%m %H:%M") %>
@@ -236,7 +236,7 @@
     </div>
 
     <!-- Test direct des animations -->
-    <div class="bg-green-900 rounded-lg p-6 mb-8">
+    <div class="bg-purple-900 rounded-lg p-6 mb-8">
       <h2 class="text-xl font-bold mb-4">Test Direct des Animations</h2>
       <p class="text-gray-300 mb-4">Testez les animations directement depuis le frontend (sans passer par le backend)</p>
       
@@ -948,7 +948,7 @@ class RewardAnimationSystem {
           <div style="background: rgba(255, 255, 255, 0.2); padding: 6px 12px; border-radius: 15px; font-size: 0.8rem;">
             <span style="color: #ffd700; font-weight: bold;">${rewardInfo.requirement}</span>
           </div>
-          <div style="background: #10b981; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
+          <div style="background: #9333ea; color: white; padding: 6px 12px; border-radius: 15px; font-size: 0.8rem; font-weight: bold;">
             DÉBLOQUÉ
           </div>
         </div>

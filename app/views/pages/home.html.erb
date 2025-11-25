@@ -111,13 +111,13 @@
                 <div class="playlist-fallback" style="display: none;">
                   <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
                   <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                  <p class="text-white/80 text-sm"><%= playlist.videos.count %> titres</p>
+                  <p class="text-white/80 text-sm"><%= t('home.tracks', count: playlist.videos.count) %></p>
                 </div>
               <% else %>
                 <div class="playlist-fallback">
                   <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
                   <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                  <p class="text-white/80 text-sm"><%= playlist.videos.count %> titres</p>
+                  <p class="text-white/80 text-sm"><%= t('home.tracks', count: playlist.videos.count) %></p>
                 </div>
               <% end %>
               
@@ -129,9 +129,9 @@
               <div class="playlist-button-overlay">
                 <div class="playlist-button-container">
                   <% if user_signed_in? %>
-                      <%= link_to 'JOUER', new_playlist_game_path_with_locale(playlist), class: 'playlist-play-button' %>
+                    <%= link_to t('playlists.play'), new_playlist_game_path_with_locale(playlist), class: 'playlist-play-button' %>
                   <% else %>
-                    <%= link_to 'JOUER', new_user_session_path, class: 'playlist-play-button' %>
+                    <%= link_to t('playlists.play'), new_user_session_path, class: 'playlist-play-button' %>
                   <% end %>
                 </div>
               </div>
@@ -185,7 +185,7 @@
             </div>
             <div class="badge-name-home"><%= badge.name %></div>
             <div class="badge-level-home"><%= badge.level.upcase %></div>
-            <div class="badge-points-home"><%= badge.points_required %> points</div>
+            <div class="badge-points-home"><%= t('badges.points_label', count: badge.points_required) %></div>
           </div>
         <% end %>
       </div>
@@ -209,7 +209,7 @@
               level: 'challenge', 
               color: 'from-yellow-400 to-yellow-600', 
               icon: '🥉',
-              content: 'Des playlists que vous ne trouverez nulle part ailleurs. Versions acoustiques, remix spéciaux, titres rares.',
+              content: t('rewards.descriptions.challenge'),
               visual: 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
             },
             { 
@@ -217,7 +217,7 @@
               level: 'exclusif', 
               color: 'from-gray-400 to-gray-600', 
               icon: '🥈',
-              content: 'L\'envers du décor vous attend. Documentaires primés, interviews exclusives, podcasts underground.',
+              content: t('rewards.descriptions.exclusif'),
               visual: 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
             },
             { 
@@ -225,7 +225,7 @@
               level: 'premium', 
               color: 'from-orange-400 to-orange-600', 
               icon: '🥇',
-              content: 'Rencontrez les artistes dans leur intimité. Sessions studio exclusives, backstage, photos rares.',
+              content: t('rewards.descriptions.premium'),
               visual: get_premium_preview_image
             },
             { 
@@ -233,7 +233,7 @@
               level: 'ultime', 
               color: 'from-pink-400 to-purple-600', 
               icon: '🌈',
-              content: 'L\'expérience ultime vous attend. Backstage réel, invitations concerts, rencontres privées.',
+              content: t('rewards.descriptions.ultime'),
               visual: get_ultime_preview_image
             }
           ]
@@ -258,10 +258,10 @@
   </div>
 
   <!-- Section Boutique avec vrais produits -->
-  <div class="pt-32 pb-32 bg-gradient-to-r from-green-600/20 to-blue-600/20">
+  <div class="pt-32 pb-32 bg-gradient-to-r from-purple-600/20 to-blue-600/20">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-white mb-4">Boutique Premium</h2>
+        <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.shop.title') %></h2>
       </div>
       
       <!-- Quatre produits boutique avec vrais visuels -->
@@ -270,12 +270,12 @@
         <div class="shop-visual-card">
           <div class="shop-visual-section" style="background-image: url('/assets/store/lovepik.png');">
             <div class="shop-visual-content">
-              <h3 class="shop-visual-title">Pack 1000 Points</h3>
+              <h3 class="shop-visual-title"><%= t('home.shop.pack_1000') %></h3>
               <p class="shop-visual-price">3.99 €</p>
             </div>
           </div>
           <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">💰 Acheter maintenant</button>
+            <button class="shop-buy-btn">💰 <%= t('home.shop.buy_now') %></button>
           </div>
         </div>
 
@@ -283,12 +283,12 @@
         <div class="shop-visual-card">
           <div class="shop-visual-section" style="background-image: url('/assets/store/trove_of_coins.png');">
             <div class="shop-visual-content">
-              <h3 class="shop-visual-title">Pack 5000 Points</h3>
+              <h3 class="shop-visual-title"><%= t('home.shop.pack_5000') %></h3>
               <p class="shop-visual-price">4.99 €</p>
             </div>
           </div>
           <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">💰 Acheter maintenant</button>
+            <button class="shop-buy-btn">💰 <%= t('home.shop.buy_now') %></button>
           </div>
         </div>
 
@@ -296,12 +296,12 @@
         <div class="shop-visual-card">
           <div class="shop-visual-section" style="background-image: url('/assets/store/6070880.jpg');">
             <div class="shop-visual-content">
-              <h3 class="shop-visual-title">Abonnement VIP</h3>
+              <h3 class="shop-visual-title"><%= t('home.shop.vip_subscription') %></h3>
               <p class="shop-visual-price">9.99 €</p>
             </div>
           </div>
           <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">👑 S'abonner maintenant</button>
+            <button class="shop-buy-btn">👑 <%= t('home.shop.subscribe_now') %></button>
           </div>
         </div>
 
@@ -309,12 +309,12 @@
         <div class="shop-visual-card">
           <div class="shop-visual-section" style="background-image: url('https://img.youtube.com/vi/0tJz8JjPbHU/hqdefault.jpg');">
             <div class="shop-visual-content">
-              <h3 class="shop-visual-title">Playlist Premium</h3>
+              <h3 class="shop-visual-title"><%= t('home.shop.premium_playlist') %></h3>
               <p class="shop-visual-price">500 points</p>
             </div>
           </div>
           <div class="shop-bottom-section" style="background-color: #06B6D4;">
-            <button class="shop-buy-btn">🎶 Acheter maintenant</button>
+            <button class="shop-buy-btn">🎶 <%= t('home.shop.playlist_buy') %></button>
           </div>
         </div>
       </div>
@@ -328,16 +328,16 @@
     
     <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
       <h2 class="text-6xl font-bold text-white mb-8 drop-shadow-2xl">
-        Prêt pour l'aventure ?
+        <%= t('home.final_cta_title') %>
       </h2>
       
       <% if user_signed_in? %>
         <%= link_to playlists_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          GO
+          <%= t('home.final_cta_button') %>
         <% end %>
       <% else %>
         <%= link_to new_user_registration_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          GO
+          <%= t('home.final_cta_button') %>
         <% end %>
       <% end %>
     </div>
@@ -353,13 +353,13 @@
       
       <div class="flex space-x-6 text-gray-400">
         <% if user_signed_in? %>
-          <%= link_to "Jouer", playlists_path, class: "hover:text-white transition-colors" %>
-          <%= link_to "Classements", scores_path, class: "hover:text-white transition-colors" %>
-          <%= link_to "Badges", my_badges_path, class: "hover:text-white transition-colors" %>
-          <%= link_to "🎉 Animations", reward_animations_demo_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t('playlists.play'), playlists_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t('scores.title'), scores_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t('badges.title'), my_badges_path, class: "hover:text-white transition-colors" %>
+          <%= link_to "🎉 #{t('home.animations_demo')}", reward_animations_demo_path, class: "hover:text-white transition-colors" %>
         <% else %>
-          <%= link_to "Connexion", new_user_session_path, class: "hover:text-white transition-colors" %>
-          <%= link_to "Inscription", new_user_registration_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t('nav.sign_in'), new_user_session_path, class: "hover:text-white transition-colors" %>
+          <%= link_to t('nav.sign_up'), new_user_registration_path, class: "hover:text-white transition-colors" %>
         <% end %>
       </div>
     </div>

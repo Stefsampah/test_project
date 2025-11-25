@@ -274,7 +274,7 @@ class RewardsController < ApplicationController
         title: 'CARBONNE - BACKSTAGE FESTIVAL',
         description: 'Backstage festival avec ambiance détendue et version alternative de "Falbala"',
         icon: '🎪',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://www.tiktok.com/@dubsilence/video/7374726614250278177',
         link_text: 'Voir le backstage',
         type: 'Backstage Festival',
@@ -340,7 +340,7 @@ class RewardsController < ApplicationController
         title: 'TIMEO - CLIP COMPLET AVEC STORYTELLING',
         description: 'Clip complet avec scènes de tournage et storytelling de "Si je m\'en vais"',
         icon: '🎬',
-        color: 'from-blue-400 to-green-500',
+        color: 'from-blue-400 to-purple-500',
         link: 'https://www.youtube.com/watch?v=ORfP-QudA1A',
         link_text: 'Regarder le clip',
         type: 'Clip Officiel',
@@ -397,7 +397,7 @@ class RewardsController < ApplicationController
         title: 'MADNESS - PRINCE DU SKA, ROI DE LA POP',
         description: 'Cuivres éclatants, rythmes bondissants, synthétiseurs fous : retour sur la déferlante britannique Madness',
         icon: '🎺',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://www.youtube.com/watch?v=qqNfk_xR1I0',
         link_text: 'Regarder le documentaire',
         type: 'Documentaire Ska',
@@ -430,7 +430,7 @@ class RewardsController < ApplicationController
         title: 'AFROBEATS : LE PHÉNOMÈNE MUSICAL QUI SECOUE LE MONDE',
         description: 'Comment expliquer que ce son né au Nigéria ait réussi à conquérir le monde en à peine dix ans ?',
         icon: '🌍',
-        color: 'from-green-400 to-yellow-500',
+        color: 'from-purple-400 to-yellow-500',
         link: 'https://www.youtube.com/watch?v=FhKwzAY_S_g',
         link_text: 'Regarder le documentaire',
         type: 'Documentaire Afrobeats',
@@ -452,7 +452,7 @@ class RewardsController < ApplicationController
         title: 'BILLIE EILISH: THE WORLD\'S A LITTLE BLURRY',
         description: 'Documentaire musical sur Billie Eilish, le plus beau documentaire de musique jamais vu',
         icon: '🎵',
-        color: 'from-blue-400 to-green-500',
+        color: 'from-blue-400 to-purple-500',
         link: 'https://www.youtube.com/watch?v=lx-0uom3Tbk',
         link_text: 'Regarder le documentaire',
         type: 'Documentaire Billie',
@@ -476,7 +476,7 @@ class RewardsController < ApplicationController
         title: 'O\'KENNETH - PHOTO EXCLUSIVE NFT',
         description: 'Ghanaian rapper, raw voice of Kumasi, Asakaa drill pioneer, "Yimaye" – street soul meets introspection',
         icon: '🖼️',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: '#',
         link_text: 'Voir la photo NFT',
         type: 'Photo NFT',
@@ -509,7 +509,7 @@ class RewardsController < ApplicationController
         title: 'KOFFEE - PHOTO EXCLUSIVE NFT',
         description: 'KOFFEE #1 Reggae artist from Spanish Town, empowering, radiant, and unapologetically uplifting',
         icon: '🖼️',
-        color: 'from-yellow-400 to-green-500',
+        color: 'from-yellow-400 to-purple-500',
         link: '#',
         link_text: 'Voir la photo NFT',
         type: 'Photo NFT',
@@ -683,7 +683,7 @@ class RewardsController < ApplicationController
       {
         artist_name: 'O\'KENNETH',
         artist_description: 'Ghanaian rapper, raw voice of Kumasi, Asakaa drill pioneer, \'Yimaye\' – street soul meets introspection',
-        gradient_colors: 'from-green-400 to-blue-500'
+        gradient_colors: 'from-purple-400 to-blue-500'
       }
     when 'chuwi_nft'
       {
@@ -702,7 +702,7 @@ class RewardsController < ApplicationController
       {
         artist_name: 'KOFFEE',
         artist_description: 'Reggae artist from Spanish Town, empowering, radiant, and unapologetically uplifting',
-        gradient_colors: 'from-yellow-400 to-green-500'
+        gradient_colors: 'from-yellow-400 to-purple-500'
       }
     else
       {

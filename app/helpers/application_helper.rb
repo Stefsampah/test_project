@@ -73,6 +73,12 @@ module ApplicationHelper
   # Helper spécifique pour new_playlist_game_path avec gestion du locale
   def new_playlist_game_path_with_locale(playlist)
     playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
-    new_playlist_game_path(playlist_id: playlist_id)
+    new_playlist_game_path(playlist_id: playlist_id, locale: I18n.locale)
+  end
+
+  def playlist_game_path_with_locale(playlist, game)
+    playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
+    game_id = game.is_a?(Game) ? game.id : game
+    playlist_game_path(locale: I18n.locale, playlist_id: playlist_id, id: game_id)
   end
 end

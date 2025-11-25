@@ -2,15 +2,15 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">🔍 Explorer les Récompenses</h1>
+      <h1 class="text-2xl font-bold text-white">🔍 <%= t('rewards.explore_rewards') %></h1>
     </div>
 
     <!-- Navigation moderne -->
     <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
-        <%= link_to "Mes récompenses", my_rewards_path, 
+        <%= link_to t('rewards.my_rewards'), my_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
-        <%= link_to "Toutes les récompenses", all_rewards_path, 
+        <%= link_to t('rewards.all_rewards'), all_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors" %>
       </div>
     </div>
@@ -19,11 +19,11 @@
 
     <!-- Toutes les récompenses disponibles -->
     <div class="mb-8">
-      <h2 class="text-2xl font-bold text-white mb-6">🎁 Toutes les Récompenses Disponibles</h2>
+      <h2 class="text-2xl font-bold text-white mb-6">🎁 <%= t('rewards.all_available_rewards') %></h2>
       
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-6">
         <h3 class="text-xl font-bold text-white mb-4">
-          Toutes les Récompenses Disponibles
+          <%= t('rewards.all_available_rewards') %>
         </h3>
         
         <div class="rewards-grid">
@@ -86,50 +86,50 @@
 
     <!-- Guide du système -->
     <div class="bg-gradient-to-r from-blue-500/20 to-purple-600/20 backdrop-blur-sm rounded-xl p-6 border border-blue-400/30">
-      <h2 class="text-2xl font-bold text-white mb-4">📖 Guide du Système de Récompenses</h2>
+      <h2 class="text-2xl font-bold text-white mb-4">📖 <%= t('rewards.guide_title') %></h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h4 class="text-lg font-bold text-white mb-3">🎯 Comment ça marche ?</h4>
-          <p class="text-gray-300 text-sm mb-3">Le système est basé sur le total de badges collectés</p>
+          <h4 class="text-lg font-bold text-white mb-3">🎯 <%= t('rewards.how_it_works_title') %></h4>
+          <p class="text-gray-300 text-sm mb-3"><%= t('rewards.how_it_works_description') %></p>
           <div class="space-y-2 text-sm text-gray-300">
-            <p>• <strong>3 badges</strong> = 🥉 Challenge (Playlists Spéciales + Versions acoustiques)</p>
-            <p>• <strong>6 badges</strong> = 🥈 Exclusif (Contenu exclusif + Sessions studio)</p>
-            <p>• <strong>9 badges</strong> = 🥇 Premium (Contenu exclusif artistes + Backstage)</p>
-            <p>• <strong>12 badges</strong> = 🌈 Ultime (Collection Arc-en-ciel + Expériences VIP)</p>
+            <p>• <strong><%= t('rewards.badges_count', count: 3) %></strong> = 🥉 <%= t('rewards.levels.challenge') %> (<%= t('rewards.levels.challenge_content') %>)</p>
+            <p>• <strong><%= t('rewards.badges_count', count: 6) %></strong> = 🥈 <%= t('rewards.levels.exclusif') %> (<%= t('rewards.levels.exclusif_content') %>)</p>
+            <p>• <strong><%= t('rewards.badges_count', count: 9) %></strong> = 🥇 <%= t('rewards.levels.premium') %> (<%= t('rewards.levels.premium_content') %>)</p>
+            <p>• <strong><%= t('rewards.badges_count', count: 12) %></strong> = 🌈 <%= t('rewards.levels.ultime') %> (<%= t('rewards.levels.ultime_content') %>)</p>
           </div>
         </div>
 
         <div>
-          <h4 class="text-lg font-bold text-white mb-3">🚀 Stratégies pour Progresser</h4>
-          <p class="text-gray-300 text-sm mb-3">Maximisez vos chances de débloquer des récompenses</p>
+          <h4 class="text-lg font-bold text-white mb-3">🚀 <%= t('rewards.strategies_title') %></h4>
+          <p class="text-gray-300 text-sm mb-3"><%= t('rewards.strategies_description') %></p>
           <div class="space-y-2 text-sm text-gray-300">
-            <p>• <strong>Jouez régulièrement</strong> aux playlists pour gagner des badges</p>
-            <p>• <strong>Engagez-vous activement</strong> avec les contenus</p>
-            <p>• <strong>Donnez des critiques avisées</strong> sur les musiques (likes/dislikes)</p>
+            <p>• <strong><%= t('rewards.strategies.play_regularly') %></strong> <%= t('rewards.strategies.play_regularly_desc') %></p>
+            <p>• <strong><%= t('rewards.strategies.engage_actively') %></strong> <%= t('rewards.strategies.engage_actively_desc') %></p>
+            <p>• <strong><%= t('rewards.strategies.give_reviews') %></strong> <%= t('rewards.strategies.give_reviews_desc') %></p>
           </div>
         </div>
       </div>
       
       
       <div class="mt-6 p-4 bg-white/5 rounded-lg">
-        <h3 class="text-lg font-bold text-white mb-2">💡 Conseils d'Expert :</h3>
+        <h3 class="text-lg font-bold text-white mb-2">💡 <%= t('rewards.expert_tips_title') %>:</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <span class="text-yellow-400 font-semibold">🎵 Diversifiez :</span>
-            <span class="text-gray-300">Jouez à différents types de playlists</span>
+            <span class="text-yellow-400 font-semibold">🎵 <%= t('rewards.tips.diversify') %>:</span>
+            <span class="text-gray-300"><%= t('rewards.tips.diversify_desc') %></span>
           </div>
           <div>
-            <span class="text-green-400 font-semibold">⏰ Régularité :</span>
-            <span class="text-gray-300">Connectez-vous quotidiennement</span>
+            <span class="text-purple-400 font-semibold">⏰ <%= t('rewards.tips.regularity') %>:</span>
+            <span class="text-gray-300"><%= t('rewards.tips.regularity_desc') %></span>
           </div>
           <div>
-            <span class="text-blue-400 font-semibold">🎯 Objectifs :</span>
-            <span class="text-gray-300">Fixez-vous des objectifs quotidiens</span>
+            <span class="text-blue-400 font-semibold">🎯 <%= t('rewards.tips.goals') %>:</span>
+            <span class="text-gray-300"><%= t('rewards.tips.goals_desc') %></span>
           </div>
           <div>
-            <span class="text-purple-400 font-semibold">🏆 Excellence :</span>
-            <span class="text-gray-300">Visez les meilleurs scores</span>
+            <span class="text-purple-400 font-semibold">🏆 <%= t('rewards.tips.excellence') %>:</span>
+            <span class="text-gray-300"><%= t('rewards.tips.excellence_desc') %></span>
           </div>
         </div>
       </div>

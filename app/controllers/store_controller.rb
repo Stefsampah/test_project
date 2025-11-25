@@ -4,14 +4,14 @@ class StoreController < ApplicationController
 
   def index
     @point_packs = [
-      { name: "Pack 100 points", price: 0.99, points: 100, description: "Idéal pour tester sans engagement" },
-      { name: "Pack 500 points", price: 1.99, points: 500, description: "Un bon équilibre avec des bonus inclus" },
-      { name: "Pack 1000 points", price: 3.99, points: 1000, description: "Offre la meilleure valeur avec un bonus supplémentaire" },
-      { name: "Pack 5000 points", price: 4.99, points: 5000, description: "Offre la meilleure valeur avec un bonus supplémentaire" }
+      { name: t('store.packs.pack_100.name'), price: 0.99, points: 100, description: t('store.packs.pack_100.description') },
+      { name: t('store.packs.pack_500.name'), price: 1.99, points: 500, description: t('store.packs.pack_500.description') },
+      { name: t('store.packs.pack_1000.name'), price: 3.99, points: 1000, description: t('store.packs.pack_1000.description') },
+      { name: t('store.packs.pack_5000.name'), price: 4.99, points: 5000, description: t('store.packs.pack_5000.description') }
     ]
 
     @subscriptions = [
-      { name: "VIP", price: 9.99, description: "Débloque toutes les playlists premium" }
+      { name: t('store.subscriptions.vip.name'), price: 9.99, description: t('store.subscriptions.vip.description') }
     ]
 
     # Exclure les playlists Challenge Reward (récompenses gagnées, pas achetées)
@@ -30,10 +30,10 @@ class StoreController < ApplicationController
   def buy_points
     pack_id = params[:pack_id]
     @point_packs = [
-      { id: 0, name: "Pack 100 points", price: 0.99, points: 100, description: "Idéal pour tester sans engagement" },
-      { id: 1, name: "Pack 500 points", price: 1.99, points: 500, description: "Un bon équilibre avec des bonus inclus" },
-      { id: 2, name: "Pack 1000 points", price: 3.99, points: 1000, description: "Offre la meilleure valeur avec un bonus supplémentaire" },
-      { id: 3, name: "Pack 5000 points", price: 4.99, points: 5000, description: "Offre la meilleure valeur avec un bonus supplémentaire" }
+      { id: 0, name: t('store.packs.pack_100.name'), price: 0.99, points: 100, description: t('store.packs.pack_100.description') },
+      { id: 1, name: t('store.packs.pack_500.name'), price: 1.99, points: 500, description: t('store.packs.pack_500.description') },
+      { id: 2, name: t('store.packs.pack_1000.name'), price: 3.99, points: 1000, description: t('store.packs.pack_1000.description') },
+      { id: 3, name: t('store.packs.pack_5000.name'), price: 4.99, points: 5000, description: t('store.packs.pack_5000.description') }
     ]
     
     @selected_pack = @point_packs.find { |pack| pack[:id] == pack_id.to_i }
@@ -49,7 +49,7 @@ class StoreController < ApplicationController
           
           Rails.logger.info "Simulation d'achat: User #{current_user.id} a acheté #{@selected_pack[:points]} points pour #{@selected_pack[:price]}€"
           
-          redirect_to store_path, notice: "✅ Achat simulé réussi ! Vous avez désormais #{new_points} points ! (Mode simulation - configurez Stripe pour les vrais paiements)"
+          redirect_to store_path, notice: t('store.messages.purchase_simulated', points: new_points)
         else
           # Mode réel - utiliser Stripe
           session = Stripe::Checkout::Session.create({
@@ -78,13 +78,13 @@ class StoreController < ApplicationController
           redirect_to session.url, allow_other_host: true
         end
       rescue Stripe::CardError => e
-        redirect_to store_path, alert: "❌ Erreur de carte: #{e.message}"
+        redirect_to store_path, alert: t('store.messages.card_error', message: e.message)
       rescue => e
         Rails.logger.error "Erreur Stripe: #{e.message}"
-        redirect_to store_path, alert: "❌ Erreur lors de l'achat. Veuillez réessayer."
+        redirect_to store_path, alert: t('store.messages.purchase_error')
       end
     else
-      redirect_to store_path, alert: "❌ Pack de points invalide."
+      redirect_to store_path, alert: t('store.messages.invalid_pack')
     end
   end
 
@@ -100,7 +100,7 @@ class StoreController < ApplicationController
           
           Rails.logger.info "Simulation d'abonnement VIP: User #{current_user.id} a acheté un abonnement VIP pour 9.99€"
           
-          redirect_to playlists_path, notice: "✅ Abonnement VIP simulé activé ! Toutes les playlists premium sont maintenant débloquées. (Mode simulation - configurez Stripe pour les vrais paiements) <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>".html_safe
+          redirect_to playlists_path, notice: t('store.messages.vip_subscription_simulated').html_safe
         else
           # Mode réel - utiliser Stripe
           session = Stripe::Checkout::Session.create({
@@ -128,13 +128,13 @@ class StoreController < ApplicationController
           redirect_to session.url, allow_other_host: true
         end
       rescue Stripe::CardError => e
-        redirect_to store_path, alert: "❌ Erreur de carte: #{e.message}"
+        redirect_to store_path, alert: t('store.messages.card_error', message: e.message)
       rescue => e
         Rails.logger.error "Erreur Stripe: #{e.message}"
-        redirect_to store_path, alert: "❌ Erreur lors de l'achat. Veuillez réessayer."
+        redirect_to store_path, alert: t('store.messages.subscription_error')
       end
     else
-      redirect_to store_path, alert: "❌ Type d'abonnement invalide."
+      redirect_to store_path, alert: t('store.messages.invalid_subscription')
     end
   end
 
@@ -164,9 +164,9 @@ class StoreController < ApplicationController
       
       # Enregistrer le déblocage de la playlist premium pour l'utilisateur
       UserPlaylistUnlock.find_or_create_by(user: current_user, playlist: @playlist)
-      redirect_to playlists_path(notice: "Playlist débloquée avec succès !", unlocked_playlist_id: @playlist.id)
+      redirect_to playlists_path(notice: t('store.messages.playlist_unlocked'), unlocked_playlist_id: @playlist.id)
     else
-      redirect_to buy_playlist_store_path(@playlist), alert: "Points insuffisants. Veuillez acheter plus de points."
+      redirect_to buy_playlist_store_path(@playlist), alert: t('store.messages.insufficient_points')
     end
   end
 
@@ -201,33 +201,33 @@ class StoreController < ApplicationController
             # Activer l'abonnement VIP
             current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
             Rails.logger.info "Abonnement VIP activé: User #{current_user.id}"
-            redirect_to playlists_path, notice: "✅ Abonnement VIP activé ! Toutes les playlists premium sont maintenant débloquées. <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>".html_safe
+            redirect_to playlists_path, notice: t('store.messages.vip_subscription_activated').html_safe
           else
             # Ajouter les points
             points = checkout_session.metadata['points'].to_i
             current_points = current_user.points || 0
             current_user.update!(points: current_points + points)
             Rails.logger.info "Points ajoutés: User #{current_user.id} a reçu #{points} points"
-            redirect_to store_path, notice: "✅ Paiement réussi ! Vous avez reçu #{points} points !"
+            redirect_to store_path, notice: t('store.messages.payment_success', points: points)
           end
         else
-          redirect_to store_path, alert: "❌ Paiement non confirmé"
+          redirect_to store_path, alert: t('store.messages.payment_not_confirmed')
         end
       rescue Stripe::InvalidRequestError => e
         Rails.logger.error "Session Stripe invalide: #{e.message}"
-        redirect_to store_path, alert: "❌ Session de paiement invalide"
+        redirect_to store_path, alert: t('store.messages.invalid_payment_session')
       rescue => e
         Rails.logger.error "Erreur lors du traitement du paiement: #{e.message}"
-        redirect_to store_path, alert: "❌ Erreur lors du traitement du paiement"
+        redirect_to store_path, alert: t('store.messages.payment_processing_error')
       end
     else
-      redirect_to store_path, alert: "❌ Session invalide"
+      redirect_to store_path, alert: t('store.messages.invalid_session')
     end
   end
 
   # Page d'annulation de paiement
   def cancel
-    redirect_to store_path, alert: "❌ Paiement annulé"
+    redirect_to store_path, alert: t('store.messages.payment_cancelled')
   end
 
   private

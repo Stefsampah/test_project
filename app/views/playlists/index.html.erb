@@ -2,18 +2,18 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">Playlists</h1>
+      <h1 class="text-2xl font-bold text-white"><%= t('playlists.title') %></h1>
     </div>
 
     <!-- Boutons de filtrage -->
     <div class="flex justify-center mb-8">
       <div class="bg-gray-800 rounded-lg p-1 flex space-x-1">
         <button id="all-playlists-btn" class="filter-btn active px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="all">
-          Toutes les playlists
+          <%= t('playlists.all_playlists') %>
         </button>
         <% if user_signed_in? %>
           <button id="my-playlists-btn" class="filter-btn px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="my">
-            Mes playlists
+            <%= t('playlists.my_playlists') %>
           </button>
         <% end %>
       </div>
@@ -21,12 +21,13 @@
 
     <!-- Tags de catégories -->
     <div id="categories-section" class="mb-6">
-      <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 Par Catégorie</h2>
+      <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 <%= t('playlists.filters.by_category') %></h2>
         <% categories = ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'] %>
       <div class="categories-grid mb-8">
-        <% ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'].each do |category| %>
+        <% categories.each do |category| %>
+          <% category_key = category.parameterize(separator: '_').underscore %>
           <button class="category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
-              <%= category %>
+              <%= t("playlists.categories.#{category_key}", default: category) %>
             </button>
         <% end %>
       </div>
@@ -40,14 +41,14 @@
       </div>
     <% end %>
     <% if flash[:notice] || params[:notice] %>
-      <div class="bg-green-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
+      <div class="bg-purple-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
         <span><%= flash[:notice] || params[:notice] %></span>
       </div>
     <% end %>
 
     <!-- Liste unifiée de toutes les playlists -->
     <div id="all-playlists-section" class="mb-20 sm:mb-24 playlist-section">
-      <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Toutes les Playlists</h2>
+      <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2"><%= t('playlists.all_playlists') %></h2>
       
       <div class="playlists-grid">
         <% reward_playlists = Playlist.where(category: 'Exclusives', hidden: [false, nil]).order(:id) %>
@@ -75,15 +76,16 @@
     <!-- Section mes playlists (si connecté) -->
     <% if user_signed_in? && @user_playlists&.any? %>
       <div id="my-playlists-section" class="mb-16 playlist-section" style="display: none;">
-        <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">Mes Playlists</h2>
+        <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2"><%= t('playlists.my_playlists') %></h2>
         
         <!-- Tags de catégories pour Mes Playlists -->
         <div class="mb-6">
-          <h3 class="text-lg font-bold text-white mb-4 text-center">🎵 Filtrer par Catégorie</h3>
+          <h3 class="text-lg font-bold text-white mb-4 text-center">🎵 <%= t('playlists.filters.filter_my_playlists') %></h3>
           <div class="categories-grid mb-6">
             <% categories.each do |category| %>
+              <% category_key = category.parameterize(separator: '_').underscore %>
               <button class="my-category-filter category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-my-category="<%= category %>">
-                <%= category %>
+                <%= t("playlists.categories.#{category_key}", default: category) %>
               </button>
             <% end %>
           </div>

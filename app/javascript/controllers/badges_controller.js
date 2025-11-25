@@ -87,7 +87,7 @@ export default class extends Controller {
                       badge.level === 'silver' ? 'bg-gray-400' : 'bg-yellow-400';
       const earnedDate = userBadge.earnedAt ? new Date(userBadge.earnedAt).toLocaleDateString() : 'N/A';
       const claimedStatus = userBadge.claimedAt ? 
-        `<span class="text-green-600">Récompense réclamée le ${new Date(userBadge.claimedAt).toLocaleDateString()}</span>` : 
+        `<span class="text-purple-600">Récompense réclamée le ${new Date(userBadge.claimedAt).toLocaleDateString()}</span>` : 
         `<button data-action="badges#claimReward" data-badge-id="${badge.id}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">Réclamer la récompense</button>`;
       
       html += `
@@ -176,7 +176,7 @@ export default class extends Controller {
     // Appliquer la classe en fonction du type
     notification.className = "notification p-4 rounded mb-4 ";
     if (type === "success") {
-      notification.className += "bg-green-100 text-green-800 border border-green-200";
+      notification.className += "bg-purple-100 text-purple-800 border border-purple-200";
     } else if (type === "error") {
       notification.className += "bg-red-100 text-red-800 border border-red-200";
     } else {

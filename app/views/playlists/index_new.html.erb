@@ -1,62 +1,6 @@
 <!-- Nouvelle vue des playlists avec système de catégories et thumbnails YouTube -->
 <style>
-  /* Styles critiques pour harmonisation avec page scores - DOIT être en haut */
-  @media (max-width: 1024px) {
-    .nav-content {
-      height: auto !important;
-      min-height: 47px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: space-between !important;
-    }
-    
-    .logo {
-      font-size: 1rem !important;
-      padding: 0.25rem !important;
-    }
-    
-    .logo img {
-      width: 24px !important;
-      height: 24px !important;
-    }
-  }
-  
-  /* Notification - garantir les mêmes dimensions que page scores */
-  #game-in-progress-notification {
-    max-width: 1200px !important;
-    margin: 1rem auto !important;
-    padding: 0 1rem !important;
-  }
-  
-  #game-in-progress-notification .flash-notice {
-    padding: 0.75rem 1rem !important;
-    font-size: 1rem !important;
-    margin-bottom: 1rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 1rem !important;
-    flex-wrap: wrap !important;
-    line-height: 1.5 !important;
-    box-sizing: border-box !important;
-    min-height: 48px !important;
-  }
-  
-  #game-in-progress-notification .flash-notice span {
-    font-size: 1rem !important;
-    flex: 1 !important;
-    min-width: 200px !important;
-    line-height: 1.5 !important;
-  }
-  
-  #game-in-progress-notification .flash-notice a {
-    font-size: 1rem !important;
-    padding: 0.5rem 1rem !important;
-    line-height: 1.5 !important;
-    white-space: nowrap !important;
-    flex-shrink: 0 !important;
-    text-decoration: none !important;
-  }
+  /* Styles spécifiques aux playlists uniquement - les styles de navigation sont dans le layout */
 </style>
 <div class="min-h-screen bg-gray-900 py-0">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,11 +26,12 @@
 
     <!-- Tags de catégories -->
     <div id="categories-section" class="mb-12">
-      <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 Par Catégorie</h2>
+      <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 <%= t('playlists.filters.by_category') %></h2>
       <div class="categories-grid mb-8">
         <% ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'].each do |category| %>
+          <% category_key = category.parameterize(separator: '_').underscore %>
           <button class="category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-category="<%= category %>">
-            <%= category %>
+            <%= t("playlists.categories.#{category_key}", default: category) %>
           </button>
         <% end %>
       </div>
@@ -99,7 +44,7 @@
       </div>
     <% end %>
     <% if flash[:notice] || params[:notice] %>
-      <div class="bg-green-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
+      <div class="bg-purple-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">
         <span><%= flash[:notice] || params[:notice] %></span>
       </div>
     <% end %>
@@ -159,7 +104,7 @@
                   <% elsif user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
                     <!-- Overlay pour indiquer que c'est déjà joué -->
                     <div class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center">
-                      <svg class="w-12 h-12 text-green-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                      <svg class="w-12 h-12 text-purple-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                       </svg>
                       <p class="text-white font-bold text-lg">Déjà jouée</p>
@@ -226,24 +171,24 @@
                               <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                               </svg>
-                              DÉBLOQUÉE
+                              <%= t('playlists.badges.unlocked') %>
                             </span>
                           <% else %>
                             <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #ff00ff !important; color: white !important; border: 3px solid #00ffff !important; box-shadow: 0 4px 8px rgba(255,0,255,0.5); font-size: 12px; padding: 3px 6px; min-width: fit-content;">
                               <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
                               </svg>
-                              PREMIUM
+                              <%= t('playlists.badges.premium') %>
                             </span>
                           <% end %>
                           
                           <!-- BADGE DÉJÀ JOUÉE -->
                           <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-                            <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #10b981 !important; color: white !important; border: 2px solid #34d399 !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
+                            <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #9333ea !important; color: white !important; border: 2px solid #c084fc !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
                               <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                               </svg>
-                              JOUÉE
+                              <%= t('playlists.badges.played') %>
                             </span>
                           <% end %>
                         </div>
@@ -252,21 +197,21 @@
                       <!-- Catégorie et sous-catégorie -->
                       <div class="flex gap-2 mb-2">
                         <% if playlist.category.present? %>
-                          <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: <%= is_unlocked ? '#34d399' : '#a78bfa' %> !important; border: 1px solid <%= is_unlocked ? '#10b981' : '#a855f7' %>;">
+                          <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: <%= is_unlocked ? '#c084fc' : '#a78bfa' %> !important; border: 1px solid <%= is_unlocked ? '#9333ea' : '#a855f7' %>;">
                             <%= playlist.category %>
                           </span>
                         <% end %>
                         <% if playlist.subcategory.present? %>
-                          <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: <%= is_unlocked ? '#34d399' : '#a78bfa' %> !important; border: 1px solid <%= is_unlocked ? '#10b981' : '#a855f7' %>;">
+                          <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: <%= is_unlocked ? '#c084fc' : '#a78bfa' %> !important; border: 1px solid <%= is_unlocked ? '#9333ea' : '#a855f7' %>;">
                             <%= playlist.subcategory %>
                           </span>
                         <% end %>
                       </div>
                       
-                      <p class="text-gray-300 text-sm line-clamp-2"><%= playlist.description %></p>
+                      <p class="text-gray-300 text-sm line-clamp-2"><%= translated_playlist_description(playlist) %></p>
                     </div>
                     <div class="flex items-center justify-between mt-2">
-                      <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
+                      <span class="text-gray-400 text-sm"><%= t('playlists.tracks_count', count: playlist.videos.count) %></span>
                       <% if can_access %>
                         <!-- Pas de bouton ici - la carte entière est cliquable -->
                       <% elsif user_signed_in? %>
@@ -301,7 +246,7 @@
       <% @standard_by_category.each do |category, playlists| %>
         <div class="mb-12">
           <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
-            <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-300 to-blue-400">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-pink-400">
               <%= category %>
             </span>
             <span class="text-sm font-normal text-gray-400 ml-2">
@@ -371,11 +316,11 @@
                       <h3 class="text-lg font-bold text-white"><%= playlist.title %></h3>
                       <!-- BADGE DÉJÀ JOUÉE -->
                       <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #10b981 !important; color: white !important; border: 2px solid #34d399 !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
+                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #9333ea !important; color: white !important; border: 2px solid #c084fc !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
                           <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                           </svg>
-                          JOUÉE
+                          <%= t('playlists.badges.played') %>
                         </span>
                       <% end %>
                     </div>
@@ -383,21 +328,21 @@
                     <!-- Catégorie et sous-catégorie -->
                     <div class="flex gap-2 mb-2">
                       <% if playlist.category.present? %>
-                        <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #34d399 !important; border: 1px solid #10b981;">
+                        <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #c084fc !important; border: 1px solid #9333ea;">
                           <%= playlist.category %>
                         </span>
                       <% end %>
                       <% if playlist.subcategory.present? %>
-                        <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #34d399 !important; border: 1px solid #10b981;">
+                        <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #c084fc !important; border: 1px solid #9333ea;">
                           <%= playlist.subcategory %>
                         </span>
                       <% end %>
                     </div>
                     
-                    <p class="text-gray-300 text-sm line-clamp-2"><%= playlist.description %></p>
+                    <p class="text-gray-300 text-sm line-clamp-2"><%= translated_playlist_description(playlist) %></p>
                   </div>
                   <div class="flex items-center justify-between mt-2">
-                    <span class="text-gray-400 text-sm"><%= pluralize(playlist.videos.count, 'titre') %></span>
+                    <span class="text-gray-400 text-sm"><%= t('playlists.tracks_count', count: playlist.videos.count) %></span>
                   </div>
                 </div>
               </div>
@@ -433,7 +378,7 @@
               <% else %>
                 <!-- Overlay pour indiquer que c'est déjà joué -->
                 <div class="absolute inset-0 bg-black/60 z-30 flex flex-col items-center justify-center">
-                  <svg class="w-12 h-12 text-green-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
+                  <svg class="w-12 h-12 text-purple-400 mb-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
                   <p class="text-white font-bold text-lg">Déjà jouée</p>
@@ -484,7 +429,7 @@
                       
                       <!-- BADGE DÉJÀ JOUÉE -->
                       <% if user_signed_in? && current_user.scores.exists?(playlist: playlist) %>
-                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #10b981 !important; color: white !important; border: 2px solid #34d399 !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
+                        <span class="inline-flex items-center text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="background-color: #9333ea !important; color: white !important; border: 2px solid #c084fc !important; box-shadow: 0 2px 4px rgba(16,185,129,0.3); font-size: 11px; padding: 2px 5px; min-width: fit-content;">
                           <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                           </svg>
@@ -497,12 +442,12 @@
                   <!-- Catégorie et sous-catégorie -->
                   <div class="flex gap-2 mb-2">
                     <% if playlist.category.present? %>
-                      <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #34d399 !important; border: 1px solid #10b981;">
+                      <span class="inline-block bg-gray-800 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #c084fc !important; border: 1px solid #9333ea;">
                         <%= playlist.category %>
                       </span>
                     <% end %>
                     <% if playlist.subcategory.present? %>
-                      <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #34d399 !important; border: 1px solid #10b981;">
+                      <span class="inline-block bg-gray-700 text-xs px-2 py-1 rounded font-medium uppercase tracking-wide" style="color: #c084fc !important; border: 1px solid #9333ea;">
                         <%= playlist.subcategory %>
                       </span>
                     <% end %>
@@ -512,7 +457,7 @@
                   <% user_score = current_user.scores.find_by(playlist: playlist) %>
                   <% if user_score %>
                     <div class="flex items-center mb-2 text-sm text-gray-300">
-                      <span class="bg-green-900 text-green-300 px-2 py-1 rounded mr-2">Score: <%= user_score.points %></span>
+                      <span class="bg-purple-900 text-purple-300 px-2 py-1 rounded mr-2">Score: <%= user_score.points %></span>
                       <span>Joué le <%= user_score.updated_at.strftime("%d/%m/%Y") %></span>
                     </div>
                   <% end %>

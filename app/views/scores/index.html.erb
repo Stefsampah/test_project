@@ -91,7 +91,7 @@
             <% end %>
           <% else %>
             <div class="col-span-full text-center text-gray-400 py-8">
-              <p>Aucun score disponible pour le moment.</p>
+              <p><%= t('scores.no_scores_available') %></p>
             </div>
           <% end %>
         </div>
@@ -105,7 +105,7 @@
           <svg class="w-5 h-5 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
           </svg>
-          Classement Complet
+          <%= t('scores.complete_ranking') %>
         </h2>
         
         <!-- Liste de tous les joueurs - Design équilibré -->
@@ -146,7 +146,7 @@
                       <div class="text-white font-medium truncate">
                         <%= user.email.split('@').first %>
                         <% if is_current_user %>
-                          <span class="ml-2 text-blue-400 text-xs">(Vous)</span>
+                          <span class="ml-2 text-blue-400 text-xs">(<%= t('scores.you_label') %>)</span>
                         <% end %>
                       </div>
                       <% if score[:badges].any? %>
@@ -158,14 +158,14 @@
                   <!-- Côté droit : Points -->
                   <div class="text-right flex-shrink-0 ml-3">
                     <div class="text-xl font-bold text-yellow-400"><%= points %></div>
-                    <div class="text-xs text-gray-400">points</div>
+                    <div class="text-xs text-gray-400"><%= t('scores.points_label_short') %></div>
                   </div>
                 </div>
               </div>
             <% end %>
           <% else %>
             <div class="text-center text-gray-400 py-8">
-              <p>Aucun score disponible pour le moment.</p>
+              <p><%= t('scores.no_scores_available') %></p>
             </div>
           <% end %>
         </div>
@@ -179,7 +179,7 @@
           <svg class="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
           </svg>
-          Catégories Spéciales
+          <%= t('scores.special_categories') %>
         </h2>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -187,7 +187,7 @@
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
               <span class="mr-2">⏱️</span>
-              Meilleurs Engagements
+              <%= t('scores.best_engagements') %>
             </h3>
             <div class="space-y-3">
               <% if @top_engager_scores.present? %>
@@ -205,7 +205,7 @@
                   </div>
                 <% end %>
               <% else %>
-                <p class="text-gray-400 text-sm">Aucun engagement disponible</p>
+                <p class="text-gray-400 text-sm"><%= t('scores.no_engagements') %></p>
               <% end %>
             </div>
           </div>
@@ -214,7 +214,7 @@
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
               <span class="mr-2">🎮</span>
-              Meilleurs Compétiteurs
+              <%= t('scores.best_competitors') %>
             </h3>
             <div class="space-y-3">
               <% if @best_ratio_scores.present? %>
@@ -223,7 +223,7 @@
                   <% next unless user %>
                   <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
                     <div class="flex items-center space-x-3">
-                      <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                         <%= index + 1 %>
                       </div>
                       <span class="text-white text-sm"><%= user.email.split('@').first %></span>
@@ -232,7 +232,7 @@
                   </div>
                 <% end %>
               <% else %>
-                <p class="text-gray-400 text-sm">Aucune régularité disponible</p>
+                <p class="text-gray-400 text-sm"><%= t('scores.no_competitors') %></p>
               <% end %>
             </div>
           </div>
@@ -241,7 +241,7 @@
           <div class="bg-gray-800 rounded-lg p-6">
             <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
               <span class="mr-2">🧠</span>
-              Meilleurs Critiques
+              <%= t('scores.best_critics') %>
             </h3>
             <div class="space-y-3">
               <% if @wise_critic_scores.present? %>
@@ -259,7 +259,7 @@
                   </div>
                 <% end %>
               <% else %>
-                <p class="text-gray-400 text-sm">Aucune critique disponible</p>
+                <p class="text-gray-400 text-sm"><%= t('scores.no_critics') %></p>
               <% end %>
             </div>
           </div>
@@ -274,7 +274,7 @@
           <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
           </svg>
-          Scores par Playlist
+          <%= t('scores.playlist_scores') %>
         </h2>
         
         <% if @scores_by_playlist.present? %>
@@ -288,7 +288,7 @@
                   </div>
                   <div class="text-right flex-shrink-0">
                     <div class="text-2xl font-bold text-cyan-400"><%= scores.map(&:user).uniq.count %></div>
-                    <div class="text-xs text-gray-400">joueurs</div>
+                    <div class="text-xs text-gray-400"><%= t('scores.players_label') %></div>
                   </div>
                 </div>
                 
@@ -320,7 +320,7 @@
           </div>
         <% else %>
           <div class="text-center text-gray-400 py-8">
-            <p>Aucun score par playlist disponible.</p>
+            <p><%= t('scores.no_playlist_scores') %></p>
           </div>
         <% end %>
       </div>
@@ -346,26 +346,26 @@
           <svg class="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
-          Mes Scores
+          <%= t('scores.my_scores_section') %>
         </h2>
         
         <!-- Détail du score global -->
         <div class="bg-gray-800 rounded-lg p-6 mb-8">
-          <h3 class="text-lg font-bold text-white mb-4 text-center">Détail du Score Global</h3>
+          <h3 class="text-lg font-bold text-white mb-4 text-center"><%= t('scores.global_score_detail') %></h3>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="text-center">
               <div class="text-2xl font-bold text-purple-400"><%= current_user.regularity_points %></div>
-              <div class="text-sm text-gray-300">Régularité</div>
-              <div class="text-xs text-gray-400">(<%= current_user.playlists_per_day %> playlists/jour × 20)</div>
+              <div class="text-sm text-gray-300"><%= t('scores.regularity') %></div>
+              <div class="text-xs text-gray-400">(<%= current_user.playlists_per_day %> <%= t('scores.playlists_per_day_label') %>)</div>
             </div>
             <div class="text-center">
-              <div class="text-2xl font-bold text-green-400"><%= current_user.listening_points %></div>
-              <div class="text-sm text-gray-300">Temps d'écoute</div>
+              <div class="text-2xl font-bold text-purple-400"><%= current_user.listening_points %></div>
+              <div class="text-sm text-gray-300"><%= t('scores.listening_time') %></div>
               <div class="text-xs text-gray-400">(<%= current_user.swipes.count %> swipes × 1.5)</div>
             </div>
             <div class="text-center">
               <div class="text-2xl font-bold text-purple-400"><%= current_user.critical_opinions_points %></div>
-              <div class="text-sm text-gray-300">Critique constructive</div>
+              <div class="text-sm text-gray-300"><%= t('scores.constructive_criticism') %></div>
               <div class="text-xs text-gray-400">(<%= current_user.likes_count + current_user.dislikes_count %> actions + bonus)</div>
             </div>
           </div>
@@ -376,15 +376,15 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
             <div class="bg-gray-800 rounded-lg p-4 text-center">
               <div class="text-3xl font-bold text-purple-400 mb-2"><%= @my_scores.count %></div>
-              <div class="text-gray-300 text-sm">Playlists jouées</div>
+              <div class="text-gray-300 text-sm"><%= t('scores.playlists_played') %></div>
             </div>
             <div class="bg-gray-800 rounded-lg p-4 text-center">
-              <div class="text-3xl font-bold text-green-400 mb-2"><%= current_user.game_points %></div>
-              <div class="text-gray-300 text-sm">Points totaux</div>
+              <div class="text-3xl font-bold text-purple-400 mb-2"><%= current_user.game_points %></div>
+              <div class="text-gray-300 text-sm"><%= t('scores.total_points') %></div>
             </div>
             <div class="bg-gray-800 rounded-lg p-4 text-center">
               <div class="text-3xl font-bold text-yellow-400 mb-2"><%= @my_scores.maximum(:points) || 0 %></div>
-              <div class="text-gray-300 text-sm">Meilleur score</div>
+              <div class="text-gray-300 text-sm"><%= t('scores.best_score') %></div>
             </div>
           </div>
 
@@ -398,21 +398,21 @@
                     <p class="text-gray-400 text-sm"><%= playlist.genre %></p>
                   </div>
                   <div class="text-right">
-                    <div class="text-2xl font-bold text-purple-400"><%= scores.first.points %></div>
-                    <div class="text-xs text-gray-400">points</div>
+                  <div class="text-2xl font-bold text-purple-400"><%= scores.first.points %></div>
+                  <div class="text-xs text-gray-400"><%= t('scores.points_label_short') %></div>
                   </div>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-300">
-                  <span>Joué le <%= scores.first.updated_at.strftime("%d/%m/%Y") %></span>
-                  <span><%= pluralize(playlist.videos.count, 'titre') %></span>
+                  <span><%= t('scores.played_on', date: scores.first.updated_at.strftime('%d/%m/%Y')) %></span>
+                  <span><%= t('scores.tracks_count', count: playlist.videos.count) %></span>
                 </div>
               </div>
             <% end %>
           </div>
         <% else %>
           <div class="text-center text-gray-400 py-8">
-            <p>Vous n'avez pas encore de scores. Commencez à jouer pour voir vos résultats ici !</p>
+            <p><%= t('scores.no_my_scores') %></p>
           </div>
         <% end %>
       </div>
@@ -422,17 +422,17 @@
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
       <button onclick="window.location.href='<%= playlists_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none transform hover:scale-105">
-        <span>🎵 Jouer</span>
+        <span>🎵 <%= t('playlists.play') %></span>
       </button>
       
       <button onclick="window.location.href='<%= my_badges_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-yellow-600 hover:bg-yellow-700 transition-all focus:outline-none transform hover:scale-105">
-        <span>🏅 Mes Badges</span>
+        <span>🏅 <%= t('badges.my_badges') %></span>
       </button>
       
       <button onclick="window.location.href='<%= profile_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all focus:outline-none transform hover:scale-105">
-        <span>👤 Mon Profil</span>
+        <span>👤 <%= t('nav.profile') %></span>
       </button>
     </div>
 <style>

@@ -105,7 +105,7 @@ class RewardsController < ApplicationController
         title: 'My Afro Culture',
         description: 'Blog culturel sur les talents émergents (Himra, Widgunz, SK07, Ramba Junior, Agato, Mister Christ)',
         icon: '📝',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://myafroculture.com/les-6-rappeurs-ivoiriens-qui-montent/',
         link_text: 'Voir le contenu',
         type: 'Blog et Média'
@@ -165,7 +165,7 @@ class RewardsController < ApplicationController
         title: 'Bandcamp Daily',
         description: 'Blog qui explore les scènes locales et underground aux États-Unis, avec des focus régionaux',
         icon: '📝',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://daily.bandcamp.com/',
         link_text: 'Voir le contenu',
         type: 'Blog et Média'
@@ -249,7 +249,7 @@ class RewardsController < ApplicationController
         title: 'La Télé d\'Ici',
         description: 'Zoh Cataleya et Serge Dioman - Discussion sur son parcours et ses engagements',
         icon: '🎬',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://www.youtube.com/watch?v=K3I1WR1zhAQ',
         link_text: 'Regarder le documentaire',
         type: 'Documentaire'
@@ -279,7 +279,7 @@ class RewardsController < ApplicationController
         title: 'Country Music – Une histoire populaire des États-Unis',
         description: 'Réalisé par Ken Burns, ce documentaire retrace l\'évolution du genre country à travers les décennies',
         icon: '🎬',
-        color: 'from-yellow-400 to-green-500',
+        color: 'from-yellow-400 to-purple-500',
         link: 'https://www.arte.tv/fr/videos/113630-009-A/country-music-une-histoire-populaire-des-etats-unis-9-9/',
         link_text: 'Voir le documentaire',
         type: 'Documentaire'
@@ -321,7 +321,7 @@ class RewardsController < ApplicationController
         title: 'ZOH CATALEYA - LIVE TOURA DRILL 1',
         description: 'Performance live proche d\'une session studio',
         icon: '🎹',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://www.youtube.com/watch?v=e0sVW6DjgbU',
         link_text: 'Regarder la session',
         type: 'Session Studio'
@@ -361,7 +361,7 @@ class RewardsController < ApplicationController
         title: 'VOICI COMMENT DIDI B ENREGISTRE SES SONG',
         description: 'Session studio générale incluant Rodela',
         icon: '🎹',
-        color: 'from-green-400 to-blue-500',
+        color: 'from-purple-400 to-blue-500',
         link: 'https://www.youtube.com/watch?v=YCs4vMwOVwc',
         link_text: 'Regarder la session',
         type: 'Session Studio'
@@ -391,7 +391,7 @@ class RewardsController < ApplicationController
         title: 'Timar feat. ZZ - Lequel',
         description: 'EXCLU - Session studio exclusive',
         icon: '🎹',
-        color: 'from-blue-400 to-green-500',
+        color: 'from-blue-400 to-purple-500',
         link: 'https://www.youtube.com/watch?v=umTlEIX0GFI',
         link_text: 'Regarder la session',
         type: 'Session Studio'

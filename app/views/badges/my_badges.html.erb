@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">Mes Badges</h1>
+      <h1 class="text-2xl font-bold text-white"><%= t('badges.my_badges') %></h1>
     </div>
 
     <!-- Navigation entre les pages de badges -->
@@ -10,11 +10,11 @@
       <div class="inline-flex rounded-md shadow-sm" role="group">
         <button onclick="window.location.href='<%= my_badges_path %>'" 
             class="px-6 py-3 text-sm font-medium rounded-l-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none">
-          Mes badges
+          <%= t('badges.my_badges') %>
         </button>
         <button onclick="window.location.href='<%= all_badges_path %>'" 
             class="px-6 py-3 text-sm font-medium rounded-r-lg text-white bg-gray-700 hover:bg-gray-600 focus:outline-none">
-          Tous les badges
+          <%= t('badges.all_badges') %>
         </button>
       </div>
     </div>
@@ -23,23 +23,23 @@
 
     <!-- Statistiques des badges -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 mb-8">
-      <h2 class="text-2xl font-bold text-white mb-4">📊 Statistiques des Badges</h2>
+      <h2 class="text-2xl font-bold text-white mb-4">📊 <%= t('badges.statistics') %></h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg p-4 text-center">
           <div class="text-2xl font-bold text-white"><%= @bronze_count || 0 %></div>
-          <div class="text-sm text-gray-200">Bronze</div>
+          <div class="text-sm text-gray-200"><%= t('badges.levels.bronze') %></div>
         </div>
         <div class="bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg p-4 text-center">
           <div class="text-2xl font-bold text-white"><%= @silver_count || 0 %></div>
-          <div class="text-sm text-gray-200">Silver</div>
+          <div class="text-sm text-gray-200"><%= t('badges.levels.silver') %></div>
         </div>
         <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-lg p-4 text-center">
           <div class="text-2xl font-bold text-white"><%= @gold_count || 0 %></div>
-          <div class="text-sm text-gray-200">Gold</div>
+          <div class="text-sm text-gray-200"><%= t('badges.levels.gold') %></div>
         </div>
         <div class="bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg p-4 text-center">
           <div class="text-2xl font-bold text-white"><%= @total_badges || 0 %></div>
-          <div class="text-sm text-gray-200">Total</div>
+          <div class="text-sm text-gray-200"><%= t('badges.total') %></div>
         </div>
       </div>
     </div>
@@ -47,7 +47,7 @@
     <!-- Badges de l'utilisateur -->
     <div class="mb-12">
       <div class="bg-gradient-to-r from-amber-600 to-red-600 rounded-lg p-6 mb-8">
-        <h2 class="text-2xl font-light text-white mb-6">Mes badges obtenus</h2>
+        <h2 class="text-2xl font-light text-white mb-6"><%= t('badges.my_earned_badges') %></h2>
         <% if @user_badges.any? %>
           <div class="badge-container">
             <% @user_badges.each do |user_badge| %>
@@ -81,14 +81,14 @@
                 </div>
                 <div class="badge-name"><%= badge.name %></div>
                 <div class="badge-level"><%= badge.level.capitalize %></div>
-                <div class="badge-points"><%= badge.points_required %> points</div>
-                <div class="badge-earned">Obtenu le <%= user_badge.earned_at.strftime("%d/%m/%Y") %></div>
+                <div class="badge-points"><%= t('badges.points_label', count: badge.points_required) %></div>
+                <div class="badge-earned"><%= t('badges.earned_on', date: user_badge.earned_at.strftime("%d/%m/%Y")) %></div>
               </button>
             <% end %>
           </div>
         <% else %>
           <div class="empty-badges">
-            <p>Vous n'avez pas encore obtenu de badges. Continuez à jouer pour en gagner !</p>
+            <p><%= t('badges.no_badges_yet') %></p>
           </div>
         <% end %>
       </div>

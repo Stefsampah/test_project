@@ -34,6 +34,10 @@ class ApplicationController < ActionController::Base
     redirect_back(fallback_location: root_path)
   end
 
+  def default_url_options
+    super.merge(locale: I18n.locale)
+  end
+
   def sign_out_redirect
     # Utiliser sanitize au lieu de html_safe pour plus de sécurité
     render html: sanitize("

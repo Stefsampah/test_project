@@ -2,29 +2,29 @@
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête avec logo -->
     <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white">🏆 Récompenses</h1>
+      <h1 class="text-2xl font-bold text-white">🏆 <%= t('rewards.title') %></h1>
     </div>
 
     <!-- Navigation moderne -->
     <div class="flex justify-center mb-8">
       <div class="flex space-x-2">
-        <%= link_to "Mes récompenses", my_rewards_path, 
+        <%= link_to t('rewards.my_rewards'), my_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors" %>
-        <%= link_to "Toutes les récompenses", all_rewards_path, 
+        <%= link_to t('rewards.all_rewards'), all_rewards_path, 
             class: "px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" %>
       </div>
     </div>
 
     <!-- Bouton pour vérifier les récompenses -->
     <div class="text-center mb-8">
-      <%= link_to "Vérifier mes récompenses", unlock_rewards_path, method: :post, 
+      <%= link_to t('rewards.check_my_rewards'), unlock_rewards_path, method: :post, 
           class: "bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200" %>
     </div>
 
     <!-- Mes récompenses débloquées -->
     <div class="mb-12">
       <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 mb-8">
-        <h2 class="text-2xl font-bold text-white mb-6">🎉 Mes récompenses débloquées</h2>
+        <h2 class="text-2xl font-bold text-white mb-6">🎉 <%= t('rewards.my_unlocked_rewards') %></h2>
         
         <% if @unlocked_rewards.any? %>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -32,14 +32,14 @@
               <div class="reward-card bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg transform hover:scale-105 transition-all duration-200 h-full flex flex-col">
                 <!-- Bannière avec image ou dégradé -->
                 <div class="h-48 relative">
-                  <div class="w-full h-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
+                  <div class="w-full h-full bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center">
                     <div class="text-white text-4xl">🏆</div>
                   </div>
                   <div class="absolute top-3 left-3">
                     <span class="bg-white/20 text-white text-xs px-2 py-1 rounded-full">NEW!</span>
                   </div>
                   <div class="absolute top-3 right-3">
-                    <span class="bg-green-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
+                    <span class="bg-purple-500 text-white text-xs px-2 py-1 rounded-full">DÉBLOQUÉ</span>
                   </div>
                 </div>
                 
@@ -77,7 +77,7 @@
                       <div class="text-gray-400 text-xs">points</div>
                     </div>
                     <%= link_to reward_path(reward), class: "text-blue-400 hover:text-blue-300 text-sm flex items-center" do %>
-                      Voir détails →
+                      <%= t('rewards.view_details') %> →
                     <% end %>
                   </div>
                 </div>
@@ -87,8 +87,8 @@
         <% else %>
           <div class="text-center py-12 bg-white/10 backdrop-blur-sm rounded-xl">
             <div class="text-6xl mb-4">🎯</div>
-            <h3 class="text-xl font-bold text-white mb-2">Aucune récompense débloquée</h3>
-            <p class="text-gray-300">Collectez des badges pour débloquer vos premières récompenses !</p>
+            <h3 class="text-xl font-bold text-white mb-2"><%= t('rewards.no_rewards_unlocked') %></h3>
+            <p class="text-gray-300"><%= t('rewards.collect_badges_message') %></p>
           </div>
         <% end %>
       </div>
@@ -96,7 +96,7 @@
 
     <!-- Statistiques -->
     <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-      <h2 class="text-2xl font-bold text-white mb-4">📊 Mes statistiques</h2>
+      <h2 class="text-2xl font-bold text-white mb-4">📊 <%= t('rewards.my_statistics') %></h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         <% @badge_counts.each do |badge_type, count| %>
           <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-4 text-center">

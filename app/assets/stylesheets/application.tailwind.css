@@ -52,7 +52,7 @@
   }
 
   .flash-notice {
-    @apply bg-green-50 p-4 rounded-md flex items-center;
+    @apply bg-purple-50 p-4 rounded-md flex items-center;
   }
 
   .flash-alert {
