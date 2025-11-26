@@ -28,5 +28,8 @@ module TestProject
     config.i18n.available_locales = [:fr, :en]
     config.i18n.default_locale = :fr
     config.i18n.fallbacks = true
+    
+    # Charger automatiquement les services
+    config.autoload_paths += %W(#{config.root}/app/services)
   end
 end

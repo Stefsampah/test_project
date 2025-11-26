@@ -28,12 +28,19 @@ class PayPalService
   def self.create_payment(amount:, currency: 'EUR', description:, return_url:, cancel_url:, metadata: {})
     # Vérifier si PayPal est configuré
     if Rails.configuration.paypal[:client_id].blank? || Rails.configuration.paypal[:client_secret].blank?
-      Rails.logger.error "PayPal non configuré - Mode simulation activé"
-      return { success: false, mode: 'simulation' }
+      Rails.logger.error "❌ PayPal non configuré - impossible de créer un paiement"
+      Rails.logger.error "Client ID présent: #{Rails.configuration.paypal[:client_id].present?}"
+      Rails.logger.error "Client Secret présent: #{Rails.configuration.paypal[:client_secret].present?}"
+      return { success: false, error: 'PayPal non configuré' }
     end
 
+    Rails.logger.info "🔑 Obtention du token PayPal..."
     access_token = get_access_token
-    return { success: false, error: 'Impossible d\'obtenir le token PayPal' } unless access_token
+    unless access_token
+      Rails.logger.error "❌ Impossible d'obtenir le token PayPal"
+      return { success: false, error: 'Impossible d\'obtenir le token PayPal' }
+    end
+    Rails.logger.info "✅ Token PayPal obtenu"
 
     begin
       uri = URI("#{Rails.configuration.paypal[:base_url]}/v1/payments/payment")
@@ -64,7 +71,13 @@ class PayPalService
       request['Authorization'] = "Bearer #{access_token}"
       request.body = payment_data.to_json
 
+      Rails.logger.info "📤 Envoi de la requête PayPal à: #{uri.path}"
+      Rails.logger.debug "Données du paiement: #{payment_data.to_json}"
+      
       response = http.request(request)
+      
+      Rails.logger.info "📥 Réponse PayPal - Code: #{response.code}"
+      Rails.logger.debug "Réponse PayPal: #{response.body}"
       
       if response.code == '201'
         data = JSON.parse(response.body)
@@ -74,7 +87,8 @@ class PayPalService
         approval_link = data['links'].find { |link| link['rel'] == 'approval_url' }
         
         if approval_link
-          Rails.logger.info "Paiement PayPal créé: #{payment_id}"
+          Rails.logger.info "✅ Paiement PayPal créé: #{payment_id}"
+          Rails.logger.info "🔗 URL d'approbation: #{approval_link['href']}"
           return {
             success: true,
             payment_id: payment_id,
@@ -82,15 +96,23 @@ class PayPalService
             mode: Rails.configuration.paypal[:mode]
           }
         else
-          Rails.logger.error "URL d'approbation PayPal introuvable"
+          Rails.logger.error "❌ URL d'approbation PayPal introuvable dans la réponse"
+          Rails.logger.error "Links disponibles: #{data['links']&.map { |l| l['rel'] }&.inspect}"
           return { success: false, error: 'URL d\'approbation introuvable' }
         end
       else
-        Rails.logger.error "Erreur création paiement PayPal: #{response.body}"
-        return { success: false, error: response.body }
+        error_data = begin
+          JSON.parse(response.body)
+        rescue
+          response.body
+        end
+        Rails.logger.error "❌ Erreur création paiement PayPal (Code #{response.code}): #{error_data}"
+        error_message = error_data.is_a?(Hash) ? (error_data['message'] || error_data['name'] || response.body) : response.body
+        return { success: false, error: error_message }
       end
     rescue => e
-      Rails.logger.error "Erreur PayPal: #{e.message}"
+      Rails.logger.error "❌ Exception PayPal: #{e.class} - #{e.message}"
+      Rails.logger.error e.backtrace.first(5).join("\n")
       return { success: false, error: e.message }
     end
   end

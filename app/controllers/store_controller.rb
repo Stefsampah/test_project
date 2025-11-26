@@ -40,24 +40,21 @@ class StoreController < ApplicationController
     
     if @selected_pack
       begin
-        # Vérifier si PayPal est configuré
-        if Rails.configuration.paypal[:client_id].blank? || Rails.configuration.paypal[:client_secret].blank?
-          # Mode simulation - simuler l'achat
-          current_points = current_user.points || 0
-          new_points = current_points + @selected_pack[:points]
-          current_user.update!(points: new_points)
-          
-          Rails.logger.info "Simulation d'achat: User #{current_user.id} a acheté #{@selected_pack[:points]} points pour #{@selected_pack[:price]}€"
-          
-          redirect_to store_path, notice: t('store.messages.purchase_simulated', points: new_points)
-        else
+        if paypal_configured?
           # Mode réel - utiliser PayPal
-          result = PayPalService.create_payment(
+          # PayPal nécessite des URLs absolues
+          return_url = store_execute_url(payment_type: 'points', pack_id: pack_id, locale: I18n.locale, only_path: false)
+          cancel_url = store_cancel_url(locale: I18n.locale, only_path: false)
+          
+          Rails.logger.info "Création paiement PayPal - Pack: #{pack_id}, Montant: #{@selected_pack[:price]}€, User: #{current_user.id}"
+          Rails.logger.debug "Return URL: #{return_url}, Cancel URL: #{cancel_url}"
+          
+          result = ::PayPalService.create_payment(
             amount: @selected_pack[:price],
             currency: 'EUR',
             description: @selected_pack[:name],
-            return_url: store_execute_url(payment_type: 'points', pack_id: pack_id),
-            cancel_url: store_cancel_url,
+            return_url: return_url,
+            cancel_url: cancel_url,
             metadata: {
               user_id: current_user.id,
               pack_id: pack_id,
@@ -72,11 +69,25 @@ class StoreController < ApplicationController
             session[:paypal_pack_id] = pack_id
             session[:paypal_points] = @selected_pack[:points]
             
+            Rails.logger.info "Redirection vers PayPal: #{result[:approval_url]}"
             redirect_to result[:approval_url], allow_other_host: true
           else
-            Rails.logger.error "Erreur création paiement PayPal: #{result[:error]}"
-            redirect_to store_path, alert: t('store.messages.purchase_error')
+            Rails.logger.error "❌ Erreur création paiement PayPal: #{result[:error]}"
+            Rails.logger.error "Détails: #{result.inspect}"
+            redirect_to store_path, alert: "❌ Erreur lors de l'achat: #{result[:error]}. Veuillez réessayer."
           end
+        elsif current_user.admin?
+          # Mode simulation réservé aux administrateurs
+          current_points = current_user.points || 0
+          new_points = current_points + @selected_pack[:points]
+          current_user.update!(points: new_points)
+          
+          Rails.logger.info "Simulation d'achat administrateur: User #{current_user.id} a ajouté #{@selected_pack[:points]} points (#{@selected_pack[:price]}€)"
+          
+          redirect_to store_path, notice: t('store.messages.purchase_simulated', points: new_points)
+        else
+          Rails.logger.error "PayPal non configuré pour l'achat de points"
+          redirect_to store_path, alert: t('store.messages.paypal_not_configured')
         end
       rescue => e
         Rails.logger.error "Erreur PayPal: #{e.message}"
@@ -92,22 +103,21 @@ class StoreController < ApplicationController
     
     if subscription_type == "vip"
       begin
-        # Vérifier si PayPal est configuré
-        if Rails.configuration.paypal[:client_id].blank? || Rails.configuration.paypal[:client_secret].blank?
-          # Mode simulation - simuler l'achat
-          current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
-          
-          Rails.logger.info "Simulation d'abonnement VIP: User #{current_user.id} a acheté un abonnement VIP pour 9.99€"
-          
-          redirect_to playlists_path, notice: t('store.messages.vip_subscription_simulated').html_safe
-        else
+        if paypal_configured?
           # Mode réel - utiliser PayPal
-          result = PayPalService.create_payment(
+          # PayPal nécessite des URLs absolues
+          return_url = store_execute_url(payment_type: 'subscription', subscription_type: 'vip', locale: I18n.locale, only_path: false)
+          cancel_url = store_cancel_url(locale: I18n.locale, only_path: false)
+          
+          Rails.logger.info "Création paiement PayPal VIP - User: #{current_user.id}, Montant: 9.99€"
+          Rails.logger.debug "Return URL: #{return_url}, Cancel URL: #{cancel_url}"
+          
+          result = ::PayPalService.create_payment(
             amount: 9.99,
             currency: 'EUR',
             description: t('store.subscriptions.vip.name'),
-            return_url: store_execute_url(payment_type: 'subscription', subscription_type: 'vip'),
-            cancel_url: store_cancel_url,
+            return_url: return_url,
+            cancel_url: cancel_url,
             metadata: {
               user_id: current_user.id,
               subscription_type: 'vip',
@@ -120,11 +130,23 @@ class StoreController < ApplicationController
             session[:paypal_payment_id] = result[:payment_id]
             session[:paypal_subscription_type] = 'vip'
             
+            Rails.logger.info "Redirection vers PayPal: #{result[:approval_url]}"
             redirect_to result[:approval_url], allow_other_host: true
           else
-            Rails.logger.error "Erreur création paiement PayPal: #{result[:error]}"
-            redirect_to store_path, alert: t('store.messages.subscription_error')
+            Rails.logger.error "❌ Erreur création paiement PayPal VIP: #{result[:error]}"
+            Rails.logger.error "Détails: #{result.inspect}"
+            redirect_to store_path, alert: "❌ Erreur lors de l'achat: #{result[:error]}. Veuillez réessayer."
           end
+        elsif current_user.admin?
+          # Mode simulation réservé aux administrateurs
+          current_user.update!(vip_subscription: true, vip_expires_at: 1.month.from_now)
+          
+          Rails.logger.info "Simulation d'abonnement VIP par un administrateur: User #{current_user.id} a activé le VIP pour 9.99€"
+          
+          redirect_to playlists_path, notice: t('store.messages.vip_subscription_simulated').html_safe
+        else
+          Rails.logger.error "PayPal non configuré pour l'abonnement VIP"
+          redirect_to store_path, alert: t('store.messages.paypal_not_configured')
         end
       rescue => e
         Rails.logger.error "Erreur PayPal: #{e.message}"
@@ -199,7 +221,7 @@ class StoreController < ApplicationController
     end
     
     begin
-      result = PayPalService.execute_payment(payment_id: payment_id, payer_id: payer_id)
+      result = ::PayPalService.execute_payment(payment_id: payment_id, payer_id: payer_id)
       
       if result[:success]
         # Traiter le paiement selon le type
@@ -247,6 +269,11 @@ class StoreController < ApplicationController
     end
   end
 
+  # Page d'annulation de paiement
+  def cancel
+    redirect_to store_path, alert: t('store.messages.payment_cancelled')
+  end
+
   private
 
   def get_points_for_pack(pack_id)
@@ -259,14 +286,11 @@ class StoreController < ApplicationController
     packs[pack_id.to_s] || 0
   end
 
-  # Page d'annulation de paiement
-  def cancel
-    redirect_to store_path, alert: t('store.messages.payment_cancelled')
+  def paypal_configured?
+    Rails.configuration.paypal[:client_id].present? && Rails.configuration.paypal[:client_secret].present?
   end
-
-  private
 
   def set_user_points
     @user_points = current_user.total_points || 0
   end
-end 
+end

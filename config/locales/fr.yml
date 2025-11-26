@@ -379,6 +379,7 @@ fr:
       payment_cancelled: "❌ Paiement annulé"
       invalid_playlist: "❌ Playlist invalide"
       playlist_not_found: "❌ Playlist introuvable"
+      paypal_not_configured: "❌ Les paiements sont temporairement indisponibles. Contactez un administrateur."
   
   # Profile
   profile:
