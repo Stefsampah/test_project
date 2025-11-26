@@ -160,10 +160,16 @@
       <!-- Vrais badges du jeu avec format identique à la page badges -->
       <div class="badge-container-home">
         <% 
-          # Utiliser les vrais badges du jeu depuis la base de données
-          real_badges = Badge.limit(4)
+          # Vérifier si la table badges existe
+          badges_table_exists = ActiveRecord::Base.connection.table_exists?('badges')
+          if badges_table_exists
+            real_badges = Badge.limit(4)
+          else
+            real_badges = []
+          end
         %>
-        <% real_badges.each do |badge| %>
+        <% if real_badges.any? %>
+          <% real_badges.each do |badge| %>
           <% 
             badge_class = "badge-card-home #{badge.badge_type}"
             badge_class += " bronze" if badge.level == "bronze"
@@ -194,6 +200,12 @@
             <div class="badge-name-home"><%= badge.name %></div>
             <div class="badge-level-home"><%= badge.level.upcase %></div>
             <div class="badge-points-home"><%= t('badges.points_label', count: badge.points_required) %></div>
+          </div>
+          <% end %>
+        <% else %>
+          <!-- Message si aucun badge n'est disponible -->
+          <div class="text-center text-gray-400 py-8">
+            <p>Les badges seront disponibles prochainement</p>
           </div>
         <% end %>
       </div>
