@@ -415,3 +415,9 @@ fr:
     back: "Retour"
     next: "Suivant"
     previous: "Précédent"
+
+  # ActiveRecord
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "La validation a échoué : %{errors}"
