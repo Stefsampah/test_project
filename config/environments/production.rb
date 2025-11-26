@@ -27,6 +27,9 @@ Rails.application.configure do
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
 
+  # Disable CSS compression to avoid Sass issues with modern CSS syntax (Tailwind)
+  config.assets.css_compressor = nil
+
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
