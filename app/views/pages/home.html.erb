@@ -54,47 +54,53 @@
       <!-- Vraies playlists du jeu - carte custom home (2 colonnes, vignettes agrandies) -->
       <div class="playlists-grid-home">
         <% 
-          # Vérifier si la colonne category existe
-          category_column_exists = Playlist.column_names.include?('category')
-          
-          # 4 catégories distinctes sans doublons
-          requested_categories = ["ROCK", "POP", "HITS", "HIP HOP"]
-          selected = []
-          used_ids = []
-          used_categories = []
-          
-          if category_column_exists
-            # D'abord, essayer de prendre une playlist de chaque catégorie demandée
-            requested_categories.each do |cat|
-              pl = Playlist.where("upper(category) = ?", cat).where.not(id: used_ids).first
-              if pl && pl.category.present? && !used_categories.include?(pl.category.upcase)
-                selected << pl
-                used_ids << pl.id
-                used_categories << pl.category.upcase
+          begin
+            # Vérifier si la colonne category existe
+            category_column_exists = Playlist.column_names.include?('category')
+            
+            # 4 catégories distinctes sans doublons
+            requested_categories = ["ROCK", "POP", "HITS", "HIP HOP"]
+            selected = []
+            used_ids = []
+            used_categories = []
+            
+            if category_column_exists
+              # D'abord, essayer de prendre une playlist de chaque catégorie demandée
+              requested_categories.each do |cat|
+                pl = Playlist.where("upper(category) = ?", cat).where.not(id: used_ids).first
+                if pl && pl.category.present? && !used_categories.include?(pl.category.upcase)
+                  selected << pl
+                  used_ids << pl.id
+                  used_categories << pl.category.upcase
+                end
               end
+              
+              # Si on n'a pas 4 playlists, compléter avec d'autres catégories
+              if selected.size < 4
+                remaining = 4 - selected.size
+                fallback_playlists = Playlist.where.not(id: used_ids)
+                                            .where.not("upper(category) IN (?)", used_categories)
+                                            .limit(remaining)
+                
+                fallback_playlists.each do |pl|
+                  selected << pl
+                  used_ids << pl.id
+                  used_categories << (pl.category&.upcase || 'OTHER')
+                end
+              end
+            else
+              # Si category n'existe pas, prendre simplement 4 playlists
+              selected = Playlist.limit(4).to_a
             end
             
-            # Si on n'a pas 4 playlists, compléter avec d'autres catégories
-            if selected.size < 4
-              remaining = 4 - selected.size
-              fallback_playlists = Playlist.where.not(id: used_ids)
-                                          .where.not("upper(category) IN (?)", used_categories)
-                                          .limit(remaining)
-              
-              fallback_playlists.each do |pl|
-                selected << pl
-                used_ids << pl.id
-                used_categories << (pl.category&.upcase || 'OTHER')
-              end
-            end
-          else
-            # Si category n'existe pas, prendre simplement 4 playlists
-            selected = Playlist.limit(4).to_a
+            real_playlists = selected
+          rescue => e
+            Rails.logger.error "Erreur lors de la récupération des playlists: #{e.message}"
+            real_playlists = []
           end
-          
-          real_playlists = selected
         %>
-        <% real_playlists.each do |playlist| %>
+        <% if real_playlists.any? %>
+          <% real_playlists.each do |playlist| %>
           <div class="playlist-item-home">
             <div class="text-center mb-2">
               <div class="playlist-category-title"><%= (playlist.respond_to?(:category) && playlist.category.presence) ? playlist.category.upcase : (playlist.genre.presence || 'HITS').upcase %></div>

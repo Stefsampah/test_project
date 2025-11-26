@@ -7,7 +7,6 @@ admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
     user.password = '123456'
     user.admin = true
   end
-  admin.update!(admin: true) unless admin.admin?
   
   # Création d'un utilisateur normal
   user = User.find_or_create_by!(email: 'user@example.com') do |user|
