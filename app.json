@@ -18,13 +18,17 @@
       "description": "Clé secrète Rails pour la production",
       "generator": "secret"
     },
-    "STRIPE_PUBLISHABLE_KEY": {
-      "description": "Clé publique Stripe (pk_live_... ou pk_test_...)",
-      "value": "pk_test_EXEMPLE_STRIPE_PUBLISHABLE_KEY"
+    "PAYPAL_CLIENT_ID": {
+      "description": "Client ID PayPal (sandbox ou live)",
+      "value": "votre_client_id_paypal"
     },
-    "STRIPE_SECRET_KEY": {
-      "description": "Clé secrète Stripe (sk_live_... ou sk_test_...)",
-      "value": "sk_test_EXEMPLE_STRIPE_SECRET_KEY"
+    "PAYPAL_CLIENT_SECRET": {
+      "description": "Client Secret PayPal (sandbox ou live)",
+      "value": "votre_client_secret_paypal"
+    },
+    "PAYPAL_MODE": {
+      "description": "Mode PayPal (sandbox ou live)",
+      "value": "sandbox"
     }
   },
   "formation": {
