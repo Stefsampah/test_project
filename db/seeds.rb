@@ -2,19 +2,18 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# Création d'un utilisateur admin (seulement si n'existe pas déjà)
-admin = User.find_by(email: 'admin@tubenplay.com')
-unless admin
-  admin = User.create!(email: 'admin@tubenplay.com', password: '123456', admin: true)
-end
-admin.update!(admin: true) unless admin.admin?
-
-# Création d'un utilisateur normal (seulement si n'existe pas déjà)
-user = User.find_by(email: 'user@tubenplay.com')
-unless user
-  user = User.create!(email: 'user@tubenplay.com', password: '234567')
-end
-
+# Création d'un utilisateur admin
+admin = User.find_or_create_by!(email: 'admin@example.com') do |user|
+    user.password = '123456'
+    user.admin = true
+  end
+  admin.update!(admin: true) unless admin.admin?
+  
+  # Création d'un utilisateur normal
+  user = User.find_or_create_by!(email: 'user@example.com') do |user|
+    user.password = '234567'
+  end
+  
 puts "✅ Utilisateurs créés"
 
 # ===========================================

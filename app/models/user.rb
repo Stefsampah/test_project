@@ -422,19 +422,7 @@ class User < ApplicationRecord
   def email_domain_validity
     return unless email.present?
 
-    # Domaines invalides courants à rejeter
-    invalid_domains = [
-      'example.com',
-      'test.com',
-      'invalid.com',
-      'localhost',
-      'domain.com'
-    ]
-
     domain = email.split('@').last&.downcase
-    if domain && invalid_domains.include?(domain)
-      errors.add(:email, "ne peut pas utiliser le domaine #{domain}")
-    end
 
     # Vérifier que le domaine a au moins un point (ex: gmail.com)
     if domain && !domain.include?('.')
