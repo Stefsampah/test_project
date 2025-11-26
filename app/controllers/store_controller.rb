@@ -3,11 +3,13 @@ class StoreController < ApplicationController
   before_action :set_user_points, only: [:index, :buy_playlist]
 
   def index
+    @active_tab = params[:tab] || 'store'
+    
     @point_packs = [
-      { name: t('store.packs.pack_100.name'), price: 0.99, points: 100, description: t('store.packs.pack_100.description') },
-      { name: t('store.packs.pack_500.name'), price: 1.99, points: 500, description: t('store.packs.pack_500.description') },
-      { name: t('store.packs.pack_1000.name'), price: 3.99, points: 1000, description: t('store.packs.pack_1000.description') },
-      { name: t('store.packs.pack_5000.name'), price: 4.99, points: 5000, description: t('store.packs.pack_5000.description') }
+      { id: 0, name: t('store.packs.pack_100.name'), price: 0.99, points: 100, description: t('store.packs.pack_100.description') },
+      { id: 1, name: t('store.packs.pack_500.name'), price: 1.99, points: 500, description: t('store.packs.pack_500.description') },
+      { id: 2, name: t('store.packs.pack_1000.name'), price: 3.99, points: 1000, description: t('store.packs.pack_1000.description') },
+      { id: 3, name: t('store.packs.pack_5000.name'), price: 4.99, points: 5000, description: t('store.packs.pack_5000.description') }
     ]
 
     @subscriptions = [
@@ -25,6 +27,42 @@ class StoreController < ApplicationController
     
     @unlocked_playlists = current_user.user_playlist_unlocks.includes(:playlist).map(&:playlist)
     @unlocked_exclusive_playlists = [] # Pas de playlists exclusives dans la boutique
+    
+    # Données pour "Ma boutique"
+    if @active_tab == 'my_store'
+      # Vérifier si l'utilisateur a un abonnement VIP actif
+      vip_active = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
+      
+      # Playlists achetées
+      @purchased_playlists = current_user.unlocked_playlists.includes(:videos).order(created_at: :desc)
+      
+      # Si l'utilisateur a un abonnement VIP actif, ajouter toutes les playlists premium
+      if vip_active
+        # Exclure les playlists Challenge Reward (récompenses gagnées, pas achetées)
+        reward_playlist_ids = Playlist.where("LOWER(title) LIKE ? OR LOWER(title) LIKE ? OR LOWER(title) LIKE ?", 
+                                             "%reward%", "%récompense%", "%challenge%").pluck(:id)
+        
+        # Récupérer toutes les playlists premium (sauf celles déjà débloquées individuellement)
+        all_premium_playlists = Playlist.where(premium: true, exclusive: [false, nil])
+                                        .where.not(id: reward_playlist_ids)
+                                        .includes(:videos)
+                                        .order(:title)
+        
+        # Combiner les playlists achetées individuellement avec toutes les playlists premium (sans doublons)
+        purchased_ids = @purchased_playlists.pluck(:id)
+        @purchased_playlists = (@purchased_playlists.to_a + all_premium_playlists.reject { |p| purchased_ids.include?(p.id) }).uniq
+      end
+      
+      # Abonnements actifs
+      @active_subscriptions = []
+      if vip_active
+        @active_subscriptions << {
+          name: t('store.subscriptions.vip.name'),
+          expires_at: current_user.vip_expires_at,
+          active: true
+        }
+      end
+    end
   end
 
   def buy_points
@@ -187,7 +225,7 @@ class StoreController < ApplicationController
       
       # Enregistrer le déblocage de la playlist premium pour l'utilisateur
       UserPlaylistUnlock.find_or_create_by(user: current_user, playlist: @playlist)
-      redirect_to playlists_path(notice: t('store.messages.playlist_unlocked'), unlocked_playlist_id: @playlist.id)
+      redirect_to store_path(tab: 'my_store'), notice: t('store.messages.playlist_unlocked')
     else
       redirect_to buy_playlist_store_path(@playlist), alert: t('store.messages.insufficient_points')
     end
@@ -234,7 +272,7 @@ class StoreController < ApplicationController
           session.delete(:paypal_payment_id)
           session.delete(:paypal_subscription_type)
           
-          redirect_to playlists_path, notice: t('store.messages.vip_subscription_activated').html_safe
+          redirect_to store_path(tab: 'my_store'), notice: t('store.messages.vip_subscription_activated')
         else
           # Ajouter les points
           points = session[:paypal_points] || params[:pack_id] ? get_points_for_pack(params[:pack_id] || session[:paypal_pack_id]) : 0
@@ -247,7 +285,7 @@ class StoreController < ApplicationController
           session.delete(:paypal_pack_id)
           session.delete(:paypal_points)
           
-          redirect_to store_path, notice: t('store.messages.payment_success', points: points)
+          redirect_to store_path(tab: 'my_store'), notice: t('store.messages.payment_success', points: points)
         end
       else
         Rails.logger.error "Erreur exécution paiement PayPal: #{result[:error]}"

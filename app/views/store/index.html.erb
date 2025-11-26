@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-gray-900 py-8">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- En-tête de la boutique -->
-    <div class="text-center mb-12">
+    <div class="text-center mb-8">
       <h1 class="text-4xl font-bold text-white mb-4">🛍️ <%= t('store.title') %></h1>
       <p class="text-xl text-gray-300"><%= t('store.subtitle') %></p>
       
@@ -30,7 +30,128 @@
       </div>
     </div>
 
-    <!-- Section Acheter des points -->
+    <!-- Onglets Boutique / Ma boutique -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex bg-gray-800 rounded-lg p-1 border border-gray-700">
+        <%= link_to store_path(tab: 'store'), 
+            class: "px-6 py-3 rounded-md font-semibold transition-all duration-200 #{@active_tab == 'store' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}" do %>
+          🛍️ Boutique
+        <% end %>
+        <%= link_to store_path(tab: 'my_store'), 
+            class: "px-6 py-3 rounded-md font-semibold transition-all duration-200 #{@active_tab == 'my_store' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}" do %>
+          📦 Ma boutique
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Section Ma boutique -->
+    <% if @active_tab == 'my_store' %>
+      <div class="space-y-12">
+        <!-- Abonnements actifs -->
+        <% if @active_subscriptions.any? %>
+          <div>
+            <div class="flex items-center mb-8">
+              <h2 class="text-3xl font-bold text-white">👑 Mes abonnements</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <% @active_subscriptions.each do |subscription| %>
+                <div class="rounded-xl p-8 border border-yellow-500 overflow-hidden relative bg-gradient-to-br from-yellow-600/20 to-orange-600/20">
+                  <div class="text-center">
+                    <div class="text-6xl mb-4">👑</div>
+                    <h3 class="text-2xl font-bold text-white mb-2"><%= subscription[:name] %></h3>
+                    <p class="text-yellow-300 mb-4">Actif jusqu'au <%= subscription[:expires_at].strftime('%d/%m/%Y') %></p>
+                    <div class="inline-flex items-center px-4 py-2 bg-green-600 rounded-full">
+                      <span class="text-white font-semibold">✅ Actif</span>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Playlists -->
+        <% 
+          vip_active = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
+          purchased_ids = current_user.unlocked_playlists.pluck(:id)
+        %>
+        <% if @purchased_playlists.any? %>
+          <div>
+            <div class="flex items-center mb-8">
+              <h2 class="text-3xl font-bold text-white">🎵 Mes playlists</h2>
+            </div>
+            <div class="playlists-grid">
+              <% @purchased_playlists.each do |playlist| %>
+                <% 
+                  is_individually_purchased = purchased_ids.include?(playlist.id)
+                  is_vip_included = vip_active && !is_individually_purchased
+                %>
+                <div class="playlist-item premium-playlist">
+                  <div class="playlist-card-uniform">
+                    <div class="playlist-image-uniform">
+                      <% thumbnail_id = playlist.valid_thumbnail_id %>
+                      <% if thumbnail_id %>
+                        <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg"
+                             alt="<%= playlist.title %>"
+                             class="w-full h-full object-cover object-center"
+                             onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg';">
+                      <% else %>
+                        <div class="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5.14v14l11-7-11-7z"/>
+                          </svg>
+                        </div>
+                      <% end %>
+                    </div>
+                    <div class="playlist-text-uniform">
+                      <div class="playlist-title-uniform"><%= playlist.title %></div>
+                      <div class="playlist-tags-uniform">
+                        <% if is_individually_purchased %>
+                          <span class="playlist-tag-uniform" style="background-color: #9333ea; color: white;">✅ Achetée</span>
+                        <% elsif is_vip_included %>
+                          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;">👑 VIP</span>
+                        <% end %>
+                        <% if playlist.category.present? %>
+                          <span class="playlist-tag-uniform" style="background-color: #374151; color: #9ca3af;"><%= playlist.category.upcase %></span>
+                        <% end %>
+                      </div>
+                      <div class="playlist-description-uniform"><%= translated_playlist_description(playlist) %></div>
+                      <div class="playlist-footer-uniform">
+                        <span><%= t('playlists.tracks_count', count: playlist.videos.count) %></span>
+                      </div>
+                    </div>
+                    <%= link_to playlist_path(playlist), class: "absolute inset-0 z-30" do %>
+                      <span style="display: none;">Jouer <%= playlist.title %></span>
+                    <% end %>
+                    <div class="playlist-overlay-uniform">
+                      <svg fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                      </svg>
+                      <div class="overlay-title"><%= is_vip_included ? "Incluse dans VIP" : "Déjà achetée" %></div>
+                      <div class="overlay-subtitle">Cliquez pour jouer</div>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Message si aucun achat -->
+        <% if @purchased_playlists.empty? && @active_subscriptions.empty? %>
+          <div class="text-center py-16">
+            <div class="text-6xl mb-4">📦</div>
+            <h3 class="text-2xl font-bold text-white mb-4">Aucun achat pour le moment</h3>
+            <p class="text-gray-400 mb-8">Commencez à acheter des points, des abonnements ou des playlists pour les voir apparaître ici.</p>
+            <%= link_to store_path(tab: 'store'), class: "inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold rounded-lg transition-all duration-300 transform hover:scale-105" do %>
+              <span class="mr-2">🛍️</span>
+              Voir la boutique
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <!-- Section Acheter des points -->
     <div class="mb-16">
       <div class="flex items-center mb-8">
         <h2 class="text-3xl font-bold text-white"><%= t('store.buy_points_section') %></h2>
@@ -209,6 +330,7 @@
         </div>
       <% end %>
     </div>
+    <% end %>
 
     <% if flash[:notice] %>
       <div class="bg-purple-500 text-white p-4 rounded-lg mb-8 max-w-2xl mx-auto flex flex-col items-center gap-4">

@@ -370,7 +370,7 @@ en:
       invalid_subscription: "❌ Invalid subscription type."
       playlist_unlocked: "Playlist unlocked successfully!"
       insufficient_points: "Insufficient points. Please purchase more points."
-      vip_subscription_activated: "✅ VIP subscription activated! All premium playlists are now unlocked. <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>View playlists</a>"
+      vip_subscription_activated: "✅ VIP subscription activated! All premium playlists are now unlocked. Check the 'My Store' tab to see all your playlists."
       payment_success: "✅ Payment successful! You received %{points} points!"
       payment_not_confirmed: "❌ Payment not confirmed"
       invalid_payment_session: "❌ Invalid payment session"

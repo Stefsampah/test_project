@@ -20,7 +20,7 @@ fr:
   # Homepage
   home:
     title: "Tube'NPlay"
-    subtitle: "Gagnez un billet de concert avec une chanson"
+    subtitle: "Transforme tes écoutes en places de concert"
     description: "Votre passion musicale transformée en aventure interactive. Swippez, gagnez, débloquez. Le jeu musical qui transforme vos écoutes en récompenses. Des playlists exclusives aux expériences VIP, chaque partie vous rapproche du graal. Votre amour de la musique mérite des récompenses à la hauteur !"
     discover_playlists: "Découvrez nos Playlists"
     collect_badges: "Collectionnez vos Badges"
@@ -365,12 +365,12 @@ fr:
       card_error: "❌ Erreur de carte: %{message}"
       purchase_error: "❌ Erreur lors de l'achat. Veuillez réessayer."
       invalid_pack: "❌ Pack de points invalide."
-      vip_subscription_simulated: "✅ Abonnement VIP simulé activé ! Toutes les playlists premium sont maintenant débloquées. (Mode simulation - configurez PayPal pour les vrais paiements) <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>"
+      vip_subscription_simulated: "✅ Abonnement VIP simulé activé ! Toutes les playlists premium sont maintenant débloquées. (Mode simulation - configurez PayPal pour les vrais paiements) Consultez l'onglet 'Ma boutique' pour voir toutes vos playlists."
       subscription_error: "❌ Erreur lors de l'achat. Veuillez réessayer."
       invalid_subscription: "❌ Type d'abonnement invalide."
       playlist_unlocked: "Playlist débloquée avec succès !"
       insufficient_points: "Points insuffisants. Veuillez acheter plus de points."
-      vip_subscription_activated: "✅ Abonnement VIP activé ! Toutes les playlists premium sont maintenant débloquées. <a href='/playlists' class='text-yellow-300 hover:text-yellow-200 underline'>Voir les playlists</a>"
+      vip_subscription_activated: "✅ Abonnement VIP activé ! Toutes les playlists premium sont maintenant débloquées. Consultez l'onglet 'Ma boutique' pour voir toutes vos playlists."
       payment_success: "✅ Paiement réussi ! Vous avez reçu %{points} points !"
       payment_not_confirmed: "❌ Paiement non confirmé"
       invalid_payment_session: "❌ Session de paiement invalide"
