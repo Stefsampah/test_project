@@ -17,4 +17,4 @@ Rails.application.config.assets.precompile += %w( controllers/badge_reveal_contr
 Rails.application.config.assets.precompile += %w( controllers/badges_controller.js )
 Rails.application.config.assets.precompile += %w( controllers/hello_controller.js )
 Rails.application.config.assets.precompile += %w( controllers/index.js )
-Rails.application.config.assets.precompile += %w( logo/Copilot_20251006_162220.png )
+Rails.application.config.assets.precompile += %w( Logo/Copilot_20251006_162220.png )
