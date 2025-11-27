@@ -81,3 +81,7 @@ end
 gem "webdrivers", "~> 5.3", group: :test
 
 gem "selenium-webdriver", "~> 4.10.0", group: :test
+
+# Cloudinary for image storage with Active Storage
+gem 'cloudinary'
+gem 'activestorage-cloudinary-service'
