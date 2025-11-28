@@ -141,9 +141,24 @@ class StoreController < ApplicationController
     
     if subscription_type == "vip"
       begin
-        if paypal_configured?
-          # Mode réel - utiliser PayPal
-          # PayPal nécessite des URLs absolues
+        if paypal_me_enabled?
+          # Utiliser PayPal.me (simple, pas besoin de SIRET)
+          amount = 9.99
+          paypal_me_link = "https://#{Rails.configuration.paypal_me[:link]}/#{amount}"
+          
+          # Stocker en session pour référence
+          session[:pending_subscription] = {
+            type: 'vip',
+            amount: amount,
+            user_id: current_user.id,
+            email: current_user.email
+          }
+          
+          Rails.logger.info "Redirection vers PayPal.me - User: #{current_user.id}, Montant: #{amount}€, Lien: #{paypal_me_link}"
+          
+          redirect_to paypal_me_link, allow_other_host: true
+        elsif paypal_configured?
+          # Mode réel - utiliser PayPal API (si configuré)
           return_url = store_execute_url(payment_type: 'subscription', subscription_type: 'vip', locale: I18n.locale, only_path: false)
           cancel_url = store_cancel_url(locale: I18n.locale, only_path: false)
           
@@ -164,7 +179,6 @@ class StoreController < ApplicationController
           )
           
           if result[:success]
-            # Stocker le payment_id en session pour la vérification
             session[:paypal_payment_id] = result[:payment_id]
             session[:paypal_subscription_type] = 'vip'
             
@@ -172,7 +186,6 @@ class StoreController < ApplicationController
             redirect_to result[:approval_url], allow_other_host: true
           else
             Rails.logger.error "❌ Erreur création paiement PayPal VIP: #{result[:error]}"
-            Rails.logger.error "Détails: #{result.inspect}"
             redirect_to store_path, alert: "❌ Erreur lors de l'achat: #{result[:error]}. Veuillez réessayer."
           end
         elsif current_user.admin?
@@ -183,11 +196,11 @@ class StoreController < ApplicationController
           
           redirect_to playlists_path, notice: t('store.messages.vip_subscription_simulated').html_safe
         else
-          Rails.logger.error "PayPal non configuré pour l'abonnement VIP"
+          Rails.logger.error "PayPal/PayPal.me non configuré pour l'abonnement VIP"
           redirect_to store_path, alert: t('store.messages.paypal_not_configured')
         end
       rescue => e
-        Rails.logger.error "Erreur PayPal: #{e.message}"
+        Rails.logger.error "Erreur lors de l'achat d'abonnement: #{e.message}"
         redirect_to store_path, alert: t('store.messages.subscription_error')
       end
     else
@@ -312,6 +325,44 @@ class StoreController < ApplicationController
     redirect_to store_path, alert: t('store.messages.payment_cancelled')
   end
 
+  # Page de confirmation de paiement PayPal.me
+  def payment_confirmation
+    @pending_subscription = session[:pending_subscription]
+    if @pending_subscription.nil?
+      redirect_to store_path, alert: "Aucun paiement en attente"
+    end
+  end
+
+  # Confirmer le paiement PayPal.me (pour activation manuelle par l'admin)
+  def confirm_payment
+    transaction_id = params[:transaction_id]
+    user_email = params[:user_email]
+    
+    if transaction_id.blank? || user_email.blank?
+      redirect_to store_payment_confirmation_path, alert: "Veuillez remplir tous les champs"
+      return
+    end
+
+    user = User.find_by(email: user_email)
+    unless user
+      redirect_to store_payment_confirmation_path, alert: "Utilisateur non trouvé"
+      return
+    end
+
+    # Stocker la transaction pour vérification manuelle par l'admin
+    # L'admin devra vérifier dans PayPal et activer l'abonnement
+    session[:payment_confirmation] = {
+      transaction_id: transaction_id,
+      user_email: user_email,
+      user_id: user.id,
+      timestamp: Time.current
+    }
+
+    Rails.logger.info "Confirmation de paiement PayPal.me - Transaction: #{transaction_id}, User: #{user.id} (#{user_email})"
+    
+    redirect_to store_path, notice: "✅ Merci ! Votre paiement est en cours de vérification. Votre abonnement VIP sera activé sous 24h après vérification."
+  end
+
   private
 
   def get_points_for_pack(pack_id)
@@ -328,7 +379,11 @@ class StoreController < ApplicationController
     Rails.configuration.paypal[:client_id].present? && Rails.configuration.paypal[:client_secret].present?
   end
 
+  def paypal_me_enabled?
+    Rails.configuration.paypal_me[:enabled] && Rails.configuration.paypal_me[:link].present?
+  end
+
   def set_user_points
     @user_points = current_user.total_points || 0
   end
-end
+end 

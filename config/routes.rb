@@ -101,6 +101,8 @@ Rails.application.routes.draw do
   get 'store/success', to: 'store#success', as: :store_success
   get 'store/cancel', to: 'store#cancel', as: :store_cancel
   get 'store/execute', to: 'store#execute_payment', as: :store_execute
+  get 'store/payment_confirmation', to: 'store#payment_confirmation', as: :store_payment_confirmation
+  post 'store/confirm_payment', to: 'store#confirm_payment', as: :store_confirm_payment
   
   # Gestion des abonnements VIP
   get 'subscriptions', to: 'subscriptions#index'

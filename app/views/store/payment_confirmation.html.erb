@@ -1,0 +1,73 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto bg-gray-800 rounded-lg shadow-xl p-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-white mb-2">Confirmation de Paiement</h1>
+      <p class="text-gray-400">Merci d'avoir effectué votre paiement via PayPal.me</p>
+    </div>
+
+    <div class="bg-yellow-900 border border-yellow-700 rounded-lg p-4 mb-6">
+      <p class="text-yellow-200 text-sm">
+        <strong>⚠️ Important :</strong> Votre abonnement VIP sera activé manuellement après vérification de votre paiement dans notre compte PayPal. Cela peut prendre jusqu'à 24h.
+      </p>
+    </div>
+
+    <div class="mb-6">
+      <h2 class="text-xl font-semibold text-white mb-4">Informations de votre paiement</h2>
+      
+      <% if @pending_subscription %>
+        <div class="bg-gray-700 rounded-lg p-4 space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Type d'abonnement :</span>
+            <span class="text-white font-semibold">VIP</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Montant :</span>
+            <span class="text-white font-semibold"><%= number_to_currency(@pending_subscription[:amount], unit: "€", separator: ",", delimiter: " ") %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Email :</span>
+            <span class="text-white"><%= @pending_subscription[:email] %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form_with url: store_confirm_payment_path, method: :post, local: true, class: "space-y-4" do |f| %>
+      <div>
+        <%= f.label :transaction_id, "Numéro de transaction PayPal", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.text_field :transaction_id, 
+            placeholder: "Ex: 5X1234567890123", 
+            required: true,
+            class: "w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500" %>
+        <p class="mt-1 text-xs text-gray-400">
+          Trouvez ce numéro dans l'email de confirmation PayPal ou dans votre historique PayPal
+        </p>
+      </div>
+
+      <div>
+        <%= f.label :user_email, "Votre email", class: "block text-sm font-medium text-gray-300 mb-2" %>
+        <%= f.email_field :user_email, 
+            value: @pending_subscription&.dig(:email) || current_user&.email,
+            required: true,
+            class: "w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500" %>
+      </div>
+
+      <div class="pt-4">
+        <%= f.submit "Confirmer le Paiement", 
+            class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-blue-700 transition duration-200 cursor-pointer" %>
+      </div>
+    <% end %>
+
+    <div class="mt-6 text-center">
+      <%= link_to "Retour à la boutique", store_path, class: "text-purple-400 hover:text-purple-300 underline text-sm" %>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-gray-700">
+      <p class="text-xs text-gray-500 text-center">
+        Après confirmation, nous vérifierons votre paiement et activerons votre abonnement VIP. 
+        Vous recevrez un email de confirmation une fois l'abonnement activé.
+      </p>
+    </div>
+  </div>
+</div>
+
