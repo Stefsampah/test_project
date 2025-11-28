@@ -103,6 +103,7 @@ Rails.application.routes.draw do
   get 'store/execute', to: 'store#execute_payment', as: :store_execute
   get 'store/payment_confirmation', to: 'store#payment_confirmation', as: :store_payment_confirmation
   post 'store/confirm_payment', to: 'store#confirm_payment', as: :store_confirm_payment
+  get 'store/paypal_instructions', to: 'store#paypal_instructions', as: :store_paypal_instructions
   
   # Gestion des abonnements VIP
   get 'subscriptions', to: 'subscriptions#index'

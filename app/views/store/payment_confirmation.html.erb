@@ -29,6 +29,27 @@
             <span class="text-white"><%= @pending_subscription[:email] %></span>
           </div>
         </div>
+      <% elsif @pending_payment %>
+        <div class="bg-gray-700 rounded-lg p-4 space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Type d'achat :</span>
+            <span class="text-white font-semibold"><%= @pending_payment[:description] %></span>
+          </div>
+          <% if @pending_payment[:points] %>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Points :</span>
+              <span class="text-yellow-400 font-semibold"><%= @pending_payment[:points] %> points</span>
+            </div>
+          <% end %>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Montant :</span>
+            <span class="text-white font-semibold"><%= number_to_currency(@pending_payment[:amount], unit: "€", separator: ",", delimiter: " ") %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Email :</span>
+            <span class="text-white"><%= @pending_payment[:email] %></span>
+          </div>
+        </div>
       <% end %>
     </div>
 
