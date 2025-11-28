@@ -18,6 +18,10 @@ Rails.application.routes.draw do
   get 'check_user', to: 'tests#check_user'
   get 'test_fullscreen', to: 'pages#test_fullscreen'
   
+  # Page de contact
+  get 'contact', to: 'contact#index'
+  post 'contact', to: 'contact#send_message'
+  
   # Route temporaire pour gérer les anciens liens GET vers sign_out
   get '/users/sign_out', to: 'application#sign_out_redirect'
 

@@ -11,6 +11,7 @@ fr:
     sign_out: "Déconnexion"
     sign_up: "Inscription"
     store: "Boutique"
+    contact: "Contact"
 
   layout:
     logo_title: "Accueil - Tube'NPlay"

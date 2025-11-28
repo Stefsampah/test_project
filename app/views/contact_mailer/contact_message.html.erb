@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+      <h1 style="color: white; margin: 0; font-size: 24px;">Tube'NPlay - Nouveau Message</h1>
+    </div>
+    
+    <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; border: 1px solid #e0e0e0;">
+      <h2 style="color: #667eea; margin-top: 0;">Nouveau message depuis le formulaire de contact</h2>
+      
+      <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+        <p style="margin: 10px 0;"><strong>Nom :</strong> <%= @name %></p>
+        <p style="margin: 10px 0;"><strong>Email :</strong> <%= @email %></p>
+        <p style="margin: 10px 0;"><strong>Sujet :</strong> <%= @subject %></p>
+      </div>
+      
+      <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;">
+        <h3 style="color: #764ba2; margin-top: 0;">Message :</h3>
+        <p style="white-space: pre-wrap; color: #555;"><%= @message %></p>
+      </div>
+      
+      <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #999; font-size: 12px;">
+        <p>Vous pouvez répondre directement à cet email pour contacter <%= @name %> (<%= @email %>)</p>
+      </div>
+    </div>
+  </body>
+</html>
+

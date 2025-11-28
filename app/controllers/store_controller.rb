@@ -343,7 +343,9 @@ class StoreController < ApplicationController
   # Page de confirmation de paiement PayPal.me
   def payment_confirmation
     @pending_subscription = session[:pending_subscription]
-    if @pending_subscription.nil?
+    @pending_payment = session[:pending_payment]
+    
+    if @pending_subscription.nil? && @pending_payment.nil?
       redirect_to store_path, alert: "Aucun paiement en attente"
     end
   end

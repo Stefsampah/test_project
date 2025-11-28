@@ -11,6 +11,7 @@ en:
     sign_out: "Sign Out"
     sign_up: "Sign Up"
     store: "Store"
+    contact: "Contact"
 
   layout:
     logo_title: "Home - Tube'NPlay"
