@@ -15,6 +15,20 @@
     <!-- Ajoutez ici la balise meta de validation Google Search Console -->
     <!-- Exemple: <meta name="google-site-verification" content="VOTRE_CODE_ICI" /> -->
     
+    <!-- Google Analytics 4 -->
+    <% if ENV['GA_MEASUREMENT_ID'].present? %>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV['GA_MEASUREMENT_ID'] %>"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '<%= ENV['GA_MEASUREMENT_ID'] %>', {
+          'page_path': '<%= request.path %>',
+          'page_title': '<%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %>'
+        });
+      </script>
+    <% end %>
+    
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.tubenplay.com<%= request.path %>">

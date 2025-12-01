@@ -3,6 +3,18 @@ module ApplicationHelper
     "/assets/store/#{image_name}"
   end
   
+  # Helper pour Google Analytics - Envoyer des événements personnalisés
+  def ga_event(event_name, event_params = {})
+    return unless ENV['GA_MEASUREMENT_ID'].present?
+    
+    params_json = event_params.to_json.html_safe
+    javascript_tag do
+      "if (typeof gtag !== 'undefined') {
+        gtag('event', '#{event_name}', #{params_json});
+      }".html_safe
+    end
+  end
+  
   def get_premium_preview_image
     # Images aléatoires pour les récompenses premium (9 badges)
     # Utiliser l'ID de l'utilisateur pour une sélection cohérente
