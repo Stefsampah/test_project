@@ -1,5 +1,20 @@
 <div class="shorts-container">
-  <% if @current_video %>
+  <% unless user_signed_in? %>
+    <!-- Message pour utilisateurs non connectés -->
+    <div class="shorts-end">
+      <div class="end-message">
+        <h2><%= t('playlists.game_in_progress', default: 'Connectez-vous pour jouer') %></h2>
+        <p style="margin-bottom: 20px; color: rgba(255,255,255,0.8);">
+          <%= t('playlists.game_in_progress', default: 'Vous devez être connecté pour jouer à cette playlist.') %>
+        </p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+          <%= link_to t('nav.sign_in', default: 'Se connecter'), new_user_session_path, class: "end-button" %>
+          <%= link_to t('nav.sign_up', default: 'S\'inscrire'), new_user_registration_path, class: "end-button", style: "background: linear-gradient(45deg, #9333ea, #7c3aed);" %>
+        </div>
+        <%= link_to t('playlists.all_playlists', default: 'Retour aux playlists'), playlists_path, class: "end-button", style: "margin-top: 12px; background: rgba(255,255,255,0.1);" %>
+      </div>
+    </div>
+  <% elsif @current_video %>
     <div class="shorts-player"
          data-controller="swipe"
          data-swipe-video-id="<%= @current_video.id %>"

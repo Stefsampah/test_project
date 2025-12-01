@@ -1,8 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
-    <title>Tube'NPlay</title>
+    <title>Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="<%= t('seo.description', default: 'Tube\'NPlay - Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta name="keywords" content="<%= t('seo.keywords', default: 'Tube\'NPlay, jeu musical, YouTube, playlist, quiz musique, badges, récompenses, découverte musique') %>">
+    <meta name="author" content="Tube'NPlay">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://www.tubenplay.com<%= request.path %>">
+    
+    <!-- Google Search Console Verification -->
+    <!-- Ajoutez ici la balise meta de validation Google Search Console -->
+    <!-- Exemple: <meta name="google-site-verification" content="VOTRE_CODE_ICI" /> -->
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.tubenplay.com<%= request.path %>">
+    <meta property="og:title" content="Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
+    <meta property="og:description" content="<%= t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta property="og:image" content="<%= request.base_url %><%= asset_path('Logo/Copilot_20251006_162220.png') %>">
+    <meta property="og:site_name" content="Tube'NPlay">
+    <meta property="og:locale" content="<%= I18n.locale == :fr ? 'fr_FR' : 'en_US' %>">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://www.tubenplay.com<%= request.path %>">
+    <meta name="twitter:title" content="Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
+    <meta name="twitter:description" content="<%= t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta name="twitter:image" content="<%= request.base_url %><%= asset_path('Logo/Copilot_20251006_162220.png') %>">
+    
     <%= favicon_link_tag "Logo/Copilot_20251006_162220.png" %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>

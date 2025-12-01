@@ -129,4 +129,7 @@ Rails.application.routes.draw do
   
   # Route pour changer la langue (hors scope pour éviter les conflits)
   get '/locale/:locale', to: 'application#change_locale', as: :change_locale
+  
+  # Sitemap (hors scope locale pour être accessible directement)
+  get '/sitemap.xml', to: 'sitemap#index', format: 'xml'
 end

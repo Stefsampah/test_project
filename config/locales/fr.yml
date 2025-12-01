@@ -18,6 +18,12 @@ fr:
     game_in_progress_html: "🎮 Vous avez une partie en cours : <strong>%{playlist}</strong>"
     resume_game: "Reprendre la partie"
   
+  # SEO
+  seo:
+    title: "Jeu musical interactif sur YouTube"
+    description: "Tube'NPlay - Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !"
+    keywords: "Tube'NPlay, jeu musical, YouTube, playlist, quiz musique, badges, récompenses, découverte musique"
+  
   # Homepage
   home:
     title: "Tube'NPlay"
