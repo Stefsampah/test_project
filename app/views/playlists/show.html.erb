@@ -23,107 +23,169 @@
       
       <div class="shorts-video">
         <div id="video-container-<%= @current_video.id %>" style="width: 100%; height: 100%; position: relative;">
+          <% 
+            # Détection Safari mobile côté serveur pour optimiser les paramètres
+            is_safari_mobile = request.user_agent.to_s.match?(/iPhone|iPad|iPod/)
+            mute_param = is_safari_mobile ? '1' : '0'
+            base_url = request.base_url
+            video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=#{mute_param}&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+          %>
           <iframe
             id="youtube-player-<%= @current_video.id %>"
-            src=""
+            src="<%= video_url %>"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
             style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
           </iframe>
-          <div id="video-error-<%= @current_video.id %>" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px; color: white; text-align: center;">
-            <p style="margin-bottom: 15px;">La vidéo ne se charge pas</p>
-            <button onclick="retryVideoLoad('<%= @current_video.id %>', '<%= @current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Réessayer</button>
+          
+          <!-- Overlay de chargement pour Safari mobile -->
+          <div id="video-loading-<%= @current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="color: white; text-align: center; padding: 20px;">
+              <p style="margin-bottom: 20px; font-size: 18px;">Chargement de la vidéo...</p>
+              <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+            </div>
+          </div>
+          
+          <!-- Message d'erreur avec bouton de retry -->
+          <div id="video-error-<%= @current_video.id %>" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; color: white; text-align: center; max-width: 90%;">
+            <p style="margin-bottom: 20px; font-size: 16px;">La vidéo ne se charge pas</p>
+            <button onclick="retryVideoLoad('<%= @current_video.id %>', '<%= @current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Réessayer</button>
+            <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">Si le problème persiste, essayez de rafraîchir la page</p>
           </div>
         </div>
+        
+        <style>
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+        </style>
+        
         <script>
-          // Détection Safari mobile
-          const isSafariMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
-          
-          // Fonction pour charger la vidéo avec les bons paramètres
-          function loadYouTubeVideo(videoId, youtubeId) {
-            const iframe = document.getElementById('youtube-player-' + videoId);
-            const errorDiv = document.getElementById('video-error-' + videoId);
-            if (!iframe) return;
-            
-            // Pour Safari mobile, utiliser mute=1 pour permettre l'autoplay
-            const muteParam = isSafariMobile ? '1' : '0';
-            const baseUrl = '<%= request.base_url %>';
-            
-            const videoUrl = 'https://www.youtube.com/embed/' + youtubeId + 
-              '?autoplay=1' +
-              '&controls=0' +
-              '&modestbranding=1' +
-              '&rel=0' +
-              '&playsinline=1' +
-              '&fs=1' +
-              '&disablekb=1' +
-              '&iv_load_policy=3' +
-              '&cc_load_policy=0' +
-              '&mute=' + muteParam +
-              '&showinfo=0' +
-              '&enablejsapi=1' +
-              '&origin=' + encodeURIComponent(baseUrl);
-            
-            iframe.src = videoUrl;
-            errorDiv.style.display = 'none';
-            
-            // Détecter les erreurs de chargement
-            let loadTimeout;
-            let hasLoaded = false;
-            
-            const checkLoad = function() {
-              if (!hasLoaded) {
-                // Vérifier si l'iframe a chargé après 3 secondes
-                loadTimeout = setTimeout(function() {
-                  if (!hasLoaded) {
-                    console.warn('Timeout de chargement de la vidéo');
-                    errorDiv.style.display = 'block';
-                  }
-                }, 3000);
-              }
-            };
-            
-            iframe.addEventListener('load', function() {
-              hasLoaded = true;
-              clearTimeout(loadTimeout);
-              console.log('Vidéo chargée avec succès');
-              errorDiv.style.display = 'none';
-            });
-            
-            iframe.addEventListener('error', function() {
-              console.error('Erreur de chargement de la vidéo');
-              errorDiv.style.display = 'block';
-            });
-            
-            // Démarrer la vérification
-            checkLoad();
-          }
-          
-          // Fonction pour réessayer le chargement
-          function retryVideoLoad(videoId, youtubeId) {
-            const iframe = document.getElementById('youtube-player-' + videoId);
-            if (iframe) {
-              iframe.src = '';
-              setTimeout(function() {
-                loadYouTubeVideo(videoId, youtubeId);
-              }, 500);
-            }
-          }
-          
-          // Charger la vidéo au chargement de la page
           (function() {
             const videoId = '<%= @current_video.id %>';
             const youtubeId = '<%= @current_video.youtube_id %>';
+            const iframe = document.getElementById('youtube-player-' + videoId);
+            const loadingDiv = document.getElementById('video-loading-' + videoId);
+            const errorDiv = document.getElementById('video-error-' + videoId);
             
-            // Attendre que le DOM soit prêt
-            if (document.readyState === 'loading') {
-              document.addEventListener('DOMContentLoaded', function() {
-                loadYouTubeVideo(videoId, youtubeId);
-              });
-            } else {
-              loadYouTubeVideo(videoId, youtubeId);
+            if (!iframe) return;
+            
+            // Détection Safari mobile
+            const isSafariMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            let loadCheckTimeout;
+            let hasLoaded = false;
+            let errorShown = false;
+            
+            // Fonction pour masquer le loader et afficher la vidéo
+            function hideLoader() {
+              if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+              }
+              if (errorDiv) {
+                errorDiv.style.display = 'none';
+              }
             }
+            
+            // Fonction pour afficher l'erreur
+            function showError() {
+              if (errorShown) return;
+              errorShown = true;
+              if (loadingDiv) loadingDiv.style.display = 'none';
+              if (errorDiv) errorDiv.style.display = 'block';
+            }
+            
+            // Vérifier que l'iframe se charge correctement
+            function checkIframeLoad() {
+              // Pour Safari mobile, timeout plus long (4 secondes) car le chargement peut être plus lent
+              const timeoutDuration = isSafariMobile ? 4000 : 3000;
+              
+              loadCheckTimeout = setTimeout(function() {
+                if (!hasLoaded) {
+                  console.warn('Timeout de chargement après ' + timeoutDuration + 'ms');
+                  // Sur Safari mobile, on masque le loader mais on n'affiche pas d'erreur immédiatement
+                  // car l'iframe peut être chargée mais la vidéo ne joue pas à cause de l'autoplay bloqué
+                  if (isSafariMobile) {
+                    // Masquer le loader, la vidéo est probablement chargée mais en pause
+                    hideLoader();
+                    console.log('Safari mobile: Iframe chargée, autoplay peut être bloqué');
+                  } else {
+                    showError();
+                  }
+                }
+              }, timeoutDuration);
+            }
+            
+            // Écouter l'événement load de l'iframe
+            iframe.addEventListener('load', function() {
+              hasLoaded = true;
+              clearTimeout(loadCheckTimeout);
+              console.log('✅ Iframe chargée avec succès');
+              
+              // Masquer le loader immédiatement après le load
+              hideLoader();
+              
+              // Pour Safari mobile, attendre un peu plus pour voir si la vidéo démarre
+              if (isSafariMobile) {
+                // Sur Safari, même si l'iframe charge, l'autoplay peut être bloqué
+                // On masque le loader et on laisse l'utilisateur interagir
+                setTimeout(function() {
+                  console.log('Safari mobile: Vidéo prête (autoplay peut nécessiter interaction)');
+                }, 500);
+              }
+            });
+            
+            // Écouter les erreurs
+            iframe.addEventListener('error', function() {
+              console.error('❌ Erreur de chargement de l\'iframe');
+              showError();
+            });
+            
+            // Fonction de retry
+            window.retryVideoLoad = function(videoId, youtubeId) {
+              errorShown = false;
+              hasLoaded = false;
+              if (loadingDiv) loadingDiv.style.display = 'flex';
+              if (errorDiv) errorDiv.style.display = 'none';
+              
+              const muteParam = isSafariMobile ? '1' : '0';
+              const baseUrl = '<%= request.base_url %>';
+              const newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
+                '?autoplay=1' +
+                '&controls=0' +
+                '&modestbranding=1' +
+                '&rel=0' +
+                '&playsinline=1' +
+                '&fs=1' +
+                '&disablekb=1' +
+                '&iv_load_policy=3' +
+                '&cc_load_policy=0' +
+                '&mute=' + muteParam +
+                '&showinfo=0' +
+                '&enablejsapi=1' +
+                '&origin=' + encodeURIComponent(baseUrl) +
+                '&t=' + Date.now(); // Cache buster
+              
+              iframe.src = '';
+              setTimeout(function() {
+                iframe.src = newUrl;
+                checkIframeLoad();
+              }, 300);
+            };
+            
+            // Démarrer la vérification
+            checkIframeLoad();
+            
+            // Masquer le loader après 3 secondes max (fallback si l'event load ne se déclenche pas)
+            setTimeout(function() {
+              if (loadingDiv && loadingDiv.style.display !== 'none' && !hasLoaded) {
+                // Si le loader est toujours visible après 3 secondes et l'event load ne s'est pas déclenché
+                // On masque le loader quand même (la vidéo peut être chargée)
+                console.log('Fallback: Masquage du loader après timeout');
+                loadingDiv.style.display = 'none';
+              }
+            }, 3000);
           })();
         </script>
       </div>
