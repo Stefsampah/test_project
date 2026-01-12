@@ -17,7 +17,7 @@
             end
           %>
           <% if is_safari_mobile %>
-          <!-- Pour Safari mobile, iframe cachée jusqu'au clic -->
+          <!-- Pour Safari mobile, iframe visible mais vide jusqu'au clic -->
           <iframe 
             id="youtube-player-<%= @game.current_video.id %>"
             src=""
@@ -25,7 +25,7 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; opacity: 0; visibility: hidden;">
+            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
           </iframe>
           <% else %>
           <iframe 
@@ -167,15 +167,13 @@
                 return;
               }
               
-              // Masquer le bouton play
+              // Masquer le bouton play immédiatement
               if (playButton) {
                 playButton.style.display = 'none';
                 console.log('✅ Bouton play masqué');
               }
               
-              // Afficher l'iframe
-              currentIframe.style.opacity = '1';
-              currentIframe.style.visibility = 'visible';
+              // Activer l'iframe pour qu'elle puisse recevoir les événements
               currentIframe.style.pointerEvents = 'auto';
               
               // URL simplifiée pour Safari mobile - sans mute pour permettre le son
@@ -190,28 +188,28 @@
               
               console.log('📺 Chargement URL:', videoUrl);
               
-              // Charger la vidéo dans l'iframe de la nouvelle vidéo
-              currentIframe.src = videoUrl;
+              // Vider d'abord le src pour forcer le rechargement
+              currentIframe.src = '';
               
-              // Réinitialiser les variables pour la nouvelle vidéo
-              let hasLoadedNew = false;
-              let loadCheckTimeoutNew;
-              
-              // Écouter le chargement de la nouvelle vidéo
-              const onLoad = function() {
-                hasLoadedNew = true;
-                clearTimeout(loadCheckTimeoutNew);
-                console.log('✅ Nouvelle vidéo chargée avec succès');
-              };
-              
-              currentIframe.addEventListener('load', onLoad, { once: true });
-              
-              // Timeout pour la nouvelle vidéo
-              loadCheckTimeoutNew = setTimeout(function() {
-                if (!hasLoadedNew) {
-                  console.warn('⚠️ Timeout de chargement de la nouvelle vidéo');
-                }
-              }, 5000);
+              // Attendre un court délai pour que l'iframe soit prête, puis charger la vidéo
+              setTimeout(function() {
+                console.log('📺 Définition du src de l\'iframe...');
+                currentIframe.src = videoUrl;
+                
+                // Écouter le chargement de la nouvelle vidéo
+                const onLoad = function() {
+                  console.log('✅ Nouvelle vidéo chargée avec succès');
+                };
+                
+                currentIframe.addEventListener('load', onLoad, { once: true });
+                
+                // Timeout pour détecter si la vidéo ne charge pas
+                setTimeout(function() {
+                  if (currentIframe.src === '' || currentIframe.src === videoUrl) {
+                    console.warn('⚠️ Vérification: iframe src =', currentIframe.src);
+                  }
+                }, 2000);
+              }, 100);
             };
             
             // S'assurer que la fonction est accessible globalement
