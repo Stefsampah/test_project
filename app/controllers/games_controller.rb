@@ -176,17 +176,56 @@ class GamesController < ApplicationController
   def swipe
     # Empêcher de swiper si le jeu est déjà terminé
     if @game.completed?
-      redirect_to results_playlist_game_path(@game.playlist, @game), alert: "Cette partie est déjà terminée !"
+      if request.format.json?
+        render json: { error: "Cette partie est déjà terminée !", redirect: results_playlist_game_path(@game.playlist, @game) }, status: :unprocessable_entity
+      else
+        redirect_to results_playlist_game_path(@game.playlist, @game), alert: "Cette partie est déjà terminée !"
+      end
       return
     end
 
     Rails.logger.info "Params reçus : #{params.inspect}"
 
     video = @game.current_video
+    
+    # Vérifier qu'une vidéo existe
+    unless video
+      Rails.logger.error "Aucune vidéo trouvée pour le jeu #{@game.id}"
+      if request.format.json?
+        render json: { error: "Aucune vidéo disponible." }, status: :not_found
+      else
+        redirect_to results_playlist_game_path(@game.playlist, @game), alert: "Aucune vidéo disponible."
+      end
+      return
+    end
+    
     action = params[:direction] == "like" ? "like" : "dislike"
     liked_value = (action == "like")
 
     Rails.logger.info "Vidéo actuelle : #{video&.title} | Utilisateur : #{current_user&.id} | Action : #{action}"
+
+    # Vérifier que la vidéo n'a pas déjà été swipée
+    existing_swipe = @game.swipes.find_by(video: video)
+    if existing_swipe
+      Rails.logger.warn "Swipe déjà existant pour cette vidéo"
+      @game.reload
+      next_video = @game.next_video
+      
+      if next_video
+        if request.format.json?
+          render json: { success: true, next_video_id: next_video.id, redirect: playlist_game_path(@game.playlist, @game) }, status: :ok
+        else
+          redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
+        end
+      else
+        if request.format.json?
+          render json: { success: true, completed: true, redirect: results_playlist_game_path(@game.playlist, @game) }, status: :ok
+        else
+          redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+        end
+      end
+      return
+    end
 
     # Utiliser une transaction avec retry pour gérer les verrouillages SQLite
     retries = 3
@@ -227,12 +266,21 @@ class GamesController < ApplicationController
         end
 
         if next_video
-          redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
-        else
-          if reward_playlist?(@playlist)
-            redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist récompense !"
+          if request.format.json?
+            render json: { success: true, next_video_id: next_video.id, redirect: playlist_game_path(@game.playlist, @game) }, status: :ok
           else
-            redirect_to results_playlist_game_path(@game.playlist, @game), notice: "Félicitations ! Vous avez terminé la playlist !"
+            redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
+          end
+        else
+          redirect_path = results_playlist_game_path(@game.playlist, @game)
+          message = reward_playlist?(@playlist) ? 
+            "Félicitations ! Vous avez terminé la playlist récompense !" : 
+            "Félicitations ! Vous avez terminé la playlist !"
+          
+          if request.format.json?
+            render json: { success: true, completed: true, redirect: redirect_path }, status: :ok
+          else
+            redirect_to redirect_path, notice: message
           end
         end
       end
@@ -243,7 +291,20 @@ class GamesController < ApplicationController
         retry
       else
         Rails.logger.error "Erreur lors du swipe : #{e.message}"
-        redirect_to playlist_game_path(@game.playlist, @game), alert: "Erreur lors de l'enregistrement. Veuillez réessayer."
+        error_message = "Erreur lors de l'enregistrement. Veuillez réessayer."
+        if request.format.json?
+          render json: { error: error_message }, status: :internal_server_error
+        else
+          redirect_to playlist_game_path(@game.playlist, @game), alert: error_message
+        end
+      end
+    rescue => e
+      Rails.logger.error "Erreur inattendue lors du swipe : #{e.message} - #{e.backtrace.first(5).join("\n")}"
+      error_message = "Une erreur est survenue. Veuillez réessayer."
+      if request.format.json?
+        render json: { error: error_message }, status: :internal_server_error
+      else
+        redirect_to playlist_game_path(@game.playlist, @game), alert: error_message
       end
     end
   end

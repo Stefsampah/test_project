@@ -5,6 +5,12 @@ class ApplicationController < ActionController::Base
   # Gestion de la langue
   before_action :set_locale
   
+  # Rafraîchir la session pour éviter les déconnexions sur mobile
+  before_action :refresh_session_if_needed
+  
+  # Gestion des erreurs d'authentification pour les requêtes AJAX
+  rescue_from Devise::FailureApp, with: :handle_authentication_failure
+  
   def set_locale
     # Priorité: paramètre URL > session > Accept-Language header > défaut (fr)
     locale = params[:locale] || session[:locale] || extract_locale_from_accept_language_header || I18n.default_locale
@@ -47,5 +53,30 @@ class ApplicationController < ActionController::Base
       </form>
       <script>document.getElementById('signout-form').submit();</script>
     ")
+  end
+  
+  private
+  
+  # Rafraîchir la session pour éviter les déconnexions, surtout sur mobile
+  def refresh_session_if_needed
+    # Ne rafraîchir que si l'utilisateur est connecté et que c'est une requête GET ou POST
+    if user_signed_in? && (request.get? || request.post?)
+      # Toucher la session pour la maintenir active
+      session[:last_activity] = Time.current.to_i
+    end
+  end
+  
+  # Gérer les erreurs d'authentification pour les requêtes AJAX
+  def handle_authentication_failure(exception)
+    if request.format.json? || request.headers['Accept']&.include?('application/json')
+      render json: { 
+        error: "Votre session a expiré. Veuillez vous reconnecter.",
+        requires_auth: true,
+        redirect: new_user_session_path
+      }, status: :unauthorized
+    else
+      # Comportement par défaut de Devise
+      redirect_to new_user_session_path, alert: "Votre session a expiré. Veuillez vous reconnecter."
+    end
   end
 end

@@ -23,12 +23,50 @@
       
       <div class="shorts-video">
         <iframe
-          src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=http://localhost:3000&mute=0&showinfo=0"
+          id="youtube-player-<%= @current_video.id %>"
+          src="https://www.youtube.com/embed/<%= @current_video.youtube_id %>?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=<%= request.base_url %>"
           frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowfullscreen="true"
           style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
         </iframe>
+        <script>
+          // Gestion des erreurs de lecture vidéo sur mobile
+          (function() {
+            const iframe = document.getElementById('youtube-player-<%= @current_video.id %>');
+            if (!iframe) return;
+            
+            let errorCount = 0;
+            const maxRetries = 2;
+            
+            // Détecter les erreurs de chargement
+            iframe.addEventListener('load', function() {
+              errorCount = 0;
+              console.log('Vidéo chargée avec succès');
+            });
+            
+            // Tentative de détection d'erreur via timeout
+            const loadTimeout = setTimeout(function() {
+              if (errorCount === 0) {
+                console.warn('Timeout de chargement de la vidéo');
+                // Essayer de recharger la vidéo une fois
+                if (errorCount < maxRetries) {
+                  errorCount++;
+                  const currentSrc = iframe.src;
+                  iframe.src = '';
+                  setTimeout(function() {
+                    iframe.src = currentSrc;
+                  }, 500);
+                }
+              }
+            }, 5000);
+            
+            // Nettoyer le timeout si la vidéo charge correctement
+            iframe.addEventListener('load', function() {
+              clearTimeout(loadTimeout);
+            });
+          })();
+        </script>
       </div>
 
       <div class="shorts-controls">
