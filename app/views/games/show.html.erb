@@ -176,40 +176,40 @@
               // Activer l'iframe pour qu'elle puisse recevoir les événements
               currentIframe.style.pointerEvents = 'auto';
               
-              // URL simplifiée pour Safari mobile - sans mute pour permettre le son
+              // URL pour Safari mobile avec enablejsapi pour meilleur contrôle
               // L'interaction utilisateur permet l'autoplay avec son
+              const baseUrl = window.location.origin;
               const videoUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                 '?autoplay=1' +
                 '&mute=0' +
                 '&playsinline=1' +
                 '&controls=0' +
                 '&rel=0' +
-                '&modestbranding=1';
+                '&modestbranding=1' +
+                '&enablejsapi=1' +
+                '&origin=' + encodeURIComponent(baseUrl);
               
               console.log('📺 Chargement URL:', videoUrl);
               
-              // Vider d'abord le src pour forcer le rechargement
-              currentIframe.src = '';
+              // Charger directement le src (sans délai pour garder la chaîne d'événements utilisateur)
+              // Safari nécessite que le chargement soit déclenché directement par l'événement utilisateur
+              currentIframe.src = videoUrl;
               
-              // Attendre un court délai pour que l'iframe soit prête, puis charger la vidéo
+              // Écouter le chargement de la nouvelle vidéo
+              const onLoad = function() {
+                console.log('✅ Nouvelle vidéo chargée avec succès');
+              };
+              
+              currentIframe.addEventListener('load', onLoad, { once: true });
+              
+              // Timeout pour détecter si la vidéo ne charge pas
               setTimeout(function() {
-                console.log('📺 Définition du src de l\'iframe...');
-                currentIframe.src = videoUrl;
-                
-                // Écouter le chargement de la nouvelle vidéo
-                const onLoad = function() {
-                  console.log('✅ Nouvelle vidéo chargée avec succès');
-                };
-                
-                currentIframe.addEventListener('load', onLoad, { once: true });
-                
-                // Timeout pour détecter si la vidéo ne charge pas
-                setTimeout(function() {
-                  if (currentIframe.src === '' || currentIframe.src === videoUrl) {
-                    console.warn('⚠️ Vérification: iframe src =', currentIframe.src);
-                  }
-                }, 2000);
-              }, 100);
+                if (!currentIframe.src || currentIframe.src === '') {
+                  console.error('❌ Erreur: iframe src est vide après chargement');
+                } else {
+                  console.log('✅ Vérification: iframe src chargé =', currentIframe.src.substring(0, 50) + '...');
+                }
+              }, 2000);
             };
             
             // S'assurer que la fonction est accessible globalement
