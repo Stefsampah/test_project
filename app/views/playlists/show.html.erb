@@ -24,13 +24,12 @@
       <div class="shorts-video">
         <div id="video-container-<%= @current_video.id %>" style="width: 100%; height: 100%; position: relative;">
           <% 
-            # Détection Safari mobile côté serveur pour optimiser les paramètres
+            # Détection Safari mobile côté serveur
             is_safari_mobile = request.user_agent.to_s.match?(/iPhone|iPad|iPod/)
             
-            # Pour Safari mobile, URL simplifiée sans origin pour éviter les blocages
+            # Pour Safari mobile, ne pas charger l'iframe directement (sera chargée après interaction)
             if is_safari_mobile
-              # URL minimale pour Safari mobile - sans origin qui peut causer des blocages
-              video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1"
+              video_url = "" # Vide pour Safari mobile - sera chargée après clic
             else
               base_url = request.base_url
               video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
@@ -45,13 +44,25 @@
             style="width: 100vw !important; height: 100vh !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important;">
           </iframe>
           
-          <!-- Overlay de chargement pour Safari mobile -->
+          <!-- Overlay avec bouton play pour Safari mobile -->
+          <% if is_safari_mobile %>
+          <div id="video-play-button-<%= @current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="color: white; text-align: center; padding: 20px;">
+              <button onclick="loadVideoOnSafari('<%= @current_video.id %>', '<%= @current_video.youtube_id %>')" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5);">
+                ▶
+              </button>
+              <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
+            </div>
+          </div>
+          <% else %>
+          <!-- Overlay de chargement pour autres navigateurs -->
           <div id="video-loading-<%= @current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
             <div style="color: white; text-align: center; padding: 20px;">
               <p style="margin-bottom: 20px; font-size: 18px;">Chargement de la vidéo...</p>
               <div style="width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
             </div>
           </div>
+          <% end %>
           
           <!-- Message d'erreur avec bouton de retry et fallback -->
           <div id="video-error-<%= @current_video.id %>" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; color: white; text-align: center; max-width: 90%;">
@@ -142,6 +153,26 @@
               showError();
             });
             
+            // Fonction pour charger la vidéo sur Safari mobile après interaction utilisateur
+            window.loadVideoOnSafari = function(videoId, youtubeId) {
+              const playButton = document.getElementById('video-play-button-' + videoId);
+              if (playButton) {
+                playButton.style.display = 'none';
+              }
+              
+              // URL simplifiée pour Safari mobile
+              const videoUrl = 'https://www.youtube.com/embed/' + youtubeId + 
+                '?autoplay=1' +
+                '&mute=1' +
+                '&playsinline=1' +
+                '&controls=0' +
+                '&rel=0' +
+                '&modestbranding=1';
+              
+              iframe.src = videoUrl;
+              checkIframeLoad();
+            };
+            
             // Fonction de retry
             window.retryVideoLoad = function(videoId, youtubeId) {
               errorShown = false;
@@ -186,18 +217,20 @@
               }, 500);
             };
             
-            // Démarrer la vérification
-            checkIframeLoad();
-            
-            // Masquer le loader après 3 secondes max (fallback si l'event load ne se déclenche pas)
-            setTimeout(function() {
-              if (loadingDiv && loadingDiv.style.display !== 'none' && !hasLoaded) {
-                // Si le loader est toujours visible après 3 secondes et l'event load ne s'est pas déclenché
-                // On masque le loader quand même (la vidéo peut être chargée)
-                console.log('Fallback: Masquage du loader après timeout');
-                loadingDiv.style.display = 'none';
-              }
-            }, 3000);
+            // Démarrer la vérification seulement si ce n'est pas Safari mobile (iframe déjà chargée)
+            if (!isSafariMobile) {
+              checkIframeLoad();
+              
+              // Masquer le loader après 3 secondes max (fallback si l'event load ne se déclenche pas)
+              setTimeout(function() {
+                if (loadingDiv && loadingDiv.style.display !== 'none' && !hasLoaded) {
+                  // Si le loader est toujours visible après 3 secondes et l'event load ne s'est pas déclenché
+                  // On masque le loader quand même (la vidéo peut être chargée)
+                  console.log('Fallback: Masquage du loader après timeout');
+                  loadingDiv.style.display = 'none';
+                }
+              }, 3000);
+            }
           })();
         </script>
       </div>
