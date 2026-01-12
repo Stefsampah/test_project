@@ -142,10 +142,11 @@
                 playButton.style.display = 'none';
               }
               
-              // URL simplifiée pour Safari mobile
+              // URL simplifiée pour Safari mobile - sans mute pour permettre le son
+              // L'interaction utilisateur permet l'autoplay avec son
               const videoUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                 '?autoplay=1' +
-                '&mute=1' +
+                '&mute=0' +
                 '&playsinline=1' +
                 '&controls=0' +
                 '&rel=0' +
@@ -167,7 +168,7 @@
               if (isSafariMobile) {
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
-                  '&mute=1' +
+                  '&mute=0' +
                   '&playsinline=1' +
                   '&controls=0' +
                   '&rel=0' +
