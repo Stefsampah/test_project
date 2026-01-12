@@ -155,7 +155,15 @@
             
             // Fonction pour charger la vidéo sur Safari mobile après interaction utilisateur
             window.loadVideoOnSafari = function(videoId, youtubeId) {
+              // Trouver l'iframe de la vidéo actuelle (pas celle du scope parent)
+              const currentIframe = document.getElementById('youtube-player-' + videoId);
               const playButton = document.getElementById('video-play-button-' + videoId);
+              
+              if (!currentIframe) {
+                console.error('Iframe non trouvée pour la vidéo:', videoId);
+                return;
+              }
+              
               if (playButton) {
                 playButton.style.display = 'none';
               }
@@ -170,8 +178,28 @@
                 '&rel=0' +
                 '&modestbranding=1';
               
-              iframe.src = videoUrl;
-              checkIframeLoad();
+              // Charger la vidéo dans l'iframe de la nouvelle vidéo
+              currentIframe.src = videoUrl;
+              
+              // Réinitialiser les variables pour la nouvelle vidéo
+              let hasLoadedNew = false;
+              let loadCheckTimeoutNew;
+              
+              // Écouter le chargement de la nouvelle vidéo
+              const onLoad = function() {
+                hasLoadedNew = true;
+                clearTimeout(loadCheckTimeoutNew);
+                console.log('✅ Nouvelle vidéo chargée avec succès');
+              };
+              
+              currentIframe.addEventListener('load', onLoad, { once: true });
+              
+              // Timeout pour la nouvelle vidéo
+              loadCheckTimeoutNew = setTimeout(function() {
+                if (!hasLoadedNew) {
+                  console.warn('Timeout de chargement de la nouvelle vidéo');
+                }
+              }, 5000);
             };
             
             // Fonction de retry
