@@ -26,9 +26,15 @@
           <% 
             # Détection Safari mobile côté serveur pour optimiser les paramètres
             is_safari_mobile = request.user_agent.to_s.match?(/iPhone|iPad|iPod/)
-            mute_param = is_safari_mobile ? '1' : '0'
-            base_url = request.base_url
-            video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=#{mute_param}&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+            
+            # Pour Safari mobile, URL simplifiée sans origin pour éviter les blocages
+            if is_safari_mobile
+              # URL minimale pour Safari mobile - sans origin qui peut causer des blocages
+              video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1"
+            else
+              base_url = request.base_url
+              video_url = "https://www.youtube.com/embed/#{@current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+            end
           %>
           <iframe
             id="youtube-player-<%= @current_video.id %>"
@@ -47,10 +53,11 @@
             </div>
           </div>
           
-          <!-- Message d'erreur avec bouton de retry -->
+          <!-- Message d'erreur avec bouton de retry et fallback -->
           <div id="video-error-<%= @current_video.id %>" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; color: white; text-align: center; max-width: 90%;">
             <p style="margin-bottom: 20px; font-size: 16px;">La vidéo ne se charge pas</p>
-            <button onclick="retryVideoLoad('<%= @current_video.id %>', '<%= @current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Réessayer</button>
+            <button onclick="retryVideoLoad('<%= @current_video.id %>', '<%= @current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin: 5px;">Réessayer</button>
+            <a href="https://www.youtube.com/watch?v=<%= @current_video.youtube_id %>" target="_blank" style="display: inline-block; background: #ff0000; color: white; border: none; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: bold; margin: 5px;">Ouvrir sur YouTube</a>
             <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">Si le problème persiste, essayez de rafraîchir la page</p>
           </div>
         </div>
@@ -98,21 +105,14 @@
             
             // Vérifier que l'iframe se charge correctement
             function checkIframeLoad() {
-              // Pour Safari mobile, timeout plus long (4 secondes) car le chargement peut être plus lent
-              const timeoutDuration = isSafariMobile ? 4000 : 3000;
+              // Pour Safari mobile, timeout plus long (5 secondes) car le chargement peut être plus lent
+              const timeoutDuration = isSafariMobile ? 5000 : 3000;
               
               loadCheckTimeout = setTimeout(function() {
                 if (!hasLoaded) {
                   console.warn('Timeout de chargement après ' + timeoutDuration + 'ms');
-                  // Sur Safari mobile, on masque le loader mais on n'affiche pas d'erreur immédiatement
-                  // car l'iframe peut être chargée mais la vidéo ne joue pas à cause de l'autoplay bloqué
-                  if (isSafariMobile) {
-                    // Masquer le loader, la vidéo est probablement chargée mais en pause
-                    hideLoader();
-                    console.log('Safari mobile: Iframe chargée, autoplay peut être bloqué');
-                  } else {
-                    showError();
-                  }
+                  // Afficher l'erreur après le timeout
+                  showError();
                 }
               }, timeoutDuration);
             }
@@ -149,29 +149,41 @@
               if (loadingDiv) loadingDiv.style.display = 'flex';
               if (errorDiv) errorDiv.style.display = 'none';
               
-              const muteParam = isSafariMobile ? '1' : '0';
-              const baseUrl = '<%= request.base_url %>';
-              const newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
-                '?autoplay=1' +
-                '&controls=0' +
-                '&modestbranding=1' +
-                '&rel=0' +
-                '&playsinline=1' +
-                '&fs=1' +
-                '&disablekb=1' +
-                '&iv_load_policy=3' +
-                '&cc_load_policy=0' +
-                '&mute=' + muteParam +
-                '&showinfo=0' +
-                '&enablejsapi=1' +
-                '&origin=' + encodeURIComponent(baseUrl) +
-                '&t=' + Date.now(); // Cache buster
+              // Pour Safari mobile, URL simplifiée sans origin
+              let newUrl;
+              if (isSafariMobile) {
+                newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
+                  '?autoplay=1' +
+                  '&mute=1' +
+                  '&playsinline=1' +
+                  '&controls=0' +
+                  '&rel=0' +
+                  '&modestbranding=1' +
+                  '&t=' + Date.now();
+              } else {
+                const baseUrl = '<%= request.base_url %>';
+                newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
+                  '?autoplay=1' +
+                  '&controls=0' +
+                  '&modestbranding=1' +
+                  '&rel=0' +
+                  '&playsinline=1' +
+                  '&fs=1' +
+                  '&disablekb=1' +
+                  '&iv_load_policy=3' +
+                  '&cc_load_policy=0' +
+                  '&mute=0' +
+                  '&showinfo=0' +
+                  '&enablejsapi=1' +
+                  '&origin=' + encodeURIComponent(baseUrl) +
+                  '&t=' + Date.now();
+              }
               
               iframe.src = '';
               setTimeout(function() {
                 iframe.src = newUrl;
                 checkIframeLoad();
-              }, 300);
+              }, 500);
             };
             
             // Démarrer la vérification
