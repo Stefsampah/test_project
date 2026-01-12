@@ -136,18 +136,27 @@
             });
             
             // Fonction pour charger la vidéo sur Safari mobile après interaction utilisateur
+            // Définie globalement pour être accessible après rechargement de page
             window.loadVideoOnSafari = function(videoId, youtubeId) {
+              console.log('🎬 loadVideoOnSafari appelée pour vidéo:', videoId, 'youtubeId:', youtubeId);
+              
               // Trouver l'iframe de la vidéo actuelle (pas celle du scope parent)
               const currentIframe = document.getElementById('youtube-player-' + videoId);
               const playButton = document.getElementById('video-play-button-' + videoId);
               
+              console.log('🔍 Recherche iframe:', 'youtube-player-' + videoId);
+              console.log('🔍 Iframe trouvée:', currentIframe ? 'OUI' : 'NON');
+              console.log('🔍 Bouton trouvé:', playButton ? 'OUI' : 'NON');
+              
               if (!currentIframe) {
-                console.error('Iframe non trouvée pour la vidéo:', videoId);
+                console.error('❌ Iframe non trouvée pour la vidéo:', videoId);
+                alert('Erreur: Iframe non trouvée. Veuillez rafraîchir la page.');
                 return;
               }
               
               if (playButton) {
                 playButton.style.display = 'none';
+                console.log('✅ Bouton play masqué');
               }
               
               // URL simplifiée pour Safari mobile - sans mute pour permettre le son
@@ -159,6 +168,8 @@
                 '&controls=0' +
                 '&rel=0' +
                 '&modestbranding=1';
+              
+              console.log('📺 Chargement URL:', videoUrl);
               
               // Charger la vidéo dans l'iframe de la nouvelle vidéo
               currentIframe.src = videoUrl;
@@ -179,10 +190,13 @@
               // Timeout pour la nouvelle vidéo
               loadCheckTimeoutNew = setTimeout(function() {
                 if (!hasLoadedNew) {
-                  console.warn('Timeout de chargement de la nouvelle vidéo');
+                  console.warn('⚠️ Timeout de chargement de la nouvelle vidéo');
                 }
               }, 5000);
             };
+            
+            // S'assurer que la fonction est accessible globalement
+            console.log('✅ Fonction loadVideoOnSafari définie globalement:', typeof window.loadVideoOnSafari);
             
             // Fonction de retry
             window.retryVideoLoad = function(videoId, youtubeId) {
