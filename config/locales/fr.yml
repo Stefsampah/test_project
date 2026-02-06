@@ -12,6 +12,8 @@ fr:
     sign_up: "Inscription"
     store: "Boutique"
     contact: "Contact"
+    about: "À propos"
+    blog: "Blog"
 
   layout:
     logo_title: "Accueil - Tube'NPlay"
@@ -23,6 +25,14 @@ fr:
     title: "Jeu musical interactif sur YouTube"
     description: "Tube'NPlay - Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !"
     keywords: "Tube'NPlay, jeu musical, YouTube, playlist, quiz musique, badges, récompenses, découverte musique"
+    about:
+      title: "À propos de Tube'NPlay"
+      description: "Découvrez Tube'NPlay, le jeu musical interactif qui transforme vos playlists YouTube en défis ludiques avec badges et récompenses."
+      keywords: "Tube'NPlay, à propos, jeu musical, quiz musique, playlists YouTube, badges, récompenses"
+    blog:
+      title: "Blog Tube'NPlay"
+      description: "Conseils, actus et guides pour mieux jouer sur Tube'NPlay, découvrir des playlists et progresser."
+      keywords: "blog Tube'NPlay, conseils musique, playlists YouTube, jeu musical, quiz"
   
   # Homepage
   home:
@@ -46,6 +56,59 @@ fr:
       buy_now: "Acheter maintenant"
       subscribe_now: "S'abonner maintenant"
       playlist_buy: "Acheter maintenant"
+
+  about:
+    title: "À propos de Tube'NPlay"
+    subtitle: "Le jeu musical qui transforme vos playlists YouTube en expérience interactive."
+    mission_title: "Notre mission"
+    mission_body: "Nous voulons rapprocher la découverte musicale du jeu, avec des playlists variées, des défis rapides et des récompenses qui motivent chaque session."
+    how_title: "Comment ça marche"
+    how_body: "Tube'NPlay propose des playlists interactives : vous écoutez, vous swippez, et votre progression débloque des badges et des récompenses."
+    how_steps:
+      step_1: "Choisissez une playlist qui correspond à votre mood."
+      step_2: "Swippez pour liker ou passer les morceaux."
+      step_3: "Progressez, gagnez des points, débloquez des récompenses."
+    why_title: "Pourquoi Tube'NPlay"
+    why_body: "Parce que découvrir de la musique doit être simple, fun et gratifiant. Tube'NPlay valorise vos goûts et vous aide à explorer de nouveaux univers."
+    cta_playlists: "Explorer les playlists"
+    cta_blog: "Lire le blog"
+    cta_contact: "Nous contacter"
+
+  blog:
+    title: "Blog Tube'NPlay"
+    subtitle: "Guides, tendances et conseils pour booster vos sessions musicales."
+    cta: "Envie d'aller plus loin ? Testez une playlist ou contactez-nous."
+    cta_playlists: "Découvrir les playlists"
+    cta_contact: "Contact"
+    posts:
+      - category: "Guide"
+        title: "Comment améliorer votre score sur Tube'NPlay"
+        excerpt: "3 stratégies simples pour gagner plus de points et débloquer des récompenses."
+        read_more: "Article à venir"
+      - category: "Playlists"
+        title: "Les playlists tendances du moment"
+        excerpt: "Une sélection de playlists pour découvrir de nouveaux artistes et vibes."
+        read_more: "Article à venir"
+      - category: "Communauté"
+        title: "Badges et récompenses : comment ça fonctionne"
+        excerpt: "Comprendre le système de progression et optimiser vos gains."
+        read_more: "Article à venir"
+
+  footer:
+    tagline: "Playlists interactives, quiz musical et récompenses. Jouez, découvrez, gagnez."
+    about_heading: "À propos"
+    resources_heading: "Ressources"
+    social_heading: "Réseaux sociaux"
+    contact: "Contact"
+    social_missing: "Liens sociaux à configurer"
+    social_links:
+      instagram: "Instagram"
+      tiktok: "TikTok"
+      youtube: "YouTube"
+      twitter: "X"
+      facebook: "Facebook"
+      linkedin: "LinkedIn"
+    copyright: "© %{year} Tube'NPlay. Tous droits réservés."
   
   # Playlists
   playlists:

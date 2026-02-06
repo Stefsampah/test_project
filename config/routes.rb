@@ -21,6 +21,10 @@ Rails.application.routes.draw do
   # Page de contact
   get 'contact', to: 'contact#index'
   post 'contact', to: 'contact#send_message'
+
+  # Pages SEO
+  get 'about', to: 'pages#about'
+  get 'blog', to: 'pages#blog'
   
   # Route temporaire pour gérer les anciens liens GET vers sign_out
   get '/users/sign_out', to: 'application#sign_out_redirect'

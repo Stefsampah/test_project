@@ -57,6 +57,24 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <url>
+    <loc><%= @base_url %>/fr/about</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="<%= @base_url %>/fr/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="<%= @base_url %>/en/about" />
+    <lastmod><%= Time.current.strftime('%Y-%m-%d') %></lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc><%= @base_url %>/fr/blog</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="<%= @base_url %>/fr/blog" />
+    <xhtml:link rel="alternate" hreflang="en" href="<%= @base_url %>/en/blog" />
+    <lastmod><%= Time.current.strftime('%Y-%m-%d') %></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
   
   <!-- Playlists individuelles -->
   <% @playlists.each do |playlist| %>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <title>Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %></title>
+    <title>Tube'NPlay - <%= content_for?(:seo_title) ? yield(:seo_title) : t('seo.title', default: 'Jeu musical interactif sur YouTube') %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="<%= t('seo.description', default: 'Tube\'NPlay - Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
-    <meta name="keywords" content="<%= t('seo.keywords', default: 'Tube\'NPlay, jeu musical, YouTube, playlist, quiz musique, badges, récompenses, découverte musique') %>">
+    <meta name="description" content="<%= content_for?(:seo_description) ? yield(:seo_description) : t('seo.description', default: 'Tube\'NPlay - Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta name="keywords" content="<%= content_for?(:seo_keywords) ? yield(:seo_keywords) : t('seo.keywords', default: 'Tube\'NPlay, jeu musical, YouTube, playlist, quiz musique, badges, récompenses, découverte musique') %>">
     <meta name="author" content="Tube'NPlay">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://www.tubenplay.com<%= request.path %>">
@@ -32,8 +32,8 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.tubenplay.com<%= request.path %>">
-    <meta property="og:title" content="Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
-    <meta property="og:description" content="<%= t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta property="og:title" content="Tube'NPlay - <%= content_for?(:seo_title) ? yield(:seo_title) : t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
+    <meta property="og:description" content="<%= content_for?(:seo_description) ? yield(:seo_description) : t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
     <meta property="og:image" content="<%= request.base_url %><%= asset_path('Logo/Copilot_20251006_162220.png') %>">
     <meta property="og:site_name" content="Tube'NPlay">
     <meta property="og:locale" content="<%= I18n.locale == :fr ? 'fr_FR' : 'en_US' %>">
@@ -41,8 +41,8 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://www.tubenplay.com<%= request.path %>">
-    <meta name="twitter:title" content="Tube'NPlay - <%= t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
-    <meta name="twitter:description" content="<%= t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
+    <meta name="twitter:title" content="Tube'NPlay - <%= content_for?(:seo_title) ? yield(:seo_title) : t('seo.title', default: 'Jeu musical interactif sur YouTube') %>">
+    <meta name="twitter:description" content="<%= content_for?(:seo_description) ? yield(:seo_description) : t('seo.description', default: 'Découvrez et jouez avec vos playlists YouTube préférées. Quiz musical interactif, badges, récompenses et plus encore !') %>">
     <meta name="twitter:image" content="<%= request.base_url %><%= asset_path('Logo/Copilot_20251006_162220.png') %>">
     
     <%= favicon_link_tag "Logo/Copilot_20251006_162220.png" %>
@@ -281,6 +281,57 @@
       .main-content {
         min-height: calc(100vh - 64px);
       }
+
+      .site-footer {
+        background-color: #0b1220;
+        color: #9ca3af;
+        padding: 2.5rem 1rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: space-between;
+      }
+
+      .footer-brand {
+        max-width: 280px;
+      }
+
+      .footer-heading {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+
+      .footer-links,
+      .footer-social {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .footer-link {
+        color: #e5e7eb;
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+      }
+
+      .footer-bottom {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.85rem;
+        color: #6b7280;
+      }
       
       /* Responsive styles */
       @media (max-width: 1024px) {
@@ -331,7 +382,8 @@
             <%= link_to t('nav.badges'), my_badges_path, class: "nav-link" %>
             <%= link_to t('nav.rewards'), my_rewards_path, class: "nav-link" %>
             <%= link_to t('nav.store'), store_path, class: "nav-link" %>
-            <%= link_to t('nav.contact'), contact_path, class: "nav-link" %>
+            <%= link_to t('nav.about'), about_path, class: "nav-link" %>
+            <%= link_to t('nav.blog'), blog_path, class: "nav-link" %>
           </div>
 
           <!-- Menu utilisateur -->
@@ -371,7 +423,8 @@
           <%= link_to t('nav.badges'), my_badges_path, class: "nav-link" %>
           <%= link_to t('nav.rewards'), my_rewards_path, class: "nav-link" %>
           <%= link_to t('nav.store'), store_path, class: "nav-link" %>
-          <%= link_to t('nav.contact'), contact_path, class: "nav-link" %>
+          <%= link_to t('nav.about'), about_path, class: "nav-link" %>
+          <%= link_to t('nav.blog'), blog_path, class: "nav-link" %>
 
           <!-- Sélecteur de langue mobile -->
           <div class="border-t border-gray-700 my-2"></div>
@@ -437,6 +490,48 @@
     <div class="main-content">
       <%= yield %>
     </div>
+
+    <footer class="site-footer">
+      <% social_links = {
+        instagram: ENV['SOCIAL_INSTAGRAM_URL'],
+        tiktok: ENV['SOCIAL_TIKTOK_URL'],
+        youtube: ENV['SOCIAL_YOUTUBE_URL'],
+        twitter: ENV['SOCIAL_TWITTER_URL'],
+        facebook: ENV['SOCIAL_FACEBOOK_URL'],
+        linkedin: ENV['SOCIAL_LINKEDIN_URL']
+      }.compact %>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <div class="footer-heading">Tube'NPlay</div>
+          <p><%= t('footer.tagline') %></p>
+        </div>
+        <div class="footer-links">
+          <div class="footer-heading"><%= t('footer.about_heading') %></div>
+          <%= link_to t('nav.about'), about_path, class: "footer-link" %>
+          <%= link_to t('nav.blog'), blog_path, class: "footer-link" %>
+          <%= link_to t('footer.contact'), contact_path, class: "footer-link" %>
+        </div>
+        <div class="footer-links">
+          <div class="footer-heading"><%= t('footer.resources_heading') %></div>
+          <%= link_to t('nav.playlists'), playlists_path, class: "footer-link" %>
+          <%= link_to t('nav.scores'), scores_path, class: "footer-link" %>
+          <%= link_to t('nav.store'), store_path, class: "footer-link" %>
+        </div>
+        <div class="footer-social">
+          <div class="footer-heading"><%= t('footer.social_heading') %></div>
+          <% if social_links.any? %>
+            <% social_links.each do |name, url| %>
+              <%= link_to t("footer.social_links.#{name}"), url, class: "footer-link", target: "_blank", rel: "noopener noreferrer" %>
+            <% end %>
+          <% else %>
+            <span><%= t('footer.social_missing') %></span>
+          <% end %>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <%= t('footer.copyright', year: Time.current.year) %>
+      </div>
+    </footer>
 
     <script>
       (function() {

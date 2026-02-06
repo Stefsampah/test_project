@@ -18,4 +18,12 @@ class PagesController < ApplicationController
     # Accessible à tous pour les tests
     render layout: 'shorts'
   end
+
+  def about
+    # Page "À propos" pour le SEO et la présentation du projet
+  end
+
+  def blog
+    # Page "Blog" pour le SEO et le contenu éditorial
+  end
 end
