@@ -493,11 +493,11 @@
 
     <footer class="site-footer">
       <% social_links = {
-        instagram: ENV['SOCIAL_INSTAGRAM_URL'],
-        tiktok: ENV['SOCIAL_TIKTOK_URL'],
+        instagram: ENV['SOCIAL_INSTAGRAM_URL'] || "https://www.instagram.com/tube.nplay8/",
+        tiktok: ENV['SOCIAL_TIKTOK_URL'] || "https://www.tiktok.com/@tubenplay",
+        facebook: ENV['SOCIAL_FACEBOOK_URL'] || "https://www.facebook.com/profile.php?id=61586851863772&locale=fr_FR",
         youtube: ENV['SOCIAL_YOUTUBE_URL'],
         twitter: ENV['SOCIAL_TWITTER_URL'],
-        facebook: ENV['SOCIAL_FACEBOOK_URL'],
         linkedin: ENV['SOCIAL_LINKEDIN_URL']
       }.compact %>
       <div class="footer-container">

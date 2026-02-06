@@ -1,4 +1,7 @@
 en:
+  date:
+    formats:
+      long: "%B %-d, %Y"
   # Navigation
   nav:
     home: "Home"
@@ -80,6 +83,8 @@ en:
     cta: "Ready to go further? Try a playlist or reach out."
     cta_playlists: "Discover playlists"
     cta_contact: "Contact"
+    read_more: "Read the article"
+    back_to_blog: "Back to blog"
     posts:
       - category: "Guide"
         title: "How to improve your Tube'NPlay score"

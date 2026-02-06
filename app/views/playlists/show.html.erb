@@ -1,5 +1,5 @@
 <div class="shorts-container">
-  <% unless user_signed_in? %>
+  <% if !user_signed_in? %>
     <!-- Message pour utilisateurs non connectés -->
     <div class="shorts-end">
       <div class="end-message">
@@ -14,7 +14,8 @@
         <%= link_to t('playlists.all_playlists', default: 'Retour aux playlists'), playlists_path, class: "end-button", style: "margin-top: 12px; background: rgba(255,255,255,0.1);" %>
       </div>
     </div>
-  <% elsif @current_video %>
+  <% else %>
+    <% if @current_video %>
     <div class="shorts-player"
          data-controller="swipe"
          data-swipe-video-id="<%= @current_video.id %>"
@@ -327,13 +328,14 @@
       </div>
       
     </div>
-  <% else %>
+    <% else %>
     <div class="shorts-end">
       <div class="end-message">
         <h2>Playlist terminée !</h2>
         <%= link_to "Retour aux playlists", playlists_path, class: "end-button" %>
       </div>
     </div>
+    <% end %>
   <% end %>
 </div>
 

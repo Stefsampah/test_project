@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_28_102439) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_06_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -91,6 +91,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_28_102439) do
     t.boolean "hidden"
     t.string "category"
     t.string "subcategory"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.string "title", null: false
+    t.string "slug"
+    t.string "excerpt", null: false
+    t.text "content", null: false
+    t.string "category"
+    t.string "locale", default: "fr", null: false
+    t.boolean "published", default: false, null: false
+    t.datetime "published_at"
+    t.string "meta_title"
+    t.string "meta_description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "thumbnail_url"
+    t.index ["locale"], name: "index_posts_on_locale"
+    t.index ["published"], name: "index_posts_on_published"
+    t.index ["published_at"], name: "index_posts_on_published_at"
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
 
   create_table "rewards", force: :cascade do |t|

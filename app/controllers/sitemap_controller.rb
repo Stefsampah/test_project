@@ -5,9 +5,11 @@ class SitemapController < ApplicationController
   def index
     @base_url = "https://www.tubenplay.com"
     @playlists = Playlist.all
+    @posts = Post.published
     @last_modified = [
       @playlists.maximum(:updated_at),
-      Playlist.maximum(:created_at)
+      Playlist.maximum(:created_at),
+      @posts.maximum(:updated_at)
     ].compact.max || Time.current
     
     respond_to do |format|

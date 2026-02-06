@@ -24,7 +24,8 @@ Rails.application.routes.draw do
 
   # Pages SEO
   get 'about', to: 'pages#about'
-  get 'blog', to: 'pages#blog'
+  get 'blog', to: 'posts#index', as: :blog
+  get 'blog/:id', to: 'posts#show', as: :blog_post
   
   # Route temporaire pour gérer les anciens liens GET vers sign_out
   get '/users/sign_out', to: 'application#sign_out_redirect'

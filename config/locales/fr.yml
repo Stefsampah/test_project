@@ -1,4 +1,21 @@
 fr:
+  date:
+    formats:
+      long: "%-d %B %Y"
+    month_names:
+      - ~
+      - janvier
+      - février
+      - mars
+      - avril
+      - mai
+      - juin
+      - juillet
+      - août
+      - septembre
+      - octobre
+      - novembre
+      - décembre
   # Navigation
   nav:
     home: "Accueil"
@@ -80,6 +97,8 @@ fr:
     cta: "Envie d'aller plus loin ? Testez une playlist ou contactez-nous."
     cta_playlists: "Découvrir les playlists"
     cta_contact: "Contact"
+    read_more: "Lire l'article"
+    back_to_blog: "Retour au blog"
     posts:
       - category: "Guide"
         title: "Comment améliorer votre score sur Tube'NPlay"

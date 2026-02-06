@@ -87,8 +87,13 @@
         <p class="text-gray-300 leading-relaxed mt-4">
           Et pour les artistes, notre mission est claire : offrir une nouvelle manière d'être écouté, découvert et soutenu.
         </p>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Emplacement vidéo : message du fondateur ou démo courte du concept.
+        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
+          <%= video_tag "about/vidéo tubenplay.mov",
+            controls: true,
+            muted: true,
+            playsinline: true,
+            preload: "metadata",
+            class: "w-full rounded-md border border-gray-700 bg-black" %>
         </div>
       </div>
 
@@ -112,8 +117,22 @@
           <p><strong>Une progression motivante.</strong> Badges, scores, récompenses, défis : votre expérience devient un parcours de joueur.</p>
           <p><strong>Une découverte plus authentique.</strong> Vous ne suivez pas un algorithme : vous suivez vos propres goûts.</p>
         </div>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Emplacement image : captures d'ecran gameplay, badges, scores, playlists.
+        <div class="mt-6 grid gap-4 md:grid-cols-3">
+          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
+            <%= image_tag "about/vue playlist.png",
+              alt: "Vue playlists Tube'NPlay",
+              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
+          </div>
+          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
+            <%= image_tag "about/vue scores.png",
+              alt: "Vue scores Tube'NPlay",
+              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
+          </div>
+          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
+            <%= image_tag "about/vue badges.png",
+              alt: "Vue badges Tube'NPlay",
+              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
+          </div>
         </div>
       </div>
 
@@ -125,8 +144,20 @@
           <p><strong>Un espace pour émerger.</strong> Tube'NPlay met en avant les artistes indépendants et les talents cachés.</p>
           <p><strong>Un pont entre jeu et découverte.</strong> Votre musique devient une expérience et une opportunité d'être remarqué.</p>
         </div>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Emplacement image : artistes partenaires, playlist spotlight, sessions live.
+        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
+          <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@tubenplay/video/7600443074111622422" data-video-id="7600443074111622422" style="max-width: 605px; min-width: 325px;">
+            <section>
+              <a target="_blank" title="@tubenplay" href="https://www.tiktok.com/@tubenplay?refer=embed">@tubenplay</a>
+              Quel son aurais-tu like ?
+              <a title="musictok" target="_blank" href="https://www.tiktok.com/tag/musictok?refer=embed">#musictok</a>
+              <a title="soundcheck" target="_blank" href="https://www.tiktok.com/tag/soundcheck?refer=embed">#soundcheck</a>
+              <a title="newsound" target="_blank" href="https://www.tiktok.com/tag/newsound?refer=embed">#newsound</a>
+              <a title="viralsound" target="_blank" href="https://www.tiktok.com/tag/viralsound?refer=embed">#viralsound</a>
+              <a title="musiclover" target="_blank" href="https://www.tiktok.com/tag/musiclover?refer=embed">#musiclover</a>
+              <a target="_blank" title="♬ son original - Tube’NPlay Founder" href="https://www.tiktok.com/music/son-original-7600443078880561942?refer=embed">♬ son original - Tube’NPlay Founder</a>
+            </section>
+          </blockquote>
+          <script async src="https://www.tiktok.com/embed.js"></script>
         </div>
       </div>
 

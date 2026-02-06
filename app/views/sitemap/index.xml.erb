@@ -75,6 +75,16 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+
+  <% @posts.each do |post| %>
+    <url>
+      <loc><%= @base_url %>/<%= post.locale %>/blog/<%= post.slug.presence || post.id %></loc>
+      <xhtml:link rel="alternate" hreflang="<%= post.locale %>" href="<%= @base_url %>/<%= post.locale %>/blog/<%= post.slug.presence || post.id %>" />
+      <lastmod><%= post.updated_at.strftime('%Y-%m-%d') %></lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.5</priority>
+    </url>
+  <% end %>
   
   <!-- Playlists individuelles -->
   <% @playlists.each do |playlist| %>

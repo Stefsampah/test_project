@@ -949,3 +949,120 @@ puts "   - Reggae: 3 playlists (1 standard + 2 premium)"
 puts "   - Rock: 3 playlists (1 standard + 2 premium)"
 puts "   - Rap: 13 playlists (4 standard + 9 premium)"
 puts "   - Total: 32 playlists (320 vidéos)"
+
+# ===========================================
+# BLOG POSTS (SEO)
+# ===========================================
+
+puts "📝 Création des articles de blog..."
+
+rap_ivoire_power_ids = %w[
+  uQjVJKBrGHo
+  fDnY4Bz-ttY
+  zdMS4wZxXIs
+  -LwHX5Nndcw
+  4QLNn0BHjHs
+  2vQhkQiPSoA
+  s5zPAbaiZx4
+  G-sK6B0GKIo
+  RQQJfCK-_EY
+  1_rhXT_4TMU
+]
+random_id = rap_ivoire_power_ids.sample
+thumbnail_url = "https://img.youtube.com/vi/#{random_id}/maxresdefault.jpg"
+playlist = Playlist.find_by(title: "Rap Ivoire Power")
+playlist_link = playlist ? "/playlists/#{playlist.id}" : "/playlists"
+
+post_content = <<~HTML
+  <p>Chaque mois, Tube'NPlay explore les profondeurs du son pour vous ramener des pépites. Des artistes qui n'ont pas encore percé, mais qui méritent votre swipe. Voici les 10 talents qui font vibrer notre radar ce mois-ci.</p>
+
+  <h2>🔍 Sélection du mois</h2>
+  <div class="overflow-x-auto">
+    <table class="w-full text-left text-sm">
+      <thead>
+        <tr>
+          <th>🎧 Artiste</th>
+          <th>🎵 Titre</th>
+          <th>🎙️ Style</th>
+          <th>💬 Accroche</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lesky</td>
+          <td>GAWA</td>
+          <td>Rap mélodique</td>
+          <td>Flow introspectif et prod planante</td>
+        </tr>
+        <tr>
+          <td>Socé</td>
+          <td>À Toi</td>
+          <td>Rap émotion</td>
+          <td>Une lettre ouverte en forme de confession</td>
+        </tr>
+        <tr>
+          <td>Miedjia</td>
+          <td>Foua (C'est Facile)</td>
+          <td>Afro drill</td>
+          <td>Énergie brute et vibe contagieuse</td>
+        </tr>
+        <tr>
+          <td>Leufa</td>
+          <td>Il sait</td>
+          <td>Trap spirituelle</td>
+          <td>Entre prière et punchline</td>
+        </tr>
+        <tr>
+          <td>Le JLO &amp; Ameka Zrai</td>
+          <td>Pleure</td>
+          <td>Rap fusion</td>
+          <td>Deux voix, une douleur partagée</td>
+        </tr>
+        <tr>
+          <td>Lesky</td>
+          <td>Béni</td>
+          <td>Rap</td>
+          <td>Hymne à la résilience</td>
+        </tr>
+        <tr>
+          <td>Kadja</td>
+          <td>Tu dis quoi</td>
+          <td>Afro pop</td>
+          <td>Ambiance festive et refrain entêtant</td>
+        </tr>
+        <tr>
+          <td>Miedjia</td>
+          <td>De Même</td>
+          <td>Drill</td>
+          <td>Flow tranchant et prod sombre</td>
+        </tr>
+        <tr>
+          <td>Albinny</td>
+          <td>BlackArtist</td>
+          <td>Rap engagé</td>
+          <td>Identité forte et message clair</td>
+        </tr>
+        <tr>
+          <td>Kawid</td>
+          <td>Si C'est Pas Dieu</td>
+          <td>Rap spirituel</td>
+          <td>Foi, feu et finesse</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+HTML
+
+post = Post.find_or_initialize_by(slug: "selection-du-mois-rap-ivoire-power", locale: "fr")
+post.title = "Sélection du mois : 10 talents Rap Ivoire Power à écouter"
+post.excerpt = "Chaque mois, Tube'NPlay repère des artistes émergents. Découvrez notre sélection Rap Ivoire Power et nos 10 coups de cœur."
+post.content = post_content
+post.category = "Sélection"
+post.published = true
+post.published_at = Time.current
+post.thumbnail_url = thumbnail_url
+post.meta_title = "Rap Ivoire Power : 10 artistes à découvrir | Tube'NPlay"
+post.meta_description = "Découvrez 10 talents Rap Ivoire Power sélectionnés par Tube'NPlay. Des artistes émergents à écouter dès maintenant."
+post.save!
+
+puts "✅ Article de blog créé"
