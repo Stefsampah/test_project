@@ -10,7 +10,8 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    <%= javascript_include_tag "application", "data-turbo-track": "reload" %>
+    <%# Ne pas charger Turbo sur la page game pour éviter "Cannot set properties of undefined (setting 'Turbolinks')" et garantir que Like/Dislike fonctionnent %>
+    <%= javascript_importmap_tags unless controller_name == "games" && action_name == "show" %>
     
     <style>
       :root {
@@ -386,7 +387,7 @@
       /* Contrôles et overlay - Superposés sur l'image au bas */
       .shorts-controls {
         position: fixed !important;
-        bottom: 170px !important;
+        bottom: 60px !important;
         left: 0 !important;
         right: 0 !important;
         background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
@@ -396,6 +397,7 @@
         visibility: visible !important;
         opacity: 1 !important;
         pointer-events: auto !important;
+        touch-action: manipulation !important;
       }
 
       .shorts-info {
@@ -477,6 +479,7 @@
         opacity: 1 !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
         backdrop-filter: blur(8px) !important;
+        touch-action: manipulation !important;
       }
 
       .action-btn input[type="submit"] {
@@ -921,7 +924,7 @@
               iframe.style.setProperty('top', '0', 'important');
               iframe.style.setProperty('left', '0', 'important');
               iframe.style.setProperty('right', '0', 'important');
-              iframe.style.setProperty('bottom', 'var(--bottom-gap)', 'important');
+              iframe.style.setProperty('bottom', '200px', 'important');
               iframe.style.setProperty('border', 'none', 'important');
               iframe.style.setProperty('margin', '0', 'important');
               iframe.style.setProperty('padding', '0', 'important');
@@ -934,10 +937,14 @@
               iframe.style.setProperty('min-height', '100svh', 'important');
               iframe.style.setProperty('min-height', '100dvh', 'important');
               iframe.style.setProperty('transform', 'scale(2.8)', 'important');
-              iframe.style.setProperty('z-index', '1', 'important');
+              iframe.style.setProperty('z-index', '0', 'important');
               iframe.style.setProperty('display', 'block', 'important');
               iframe.style.setProperty('visibility', 'visible', 'important');
               iframe.style.setProperty('opacity', '1', 'important');
+              // Page game : iframe ne doit pas capter les clics (Like/Dislike doivent les recevoir)
+              if (document.getElementById('game-swipe-player')) {
+                iframe.style.setProperty('pointer-events', 'none', 'important');
+              }
             }
           });
           
@@ -953,7 +960,7 @@
             videoContainer.style.setProperty('right', '0', 'important');
             videoContainer.style.setProperty('bottom', '0', 'important');
             videoContainer.style.setProperty('overflow', 'hidden', 'important');
-            videoContainer.style.setProperty('z-index', '1', 'important');
+            videoContainer.style.setProperty('z-index', '0', 'important');
           }
         }
         
@@ -972,6 +979,8 @@
         
         // Fonction pour détecter la div background et ajuster la limite (une seule fois)
         function adjustToBackgroundDiv() {
+          // Ne pas modifier l'iframe sur la page game (évite que les contrôles soient recouverts)
+          if (document.getElementById('game-swipe-player')) return null;
           // Si déjà calculé, ne pas refaire
           if (backgroundDivLimit !== null) return backgroundDivLimit;
           
@@ -1007,31 +1016,15 @@
           const actions = document.querySelector('.shorts-actions');
           const buttons = document.querySelectorAll('.action-btn');
           
-          console.log('Debug controls:', { controls, actions, buttons: buttons.length });
-          
-          // Debug plus détaillé
-          if (controls) {
-            console.log('Controls found:', controls);
-            console.log('Controls computed style:', window.getComputedStyle(controls));
-          }
-          if (actions) {
-            console.log('Actions found:', actions);
-            console.log('Actions computed style:', window.getComputedStyle(actions));
-          }
-          buttons.forEach((btn, index) => {
-            console.log(`Button ${index}:`, btn);
-            console.log(`Button ${index} computed style:`, window.getComputedStyle(btn));
-          });
-          
           if (controls) {
             controls.style.cssText = `
               position: fixed !important;
-              bottom: 170px !important;
+              bottom: 60px !important;
               left: 0 !important;
               right: 0 !important;
               background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
               padding: 20px 20px 30px 20px !important;
-              z-index: 999999 !important;
+              z-index: 2147483647 !important;
               display: block !important;
               visibility: visible !important;
               opacity: 1 !important;
@@ -1057,7 +1050,6 @@
           }
           
           buttons.forEach((btn, index) => {
-            console.log(`Button ${index}:`, btn);
             const isLike = btn.classList.contains('like');
             const isDislike = btn.classList.contains('dislike');
             
@@ -1104,8 +1096,10 @@
             }
           });
           
-          // Si aucun bouton trouvé, créer des boutons de test
-          if (buttons.length === 0) {
+          // Ne pas remplacer les boutons sur la page game ni si data-action (Stimulus)
+          const isGamePage = actions && actions.closest('#game-swipe-player');
+          const hasStimulusActions = buttons.length > 0 && buttons[0].hasAttribute('data-action');
+          if (!isGamePage && buttons.length === 0 && !hasStimulusActions) {
             console.log('Aucun bouton trouvé, création de boutons de test');
             if (actions) {
               actions.innerHTML = `
@@ -1169,12 +1163,14 @@
           // Ne pas appeler adjustToBackgroundDiv constamment
         }, 500);
         
-        // Forcer les styles de l'iframe encore plus fréquemment
-      setInterval(function() {
-          forceIframeStyles();
-          forceControlsVisibility();
-          // Ne pas appeler adjustToBackgroundDiv constamment
-        }, 1);
+        // Sur la page game, ne pas forcer les styles en boucle (évite de perturber les clics Like/Dislike)
+        var isGamePage = !!document.getElementById('game-swipe-player');
+        if (!isGamePage) {
+          setInterval(function() {
+            forceIframeStyles();
+            forceControlsVisibility();
+          }, 1);
+        }
         
         // Appliquer sur tous les événements de redimensionnement
         ['resize', 'orientationchange', 'focus', 'blur'].forEach(event => {

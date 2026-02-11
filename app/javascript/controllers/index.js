@@ -9,3 +9,5 @@ eagerLoadControllersFrom("controllers", application)
 // Manually register controllers
 import BadgesController from "./badges_controller"
 application.register("badges", BadgesController)
+import SwipeController from "./swipe_controller"
+application.register("swipe", SwipeController)

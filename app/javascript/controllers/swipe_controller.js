@@ -10,10 +10,12 @@ export default class extends Controller {
   }
 
   like() {
+    console.log("Swipe: like cliqué")
     this.handleSwipe(true)
   }
 
   dislike() {
+    console.log("Swipe: dislike cliqué")
     this.handleSwipe(false)
   }
 

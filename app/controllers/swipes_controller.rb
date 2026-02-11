@@ -32,6 +32,7 @@ class SwipesController < ApplicationController
           success: true, 
           next_video_id: next_video.id,
           next_video_youtube_id: next_video.youtube_id,
+          next_video_title: next_video.title,
           redirect: playlist_game_path(playlist, game)
         }, status: :ok
       else
@@ -75,6 +76,7 @@ class SwipesController < ApplicationController
           success: true, 
           next_video_id: next_video.id,
           next_video_youtube_id: next_video.youtube_id,
+          next_video_title: next_video.title,
           redirect: playlist_game_path(playlist, game)
         }, status: :ok
       else

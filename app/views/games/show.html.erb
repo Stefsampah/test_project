@@ -1,7 +1,6 @@
 <div class="shorts-container">
   <% if @game.current_video %>
-    <div class="shorts-player"
-         data-controller="swipe"
+    <div class="shorts-player" id="game-swipe-player"
          data-swipe-video-id="<%= @game.current_video.id %>"
          data-swipe-playlist-id="<%= @playlist.id %>"
          data-swipe-game-id="<%= @game.id %>">
@@ -10,7 +9,9 @@
         <div id="video-container-<%= @game.current_video.id %>" style="width: 100%; height: 100%; position: relative;">
           <% 
             # Détection Safari mobile côté serveur
-            is_safari_mobile = request.user_agent.to_s.match?(/iPhone|iPad|iPod/)
+            # Uniquement en production, pour éviter les faux positifs en dev (Chrome + émulation iPhone)
+            ua = request.user_agent.to_s
+            is_safari_mobile = Rails.env.production? && ua.match?(/iPhone|iPad|iPod/) && ua.include?("Safari") && !ua.match?(/CriOS|Chrome/)
             
             # Pour Safari mobile, ne pas charger l'iframe directement (sera chargée après interaction)
             if is_safari_mobile
@@ -39,15 +40,15 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important;">
+            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important;">
           </iframe>
           <% end %>
           
           <!-- Overlay avec bouton play pour Safari mobile -->
           <% if is_safari_mobile %>
-          <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;">
             <div style="color: white; text-align: center; padding: 20px;">
-              <button onclick="loadVideoOnSafari('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000;">
+              <button onclick="loadVideoOnSafari('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">
                 ▶
               </button>
               <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
@@ -295,27 +296,174 @@
         </script>
       </div>
 
+      <!-- Zone cliquable en bas : bloque les clics à l'iframe pour que Like/Dislike reçoivent les touches -->
+      <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 220px !important; z-index: 2147483646 !important; pointer-events: auto !important; touch-action: manipulation !important;"></div>
       <!-- Contrôles et informations -->
       <div class="shorts-controls">
-        <div class="shorts-info">
-          <h2><%= @game.current_video.title %></h2>
-          <p><%= @playlist.title %></p>
-        </div>
-        
         <div class="shorts-actions">
-          <button type="button" class="action-btn dislike" data-action="click->swipe#dislike">
+          <button type="button" class="action-btn dislike" id="game-btn-dislike" onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();} return false;" ontouchend="if(window.gameSwipeDislike){event.preventDefault();window.gameSwipeDislike();} return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
               <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <button type="button" class="action-btn like" data-action="click->swipe#like">
+          <button type="button" class="action-btn like" id="game-btn-like" onclick="if(window.gameSwipeLike){window.gameSwipeLike();} return false;" ontouchend="if(window.gameSwipeLike){event.preventDefault();window.gameSwipeLike();} return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-icon">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
           </button>
         </div>
+
+        <div class="shorts-info">
+          <h2><%= @game.current_video.title %></h2>
+          <p><%= @playlist.title %></p>
+        </div>
       </div>
     </div>
+
+    <script>
+    (function() {
+      function initGameSwipe() {
+        var player = document.getElementById('game-swipe-player');
+        if (!player) { console.warn('[Game] game-swipe-player non trouvé'); return; }
+
+        var isProcessing = false;
+
+      function getData() {
+        return {
+          videoId: player.getAttribute('data-swipe-video-id'),
+          playlistId: player.getAttribute('data-swipe-playlist-id'),
+          gameId: player.getAttribute('data-swipe-game-id')
+        };
+      }
+
+      function setButtonsEnabled(enabled) {
+        var btns = player.querySelectorAll('.action-btn');
+        btns.forEach(function(btn) {
+          btn.disabled = !enabled;
+          btn.style.opacity = enabled ? '1' : '0.5';
+        });
+      }
+
+      function handleSwipe(liked) {
+        if (isProcessing) return;
+        var d = getData();
+        if (!d.videoId || !d.playlistId || !d.gameId) {
+          alert('Données manquantes. Rechargez la page.');
+          return;
+        }
+        isProcessing = true;
+        setButtonsEnabled(false);
+
+        var csrf = document.querySelector('meta[name="csrf-token"]');
+        var token = csrf ? csrf.getAttribute('content') : '';
+
+        fetch('/swipes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': token,
+            'Accept': 'application/json'
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            video_id: d.videoId,
+            playlist_id: d.playlistId,
+            game_id: d.gameId,
+            liked: liked
+          })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.success) {
+            if (data.redirect) window.location.href = data.redirect;
+            else { isProcessing = false; setButtonsEnabled(true); alert(data.error || 'Erreur'); }
+            return;
+          }
+          if (data.completed) {
+            window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId + '/results';
+            return;
+          }
+          if (data.next_video_id && data.next_video_youtube_id) {
+            var isSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isSafari && typeof window.loadVideoOnSafari === 'function') {
+              try {
+                window.loadVideoOnSafari(data.next_video_id, data.next_video_youtube_id);
+              } catch (e) {
+                window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
+                return;
+              }
+            } else {
+              var iframe = document.querySelector('iframe[id^="youtube-player-"]');
+              if (iframe) {
+                var base = window.location.origin;
+                iframe.src = 'https://www.youtube.com/embed/' + data.next_video_youtube_id +
+                  '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
+                  '&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
+              } else {
+                window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
+                return;
+              }
+            }
+            player.setAttribute('data-swipe-video-id', String(data.next_video_id));
+            var titleEl = document.querySelector('.shorts-info h2');
+            if (titleEl && data.next_video_title) titleEl.textContent = data.next_video_title;
+            isProcessing = false;
+            setButtonsEnabled(true);
+          } else {
+            window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
+          }
+        })
+        .catch(function(err) {
+          console.error('Swipe error:', err);
+          isProcessing = false;
+          setButtonsEnabled(true);
+          alert('Erreur de connexion. Réessayez.');
+        });
+      }
+
+        // Exposer les fonctions globales pour les onclick/ontouchend inline (fallback fiable)
+        window.gameSwipeLike = function() { handleSwipe(true); };
+        window.gameSwipeDislike = function() { handleSwipe(false); };
+
+        // Handlers directs sur les boutons
+        var btnLike = document.getElementById('game-btn-like');
+        var btnDislike = document.getElementById('game-btn-dislike');
+        function bindButton(btn, liked) {
+          if (!btn) return;
+          function doSwipe(e) {
+            if (e) { e.preventDefault(); e.stopPropagation(); }
+            handleSwipe(liked);
+          }
+          btn.onclick = doSwipe;
+          btn.ontouchend = function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSwipe(liked);
+          };
+        }
+        bindButton(btnLike, true);
+        bindButton(btnDislike, false);
+        console.log('[Game] Like/Dislike initialisés (boutons:', !!btnLike, !!btnDislike, ')');
+
+        // Capture au niveau document en secours (zone contrôle pour ne pas donner le focus à l'iframe)
+        function onPlayerClick(e) {
+          var zone = document.getElementById('game-controls-zone');
+          if (zone && zone.contains(e.target)) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }
+        document.addEventListener('click', onPlayerClick, true);
+        document.addEventListener('touchend', onPlayerClick, true);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGameSwipe);
+      } else {
+        initGameSwipe();
+      }
+    })();
+    </script>
   <% else %>
     <div class="shorts-end">
       <div class="end-message">
