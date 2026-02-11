@@ -35,3 +35,7 @@
 
 # macOS
 .DS_Store
+
+# Vidéos lourdes (limite GitHub 100 Mo)
+*.mov
+app/assets/images/about/video_tubenplay.mov
