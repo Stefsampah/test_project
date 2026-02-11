@@ -1,6 +1,10 @@
 <div class="shorts-container">
   <% if @game.current_video %>
-    <div class="shorts-player">
+    <div class="shorts-player"
+         data-controller="swipe"
+         data-swipe-video-id="<%= @game.current_video.id %>"
+         data-swipe-playlist-id="<%= @playlist.id %>"
+         data-swipe-game-id="<%= @game.id %>">
       <!-- Vidéo -->
       <div class="shorts-video">
         <div id="video-container-<%= @game.current_video.id %>" style="width: 100%; height: 100%; position: relative;">
@@ -153,9 +157,9 @@
             window.loadVideoOnSafari = function(videoId, youtubeId) {
               console.log('🎬 loadVideoOnSafari appelée pour vidéo:', videoId, 'youtubeId:', youtubeId);
               
-              // Trouver le conteneur et l'iframe existante
-              const container = document.getElementById('video-container-' + videoId);
-              const currentIframe = document.getElementById('youtube-player-' + videoId);
+              // Trouver le conteneur (fallback: premier video-container pour vidéo suivante après swipe)
+              const container = document.getElementById('video-container-' + videoId) || document.querySelector('[id^="video-container-"]');
+              const currentIframe = document.getElementById('youtube-player-' + videoId) || document.querySelector('iframe[id^="youtube-player-"]');
               const playButton = document.getElementById('video-play-button-' + videoId);
               
               console.log('🔍 Recherche iframe:', 'youtube-player-' + videoId);
@@ -299,21 +303,16 @@
         </div>
         
         <div class="shorts-actions">
-          <%= button_to swipe_playlist_game_path(@playlist, @game, direction: "dislike"), 
-              method: :post, 
-              class: "action-btn dislike" do %>
+          <button type="button" class="action-btn dislike" data-action="click->swipe#dislike">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
               <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          <% end %>
-          
-          <%= button_to swipe_playlist_game_path(@playlist, @game, direction: "like"), 
-              method: :post, 
-              class: "action-btn like" do %>
+          </button>
+          <button type="button" class="action-btn like" data-action="click->swipe#like">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-icon">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
-          <% end %>
+          </button>
         </div>
       </div>
     </div>

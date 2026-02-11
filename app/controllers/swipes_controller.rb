@@ -31,6 +31,7 @@ class SwipesController < ApplicationController
         return render json: { 
           success: true, 
           next_video_id: next_video.id,
+          next_video_youtube_id: next_video.youtube_id,
           redirect: playlist_game_path(playlist, game)
         }, status: :ok
       else
@@ -73,6 +74,7 @@ class SwipesController < ApplicationController
         render json: { 
           success: true, 
           next_video_id: next_video.id,
+          next_video_youtube_id: next_video.youtube_id,
           redirect: playlist_game_path(playlist, game)
         }, status: :ok
       else

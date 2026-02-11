@@ -24,9 +24,9 @@ export default class extends Controller {
       return
     }
 
-    const videoId = this.element.dataset.videoId
-    const playlistId = this.element.dataset.playlistId
-    const gameId = this.element.dataset.gameId
+    const videoId = this.element.dataset.swipeVideoId
+    const playlistId = this.element.dataset.swipePlaylistId
+    const gameId = this.element.dataset.swipeGameId
 
     if (!videoId || !playlistId || !gameId) {
       console.error("Données manquantes pour le swipe", { videoId, playlistId, gameId })
@@ -61,14 +61,37 @@ export default class extends Controller {
       })
 
       const data = await response.json()
+      const isSafariMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream
 
       if (response.ok && data.success) {
-        // Succès - rediriger vers la prochaine vidéo ou les résultats
         if (data.completed) {
-          // Jeu terminé - rediriger vers les résultats
           window.location.href = data.redirect || `/playlists/${playlistId}/games/${gameId}/results`
+        } else if (data.next_video_id && data.next_video_youtube_id) {
+          if (isSafariMobile && typeof window.loadVideoOnSafari === 'function') {
+            try {
+              window.loadVideoOnSafari(data.next_video_id, data.next_video_youtube_id)
+            } catch (e) {
+              console.error('loadVideoOnSafari:', e)
+              window.location.href = data.redirect || `/playlists/${playlistId}/games/${gameId}`
+              return
+            }
+          } else {
+            const iframe = document.querySelector('iframe[id^="youtube-player-"]')
+            if (iframe) {
+              const baseUrl = window.location.origin
+              iframe.src = 'https://www.youtube.com/embed/' + data.next_video_youtube_id +
+                '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
+                '&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1' +
+                '&origin=' + encodeURIComponent(baseUrl)
+            } else {
+              window.location.href = data.redirect || `/playlists/${playlistId}/games/${gameId}`
+              return
+            }
+          }
+          this.element.dataset.swipeVideoId = String(data.next_video_id)
+          this.isProcessing = false
+          buttons.forEach(btn => { btn.disabled = false; btn.style.opacity = '1' })
         } else {
-          // Vidéo suivante - rediriger vers la prochaine vidéo
           window.location.href = data.redirect || `/playlists/${playlistId}/games/${gameId}`
         }
       } else {
