@@ -22,8 +22,8 @@
             end
           %>
           <% if is_safari_mobile %>
-          <!-- Option B : 1 tap = lecture immédiate (muet) via API YouTube -->
-          <div id="game-yt-player-host" style="position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: calc(100vh - 120px) !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; background: #000 !important; display: none;"></div>
+          <!-- Safari : une iframe, on met à jour son src (1 tap = lecture muet, vidéo suivante = nouveau src) -->
+          <iframe id="game-safari-iframe" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="display: none !important; width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;"></iframe>
           <iframe id="youtube-player-<%= @game.current_video.id %>" src="" style="display: none;" title="YouTube"></iframe>
           <% else %>
           <iframe 
@@ -70,14 +70,6 @@
         <style>
           @keyframes spin {
             to { transform: rotate(360deg); }
-          }
-          #game-yt-player-host iframe {
-            width: 100% !important;
-            height: 100% !important;
-            border: none !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
           }
         </style>
         
@@ -155,65 +147,22 @@
               showError();
             });
             
-            // Option B (Safari) : 1 tap = lecture immédiate (muet), bouton "Activer le son"
-            window.gameYtPlayer = null;
+            // Safari : iframe simple, on met à jour src (vidéo correcte à chaque fois)
+            window.currentSafariYoutubeId = null;
             window.loadVideoOnSafari = function(videoId, youtubeId) {
               var playButton = document.getElementById('video-play-button-' + videoId) || document.querySelector('[id^="video-play-button-"]');
               if (playButton) playButton.style.display = 'none';
-              var host = document.getElementById('game-yt-player-host');
-              if (!host) return;
-              host.style.display = 'block';
+              var safariIframe = document.getElementById('game-safari-iframe');
+              if (!safariIframe) return;
+              window.currentSafariYoutubeId = youtubeId;
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
+              safariIframe.src = url;
+              safariIframe.style.setProperty('display', 'block', 'important');
               var sonBtn = document.getElementById('game-sound-btn');
-              function showSoundBtn() {
-                if (sonBtn) {
-                  sonBtn.style.display = 'block';
-                  sonBtn.textContent = '🔊 Activer le son';
-                  sonBtn.style.opacity = '1';
-                }
-              }
-              var hadPlayer = !!window.gameYtPlayer;
-              if (window.gameYtPlayer && host) {
-                host.innerHTML = '';
-                window.gameYtPlayer = null;
-              }
-              window.pendingYtPlay = { videoId: videoId, youtubeId: youtubeId, playButton: playButton };
-              if (!window.YT || !window.YT.Player) {
-                var tag = document.createElement('script');
-                tag.src = 'https://www.youtube.com/iframe_api';
-                document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
-              }
-              var checkReady = function() {
-                if (window.YT && window.YT.Player && window.pendingYtPlay) {
-                  var p = window.pendingYtPlay;
-                  var hostEl = document.getElementById('game-yt-player-host');
-                  if (!hostEl) return;
-                  if (hostEl.children.length > 0) hostEl.innerHTML = '';
-                  window.gameYtPlayer = new YT.Player('game-yt-player-host', {
-                    width: '100%',
-                    height: '100%',
-                    videoId: p.youtubeId,
-                    playerVars: { autoplay: 1, mute: 1, playsinline: 1, controls: 0, rel: 0, modestbranding: 1 },
-                    events: {
-                      onReady: function(e) {
-                        e.target.playVideo();
-                        window.pendingYtPlay = null;
-                        showSoundBtn();
-                      }
-                    }
-                  });
-                } else if (window.pendingYtPlay) {
-                  setTimeout(checkReady, 100);
-                }
-              };
-              if (window.YT && window.YT.Player) {
-                if (hadPlayer) {
-                  setTimeout(checkReady, 50);
-                } else {
-                  checkReady();
-                }
-              } else {
-                window.onYouTubeIframeAPIReady = function() { checkReady(); };
-                setTimeout(checkReady, 500);
+              if (sonBtn) {
+                sonBtn.style.display = 'block';
+                sonBtn.textContent = '🔊 Activer le son';
+                sonBtn.style.opacity = '1';
               }
             };
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
@@ -234,26 +183,10 @@
               function unmute() {
                 soundBtn.textContent = '✓ Son activé';
                 soundBtn.style.opacity = '0.8';
-                if (window.gameYtPlayer) {
-                  try {
-                    if (typeof window.gameYtPlayer.unMute === 'function') {
-                      window.gameYtPlayer.unMute();
-                    }
-                    if (typeof window.gameYtPlayer.setVolume === 'function') {
-                      window.gameYtPlayer.setVolume(100);
-                    }
-                  } catch (err) {}
-                }
-                var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-                if (isIOS) {
-                  var oldTip = document.getElementById('game-sound-tip');
-                  if (oldTip) oldTip.remove();
-                  var tip = document.createElement('div');
-                  tip.id = 'game-sound-tip';
-                  tip.style.cssText = 'position: fixed; bottom: 240px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 10000004; max-width: 90%; text-align: center; pointer-events: none;';
-                  tip.textContent = 'Si le son ne s\'active pas, touchez la vidéo.';
-                  document.body.appendChild(tip);
-                  setTimeout(function() { if (tip.parentNode) tip.remove(); }, 4000);
+                var yid = window.currentSafariYoutubeId;
+                var safariIframe = document.getElementById('game-safari-iframe');
+                if (yid && safariIframe) {
+                  safariIframe.src = 'https://www.youtube.com/embed/' + yid + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
                 }
               }
               soundBtn.addEventListener('click', function(e) { e.preventDefault(); unmute(); });
