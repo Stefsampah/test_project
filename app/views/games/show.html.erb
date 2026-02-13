@@ -22,16 +22,9 @@
             end
           %>
           <% if is_safari_mobile %>
-          <!-- Pour Safari mobile, iframe visible mais vide jusqu'au clic -->
-          <iframe 
-            id="youtube-player-<%= @game.current_video.id %>"
-            src=""
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
-          </iframe>
+          <!-- Option B : 1 tap = lecture immédiate (muet) via API YouTube -->
+          <div id="game-yt-player-host" style="position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: calc(100vh - 120px) !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; background: #000 !important; display: none;"></div>
+          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" style="display: none;" title="YouTube"></iframe>
           <% else %>
           <iframe 
             id="youtube-player-<%= @game.current_video.id %>"
@@ -44,7 +37,7 @@
           </iframe>
           <% end %>
           
-          <!-- Overlay avec bouton play pour Safari mobile (touchend pour iOS) -->
+          <!-- Option B : 1 tap = lancer (muet) ; bouton « Activer le son » bien visible -->
           <% if is_safari_mobile %>
           <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;">
             <div style="color: white; text-align: center; padding: 20px;">
@@ -54,6 +47,7 @@
               <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
             </div>
           </div>
+          <button type="button" id="game-sound-btn" style="display: none; position: fixed; top: 16px; right: 16px; z-index: 10000003; background: rgba(0,0,0,0.75); color: white; border: 2px solid rgba(255,255,255,0.9); padding: 12px 18px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 12px rgba(0,0,0,0.4);">🔊 Activer le son</button>
           <% else %>
           <!-- Overlay de chargement pour autres navigateurs -->
           <div id="video-loading-<%= @game.current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -76,6 +70,14 @@
         <style>
           @keyframes spin {
             to { transform: rotate(360deg); }
+          }
+          #game-yt-player-host iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
           }
         </style>
         
@@ -153,89 +155,61 @@
               showError();
             });
             
-            // Fonction pour charger la vidéo sur Safari mobile après interaction utilisateur
-            // Définie globalement pour être accessible après rechargement de page
+            // Option B (Safari) : 1 tap = lecture immédiate (muet), bouton "Activer le son"
+            window.gameYtPlayer = null;
             window.loadVideoOnSafari = function(videoId, youtubeId) {
-              console.log('🎬 loadVideoOnSafari appelée pour vidéo:', videoId, 'youtubeId:', youtubeId);
-              
-              // Trouver le conteneur (fallback: premier video-container pour vidéo suivante après swipe)
-              const container = document.getElementById('video-container-' + videoId) || document.querySelector('[id^="video-container-"]');
-              const currentIframe = document.getElementById('youtube-player-' + videoId) || document.querySelector('iframe[id^="youtube-player-"]');
-              const playButton = document.getElementById('video-play-button-' + videoId);
-              
-              console.log('🔍 Recherche iframe:', 'youtube-player-' + videoId);
-              console.log('🔍 Iframe trouvée:', currentIframe ? 'OUI' : 'NON');
-              console.log('🔍 Conteneur trouvé:', container ? 'OUI' : 'NON');
-              console.log('🔍 Bouton trouvé:', playButton ? 'OUI' : 'NON');
-              
-              if (!container) {
-                console.error('❌ Conteneur non trouvé pour la vidéo:', videoId);
-                alert('Erreur: Conteneur non trouvé. Veuillez rafraîchir la page.');
+              var playButton = document.getElementById('video-play-button-' + videoId) || document.querySelector('[id^="video-play-button-"]');
+              if (playButton) playButton.style.display = 'none';
+              var host = document.getElementById('game-yt-player-host');
+              if (!host) return;
+              host.style.display = 'block';
+              var sonBtn = document.getElementById('game-sound-btn');
+              function showSoundBtn() {
+                if (sonBtn) {
+                  sonBtn.style.display = 'block';
+                  sonBtn.textContent = '🔊 Activer le son';
+                  sonBtn.style.opacity = '1';
+                }
+              }
+              if (window.gameYtPlayer && typeof window.gameYtPlayer.loadVideoById === 'function') {
+                window.gameYtPlayer.loadVideoById(youtubeId);
+                window.gameYtPlayer.playVideo();
+                showSoundBtn();
                 return;
               }
-              
-              // Masquer le bouton play immédiatement
-              if (playButton) {
-                playButton.style.display = 'none';
-                console.log('✅ Bouton play masqué');
+              window.pendingYtPlay = { videoId: videoId, youtubeId: youtubeId, playButton: playButton };
+              if (!window.YT || !window.YT.Player) {
+                var tag = document.createElement('script');
+                tag.src = 'https://www.youtube.com/iframe_api';
+                document.getElementsByTagName('script')[0].parentNode.insertBefore(tag, document.getElementsByTagName('script')[0]);
               }
-              
-              // URL pour Safari mobile avec enablejsapi pour meilleur contrôle
-              // L'interaction utilisateur permet l'autoplay avec son
-              const baseUrl = window.location.origin;
-              const videoUrl = 'https://www.youtube.com/embed/' + youtubeId + 
-                '?autoplay=1' +
-                '&mute=0' +
-                '&playsinline=1' +
-                '&controls=0' +
-                '&rel=0' +
-                '&modestbranding=1' +
-                '&enablejsapi=1' +
-                '&origin=' + encodeURIComponent(baseUrl);
-              
-              console.log('📺 Chargement URL:', videoUrl);
-              
-              // Remplacer complètement l'iframe par une nouvelle pour forcer Safari à recharger
-              if (currentIframe) {
-                currentIframe.remove();
-                console.log('🗑️ Ancienne iframe supprimée');
-              }
-              
-              // Même scale que la version locale (2.2) pour format identique
-              var iframeScale = 2.2;
-              // Créer une nouvelle iframe (pointer-events: auto pour que le Play YouTube soit cliquable)
-              const newIframe = document.createElement('iframe');
-              newIframe.id = 'youtube-player-' + videoId;
-              newIframe.src = videoUrl;
-              newIframe.title = 'YouTube video player';
-              newIframe.frameBorder = '0';
-              newIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-              newIframe.allowFullscreen = true;
-              newIframe.style.cssText = 'width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(' + iframeScale + ') !important; transform-origin: center center !important; object-fit: cover !important; background: #000;';
-              
-              // Insérer la nouvelle iframe dans le conteneur
-              container.insertBefore(newIframe, container.firstChild);
-              console.log('✅ Nouvelle iframe créée et insérée');
-              
-              // Écouter le chargement de la nouvelle vidéo
-              newIframe.addEventListener('load', function() {
-                console.log('✅ Nouvelle vidéo chargée avec succès');
-              }, { once: true });
-              
-              // Timeout pour détecter si la vidéo ne charge pas
-              setTimeout(function() {
-                if (!newIframe.src || newIframe.src === '') {
-                  console.error('❌ Erreur: iframe src est vide après chargement');
-                } else {
-                  console.log('✅ Vérification: iframe src chargé =', newIframe.src.substring(0, 50) + '...');
+              var checkReady = function() {
+                if (window.YT && window.YT.Player && window.pendingYtPlay) {
+                  var p = window.pendingYtPlay;
+                  window.gameYtPlayer = new YT.Player('game-yt-player-host', {
+                    width: '100%',
+                    height: '100%',
+                    videoId: p.youtubeId,
+                    playerVars: { autoplay: 1, mute: 1, playsinline: 1, controls: 0, rel: 0, modestbranding: 1 },
+                    events: {
+                      onReady: function(e) {
+                        e.target.playVideo();
+                        window.pendingYtPlay = null;
+                        showSoundBtn();
+                      }
+                    }
+                  });
+                } else if (window.pendingYtPlay) {
+                  setTimeout(checkReady, 100);
                 }
-              }, 2000);
+              };
+              if (window.YT && window.YT.Player) {
+                checkReady();
+              } else {
+                window.onYouTubeIframeAPIReady = function() { checkReady(); };
+                setTimeout(checkReady, 500);
+              }
             };
-            
-            // S'assurer que la fonction est accessible globalement
-            console.log('✅ Fonction loadVideoOnSafari définie globalement:', typeof window.loadVideoOnSafari);
-            
-            // Bouton Play : touchend + click pour iOS (le clic seul peut ne pas déclencher la vidéo)
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
             if (playBtn && isSafariMobile) {
               function doPlay(e) {
@@ -247,6 +221,21 @@
                 e.preventDefault();
                 e.stopPropagation();
                 doPlay(e);
+              }, { passive: false });
+            }
+            var soundBtn = document.getElementById('game-sound-btn');
+            if (soundBtn && isSafariMobile) {
+              function unmute() {
+                if (window.gameYtPlayer && typeof window.gameYtPlayer.unMute === 'function') {
+                  window.gameYtPlayer.unMute();
+                  soundBtn.textContent = '✓ Son activé';
+                  soundBtn.style.opacity = '0.8';
+                }
+              }
+              soundBtn.addEventListener('click', unmute);
+              soundBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                unmute();
               }, { passive: false });
             }
             
@@ -407,31 +396,8 @@
             if (titleEl && data.next_video_title) titleEl.textContent = data.next_video_title;
 
             if (isSafari && typeof window.loadVideoOnSafari === 'function') {
-              // Afficher notre overlay "Play" pour que l'utilisateur lance la vidéo dans un geste direct → autoplay possible
-              var nextId = data.next_video_id;
-              var nextYtId = data.next_video_youtube_id;
-              var existingOverlay = document.getElementById('video-play-button-' + nextId);
-              if (existingOverlay) existingOverlay.remove();
-              var currentIframe = document.querySelector('iframe[id^="youtube-player-"]');
-              if (currentIframe) currentIframe.remove();
-              var overlay = document.createElement('div');
-              overlay.id = 'video-play-button-' + nextId;
-              overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;';
-              overlay.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">' +
-                '<button type="button" id="safari-play-btn-' + nextId + '" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">▶</button>' +
-                '<p style="margin-top: 20px; font-size: 16px;">Vidéo suivante – Appuyez pour lancer</p></div>';
-              player.appendChild(overlay);
-              var btn = document.getElementById('safari-play-btn-' + nextId);
-              function doPlayNext(e) {
-                if (e) { e.preventDefault(); e.stopPropagation(); }
-                window.loadVideoOnSafari(nextId, nextYtId);
-              }
-              btn.addEventListener('click', function(e) { e.preventDefault(); doPlayNext(e); });
-              btn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                doPlayNext(e);
-              }, { passive: false });
+              // Vidéo suivante avec son (iframe) ; si iOS bloque l'autoplay, l'utilisateur tape sur le Play YouTube
+              window.loadVideoOnSafari(data.next_video_id, data.next_video_youtube_id);
             } else {
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (iframe) {
