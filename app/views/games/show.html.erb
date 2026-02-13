@@ -47,7 +47,7 @@
               <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
             </div>
           </div>
-          <button type="button" id="game-sound-btn" style="display: none; position: fixed; top: 16px; right: 16px; z-index: 10000003; background: rgba(0,0,0,0.75); color: white; border: 2px solid rgba(255,255,255,0.9); padding: 12px 18px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 12px rgba(0,0,0,0.4);">🔊 Activer le son</button>
+          <button type="button" id="game-sound-btn" style="display: none; position: fixed; top: 16px; right: 16px; z-index: 10000003; background: rgba(0,0,0,0.75); color: white; border: 2px solid rgba(255,255,255,0.9); padding: 12px 18px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 12px rgba(0,0,0,0.4);">🔊 Ouvrir avec le son</button>
           <% else %>
           <!-- Overlay de chargement pour autres navigateurs -->
           <div id="video-loading-<%= @game.current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -161,7 +161,7 @@
               var sonBtn = document.getElementById('game-sound-btn');
               if (sonBtn) {
                 sonBtn.style.display = 'block';
-                sonBtn.textContent = '🔊 Activer le son';
+                sonBtn.textContent = '🔊 Ouvrir avec le son';
                 sonBtn.style.opacity = '1';
               }
             };
@@ -180,20 +180,19 @@
             }
             var soundBtn = document.getElementById('game-sound-btn');
             if (soundBtn && isSafariMobile) {
-              function unmute() {
-                soundBtn.textContent = '✓ Son activé';
-                soundBtn.style.opacity = '0.8';
+              function openWithSound() {
                 var yid = window.currentSafariYoutubeId;
-                var safariIframe = document.getElementById('game-safari-iframe');
-                if (yid && safariIframe) {
-                  safariIframe.src = 'https://www.youtube.com/embed/' + yid + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
+                if (yid) {
+                  window.open('https://www.youtube.com/watch?v=' + yid, '_blank');
                 }
+                soundBtn.textContent = '✓ Ouvert';
+                soundBtn.style.opacity = '0.8';
               }
-              soundBtn.addEventListener('click', function(e) { e.preventDefault(); unmute(); });
+              soundBtn.addEventListener('click', function(e) { e.preventDefault(); openWithSound(); });
               soundBtn.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                unmute();
+                openWithSound();
               }, { passive: false });
             }
             
