@@ -384,6 +384,15 @@
         object-position: center !important;
       }
 
+      /* iPhone / petit écran : moins de zoom sur la page game pour éviter vidéo trop grande */
+      @media screen and (max-width: 500px) {
+        #game-swipe-player iframe[src*="youtube"],
+        #game-swipe-player iframe {
+          transform: scale(1.4) !important;
+          transform-origin: center center !important;
+        }
+      }
+
       /* Contrôles et overlay - Superposés sur l'image au bas */
       .shorts-controls {
         position: fixed !important;
@@ -936,13 +945,17 @@
               iframe.style.setProperty('min-height', '100vh', 'important');
               iframe.style.setProperty('min-height', '100svh', 'important');
               iframe.style.setProperty('min-height', '100dvh', 'important');
-              iframe.style.setProperty('transform', 'scale(2.8)', 'important');
+              // Sur mobile (iPhone XR etc.) : scale réduit pour éviter zoom énorme
+              var isGamePage = !!document.getElementById('game-swipe-player');
+              var isNarrow = window.innerWidth <= 500;
+              var scale = (isGamePage && isNarrow) ? '1.4' : '2.8';
+              iframe.style.setProperty('transform', 'scale(' + scale + ')', 'important');
               iframe.style.setProperty('z-index', '0', 'important');
               iframe.style.setProperty('display', 'block', 'important');
               iframe.style.setProperty('visibility', 'visible', 'important');
               iframe.style.setProperty('opacity', '1', 'important');
               // Page game : iframe ne doit pas capter les clics (Like/Dislike doivent les recevoir)
-              if (document.getElementById('game-swipe-player')) {
+              if (isGamePage) {
                 iframe.style.setProperty('pointer-events', 'none', 'important');
               }
             }

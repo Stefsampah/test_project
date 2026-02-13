@@ -30,7 +30,7 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
+            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(1.4) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
           </iframe>
           <% else %>
           <iframe 
@@ -44,11 +44,11 @@
           </iframe>
           <% end %>
           
-          <!-- Overlay avec bouton play pour Safari mobile -->
+          <!-- Overlay avec bouton play pour Safari mobile (touchend pour iOS) -->
           <% if is_safari_mobile %>
           <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;">
             <div style="color: white; text-align: center; padding: 20px;">
-              <button onclick="loadVideoOnSafari('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">
+              <button type="button" id="safari-play-btn-<%= @game.current_video.id %>" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">
                 ▶
               </button>
               <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
@@ -201,6 +201,8 @@
                 console.log('🗑️ Ancienne iframe supprimée');
               }
               
+              // Scale réduit sur mobile (iPhone XR etc.) pour éviter zoom énorme
+              var iframeScale = (window.innerWidth <= 500) ? 1.4 : 2.2;
               // Créer une nouvelle iframe
               const newIframe = document.createElement('iframe');
               newIframe.id = 'youtube-player-' + videoId;
@@ -209,7 +211,7 @@
               newIframe.frameBorder = '0';
               newIframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
               newIframe.allowFullscreen = true;
-              newIframe.style.cssText = 'width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;';
+              newIframe.style.cssText = 'width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(' + iframeScale + ') !important; transform-origin: center center !important; object-fit: cover !important; background: #000;';
               
               // Insérer la nouvelle iframe dans le conteneur
               container.insertBefore(newIframe, container.firstChild);
@@ -232,6 +234,21 @@
             
             // S'assurer que la fonction est accessible globalement
             console.log('✅ Fonction loadVideoOnSafari définie globalement:', typeof window.loadVideoOnSafari);
+            
+            // Bouton Play : touchend + click pour iOS (le clic seul peut ne pas déclencher la vidéo)
+            var playBtn = document.getElementById('safari-play-btn-' + videoId);
+            if (playBtn && isSafariMobile) {
+              function doPlay(e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                window.loadVideoOnSafari(videoId, youtubeId);
+              }
+              playBtn.addEventListener('click', function(e) { e.preventDefault(); doPlay(e); });
+              playBtn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                doPlay(e);
+              }, { passive: false });
+            }
             
             // Fonction de retry
             window.retryVideoLoad = function(videoId, youtubeId) {
