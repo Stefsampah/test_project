@@ -384,12 +384,16 @@
         object-position: center !important;
       }
 
-      /* iPhone / petit écran : moins de zoom sur la page game pour éviter vidéo trop grande */
+      /* iPhone / petit écran : scale modéré pour que la vidéo ne paraisse pas zoomée */
       @media screen and (max-width: 500px) {
         #game-swipe-player iframe[src*="youtube"],
         #game-swipe-player iframe {
-          transform: scale(1.4) !important;
+          transform: scale(1.15) !important;
           transform-origin: center center !important;
+        }
+        /* Iframe cliquable pour que le bouton Play YouTube soit utilisable sur iOS */
+        #game-swipe-player iframe {
+          pointer-events: auto !important;
         }
       }
 
@@ -945,18 +949,18 @@
               iframe.style.setProperty('min-height', '100vh', 'important');
               iframe.style.setProperty('min-height', '100svh', 'important');
               iframe.style.setProperty('min-height', '100dvh', 'important');
-              // Sur mobile (iPhone XR etc.) : scale réduit pour éviter zoom énorme
+              // Sur mobile (iPhone XR etc.) : scale modéré pour éviter effet zoom
               var isGamePage = !!document.getElementById('game-swipe-player');
               var isNarrow = window.innerWidth <= 500;
-              var scale = (isGamePage && isNarrow) ? '1.4' : '2.8';
+              var scale = (isGamePage && isNarrow) ? '1.15' : '2.8';
               iframe.style.setProperty('transform', 'scale(' + scale + ')', 'important');
               iframe.style.setProperty('z-index', '0', 'important');
               iframe.style.setProperty('display', 'block', 'important');
               iframe.style.setProperty('visibility', 'visible', 'important');
               iframe.style.setProperty('opacity', '1', 'important');
-              // Page game : iframe ne doit pas capter les clics (Like/Dislike doivent les recevoir)
+              // Page game : iframe cliquable pour que l'utilisateur puisse appuyer sur le Play YouTube (zone basse garde Like/Dislike)
               if (isGamePage) {
-                iframe.style.setProperty('pointer-events', 'none', 'important');
+                iframe.style.setProperty('pointer-events', 'auto', 'important');
               }
             }
           });
