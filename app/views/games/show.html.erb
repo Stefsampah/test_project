@@ -22,9 +22,8 @@
             end
           %>
           <% if is_safari_mobile %>
-          <!-- Safari : une iframe, on met à jour son src (1 tap = lecture muet, vidéo suivante = nouveau src) -->
-          <iframe id="game-safari-iframe" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="display: none !important; width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;"></iframe>
-          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" style="display: none;" title="YouTube"></iframe>
+          <!-- Safari option A : 1 iframe, 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube -->
+          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="display: none !important; width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;"></iframe>
           <% else %>
           <iframe 
             id="youtube-player-<%= @game.current_video.id %>"
@@ -37,17 +36,16 @@
           </iframe>
           <% end %>
           
-          <!-- Option B : 1 tap = lancer (muet) ; bouton « Activer le son » bien visible -->
+          <!-- Safari option A : 1 tap = lancer avec son ; si iOS bloque l'autoplay, l'utilisateur tape sur le Play YouTube -->
           <% if is_safari_mobile %>
           <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;">
             <div style="color: white; text-align: center; padding: 20px;">
               <button type="button" id="safari-play-btn-<%= @game.current_video.id %>" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">
                 ▶
               </button>
-              <p style="margin-top: 20px; font-size: 16px;">Appuyez pour lancer la vidéo</p>
+              <p style="margin-top: 20px; font-size: 16px;">Touchez pour lancer</p>
             </div>
           </div>
-          <button type="button" id="game-sound-btn" style="display: none; position: fixed; top: 16px; right: 16px; z-index: 10000003; background: rgba(0,0,0,0.75); color: white; border: 2px solid rgba(255,255,255,0.9); padding: 12px 18px; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; touch-action: manipulation; box-shadow: 0 2px 12px rgba(0,0,0,0.4);">🔊 Ouvrir avec le son</button>
           <% else %>
           <!-- Overlay de chargement pour autres navigateurs -->
           <div id="video-loading-<%= @game.current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -147,23 +145,15 @@
               showError();
             });
             
-            // Safari : iframe simple, on met à jour src (vidéo correcte à chaque fois)
-            window.currentSafariYoutubeId = null;
+            // Safari option A : 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube
             window.loadVideoOnSafari = function(videoId, youtubeId) {
               var playButton = document.getElementById('video-play-button-' + videoId) || document.querySelector('[id^="video-play-button-"]');
               if (playButton) playButton.style.display = 'none';
-              var safariIframe = document.getElementById('game-safari-iframe');
-              if (!safariIframe) return;
-              window.currentSafariYoutubeId = youtubeId;
-              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
-              safariIframe.src = url;
-              safariIframe.style.setProperty('display', 'block', 'important');
-              var sonBtn = document.getElementById('game-sound-btn');
-              if (sonBtn) {
-                sonBtn.style.display = 'block';
-                sonBtn.textContent = '🔊 Ouvrir avec le son';
-                sonBtn.style.opacity = '1';
-              }
+              var iframe = document.querySelector('iframe[id^="youtube-player-"]');
+              if (!iframe) return;
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
+              iframe.src = url;
+              iframe.style.setProperty('display', 'block', 'important');
             };
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
             if (playBtn && isSafariMobile) {
@@ -178,24 +168,6 @@
                 doPlay(e);
               }, { passive: false });
             }
-            var soundBtn = document.getElementById('game-sound-btn');
-            if (soundBtn && isSafariMobile) {
-              function openWithSound() {
-                var yid = window.currentSafariYoutubeId;
-                if (yid) {
-                  window.open('https://www.youtube.com/watch?v=' + yid, '_blank');
-                }
-                soundBtn.textContent = '✓ Ouvert';
-                soundBtn.style.opacity = '0.8';
-              }
-              soundBtn.addEventListener('click', function(e) { e.preventDefault(); openWithSound(); });
-              soundBtn.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                openWithSound();
-              }, { passive: false });
-            }
-            
             // Fonction de retry
             window.retryVideoLoad = function(videoId, youtubeId) {
               errorShown = false;
