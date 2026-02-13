@@ -171,11 +171,10 @@
                   sonBtn.style.opacity = '1';
                 }
               }
-              if (window.gameYtPlayer && typeof window.gameYtPlayer.loadVideoById === 'function') {
-                window.gameYtPlayer.loadVideoById(youtubeId);
-                window.gameYtPlayer.playVideo();
-                showSoundBtn();
-                return;
+              var hadPlayer = !!window.gameYtPlayer;
+              if (window.gameYtPlayer && host) {
+                host.innerHTML = '';
+                window.gameYtPlayer = null;
               }
               window.pendingYtPlay = { videoId: videoId, youtubeId: youtubeId, playButton: playButton };
               if (!window.YT || !window.YT.Player) {
@@ -186,6 +185,9 @@
               var checkReady = function() {
                 if (window.YT && window.YT.Player && window.pendingYtPlay) {
                   var p = window.pendingYtPlay;
+                  var hostEl = document.getElementById('game-yt-player-host');
+                  if (!hostEl) return;
+                  if (hostEl.children.length > 0) hostEl.innerHTML = '';
                   window.gameYtPlayer = new YT.Player('game-yt-player-host', {
                     width: '100%',
                     height: '100%',
@@ -204,7 +206,11 @@
                 }
               };
               if (window.YT && window.YT.Player) {
-                checkReady();
+                if (hadPlayer) {
+                  setTimeout(checkReady, 50);
+                } else {
+                  checkReady();
+                }
               } else {
                 window.onYouTubeIframeAPIReady = function() { checkReady(); };
                 setTimeout(checkReady, 500);
@@ -226,15 +232,34 @@
             var soundBtn = document.getElementById('game-sound-btn');
             if (soundBtn && isSafariMobile) {
               function unmute() {
-                if (window.gameYtPlayer && typeof window.gameYtPlayer.unMute === 'function') {
-                  window.gameYtPlayer.unMute();
-                  soundBtn.textContent = '✓ Son activé';
-                  soundBtn.style.opacity = '0.8';
+                soundBtn.textContent = '✓ Son activé';
+                soundBtn.style.opacity = '0.8';
+                if (window.gameYtPlayer) {
+                  try {
+                    if (typeof window.gameYtPlayer.unMute === 'function') {
+                      window.gameYtPlayer.unMute();
+                    }
+                    if (typeof window.gameYtPlayer.setVolume === 'function') {
+                      window.gameYtPlayer.setVolume(100);
+                    }
+                  } catch (err) {}
+                }
+                var isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+                if (isIOS) {
+                  var oldTip = document.getElementById('game-sound-tip');
+                  if (oldTip) oldTip.remove();
+                  var tip = document.createElement('div');
+                  tip.id = 'game-sound-tip';
+                  tip.style.cssText = 'position: fixed; bottom: 240px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); color: white; padding: 12px 20px; border-radius: 10px; font-size: 14px; z-index: 10000004; max-width: 90%; text-align: center; pointer-events: none;';
+                  tip.textContent = 'Si le son ne s\'active pas, touchez la vidéo.';
+                  document.body.appendChild(tip);
+                  setTimeout(function() { if (tip.parentNode) tip.remove(); }, 4000);
                 }
               }
-              soundBtn.addEventListener('click', unmute);
+              soundBtn.addEventListener('click', function(e) { e.preventDefault(); unmute(); });
               soundBtn.addEventListener('touchend', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 unmute();
               }, { passive: false });
             }
