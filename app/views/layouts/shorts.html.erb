@@ -384,14 +384,13 @@
         object-position: center !important;
       }
 
-      /* iPhone / petit écran : scale modéré pour que la vidéo ne paraisse pas zoomée */
+      /* Page game : même format que la version locale (scale 2.2) + iframe cliquable sur iOS */
       @media screen and (max-width: 500px) {
         #game-swipe-player iframe[src*="youtube"],
         #game-swipe-player iframe {
-          transform: scale(1.15) !important;
+          transform: scale(2.2) !important;
           transform-origin: center center !important;
         }
-        /* Iframe cliquable pour que le bouton Play YouTube soit utilisable sur iOS */
         #game-swipe-player iframe {
           pointer-events: auto !important;
         }
@@ -949,10 +948,9 @@
               iframe.style.setProperty('min-height', '100vh', 'important');
               iframe.style.setProperty('min-height', '100svh', 'important');
               iframe.style.setProperty('min-height', '100dvh', 'important');
-              // Sur mobile (iPhone XR etc.) : scale modéré pour éviter effet zoom
+              // Page game : scale 2.2 comme en local ; autres pages 2.8
               var isGamePage = !!document.getElementById('game-swipe-player');
-              var isNarrow = window.innerWidth <= 500;
-              var scale = (isGamePage && isNarrow) ? '1.15' : '2.8';
+              var scale = isGamePage ? '2.2' : '2.8';
               iframe.style.setProperty('transform', 'scale(' + scale + ')', 'important');
               iframe.style.setProperty('z-index', '0', 'important');
               iframe.style.setProperty('display', 'block', 'important');

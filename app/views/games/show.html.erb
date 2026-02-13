@@ -30,7 +30,7 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(1.15) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
+            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;">
           </iframe>
           <% else %>
           <iframe 
@@ -201,8 +201,8 @@
                 console.log('🗑️ Ancienne iframe supprimée');
               }
               
-              // Scale modéré sur mobile (iPhone XR) pour format naturel
-              var iframeScale = (window.innerWidth <= 500) ? 1.15 : 2.2;
+              // Même scale que la version locale (2.2) pour format identique
+              var iframeScale = 2.2;
               // Créer une nouvelle iframe (pointer-events: auto pour que le Play YouTube soit cliquable)
               const newIframe = document.createElement('iframe');
               newIframe.id = 'youtube-player-' + videoId;
@@ -402,13 +402,36 @@
           }
           if (data.next_video_id && data.next_video_youtube_id) {
             var isSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+            player.setAttribute('data-swipe-video-id', String(data.next_video_id));
+            var titleEl = document.querySelector('.shorts-info h2');
+            if (titleEl && data.next_video_title) titleEl.textContent = data.next_video_title;
+
             if (isSafari && typeof window.loadVideoOnSafari === 'function') {
-              try {
-                window.loadVideoOnSafari(data.next_video_id, data.next_video_youtube_id);
-              } catch (e) {
-                window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
-                return;
+              // Afficher notre overlay "Play" pour que l'utilisateur lance la vidéo dans un geste direct → autoplay possible
+              var nextId = data.next_video_id;
+              var nextYtId = data.next_video_youtube_id;
+              var existingOverlay = document.getElementById('video-play-button-' + nextId);
+              if (existingOverlay) existingOverlay.remove();
+              var currentIframe = document.querySelector('iframe[id^="youtube-player-"]');
+              if (currentIframe) currentIframe.remove();
+              var overlay = document.createElement('div');
+              overlay.id = 'video-play-button-' + nextId;
+              overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;';
+              overlay.innerHTML = '<div style="color: white; text-align: center; padding: 20px;">' +
+                '<button type="button" id="safari-play-btn-' + nextId + '" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">▶</button>' +
+                '<p style="margin-top: 20px; font-size: 16px;">Vidéo suivante – Appuyez pour lancer</p></div>';
+              player.appendChild(overlay);
+              var btn = document.getElementById('safari-play-btn-' + nextId);
+              function doPlayNext(e) {
+                if (e) { e.preventDefault(); e.stopPropagation(); }
+                window.loadVideoOnSafari(nextId, nextYtId);
               }
+              btn.addEventListener('click', function(e) { e.preventDefault(); doPlayNext(e); });
+              btn.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                doPlayNext(e);
+              }, { passive: false });
             } else {
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (iframe) {
@@ -421,9 +444,6 @@
                 return;
               }
             }
-            player.setAttribute('data-swipe-video-id', String(data.next_video_id));
-            var titleEl = document.querySelector('.shorts-info h2');
-            if (titleEl && data.next_video_title) titleEl.textContent = data.next_video_title;
             isProcessing = false;
             setButtonsEnabled(true);
           } else {
