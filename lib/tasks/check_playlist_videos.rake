@@ -36,4 +36,51 @@ namespace :check_playlist_videos do
       puts "Résumé: #{ok}/#{videos.size} vidéo(s) encore disponibles."
     end
   end
+
+  desc "Liste TOUTES les vidéos indisponibles (YouTube) de toutes les playlists. Pour les remplacer en base."
+  task all_unavailable: :environment do
+    puts "Vérification de toutes les playlists..."
+    puts "=" * 90
+    total_ok = 0
+    total_ko = 0
+    list_ko = []
+    Playlist.order(:id).find_each do |playlist|
+      videos = playlist.videos.order(:id)
+      next if videos.empty?
+      videos.each_with_index do |v, i|
+        if CheckYoutubeVideoService.available?(v.youtube_id)
+          total_ok += 1
+        else
+          total_ko += 1
+          list_ko << {
+            playlist_id: playlist.id,
+            playlist_title: playlist.title,
+            position: i + 1,
+            video_id: v.id,
+            youtube_id: v.youtube_id,
+            title: v.title
+          }
+        end
+      end
+    end
+    puts "\nRÉSUMÉ GLOBAL: #{total_ok} vidéo(s) OK, #{total_ko} vidéo(s) indisponibles\n"
+    if list_ko.empty?
+      puts "Aucune vidéo indisponible. Rien à remplacer."
+      next
+    end
+    puts "\n" + "=" * 90
+    puts "VIDÉOS INDISPONIBLES À REMPLACER (à supprimer ou remplacer en base)"
+    puts "=" * 90
+    list_ko.each do |h|
+      puts "\nPlaylist ##{h[:playlist_id]} — #{h[:playlist_title]}"
+      puts "  Position: #{h[:position]} | Video ID (DB): #{h[:video_id]} | YouTube ID: #{h[:youtube_id]}"
+      puts "  Titre: #{h[:title]}"
+      puts "  → Supprimer: Video.find(#{h[:video_id]}).destroy"
+      puts "  → Ou remplacer youtube_id/title en conservant l'id #{h[:video_id]}"
+    end
+    puts "\n" + "=" * 90
+    puts "Total: #{list_ko.size} vidéo(s) indisponibles dans #{list_ko.map { |h| h[:playlist_id] }.uniq.size} playlist(s)"
+    puts "\nExemple pour tout supprimer en console Rails:"
+    puts "  Video.where(youtube_id: [#{list_ko.map { |h| "'#{h[:youtube_id]}'" }.join(', ')}]).destroy_all"
+  end
 end
