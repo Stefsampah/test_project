@@ -31,10 +31,8 @@ class Game < ApplicationRecord
     total_videos = playlist.videos.pluck(:id)
     swiped_videos = swipes.pluck(:video_id).uniq
   
-    Rails.logger.info "=== DIAGNOSTIC ==="
-    Rails.logger.info "Total vidéos dans la playlist : #{total_videos.count} | IDs : #{total_videos}"
-    Rails.logger.info "Vidéos swipées : #{swiped_videos.count} | IDs : #{swiped_videos}"
-    Rails.logger.info "Match exact : #{(total_videos - swiped_videos).empty?}"
+    Rails.logger.debug "=== DIAGNOSTIC completed? ==="
+    Rails.logger.debug "Total vidéos : #{total_videos.count} | Swipées : #{swiped_videos.count} | Match : #{(total_videos - swiped_videos).empty?}"
   
     # Condition de complétion
     swiped_videos.count >= total_videos.count
@@ -42,27 +40,18 @@ class Game < ApplicationRecord
   
   
   def swipe(direction)
-    Rails.logger.info "Début du swipe avec direction : #{direction}"
+    Rails.logger.debug "Swipe direction=#{direction}"
     return if completed?
-  
+
     video = current_video
-    Rails.logger.info "Vidéo actuelle avant swipe : #{video&.title} | ID : #{video&.id}"
-    Rails.logger.info "Vidéos déjà swipées : #{swipes.pluck(:video_id)}"
-    Rails.logger.info "Vidéo actuelle : #{video&.title}"
-  
+    Rails.logger.debug "Vidéo actuelle : #{video&.id} #{video&.title}"
+
     # Assurez-vous qu'une vidéo existe avant de continuer
     return unless video
 
-  
     begin
-      # Définir la valeur pour le champ 'liked' en fonction de la direction
       liked_value = direction == "like"
-      
-      # Ajouter les logs ici pour inspecter les valeurs
-      Rails.logger.info "Valeur de liked_value : #{liked_value}"
-      Rails.logger.info "Direction : #{direction}"
-      Rails.logger.info "Vidéo actuelle : #{video&.title}"
-      
+
       # Créer le swipe avec toutes les données nécessaires
       new_swipe = swipes.create!(
         video: video,
@@ -70,9 +59,7 @@ class Game < ApplicationRecord
         liked: liked_value,
         user: user
       )
-  
-      Rails.logger.info "Swipe créé avec succès : #{new_swipe.inspect}"
-      
+
       # Recharger les données pour s'assurer de la mise à jour des associations
       reload
   
