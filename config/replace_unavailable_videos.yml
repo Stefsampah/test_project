@@ -1,0 +1,120 @@
+# Remplacement des vidéos indisponibles — complété avec les nouveaux IDs/titres
+# Appliquer : heroku run "rake check_playlist_videos:replace_unavailable" --app tubenplay-app
+
+replacements:
+  # Playlist #11 — Dancehall & Island Vibes Vol. 1
+  - video_id: 100
+    playlist: "Dancehall & Island Vibes Vol. 1"
+    old_youtube_id: "2wkkg7wy29Y"
+    old_title: "Rich Mean Man"
+    new_youtube_id: "2sgIE-GjOPw"
+    new_title: "Vanessa Bling - Rich Mean Man (Official Music Video) | Story Book Riddim"
+
+  # Playlist #13 — Dancehall & Island Vibes Vol. 3
+  - video_id: 123
+    playlist: "Dancehall & Island Vibes Vol. 3"
+    old_youtube_id: "1vZKxKJvJ9g"
+    old_title: "Top Tier"
+    new_youtube_id: "zCJ--CElyHQ"
+    new_title: "Jada Kingdom - TOP TIER"
+
+  - video_id: 124
+    playlist: "Dancehall & Island Vibes Vol. 3"
+    old_youtube_id: "KxYgGzJvL9o"
+    old_title: "Mad Out"
+    new_youtube_id: "y41MJM-0EJA"
+    new_title: "Valiant - Mad Out (OFFICIAL VIDEO)"
+
+  - video_id: 125
+    playlist: "Dancehall & Island Vibes Vol. 3"
+    old_youtube_id: "ZpYgNzJgK9w"
+    old_title: "Pressure"
+    new_youtube_id: "j4hI9jAaIg4"
+    new_title: "Keznamdi - Pressure"
+
+  # Playlist #25 — Afro Flow
+  - video_id: 237
+    playlist: "Afro Flow"
+    old_youtube_id: "8y-iUrYrHT4"
+    old_title: "Tripa Gninnin – Dans l'eau (Freestyle Gninnin 2)"
+    new_youtube_id: "M0KVSRHjWN4"
+    new_title: "Tripa Gninnin – Dans l'eau (Freestyle Gninnin 2)"
+
+  - video_id: 239
+    playlist: "Afro Flow"
+    old_youtube_id: "WdcJn_O-tVM"
+    old_title: "Black K & Fior 2 Bior – Tu veux gâter"
+    new_youtube_id: "dREDKBQ_nuM"
+    new_title: "Black K & Fior 2 Bior – Tu veux gâter"
+
+  # Playlist #26 — Afro Melow
+  - video_id: 245
+    playlist: "Afro Melow"
+    old_youtube_id: "rJvZxWlKZgQ"
+    old_title: "Lil Jay Bingerack – Espoir"
+    new_youtube_id: "B0QuYagNvB0"
+    new_title: "Lil Jay Bingerack & Emma'a - DJANDJOU SÉRIEUX (Official Visualizer)"
+
+  - video_id: 246
+    playlist: "Afro Melow"
+    old_youtube_id: "ZK8vY7Jkz9g"
+    old_title: "D14 – Roule"
+    new_youtube_id: "tI56ZeTearo"
+    new_title: "D14 - DAGBACHI Feat Shado Chris & JM (Clip officiel)"
+
+  - video_id: 247
+    playlist: "Afro Melow"
+    old_youtube_id: "XkzvBvUuJ9M"
+    old_title: "J-Haine – Position ft. Himra"
+    new_youtube_id: "IvZwc3GfSU0"
+    new_title: "J-Haine – Position ft. Himra"
+
+  - video_id: 248
+    playlist: "Afro Melow"
+    old_youtube_id: "gYzWvX3pJkE"
+    old_title: "HIMRA – BADMAN GANGSTA ft. Jeune Morty"
+    new_youtube_id: "3l1ItWXu3Hs"
+    new_title: "BADDIES - JEUNE MORTY & HIMRA , GÉNÉRATION NERF & HIMRA [Official Music Video]"
+
+  - video_id: 249
+    playlist: "Afro Melow"
+    old_youtube_id: "TqWvLz9KpXo"
+    old_title: "Widgunz – My Bae ft. Himra"
+    new_youtube_id: "2X1_WVmbAAU"
+    new_title: "Widgunz – My Bae ft. Himra"
+
+  - video_id: 250
+    playlist: "Afro Melow"
+    old_youtube_id: "YpLzKx8WvJg"
+    old_title: "Tripa Gninnin – Decapo"
+    new_youtube_id: "kJaj4AqdaEQ"
+    new_title: "TRIPA GNINNIN - EN VIEILLESSE ( CLIP OFFICIEL )"
+
+  - video_id: 251
+    playlist: "Afro Melow"
+    old_youtube_id: "MvXqLp9JzKf"
+    old_title: "Kadja – Le Roi"
+    new_youtube_id: "s5zPAbaiZx4"
+    new_title: "Kadja - Tu dis quoi (Clip officiel)"
+
+  - video_id: 252
+    playlist: "Afro Melow"
+    old_youtube_id: "JvKxWz8LpQo"
+    old_title: "Albinny – Attaque à 2"
+    new_youtube_id: "4ZxcgXk3qVk"
+    new_title: "Albinny - Aaaah"
+
+  - video_id: 253
+    playlist: "Afro Melow"
+    old_youtube_id: "LpXvJz9KqWg"
+    old_title: "Tripa Gninnin – Ça va vite"
+    new_youtube_id: "mqncsEZ5Fz0"
+    new_title: "TRIPA GNINNIN - ÇA VA VITE FEAT HIMRA ( VISUALIZER )"
+
+  # Playlist #32 — RELEASED vol.2
+  - video_id: 313
+    playlist: "RELEASED vol.2"
+    old_youtube_id: "Q4kCS4u9b8"
+    old_title: "NO CAP"
+    new_youtube_id: "g3GpuKkqaYE"
+    new_title: "NoCap - Planet Out [Official Music Video]"
