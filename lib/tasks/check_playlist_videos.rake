@@ -82,5 +82,89 @@ namespace :check_playlist_videos do
     puts "Total: #{list_ko.size} vidéo(s) indisponibles dans #{list_ko.map { |h| h[:playlist_id] }.uniq.size} playlist(s)"
     puts "\nExemple pour tout supprimer en console Rails:"
     puts "  Video.where(youtube_id: [#{list_ko.map { |h| "'#{h[:youtube_id]}'" }.join(', ')}]).destroy_all"
+    puts "\nOu lancer la tâche: rake check_playlist_videos:destroy_all_unavailable"
+  end
+
+  # Supprime en base toutes les vidéos détectées comme indisponibles par all_unavailable.
+  # À lancer sur Heroku après avoir vérifié la liste: heroku run "rake check_playlist_videos:destroy_all_unavailable" --app tubenplay-app
+  desc "Supprime toutes les vidéos indisponibles (YouTube) de la base"
+  task destroy_all_unavailable: :environment do
+    ids = []
+    Playlist.order(:id).find_each do |playlist|
+      playlist.videos.order(:id).each do |v|
+        ids << v.youtube_id unless CheckYoutubeVideoService.available?(v.youtube_id)
+      end
+    end
+    if ids.empty?
+      puts "Aucune vidéo indisponible. Rien à supprimer."
+      next
+    end
+    count = Video.where(youtube_id: ids).count
+    Video.where(youtube_id: ids).destroy_all
+    puts "✅ #{count} vidéo(s) indisponibles supprimées (youtube_id: #{ids.join(', ')})"
+  end
+
+  # Remplace les vidéos indisponibles par les nouvelles valeurs définies dans config/replace_unavailable_videos.yml
+  # Remplis new_youtube_id et new_title pour chaque vidéo à remplacer, puis lance :
+  #   heroku run "rake check_playlist_videos:replace_unavailable" --app tubenplay-app
+  desc "Remplace les vidéos indisponibles selon config/replace_unavailable_videos.yml"
+  task replace_unavailable: :environment do
+    path = Rails.root.join("config", "replace_unavailable_videos.yml")
+    unless File.exist?(path)
+      puts "❌ Fichier absent: config/replace_unavailable_videos.yml"
+      puts "   Lance d'abord: rails check_playlist_videos:export_replace_template pour le générer."
+      next
+    end
+    data = YAML.load_file(path)
+    list = data["replacements"] || data[:replacements] || []
+    if list.empty?
+      puts "Aucun remplacement défini dans le YAML."
+      next
+    end
+    updated = 0
+    skipped = 0
+    list.each do |h|
+      vid = h["video_id"] || h[:video_id]
+      new_id = (h["new_youtube_id"] || h[:new_youtube_id]).to_s.strip
+      new_title = (h["new_title"] || h[:new_title]).to_s.strip
+      next if new_id.blank?
+      video = Video.find_by(id: vid)
+      unless video
+        puts "⚠️ Video ##{vid} introuvable, ignoré."
+        next
+      end
+      if CheckYoutubeVideoService.available?(new_id)
+        video.update!(youtube_id: new_id, title: new_title.presence || video.title)
+        puts "✅ Video ##{vid} (#{video.playlist.title}) → #{new_id} | #{new_title.presence || video.title}"
+        updated += 1
+      else
+        puts "⚠️ Le nouveau YouTube ID #{new_id} n'est pas disponible, ignoré pour Video ##{vid}."
+        skipped += 1
+      end
+    end
+    puts "\n✅ #{updated} vidéo(s) remplacée(s)."
+    puts "⚠️ #{skipped} ignorée(s) (nouvel ID indisponible)." if skipped > 0
+  end
+
+  # Génère le fichier config/replace_unavailable_videos.yml à partir des vidéos actuellement indisponibles
+  desc "Génère config/replace_unavailable_videos.yml avec les vidéos indisponibles (à compléter puis replace_unavailable)"
+  task export_replace_template: :environment do
+    path = Rails.root.join("config", "replace_unavailable_videos.yml")
+    list = []
+    Playlist.order(:id).find_each do |playlist|
+      playlist.videos.order(:id).each_with_index do |v, i|
+        next if CheckYoutubeVideoService.available?(v.youtube_id)
+        list << {
+          "video_id" => v.id,
+          "playlist" => playlist.title,
+          "old_youtube_id" => v.youtube_id,
+          "old_title" => v.title,
+          "new_youtube_id" => "",
+          "new_title" => ""
+        }
+      end
+    end
+    File.write(path, { "replacements" => list }.to_yaml)
+    puts "✅ Fichier écrit: config/replace_unavailable_videos.yml (#{list.size} vidéos à remplacer)"
   end
 end
