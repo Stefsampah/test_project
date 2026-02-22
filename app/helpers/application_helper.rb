@@ -58,11 +58,18 @@ module ApplicationHelper
     ultime_images[user_id % ultime_images.length]
   end
 
-  # Retourne la dernière partie en cours de l'utilisateur (non terminée)
+  # Retourne la dernière partie en cours de l'utilisateur (non terminée).
+  # Exclut les parties déjà terminées (completed? ou completed_at renseigné) pour éviter
+  # d'afficher "Reprendre la partie" alors que l'utilisateur a fini et a cliqué sur "Next".
   def current_game_in_progress
     return nil unless user_signed_in?
     
-    current_user.games.where(completed_at: nil).order(created_at: :desc).first
+    game = current_user.games.where(completed_at: nil).order(created_at: :desc).first
+    return nil if game.blank?
+    # Sécurité : si la partie est logiquement terminée (toutes vidéos swipées) mais completed_at pas mis à jour (bug ancien), ne pas la proposer en reprise
+    game.reload
+    return nil if game.completed?
+    game
   end
 
   # Vérifie si l'utilisateur a une partie en cours

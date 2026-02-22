@@ -36,6 +36,8 @@ class SwipesController < ApplicationController
           redirect: playlist_game_path(playlist, game)
         }, status: :ok
       else
+        # Partie terminée (toutes les vidéos swipées) : marquer pour que "Reprendre" disparaisse
+        game.update_column(:completed_at, Time.current) if game.completed_at.nil?
         return render json: { 
           success: true, 
           completed: true,
@@ -66,9 +68,9 @@ class SwipesController < ApplicationController
       game.reload
       next_video = game.next_video
 
-      # Marquer le jeu comme terminé s'il n'y a plus de vidéos
-      if !next_video && game.completed?
-        game.update(completed_at: Time.current)
+      # Marquer le jeu comme terminé s'il n'y a plus de vidéos (évite que "Reprendre la partie" reste affiché)
+      if next_video.nil?
+        game.update_column(:completed_at, Time.current) if game.completed_at.nil?
       end
 
       if next_video
