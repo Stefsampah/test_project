@@ -105,41 +105,6 @@
           </div>
         </div>
 
-        <!-- Progression vers les badges -->
-        <div class="bg-black rounded-lg p-6 border-2 border-white shadow-lg">
-          <h3 class="text-xl font-bold text-white mb-4 text-center"><%= t('scores.progress_to_badges') %></h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <% current_user.next_badges.each do |badge_type, data| %>
-              <% if data[:badge] %>
-                <div class="bg-white/10 rounded-lg p-4 border border-white/30">
-                  <div class="flex items-center justify-between mb-2">
-                    <h4 class="text-lg font-semibold text-white"><%= data[:badge].name %></h4>
-                    <span class="bg-purple-600 text-white px-2 py-1 rounded text-xs font-bold">
-                      <%= badge_type.capitalize %>
-                    </span>
-                  </div>
-                  <div class="mb-2">
-                    <div class="flex justify-between text-sm text-white mb-1">
-                      <span><%= t('scores.progression') %></span>
-                      <span><%= data[:current_score] %> / <%= data[:badge].points_required %></span>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2">
-                      <% progress = (data[:current_score].to_f / data[:badge].points_required * 100).round %>
-                      <div class="bg-purple-500 h-2 rounded-full" style="width: <%= [progress, 100].min %>%"></div>
-                    </div>
-                  </div>
-                  <p class="text-xs text-white/70">
-                    <% if data[:points_needed] > 0 %>
-                      <%= t('scores.points_needed', count: data[:points_needed]) %>
-                    <% else %>
-                      <%= t('scores.badge_available') %>
-                    <% end %>
-                  </p>
-                </div>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
       </div>
     </div>
 
