@@ -95,9 +95,41 @@ module ApplicationHelper
     new_playlist_game_path(playlist_id: playlist_id, locale: I18n.locale)
   end
 
+  # Lien pour rejouer une playlist déjà terminée (nouvelle partie)
+  def replay_playlist_game_path_with_locale(playlist)
+    playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
+    new_playlist_game_path(playlist_id: playlist_id, locale: I18n.locale, replay: 1)
+  end
+
   def playlist_game_path_with_locale(playlist, game)
     playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
     game_id = game.is_a?(Game) ? game.id : game
     playlist_game_path(locale: I18n.locale, playlist_id: playlist_id, id: game_id)
+  end
+
+  # Parcours 5 niveaux (refonte gameplay) — pour la barre "X% du concert"
+  def current_user_journey_level
+    return nil unless user_signed_in?
+    JourneyLevels.current_level(current_user.journey_points)
+  end
+
+  def current_user_journey_progress_percent
+    return 0 unless user_signed_in?
+    JourneyLevels.progress_percentage(current_user.journey_points)
+  end
+
+  def current_user_journey_points
+    return 0 unless user_signed_in?
+    current_user.journey_points
+  end
+
+  def current_user_journey_points_to_next
+    return 0 unless user_signed_in?
+    JourneyLevels.points_to_next_level(current_user.journey_points)
+  end
+
+  def current_user_journey_level_name
+    return nil unless user_signed_in?
+    JourneyLevels.level_name(current_user_journey_level)
   end
 end

@@ -57,13 +57,17 @@ class SwipesController < ApplicationController
         liked: liked
       )
 
-      # Pour les playlists normales, calculer et sauvegarder les points
+      # Pour les playlists normales, calculer et sauvegarder les points (leaderboard par playlist)
       unless reward_playlist?(playlist)
         score = Score.find_or_initialize_by(user: current_user, playlist: playlist)
         game_score = game.swipes.where(action: 'like').count * 2 + game.swipes.where(action: 'dislike').count
         score.points = game_score
         score.save!
       end
+
+      # Parcours 5 niveaux (refonte gameplay) : like +5, dislike +1, watch +2, new_artist +10, daily 10 vidéos +20
+      journey_result = JourneyPointsService.add_swipe_points(current_user, swipe, video)
+      current_user.reload
 
       game.reload
       next_video = game.next_video
@@ -73,6 +77,16 @@ class SwipesController < ApplicationController
         game.update_column(:completed_at, Time.current) if game.completed_at.nil?
       end
 
+      journey_payload = {
+        journey_points_added: journey_result[:total],
+        journey_points_breakdown: journey_result[:breakdown],
+        journey_total: current_user.journey_points,
+        journey_level: JourneyLevels.current_level(current_user.journey_points),
+        journey_level_name: JourneyLevels.level_name(JourneyLevels.current_level(current_user.journey_points)),
+        journey_progress_percent: JourneyLevels.progress_percentage(current_user.journey_points),
+        journey_points_to_next: JourneyLevels.points_to_next_level(current_user.journey_points)
+      }
+
       if next_video
         render json: { 
           success: true, 
@@ -80,7 +94,7 @@ class SwipesController < ApplicationController
           next_video_youtube_id: next_video.youtube_id,
           next_video_title: next_video.title,
           redirect: playlist_game_path(playlist, game)
-        }, status: :ok
+        }.merge(journey_payload), status: :ok
       else
         redirect_path = reward_playlist?(playlist) ? 
           results_playlist_game_path(playlist, game) : 
@@ -89,7 +103,7 @@ class SwipesController < ApplicationController
           success: true, 
           completed: true,
           redirect: redirect_path
-        }, status: :ok
+        }.merge(journey_payload), status: :ok
       end
     rescue ActiveRecord::RecordInvalid => e
       Rails.logger.error "Erreur lors de la création du swipe : #{e.message}"

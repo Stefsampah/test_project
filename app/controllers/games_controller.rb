@@ -20,25 +20,22 @@ class GamesController < ApplicationController
       return
     end
     
-    # Pour les playlists normales, vérifier si déjà terminée
-    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
+    # Pour les playlists normales
+    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
+    if existing_game && !params[:replay]
+      redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
+      return
+    end
+
+    # Si déjà terminée et pas replay → rediriger vers les résultats
     completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
-    
-    if completed_game
+    if completed_game && !params[:replay]
       redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
       return
     end
-    
-    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
-    existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
-    
-    if existing_game
-      redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
-      return
-    else
-      @game = Game.new(playlist: @playlist, user: current_user)
-    end
-    
+
+    @game = Game.new(playlist: @playlist, user: current_user)
     render layout: 'shorts'
   end
 
@@ -64,25 +61,20 @@ class GamesController < ApplicationController
       return
     end
     
-    # Pour les playlists normales, vérifier si déjà terminée
-    # Vérifier si l'utilisateur a déjà terminé une partie pour cette playlist
-    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
-    
-    if completed_game
-      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
-      return
-    end
-
-    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    # Pour les playlists normales
     existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
-    
-    if existing_game
+    if existing_game && !params[:replay]
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
       return
     end
 
-    # Remise à zéro du score pour cette playlist et cet utilisateur (seulement si pas de partie terminée)
-    # Ne pas supprimer le score si une partie est déjà terminée
+    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    if completed_game && !params[:replay]
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      return
+    end
+
+    # Replay ou première partie : supprimer l'ancien score pour cette playlist (leaderboard recalculé avec la nouvelle partie)
     existing_score = Score.find_by(user: current_user, playlist: @playlist)
     existing_score.destroy if existing_score
 

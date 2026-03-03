@@ -23,16 +23,18 @@
           %>
           <% if is_safari_mobile %>
           <!-- Safari option A : 1 iframe, 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube -->
-          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="display: none !important; width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important; background: #000;"></iframe>
+          <!-- 16:9 puis scale pour couvrir tout l'écran (cover) sur 414x896 -->
+          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="game-video-cover" style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;"></iframe>
           <% else %>
           <iframe 
             id="youtube-player-<%= @game.current_video.id %>"
+            class="game-video-cover"
             src="<%= video_url %>"
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: calc(100vh - 120px) !important; position: fixed !important; top: 0 !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: scale(2.2) !important; transform-origin: center center !important; object-fit: cover !important;">
+            style="width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
           </iframe>
           <% end %>
           
@@ -56,12 +58,15 @@
           </div>
           <% end %>
           
-          <!-- Message d'erreur avec bouton de retry et fallback -->
+          <!-- Message d'erreur : retry, passer à la suivante (vidéo indisponible type logranvic), ou ouvrir YouTube -->
           <div id="video-error-<%= @game.current_video.id %>" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; background: rgba(0,0,0,0.9); padding: 30px; border-radius: 15px; color: white; text-align: center; max-width: 90%;">
             <p style="margin-bottom: 20px; font-size: 16px;">La vidéo ne se charge pas</p>
-            <button onclick="retryVideoLoad('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin: 5px;">Réessayer</button>
-            <a href="https://www.youtube.com/watch?v=<%= @game.current_video.youtube_id %>" target="_blank" style="display: inline-block; background: #ff0000; color: white; border: none; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: bold; margin: 5px;">Ouvrir sur YouTube</a>
-            <p style="margin-top: 15px; font-size: 12px; opacity: 0.7;">Si le problème persiste, essayez de rafraîchir la page</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 12px;">
+              <button onclick="retryVideoLoad('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Réessayer</button>
+              <button onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();}" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Passer à la suivante</button>
+              <a href="https://www.youtube.com/watch?v=<%= @game.current_video.youtube_id %>" target="_blank" style="display: inline-block; background: #ff0000; color: white; border: none; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: bold;">Ouvrir sur YouTube</a>
+            </div>
+            <p style="font-size: 12px; opacity: 0.7;">Si la vidéo est indisponible, utilisez « Passer à la suivante »</p>
           </div>
         </div>
         
@@ -231,26 +236,25 @@
         </script>
       </div>
 
-      <!-- Zone cliquable en bas : bloque les clics à l'iframe pour que Like/Dislike reçoivent les touches -->
-      <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 220px !important; z-index: 2147483646 !important; pointer-events: auto !important; touch-action: manipulation !important;"></div>
-      <!-- Contrôles et informations -->
-      <div class="shorts-controls">
-        <div class="shorts-actions">
-          <button type="button" class="action-btn dislike" id="game-btn-dislike" onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();} return false;" ontouchend="if(window.gameSwipeDislike){event.preventDefault();window.gameSwipeDislike();} return false;">
+      <!-- Zone en bas : ne pas intercepter les touches (pointer-events: none) pour que Like/Dislike les reçoivent toujours -->
+      <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 260px !important; z-index: 999998 !important; pointer-events: none !important;"></div>
+      <!-- Contrôles et boutons Like/Dislike : au-dessus de la zone, reçoivent tous les clics/touches -->
+      <div class="shorts-controls" style="z-index: 2147483647 !important; pointer-events: auto !important;">
+        <div class="shorts-info">
+          <h2><%= @game.current_video.title %></h2>
+          <p><%= @playlist.title %></p>
+        </div>
+        <div class="shorts-actions" style="pointer-events: auto !important;">
+          <button type="button" class="action-btn dislike" id="game-btn-dislike" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();} return false;" ontouchend="if(window.gameSwipeDislike){event.preventDefault();window.gameSwipeDislike();} return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
               <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <button type="button" class="action-btn like" id="game-btn-like" onclick="if(window.gameSwipeLike){window.gameSwipeLike();} return false;" ontouchend="if(window.gameSwipeLike){event.preventDefault();window.gameSwipeLike();} return false;">
+          <button type="button" class="action-btn like" id="game-btn-like" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.gameSwipeLike){window.gameSwipeLike();} return false;" ontouchend="if(window.gameSwipeLike){event.preventDefault();window.gameSwipeLike();} return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-icon">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
           </button>
-        </div>
-
-        <div class="shorts-info">
-          <h2><%= @game.current_video.title %></h2>
-          <p><%= @playlist.title %></p>
         </div>
       </div>
     </div>
@@ -291,8 +295,12 @@
 
         var csrf = document.querySelector('meta[name="csrf-token"]');
         var token = csrf ? csrf.getAttribute('content') : '';
+        var localePrefix = '';
+        var path = window.location.pathname || '';
+        var localeMatch = path.match(/^\/(fr|en)(\/|$)/);
+        if (localeMatch) localePrefix = '/' + localeMatch[1];
 
-        fetch('/swipes', {
+        fetch(localePrefix + '/swipes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -376,6 +384,29 @@
         bindButton(btnLike, true);
         bindButton(btnDislike, false);
         console.log('[Game] Like/Dislike initialisés (boutons:', !!btnLike, !!btnDislike, ')');
+
+        // Délégation en phase capture : intercepter touchend/click sur la zone des boutons (contourne touch-action: none du layout)
+        var controlsEl = document.querySelector('.shorts-controls');
+        if (controlsEl) {
+          function onControlTouchOrClick(e) {
+            var t = e.target;
+            if (!t) return;
+            if (btnLike && (t === btnLike || btnLike.contains(t))) {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSwipe(true);
+              return;
+            }
+            if (btnDislike && (t === btnDislike || btnDislike.contains(t))) {
+              e.preventDefault();
+              e.stopPropagation();
+              handleSwipe(false);
+              return;
+            }
+          }
+          controlsEl.addEventListener('touchend', onControlTouchOrClick, { capture: true, passive: false });
+          controlsEl.addEventListener('click', onControlTouchOrClick, { capture: true });
+        }
 
         // Capture au niveau document en secours (zone contrôle pour ne pas donner le focus à l'iframe)
         function onPlayerClick(e) {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_02_06_120000) do
+ActiveRecord::Schema[7.1].define(version: 2026_02_06_140000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -190,6 +190,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_06_120000) do
     t.integer "points"
     t.boolean "vip_subscription"
     t.datetime "vip_expires_at"
+    t.integer "journey_points", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -202,6 +203,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_02_06_120000) do
     t.datetime "updated_at", null: false
     t.text "description"
     t.integer "points"
+    t.string "artist"
     t.index ["playlist_id"], name: "index_videos_on_playlist_id"
   end
 

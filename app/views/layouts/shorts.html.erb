@@ -384,11 +384,23 @@
         object-position: center !important;
       }
 
-      /* Page game : même format que la version locale (scale 2.2) + iframe cliquable sur iOS */
+      /* Page game : overflow pour clip la vidéo agrandie */
+      #game-swipe-player,
+      #game-swipe-player .shorts-video {
+        overflow: hidden !important;
+      }
+      /* Page game : iframe 16:9 + scale(3) pour couvrir l'écran avec meilleure netteté */
+      #game-swipe-player iframe.game-video-cover {
+        width: 100vw !important;
+        height: 56.25vw !important;
+        top: 50% !important;
+        transform: translateY(-50%) scale(3) !important;
+        transform-origin: center center !important;
+      }
       @media screen and (max-width: 500px) {
-        #game-swipe-player iframe[src*="youtube"],
-        #game-swipe-player iframe {
-          transform: scale(2.2) !important;
+        #game-swipe-player iframe:not(.game-video-cover)[src*="youtube"],
+        #game-swipe-player iframe:not(.game-video-cover) {
+          transform: scale(1.6) !important;
           transform-origin: center center !important;
         }
         #game-swipe-player iframe {
@@ -396,59 +408,67 @@
         }
       }
 
-      /* Contrôles et overlay - Superposés sur l'image au bas */
+      /* Contrôles et overlay - Titres remontés, zone plus haute pour tout afficher */
       .shorts-controls {
         position: fixed !important;
-        bottom: 60px !important;
+        bottom: 0 !important;
         left: 0 !important;
         right: 0 !important;
-        background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
-        padding: 20px 20px 30px 20px !important;
+        background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
+        padding: 24px 20px 28px 20px !important;
         z-index: 999999 !important;
-        display: block !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-end !important;
         visibility: visible !important;
         opacity: 1 !important;
         pointer-events: auto !important;
         touch-action: manipulation !important;
+        min-height: 200px !important;
       }
 
       .shorts-info {
-        margin-bottom: 5px !important;
+        margin-bottom: 12px !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         text-align: left !important;
-        padding: 0 20px !important;
+        padding: 0 4px !important;
         z-index: 9999999 !important;
         position: relative !important;
+        flex-shrink: 0 !important;
       }
 
       .shorts-info h2 {
         color: white !important;
-        font-size: 1.8rem !important;
-        font-weight: 900 !important;
-        margin-bottom: 10px !important;
-        display: block !important;
+        font-size: 1.35rem !important;
+        font-weight: 800 !important;
+        margin-bottom: 4px !important;
         visibility: visible !important;
         opacity: 1 !important;
-        line-height: 1.2 !important;
-        text-shadow: 0 6px 12px rgba(0,0,0,1) !important;
+        line-height: 1.25 !important;
+        text-shadow: 0 4px 12px rgba(0,0,0,1) !important;
         background: transparent !important;
         padding: 0 !important;
         border-radius: 0 !important;
         backdrop-filter: none !important;
         border: none !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
       }
 
       .shorts-info p {
-        color: rgba(255,255,255,1) !important;
-        font-size: 1.3rem !important;
-        font-weight: 700 !important;
+        color: rgba(255,255,255,0.95) !important;
+        font-size: 1rem !important;
+        font-weight: 600 !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
         margin: 0 !important;
-        text-shadow: 0 4px 8px rgba(0,0,0,1) !important;
+        text-shadow: 0 2px 8px rgba(0,0,0,1) !important;
         background: transparent !important;
         padding: 0 !important;
         border-radius: 0 !important;
@@ -459,7 +479,7 @@
       .shorts-actions {
         display: flex !important;
         gap: 20px !important;
-        margin-top: 15px !important;
+        margin-top: 8px !important;
         justify-content: center !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -926,17 +946,34 @@
         // Fonction pour forcer les styles de l'iframe
         function forceIframeStyles() {
           const allIframes = document.querySelectorAll('iframe[src*="youtube"]');
+          var isGamePage = !!document.getElementById('game-swipe-player');
           allIframes.forEach(function(iframe) {
             if (iframe) {
               iframe.style.setProperty('width', '100vw', 'important');
-              iframe.style.setProperty('height', 'calc(100svh - var(--bottom-gap))', 'important');
-              iframe.style.setProperty('height', 'calc(100dvh - var(--bottom-gap))', 'important');
-              iframe.style.setProperty('height', 'calc(100vh - var(--bottom-gap))', 'important');
+              if (isGamePage && iframe.classList.contains('game-video-cover')) {
+                // Page game : iframe 16:9 agrandie pour couvrir tout l'écran (414x896)
+                iframe.style.setProperty('height', '56.25vw', 'important');
+                iframe.style.setProperty('top', '50%', 'important');
+                iframe.style.setProperty('left', '0', 'important');
+                iframe.style.setProperty('transform', 'translateY(-50%) scale(3)', 'important');
+                iframe.style.setProperty('transform-origin', 'center center', 'important');
+              } else if (isGamePage) {
+                iframe.style.setProperty('height', '100vh', 'important');
+                iframe.style.setProperty('min-height', '100dvh', 'important');
+                iframe.style.setProperty('bottom', '0', 'important');
+              }
+              if (!isGamePage) {
+                iframe.style.setProperty('height', 'calc(100svh - var(--bottom-gap))', 'important');
+                iframe.style.setProperty('height', 'calc(100dvh - var(--bottom-gap))', 'important');
+                iframe.style.setProperty('height', 'calc(100vh - var(--bottom-gap))', 'important');
+                iframe.style.setProperty('bottom', '200px', 'important');
+              }
+              if (!(isGamePage && iframe.classList.contains('game-video-cover'))) {
+                iframe.style.setProperty('top', '0', 'important');
+              }
               iframe.style.setProperty('position', 'fixed', 'important');
-              iframe.style.setProperty('top', '0', 'important');
               iframe.style.setProperty('left', '0', 'important');
               iframe.style.setProperty('right', '0', 'important');
-              iframe.style.setProperty('bottom', '200px', 'important');
               iframe.style.setProperty('border', 'none', 'important');
               iframe.style.setProperty('margin', '0', 'important');
               iframe.style.setProperty('padding', '0', 'important');
@@ -945,20 +982,23 @@
               iframe.style.setProperty('max-height', '100svh', 'important');
               iframe.style.setProperty('max-height', '100dvh', 'important');
               iframe.style.setProperty('min-width', '100vw', 'important');
-              iframe.style.setProperty('min-height', '100vh', 'important');
-              iframe.style.setProperty('min-height', '100svh', 'important');
-              iframe.style.setProperty('min-height', '100dvh', 'important');
-              // Page game : scale 2.2 comme en local ; autres pages 2.8
-              var isGamePage = !!document.getElementById('game-swipe-player');
-              var scale = isGamePage ? '2.2' : '2.8';
-              iframe.style.setProperty('transform', 'scale(' + scale + ')', 'important');
+              if (!isGamePage) {
+                iframe.style.setProperty('min-height', '100vh', 'important');
+                iframe.style.setProperty('min-height', '100svh', 'important');
+                iframe.style.setProperty('min-height', '100dvh', 'important');
+              }
+              var isGameCover = isGamePage && iframe.classList.contains('game-video-cover');
+              if (!isGameCover) {
+                var scale = isGamePage ? '1.6' : '2.8';
+                iframe.style.setProperty('transform', 'scale(' + scale + ')', 'important');
+                if (isGamePage) iframe.style.setProperty('transform-origin', 'center center', 'important');
+              }
               iframe.style.setProperty('z-index', '0', 'important');
               iframe.style.setProperty('display', 'block', 'important');
               iframe.style.setProperty('visibility', 'visible', 'important');
               iframe.style.setProperty('opacity', '1', 'important');
-              // Page game : iframe cliquable pour que l'utilisateur puisse appuyer sur le Play YouTube (zone basse garde Like/Dislike)
               if (isGamePage) {
-                iframe.style.setProperty('pointer-events', 'auto', 'important');
+                iframe.style.setProperty('pointer-events', 'none', 'important');
               }
             }
           });
@@ -1034,17 +1074,20 @@
           if (controls) {
             controls.style.cssText = `
               position: fixed !important;
-              bottom: 60px !important;
+              bottom: 0 !important;
               left: 0 !important;
               right: 0 !important;
-              background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
-              padding: 20px 20px 30px 20px !important;
+              background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
+              padding: 24px 20px 28px 20px !important;
               z-index: 2147483647 !important;
-              display: block !important;
+              display: flex !important;
+              flex-direction: column !important;
+              justify-content: flex-end !important;
               visibility: visible !important;
               opacity: 1 !important;
               pointer-events: auto !important;
               transform: translateZ(0) !important;
+              min-height: 200px !important;
             `;
           }
           
@@ -1052,7 +1095,7 @@
             actions.style.cssText = `
               display: flex !important;
               gap: 20px !important;
-              margin-top: 15px !important;
+              margin-top: 8px !important;
               justify-content: center !important;
               visibility: visible !important;
               opacity: 1 !important;
