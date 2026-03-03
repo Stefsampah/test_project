@@ -387,7 +387,6 @@
         <% if user_signed_in? %>
           <%= link_to t('playlists.play'), playlists_path, class: "hover:text-white transition-colors" %>
           <%= link_to t('scores.title'), scores_path, class: "hover:text-white transition-colors" %>
-          <%= link_to t('badges.title'), my_badges_path, class: "hover:text-white transition-colors" %>
           <%= link_to "🎉 #{t('home.animations_demo')}", reward_animations_demo_path, class: "hover:text-white transition-colors" %>
         <% else %>
           <%= link_to t('nav.sign_in'), new_user_session_path, class: "hover:text-white transition-colors" %>
