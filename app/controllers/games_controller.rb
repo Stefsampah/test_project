@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  MAX_DAILY_GAMES_FREE = 7
   layout 'shorts', only: [:show, :swipe, :results, :reward_results]
   
   before_action :authenticate_user!
@@ -21,16 +22,16 @@ class GamesController < ApplicationController
     end
     
     # Pour les playlists normales
-    # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
+    # Si une partie est en cours sur cette playlist, on la reprend
     existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
-    if existing_game && !params[:replay]
+    if existing_game
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
       return
     end
 
-    # Si déjà terminée et pas replay → rediriger vers les résultats
+    # Si une partie est déjà terminée pour cette playlist, on renvoie vers les résultats
     completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
-    if completed_game && !params[:replay]
+    if completed_game
       redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
       return
     end
@@ -61,22 +62,18 @@ class GamesController < ApplicationController
       return
     end
     
-    # Pour les playlists normales
+    # Pour les playlists normales : on ne permet plus de "rejouer" après une playlist terminée
     existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
-    if existing_game && !params[:replay]
+    if existing_game
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
       return
     end
 
     completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
-    if completed_game && !params[:replay]
+    if completed_game
       redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
       return
     end
-
-    # Replay ou première partie : supprimer l'ancien score pour cette playlist (leaderboard recalculé avec la nouvelle partie)
-    existing_score = Score.find_by(user: current_user, playlist: @playlist)
-    existing_score.destroy if existing_score
 
     @game = Game.new(playlist: @playlist, user: current_user)
     
@@ -369,12 +366,11 @@ class GamesController < ApplicationController
   end
   
   def check_premium_access
-    # Vérifier si la playlist est premium et si l'utilisateur a accès
-    if @playlist.premium?
-      # Vérifier si l'utilisateur a débloqué cette playlist ou s'il a suffisamment de points
-      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
-        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
-      end
+    return if current_user.vip?
+
+    games_today = current_user.games.where(created_at: Time.current.all_day).count
+    if games_today >= MAX_DAILY_GAMES_FREE
+      redirect_to playlists_path, alert: "Tu as déjà joué #{MAX_DAILY_GAMES_FREE} playlists aujourd'hui. Reviens demain ou deviens VIP pour jouer sans limite."
     end
   end
 

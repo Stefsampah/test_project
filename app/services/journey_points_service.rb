@@ -38,6 +38,12 @@ class JourneyPointsService
         breakdown[:daily_bonus] = POINTS_DAILY_BONUS
       end
 
+      # Boost VIP: +50% de points parcours
+      if user.respond_to?(:vip?) && user.vip?
+        total = (total * 1.5).round
+        breakdown[:vip_boost] = "+50%"
+      end
+
       user.update_column(:journey_points, user.journey_points + total) if total > 0
 
       { total: total, breakdown: breakdown }

@@ -95,12 +95,6 @@ module ApplicationHelper
     new_playlist_game_path(playlist_id: playlist_id, locale: I18n.locale)
   end
 
-  # Lien pour rejouer une playlist déjà terminée (nouvelle partie)
-  def replay_playlist_game_path_with_locale(playlist)
-    playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
-    new_playlist_game_path(playlist_id: playlist_id, locale: I18n.locale, replay: 1)
-  end
-
   def playlist_game_path_with_locale(playlist, game)
     playlist_id = playlist.is_a?(Playlist) ? playlist.id : playlist
     game_id = game.is_a?(Game) ? game.id : game

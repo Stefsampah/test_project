@@ -147,13 +147,6 @@
 
     <!-- Boutons -->
     <div class="flex flex-col sm:flex-row justify-center items-center gap-4 flex-wrap">
-      <%= link_to replay_playlist_game_path_with_locale(@playlist), data: { turbo: false }, class: "inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-amber-500 hover:bg-amber-600 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-amber-400" do %>
-        <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        <span>Rejouer cette playlist</span>
-      <% end %>
-
       <button onclick="window.location.href='<%= scores_path %>'" 
           class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white/30">
         <span><%= t('games.view_leaderboard') %></span>

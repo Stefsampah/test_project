@@ -2,24 +2,21 @@ class PlaylistsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    # Récupérer toutes les playlists et les trier par catégorie (exclure les playlists cachées)
+    # Récupérer toutes les playlists (exclure les playlists cachées)
     @standard_playlists = Playlist.where(premium: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
     @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
     @exclusive_playlists = Playlist.where(exclusive: true, hidden: [false, nil]).order(:category, :subcategory, :id)
     @unlocked_playlists = []
     @unlocked_exclusive_playlists = []
     
-    # Grouper les playlists par catégorie
-    @standard_by_category = @standard_playlists.group_by(&:category)
+    # Grouper les playlists par catégorie (premium / exclusives)
     @premium_by_category = @premium_playlists.group_by(&:category)
     @unlocked_by_category = {}
     @exclusive_by_category = @exclusive_playlists.group_by(&:category)
     
     if user_signed_in?
       # Vérifier si l'utilisateur a un abonnement VIP actif
-      has_vip = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
-      
-      if has_vip
+      if current_user.vip?
         # Si VIP actif, toutes les playlists premium sont débloquées (sauf exclusives)
         @unlocked_playlists = @premium_playlists
         @premium_playlists = []
@@ -72,6 +69,9 @@ class PlaylistsController < ApplicationController
         played_exclusive = @unlocked_exclusive_playlists.where(id: played_playlist_ids)
         @unlocked_exclusive_playlists = unplayed_exclusive + played_exclusive
       end
+
+      # Feed 60/40 sur les playlists standard pour l'utilisateur connecté
+      @standard_playlists = FeedPlaylistsService.standard_feed(current_user, @standard_playlists)
     end
     
     # Récupérer les playlists jouées par l'utilisateur connecté (avec score existant)
@@ -79,26 +79,18 @@ class PlaylistsController < ApplicationController
       played_playlist_ids = current_user.scores.pluck(:playlist_id)
       @user_playlists = Playlist.where(id: played_playlist_ids).order(:id)
     end
+
+    # Grouper les playlists standard par catégorie après réordonnancement du feed
+    @standard_by_category = @standard_playlists.group_by(&:category)
   end
 
   def show
     @playlist = Playlist.find(params[:id])
     
-    # Empêcher l'accès aux playlists cachées
+    # Empêcher l'accès aux playlists cachées uniquement
     if @playlist.hidden?
       redirect_to playlists_path, alert: "Cette playlist n'est pas accessible."
       return
-    end
-    
-    # Vérifier si l'utilisateur a accès à cette playlist premium
-    if @playlist.premium? && user_signed_in?
-      has_vip = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
-      has_unlock = UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist)
-      has_points = current_user.total_points >= 500
-      
-      unless has_vip || has_unlock || has_points
-        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points, d'avoir débloqué cette playlist premium, ou d'avoir un abonnement VIP actif."
-      end
     end
     
     # Récupérer les vidéos non encore swipées par l'utilisateur s'il est connecté

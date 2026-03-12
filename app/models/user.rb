@@ -32,6 +32,11 @@ class User < ApplicationRecord
   
   has_many :rewards
 
+  # Abonnement VIP: accès confort + progression
+  def vip?
+    vip_subscription && vip_expires_at.present? && vip_expires_at > Time.current
+  end
+
   after_save :assign_badges
   after_create :assign_badges
   
