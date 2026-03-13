@@ -44,7 +44,32 @@ class JourneyPointsService
         breakdown[:vip_boost] = "+50%"
       end
 
-      user.update_column(:journey_points, user.journey_points + total) if total > 0
+      return { total: 0, breakdown: {} } if total <= 0
+
+      # Mise à jour des points parcours globaux
+      user.update_column(:journey_points, user.journey_points.to_i + total)
+
+      # Mise à jour des points de saison si une saison courante existe
+      season = Season.current rescue nil
+      if season && user.respond_to?(:season_journey_points)
+        new_season_points = user.season_journey_points.to_i + total
+
+        attrs = {
+          season_journey_points: new_season_points
+        }
+
+        # Palier 3 000 points: lien de concert
+        if !user.season_concert_link_eligible && new_season_points >= 3_000
+          attrs[:season_concert_link_eligible] = true
+        end
+
+        # Palier 6 000 points: éligible tirage place physique
+        if !user.season_concert_ticket_eligible && new_season_points >= 6_000
+          attrs[:season_concert_ticket_eligible] = true
+        end
+
+        user.update_columns(attrs)
+      end
 
       { total: total, breakdown: breakdown }
     end
