@@ -4,13 +4,6 @@ class ProfilesController < ApplicationController
   def show
     @user = current_user
     @scores = current_user.scores.includes(:playlist)
-    
-    # Statistiques des récompenses par type
-    @challenge_count = @user.rewards.where(reward_type: 'challenge', unlocked: true).count
-    @exclusif_count = @user.rewards.where(reward_type: 'exclusif', unlocked: true).count
-    @premium_count = @user.rewards.where(reward_type: 'premium', unlocked: true).count
-    @ultime_count = @user.rewards.where(reward_type: 'ultime', unlocked: true).count
-    @total_rewards = @user.rewards.where(unlocked: true).count
   end
 
   # Page test "Mon parcours / Concert"
