@@ -5,7 +5,7 @@
          data-swipe-playlist-id="<%= @playlist.id %>"
          data-swipe-game-id="<%= @game.id %>">
       <!-- Vidéo -->
-      <div class="shorts-video">
+      <div class="shorts-video" id="game-swipe-card">
         <div id="video-container-<%= @game.current_video.id %>" style="width: 100%; height: 100%; position: relative;">
           <% 
             # Détection Safari mobile côté serveur
@@ -22,11 +22,19 @@
             end
           %>
           <% if is_safari_mobile %>
-          <!-- Safari option A : 1 iframe, 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube -->
-          <!-- 16:9 puis scale pour couvrir tout l'écran (cover) sur 414x896 -->
-          <iframe id="youtube-player-<%= @game.current_video.id %>" src="" title="YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="game-video-cover" style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;"></iframe>
+          <!-- Safari mobile : iframe chargée via JS au premier geste (pas de bouton Play). -->
+          <iframe
+            id="youtube-player-<%= @game.current_video.id %>"
+            src=""
+            title="YouTube"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            class="game-video-cover"
+            style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
+          </iframe>
           <% else %>
-          <iframe 
+          <iframe
             id="youtube-player-<%= @game.current_video.id %>"
             class="game-video-cover"
             src="<%= video_url %>"
@@ -39,16 +47,7 @@
           <% end %>
           
           <!-- Safari option A : 1 tap = lancer avec son ; si iOS bloque l'autoplay, l'utilisateur tape sur le Play YouTube -->
-          <% if is_safari_mobile %>
-          <div id="video-play-button-<%= @game.current_video.id %>" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 10000001; display: flex; align-items: center; justify-content: center; flex-direction: column; touch-action: manipulation;">
-            <div style="color: white; text-align: center; padding: 20px;">
-              <button type="button" id="safari-play-btn-<%= @game.current_video.id %>" style="background: #ff0000; color: white; border: none; padding: 20px 40px; border-radius: 50%; cursor: pointer; font-size: 24px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(255,0,0,0.5); z-index: 10000002; position: relative; touch-action: manipulation;">
-                ▶
-              </button>
-              <p style="margin-top: 20px; font-size: 16px;">Touchez pour lancer</p>
-            </div>
-          </div>
-          <% else %>
+          <% if !is_safari_mobile %>
           <!-- Overlay de chargement pour autres navigateurs -->
           <div id="video-loading-<%= @game.current_video.id %>" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5; display: flex; align-items: center; justify-content: center; flex-direction: column;">
             <div style="color: white; text-align: center; padding: 20px;">
@@ -244,6 +243,7 @@
           <h2><%= @game.current_video.title %></h2>
           <p><%= @playlist.title %></p>
         </div>
+
         <div class="shorts-actions" style="pointer-events: auto !important;">
           <button type="button" class="action-btn dislike" id="game-btn-dislike" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();} return false;" ontouchend="if(window.gameSwipeDislike){event.preventDefault();window.gameSwipeDislike();} return false;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
@@ -281,6 +281,107 @@
           btn.disabled = !enabled;
           btn.style.opacity = enabled ? '1' : '0.5';
         });
+      }
+
+      function resetCardTransform() {
+        var iframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
+        if (!iframe) return;
+        iframe.style.transition = 'transform 480ms cubic-bezier(0.22, 1, 0.36, 1)';
+        iframe.style.transform = 'translateX(0px) translateY(-50%) rotate(0deg) scale(3)';
+      }
+
+      // TikTok/Tinder gesture : la "carte" = la vidéo elle-même.
+      // Swipe horizontal -> translation + rotation max ~15deg, snap-back ou "throw".
+      function clamp(num, min, max) {
+        return Math.min(Math.max(num, min), max);
+      }
+
+      var gameCardEl = document.getElementById('game-swipe-card');
+      var iframeEl = document.querySelector('#game-swipe-player iframe.game-video-cover');
+      var isDragging = false;
+      var isGestureAnimating = false;
+      var startX = 0;
+      var dx = 0;
+
+      if (gameCardEl && iframeEl) {
+        gameCardEl.style.touchAction = 'pan-y';
+        gameCardEl.style.willChange = 'transform';
+        resetCardTransform();
+
+        function shouldIgnoreTarget(t) {
+          if (!t) return true;
+          if (t.closest && t.closest('.action-btn')) return true;
+          return false;
+        }
+
+        gameCardEl.addEventListener('pointerdown', function(e) {
+          if (isProcessing || isGestureAnimating) return;
+          if (e.pointerType === 'mouse' && e.button !== 0) return;
+          if (shouldIgnoreTarget(e.target)) return;
+
+          // Safari mobile : si l'iframe est encore vide/masquée, on la charge sur le premier geste.
+          var isSafariMobile = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
+          if (isSafariMobile && typeof window.loadVideoOnSafari === 'function') {
+            try {
+              window.loadVideoOnSafari('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>');
+            } catch (_) {}
+          }
+
+          isDragging = true;
+          startX = e.clientX;
+          dx = 0;
+          gameCardEl.setPointerCapture(e.pointerId);
+          gameCardEl.style.transition = 'none';
+          iframeEl.style.transition = 'none';
+        }, { passive: true });
+
+        gameCardEl.addEventListener('pointermove', function(e) {
+          if (!isDragging) return;
+          dx = e.clientX - startX;
+
+          var width = window.innerWidth || 414;
+          var maxRotation = 15;
+          var tx = clamp(dx, -width * 0.6, width * 0.6);
+          var rot = clamp((tx / width) * maxRotation, -maxRotation, maxRotation);
+
+          iframeEl.style.transform = 'translateX(' + tx + 'px) translateY(-50%) rotate(' + rot + 'deg) scale(3)';
+        }, { passive: true });
+
+        function onPointerEnd() {
+          if (!isDragging) return;
+          isDragging = false;
+
+          var width = window.innerWidth || 414;
+          var threshold = width * 0.18;
+          var absDx = Math.abs(dx);
+          var liked = dx > 0;
+
+          if (absDx < threshold) {
+            resetCardTransform();
+            return;
+          }
+
+          isGestureAnimating = true;
+          setButtonsEnabled(false);
+
+          var dir = liked ? 1 : -1;
+          var targetX = dir * width * 1.1;
+          var targetRot = dir * 18; // + tilt quand on "throw"
+
+          iframeEl.style.transition = 'transform 260ms ease-out';
+          iframeEl.style.transform = 'translateX(' + targetX + 'px) translateY(-50%) rotate(' + targetRot + 'deg) scale(3)';
+
+          var onEnd = function(ev) {
+            gameCardEl.removeEventListener('transitionend', onEnd);
+            // lancer l'action une fois l'animation hors écran
+            isGestureAnimating = false;
+            handleSwipe(liked);
+          };
+          gameCardEl.addEventListener('transitionend', onEnd, { once: true });
+        }
+
+        gameCardEl.addEventListener('pointerup', onPointerEnd, { passive: true });
+        gameCardEl.addEventListener('pointercancel', onPointerEnd, { passive: true });
       }
 
       function handleSwipe(liked) {
@@ -322,6 +423,9 @@
             else { isProcessing = false; setButtonsEnabled(true); alert(data.error || 'Erreur'); }
             return;
           }
+
+          // (Visuel swipe) Pas d'overlay de points ici : la vidéo suit le geste.
+
           if (data.completed) {
             window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId + '/results';
             return;
@@ -347,6 +451,8 @@
                 return;
               }
             }
+            resetCardTransform();
+            resetCardTransform();
             isProcessing = false;
             setButtonsEnabled(true);
           } else {

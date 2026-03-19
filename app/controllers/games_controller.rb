@@ -331,7 +331,9 @@ class GamesController < ApplicationController
     end
     
     # Vérifier l'accès premium avant de créer le jeu
-    if @playlist.premium?
+    # Dev-only bypass: pour tester le gameplay même si les playlists sont premium
+    # (sinon on dépend du déblocage/unlock + points et tu ne peux pas itérer).
+    if @playlist.premium? && !(Rails.env.development? || Rails.env.test?)
       unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
         redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
         return
@@ -367,6 +369,9 @@ class GamesController < ApplicationController
   
   def check_premium_access
     return if current_user.vip?
+
+    # Dev-only bypass: on veut tester le gameplay même si on a déjà atteint la limite journalière.
+    return if Rails.env.development? || Rails.env.test?
 
     games_today = current_user.games.where(created_at: Time.current.all_day).count
     if games_today >= MAX_DAILY_GAMES_FREE

@@ -1,117 +1,143 @@
-<div class="min-h-screen bg-gray-900 py-0">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- En-tête harmonisé -->
-    <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white"><%= t('profile.title') %></h1>
-    </div>
-    
-    <!-- En-tête du profil -->
-    <div class="bg-gradient-to-r from-purple-800 to-blue-800 rounded-lg p-8 mb-8">
-      <div class="flex flex-col md:flex-row items-center">
-        <!-- Avatar avec possibilité de modification -->
-        <div class="relative mb-6 md:mb-0 md:mr-8">
-          <% if @user.avatar.attached? %>
-            <%= image_tag @user.avatar, class: "w-32 h-32 rounded-full border-4 border-white/30 object-cover shadow-xl" %>
-          <% else %>
-            <div class="w-32 h-32 rounded-full border-4 border-white/30 bg-gray-700 flex items-center justify-center shadow-xl">
-              <span class="text-white text-4xl font-bold"><%= @user.email.first.upcase %></span>
+<div class="min-h-screen bg-black py-6">
+  <div class="max-w-md mx-auto px-4">
+    <!-- Hero -->
+    <div class="rounded-3xl overflow-hidden border border-purple-500/25 bg-gradient-to-b from-[#6b21a8]/20 via-black to-black shadow-xl">
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-purple-500/25">
+              <span class="text-white/70 text-[11px] font-semibold uppercase tracking-widest">Profil</span>
             </div>
-          <% end %>
-          
-          <!-- Bouton modifier avatar -->
-          <button onclick="document.getElementById('avatar-input').click()" 
-                  class="absolute bottom-0 right-0 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shadow-lg transition-all">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-            </svg>
-          </button>
-          
-          <!-- Input caché pour upload -->
-          <%= form_with url: profile_path, method: :patch, local: true, class: "hidden" do |f| %>
-            <%= f.file_field :avatar, id: "avatar-input", accept: "image/*", onchange: "this.form.submit()" %>
-          <% end %>
+
+            <h1 class="mt-4 text-3xl font-extrabold text-white leading-tight truncate">
+              🎯 <%= @user.username || @user.email.split('@').first %>
+            </h1>
+            <p class="text-sm text-white/60 mt-1 truncate">
+              📧 <%= @user.email %>
+            </p>
+          </div>
+
+          <div class="relative shrink-0">
+            <% if @user.avatar.attached? %>
+              <%= image_tag @user.avatar,
+                            class: "w-20 h-20 rounded-full border-4 border-purple-500/25 object-cover shadow-xl" %>
+            <% else %>
+              <div class="w-20 h-20 rounded-full border-4 border-purple-500/25 bg-gray-900 flex items-center justify-center shadow-xl">
+                <span class="text-white text-3xl font-bold"><%= @user.email.first.upcase %></span>
+              </div>
+            <% end %>
+
+            <button onclick="document.getElementById('avatar-input').click()"
+                    class="absolute -bottom-1 -right-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-2 shadow-lg transition-all border border-white/10">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+              </svg>
+            </button>
+
+            <%= form_with url: profile_path, method: :patch, local: true, class: "hidden" do |f| %>
+              <%= f.file_field :avatar, id: "avatar-input", accept: "image/*", onchange: "this.form.submit()" %>
+            <% end %>
+          </div>
         </div>
-        
-        <!-- Informations utilisateur -->
-        <div class="text-center md:text-left">
-          <h2 class="text-4xl font-bold text-white mb-2">
-            🎯 <%= @user.username || @user.email.split('@').first %>
-          </h2>
-          <p class="text-xl text-white/80 mb-4">
-            📧 <%= @user.email %>
-          </p>
-          
-          <!-- Statistiques rapides -->
-          <div class="flex flex-wrap justify-center md:justify-start gap-4">
-            <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-purple-300"><%= @user.journey_points || 0 %></span>
-              <span class="text-white/80 text-sm">Points parcours (total)</span>
-            </div>
-            <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-blue-400"><%= @user.games.count %></span>
-              <span class="text-white/80 text-sm"><%= t('profile.games') %></span>
-            </div>
-            <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-purple-400"><%= (@user.playlists_per_day || 0).round(1) %></span>
-              <span class="text-white/80 text-sm"><%= t('profile.playlists_per_day') %></span>
-            </div>
-            <div class="bg-white/10 rounded-lg px-4 py-2">
-              <span class="text-2xl font-bold text-amber-300"><%= @user.season_journey_points || 0 %></span>
-              <span class="text-white/80 text-sm">Points saison</span>
-            </div>
+
+        <!-- Stats grid -->
+        <div class="mt-6 grid grid-cols-2 gap-3">
+          <div class="rounded-3xl bg-white/5 border border-white/10 p-4">
+            <div class="text-2xl font-extrabold text-purple-200"><%= @user.journey_points || 0 %></div>
+            <div class="text-xs text-white/70 mt-1">Points parcours</div>
+          </div>
+          <div class="rounded-3xl bg-white/5 border border-white/10 p-4">
+            <div class="text-2xl font-extrabold text-amber-300"><%= @user.season_journey_points || 0 %></div>
+            <div class="text-xs text-white/70 mt-1">Points saison</div>
+          </div>
+        </div>
+
+        <!-- Road to Concert (mini) -->
+        <div class="mt-5 rounded-3xl border border-purple-500/25 bg-purple-500/5 p-4 flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <div class="text-sm font-semibold text-white/70">Road to Concert</div>
+            <div class="text-white font-extrabold truncate">Ton concert, ta saison</div>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500/15 border border-purple-500/35 text-purple-200">
+              LIVE
+            </span>
+            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-400/10 border border-amber-400/30 text-amber-200">
+              PHYSIQUE
+            </span>
+            <a href="<%= journey_path %>"
+               class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600 hover:bg-purple-700 transition-all shadow-lg border border-white/10">
+              <span class="text-white text-lg">→</span>
+            </a>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Parcours vers le concert -->
-    <div class="mb-8">
-      <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <h3 class="text-2xl font-bold text-white mb-1">
-            Mon parcours vers le concert
-          </h3>
-          <p class="text-sm text-gray-300">
-            Suis ta progression vers le concert live et le tirage des 10 places physiques.
-          </p>
-        </div>
-        <div class="flex flex-col sm:flex-row gap-3 items-center">
-          <button onclick="window.location.href='<%= journey_path %>'"
-                  class="inline-flex items-center px-5 py-2.5 text-sm font-semibold rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all shadow-lg">
-            🎫 Voir mon parcours concert
-          </button>
+      <!-- Quick actions -->
+      <div class="px-6 pb-6">
+        <div class="grid grid-cols-2 gap-3">
+          <a href="<%= playlists_path %>"
+             class="rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2">
+            🎵 <%= t('profile.play') %>
+          </a>
+          <a href="<%= scores_path %>"
+             class="rounded-3xl bg-purple-600/90 hover:bg-purple-700 transition-all shadow-lg border border-white/10 px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2">
+            🏆 <%= t('nav.scores') %>
+          </a>
         </div>
       </div>
     </div>
 
-    <!-- Actions -->
-    <div class="flex justify-center gap-4">
-      <button onclick="window.location.href='<%= playlists_path %>'" 
-          class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all">
-        <span>🎵 <%= t('profile.play') %></span>
-      </button>
-      
-      <button onclick="window.location.href='<%= scores_path %>'" 
-          class="inline-flex items-center px-6 py-3 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all">
-        <span>🏆 <%= t('nav.scores') %></span>
-      </button>
+    <!-- Historique (bloc type leaderboard) -->
+    <div class="mt-6 rounded-3xl border border-purple-500/25 overflow-hidden bg-gradient-to-b from-purple-950/20 to-black">
+      <div class="px-5 py-4 flex items-center justify-between border-b border-white/5">
+        <div>
+          <div class="text-sm font-extrabold text-white">Historique</div>
+          <div class="text-xs text-white/60">Dernières sessions</div>
+        </div>
+        <div class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-purple-200">
+          { <%= @recent_games.size %> }
+        </div>
+      </div>
+
+      <div class="p-4 space-y-3">
+        <% @recent_games.each do |game| %>
+          <a href="<%= playlist_game_path(game.playlist, game) %>"
+             class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3 hover:bg-white/10 transition-all">
+            <img src="<%= game.playlist.thumbnail_url %>"
+                 alt="<%= game.playlist.title %>"
+                 class="w-16 h-10 rounded-xl object-cover flex-shrink-0" />
+
+            <div class="flex-1 min-w-0">
+              <div class="text-white font-bold text-sm truncate"><%= game.playlist.title %></div>
+              <div class="text-white/60 text-xs mt-1">
+                <span class="<%= game.completed_at.present? ? 'text-amber-200' : 'text-purple-200' %> font-semibold">
+                  <%= game.completed_at.present? ? 'Terminé' : 'En cours' %>
+                </span>
+              </div>
+            </div>
+
+            <div class="w-10 h-10 rounded-full bg-purple-600/15 border border-purple-500/35 flex items-center justify-center">
+              <span class="text-purple-200 text-lg">▶</span>
+            </div>
+          </a>
+        <% end %>
+
+        <% if @recent_games.blank? %>
+          <div class="text-sm text-white/60 bg-white/5 border border-white/10 rounded-2xl p-4">
+            Pas encore de sessions. Lance une playlist pour démarrer ta saison.
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>
-
-<style>
-  /* Harmonisation des titres principaux */
-  h1.text-2xl.font-bold.text-white {
-    font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-  }
-</style>
 
 <script>
   // Auto-submit du formulaire d'avatar
   document.getElementById('avatar-input')?.addEventListener('change', function() {
     this.form.submit();
   });
-</script> 
+</script>

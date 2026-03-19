@@ -4,6 +4,7 @@ class ProfilesController < ApplicationController
   def show
     @user = current_user
     @scores = current_user.scores.includes(:playlist)
+    @recent_games = current_user.games.includes(:playlist).order(created_at: :desc).limit(6)
   end
 
   # Page test "Mon parcours / Concert"

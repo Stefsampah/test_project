@@ -1,0 +1,12 @@
+<%# ProgressBarSeason - expects locals:
+    - percent (0..100)
+    - bar_bg (optional tailwind class string, for gradient/colored fill)
+%>
+<%
+  bar_bg_class = local_assigns[:bar_bg].presence || "bg-white";
+  pct = (percent.to_f || 0).round
+%>
+<div class="w-full h-2 bg-white/15 rounded-full overflow-hidden">
+  <div class="h-full <%= bar_bg_class %> rounded-full" style="width: <%= pct %>%"></div>
+</div>
+

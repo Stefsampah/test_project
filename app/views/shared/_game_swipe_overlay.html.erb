@@ -1,0 +1,31 @@
+<%# GameSwipeOverlay
+    Partial de base (markup) pour afficher des popups lors des likes/dislikes.
+    Locals optionnels:
+    - initial_message: String
+    - initial_points: Integer
+%>
+
+<div id="game-swipe-overlay" class="pointer-events-none fixed inset-0 z-[999999] hidden">
+  <div class="absolute inset-0 bg-black/10 backdrop-blur-sm"></div>
+
+  <div class="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2">
+    <div class="relative">
+      <div class="mx-auto w-64 max-w-[85vw] rounded-3xl border border-purple-500/30 bg-white/5 shadow-2xl p-4 text-center">
+        <div class="text-4xl leading-none mb-2 text-white" data-overlay-emoji>
+          ✨
+        </div>
+        <div class="text-white font-extrabold text-lg mb-1" data-overlay-title>
+          <%= local_assigns[:initial_message] || "Bravo !" %>
+        </div>
+        <div class="text-white/70 text-sm" data-overlay-points>
+          <%= local_assigns[:initial_points].present? ? "+#{local_assigns[:initial_points]} pts" : "Continue comme un roi." %>
+        </div>
+
+        <div class="mt-3 h-2 rounded-full bg-white/10 overflow-hidden">
+          <div class="h-full w-1/2 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600" data-overlay-bar style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
