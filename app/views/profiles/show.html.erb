@@ -1,34 +1,21 @@
-<div class="min-h-screen bg-black py-6">
+<div class="min-h-screen bg-gradient-to-b from-[#6b21a8] to-[#1d4ed8] py-6">
   <div class="max-w-md mx-auto px-4">
     <!-- Hero -->
-    <div class="rounded-3xl overflow-hidden border border-purple-500/25 bg-gradient-to-b from-[#6b21a8]/20 via-black to-black shadow-xl">
+    <div class="rounded-3xl overflow-hidden shadow-xl" style="background: linear-gradient(180deg, #7e22ce 0%, #6b21a8 45%, #2563eb 100%);">
       <div class="p-6">
-        <div class="flex items-start justify-between gap-4">
-          <div class="min-w-0">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-purple-500/25">
-              <span class="text-white/70 text-[11px] font-semibold uppercase tracking-widest">Profil</span>
-            </div>
-
-            <h1 class="mt-4 text-3xl font-extrabold text-white leading-tight truncate">
-              🎯 <%= @user.username || @user.email.split('@').first %>
-            </h1>
-            <p class="text-sm text-white/60 mt-1 truncate">
-              📧 <%= @user.email %>
-            </p>
-          </div>
-
+        <div class="flex flex-col items-center text-center">
           <div class="relative shrink-0">
             <% if @user.avatar.attached? %>
               <%= image_tag @user.avatar,
-                            class: "w-20 h-20 rounded-full border-4 border-purple-500/25 object-cover shadow-xl" %>
+                            class: "w-24 h-24 rounded-full object-cover shadow-xl" %>
             <% else %>
-              <div class="w-20 h-20 rounded-full border-4 border-purple-500/25 bg-gray-900 flex items-center justify-center shadow-xl">
+              <div class="w-24 h-24 rounded-full bg-gray-900/80 flex items-center justify-center shadow-xl">
                 <span class="text-white text-3xl font-bold"><%= @user.email.first.upcase %></span>
               </div>
             <% end %>
 
             <button onclick="document.getElementById('avatar-input').click()"
-                    class="absolute -bottom-1 -right-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-2 shadow-lg transition-all border border-white/10">
+                    class="absolute -bottom-1 -right-1 bg-purple-600 hover:bg-purple-700 text-white rounded-full p-2 shadow-lg transition-all">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -39,34 +26,32 @@
               <%= f.file_field :avatar, id: "avatar-input", accept: "image/*", onchange: "this.form.submit()" %>
             <% end %>
           </div>
+
+          <h1 class="mt-4 text-3xl font-extrabold text-white leading-tight">
+            🎯 <%= @user.username || @user.email.split('@').first %>
+          </h1>
+          <p class="text-sm text-white/85 mt-1">
+            📧 <%= @user.email %>
+          </p>
         </div>
 
-        <!-- Stats grid -->
-        <div class="mt-6">
-          <div class="rounded-3xl bg-white/5 border border-white/10 p-4">
-            <div class="text-3xl font-extrabold text-amber-300"><%= @user.season_journey_points || 0 %></div>
-            <div class="text-xs text-white/70 mt-1">Points parcours (saison)</div>
-          </div>
-        </div>
-
-        <!-- Road to Concert (mini) -->
-        <div class="mt-5 rounded-3xl border border-purple-500/25 bg-purple-500/5 p-4 flex items-center justify-between gap-3">
-          <div class="min-w-0">
-            <div class="text-sm font-semibold text-white/70">Road to Concert</div>
-            <div class="text-white font-extrabold truncate">Ton concert, ta saison</div>
-          </div>
-
-          <div class="flex items-center gap-2 shrink-0">
-            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-purple-500/15 border border-purple-500/35 text-purple-200">
-              LIVE
-            </span>
-            <span class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-400/10 border border-amber-400/30 text-amber-200">
-              PHYSIQUE
-            </span>
-            <a href="<%= journey_path %>"
-               class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-purple-600 hover:bg-purple-700 transition-all shadow-lg border border-white/10">
-              <span class="text-white text-lg">→</span>
-            </a>
+        <!-- Stats verticales -->
+        <div class="mt-6 rounded-3xl p-4" style="background: linear-gradient(180deg, rgba(126,34,206,0.95) 0%, rgba(37,99,235,0.95) 100%);">
+          <div class="space-y-3 text-white">
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Points saison</span>
+              <span class="text-lg font-extrabold text-amber-300"><%= @user.season_journey_points || 0 %></span>
+            </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Nombre de parties</span>
+              <span class="text-lg font-extrabold text-white"><%= @user.games.count %></span>
+            </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Playlists / jour</span>
+              <span class="text-lg font-extrabold text-white"><%= @user.respond_to?(:playlists_per_day) ? @user.playlists_per_day.to_f.round(1) : 0 %></span>
+            </div>
           </div>
         </div>
       </div>
@@ -75,11 +60,13 @@
       <div class="px-6 pb-6">
         <div class="grid grid-cols-2 gap-3">
           <a href="<%= playlists_path %>"
-             class="rounded-3xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2">
+             class="rounded-3xl hover:brightness-110 transition-all px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2"
+             style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
             🎵 <%= t('profile.play') %>
           </a>
           <a href="<%= scores_path %>"
-             class="rounded-3xl bg-purple-600/90 hover:bg-purple-700 transition-all shadow-lg border border-white/10 px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2">
+             class="rounded-3xl hover:brightness-110 transition-all shadow-lg px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2"
+             style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
             🏆 <%= t('nav.scores') %>
           </a>
         </div>
@@ -87,13 +74,13 @@
     </div>
 
     <!-- Historique (bloc type leaderboard) -->
-    <div class="mt-6 rounded-3xl border border-purple-500/25 overflow-hidden bg-gradient-to-b from-purple-950/20 to-black">
-      <div class="px-5 py-4 flex items-center justify-between border-b border-white/5">
+    <div class="mt-6 rounded-3xl overflow-hidden" style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
+      <div class="px-5 py-4 flex items-center justify-between">
         <div>
           <div class="text-sm font-extrabold text-white">Historique</div>
           <div class="text-xs text-white/60">Dernières sessions</div>
         </div>
-        <div class="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-purple-200">
+        <div class="px-3 py-1 rounded-full bg-black/25 text-xs font-semibold text-purple-200">
           { <%= @recent_games.size %> }
         </div>
       </div>
@@ -101,7 +88,7 @@
       <div class="p-4 space-y-3">
         <% @recent_games.each do |game| %>
           <a href="<%= playlist_game_path(game.playlist, game) %>"
-             class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3 hover:bg-white/10 transition-all">
+             class="flex items-center gap-3 bg-black/25 rounded-2xl p-3 hover:bg-black/35 transition-all">
             <img src="<%= game.playlist.thumbnail_url %>"
                  alt="<%= game.playlist.title %>"
                  class="w-16 h-10 rounded-xl object-cover flex-shrink-0" />
@@ -115,14 +102,14 @@
               </div>
             </div>
 
-            <div class="w-10 h-10 rounded-full bg-purple-600/15 border border-purple-500/35 flex items-center justify-center">
+            <div class="w-10 h-10 rounded-full bg-purple-600/25 flex items-center justify-center">
               <span class="text-purple-200 text-lg">▶</span>
             </div>
           </a>
         <% end %>
 
         <% if @recent_games.blank? %>
-          <div class="text-sm text-white/60 bg-white/5 border border-white/10 rounded-2xl p-4">
+          <div class="text-sm text-white/75 bg-black/25 rounded-2xl p-4">
             Pas encore de sessions. Lance une playlist pour démarrer ta saison.
           </div>
         <% end %>
