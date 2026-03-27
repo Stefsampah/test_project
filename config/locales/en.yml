@@ -243,6 +243,11 @@ en:
     no_disliked_songs: "No disliked songs yet."
     plus_points: "+%{count} points"
     plus_point: "+1 point"
+    columns:
+      ranks: "Ranks"
+      player: "Player"
+      point: "Point"
+      playlist: "Playlist"
   
   # Badges
   badges:

@@ -1,554 +1,111 @@
-<% require 'ostruct' %>
-<!-- Page Scores Complète et Responsive -->
-<div class="min-h-screen bg-gray-900 py-0">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- En-tête harmonisé -->
-    <div class="text-center mb-4">
-      <h1 class="text-2xl font-bold text-white"><%= t('scores.title') %></h1>
-    </div>
-    
-    <!-- Filtres centrés -->
-    <div class="flex justify-center mb-8">
-      <div class="flex space-x-2">
-        <button class="score-filter active px-4 py-2 rounded-lg text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 transition-colors" data-target="all"><%= t('scores.all_scores') %></button>
-        <button class="score-filter px-4 py-2 rounded-lg text-sm font-medium text-gray-300 bg-gray-700 hover:bg-gray-600 transition-colors" data-target="my"><%= t('scores.my_scores') %></button>
-      </div>
+<div class="min-h-screen bg-black py-6">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-6">
+      <h1 class="text-3xl font-extrabold text-white tracking-wide">Classement</h1>
     </div>
 
-    <!-- Section Top 3 Players - Design épuré -->
-    <div id="total-section" class="score-section mb-8">
-      <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-          </svg>
-          <%= t('scores.top_players') %>
-        </h2>
-        
-        <!-- Top 3 avec design responsive -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
-          <% if @total_scores.present? %>
-            <% @total_scores.first(3).each_with_index do |score, index| %>
-              <% user = @users_by_id[score[:user_id]] %>
-              <% next unless user %>
-              <% points = score[:points].to_i %>
-              <% rank_class = case index
-                   when 0 then "border-yellow-400 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20"
-                   when 1 then "border-gray-300 bg-gradient-to-br from-gray-500/20 to-gray-600/20"
-                   when 2 then "border-orange-500 bg-gradient-to-br from-orange-500/20 to-orange-600/20"
-                   else "border-gray-600 bg-gray-800"
-                   end %>
-              <% rank_icon = case index
-                   when 0 then "🥇"
-                   when 1 then "🥈"
-                   when 2 then "🥉"
-                   else "🏆"
-                   end %>
-              
-              <div class="relative group">
-                <div class="<%= rank_class %> border-2 rounded-xl p-4 sm:p-6 text-center transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                  <!-- Rank Badge -->
-                  <div class="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                    <%= index + 1 %>
+    <% top_three = @total_scores.first(3) %>
+    <% first = top_three[0] %>
+    <% second = top_three[1] %>
+    <% third = top_three[2] %>
+
+    <%# On pré-calcule le nombre de playlists jouées par user pour éviter les incohérences d'affichage %>
+    <% playlist_count_by_user = (@users || []).each_with_object({}) do |u, h|
+         h[u.id] = u.scores.map(&:playlist_id).uniq.count
+       end %>
+
+    <div class="p-3 mb-5">
+      <div class="flex items-end justify-center gap-6">
+        <% [third, first, second].each_with_index do |entry, idx| %>
+          <% if entry.present? %>
+            <% u = @users_by_id[entry[:user_id]] %>
+            <% next unless u %>
+            <% size = idx == 1 ? "w-20 h-20" : "w-16 h-16" %>
+            <% rank_text = idx == 1 ? "1st" : (idx == 2 ? "2nd" : "3rd") %>
+            <div class="text-center">
+              <div class="<%= size %> rounded-full overflow-hidden mx-auto bg-black/30 shadow-lg">
+                <% if u.avatar.attached? %>
+                  <%= image_tag u.avatar, class: "w-full h-full object-cover" %>
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center text-white font-bold">
+                    <%= u.email.first.upcase %>
                   </div>
-                  
-                  <!-- Avatar -->
-                  <div class="mb-4">
-                    <% if user.avatar.attached? %>
-                      <%= image_tag user.avatar, class: "h-16 w-16 rounded-full border-2 border-white shadow-lg mx-auto object-cover" %>
-                    <% else %>
-                      <img src="/players/<%= user.id %>.jpg"
-                           class="h-16 w-16 rounded-full border-2 border-white shadow-lg mx-auto object-cover"
-                           onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                      <div class="h-16 w-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold mx-auto" style="display:none;">
-                        <%= user.email.first.upcase %>
-                      </div>
-                    <% end %>
-                  </div>
-                  
-                  <!-- Username -->
-                  <h3 class="text-lg font-semibold text-white mb-2"><%= user.email.split('@').first %></h3>
-                  
-                  <!-- Points -->
-                  <div class="text-3xl font-bold text-yellow-400 mb-2"><%= points %></div>
-                  
-                  <!-- Rank Icon -->
-                  <div class="text-2xl mb-2"><%= rank_icon %></div>
-                  
-                  <!-- Badge si présent -->
-                  <% if score[:badges].any? %>
-                    <div class="space-y-1">
-                      <% score[:badges].each do |badge| %>
-                        <div class="inline-block px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600">
-                          <%= badge %>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-                </div>
+                <% end %>
               </div>
-            <% end %>
-          <% else %>
-            <div class="col-span-full text-center text-gray-400 py-8">
-              <p><%= t('scores.no_scores_available') %></p>
+              <div class="mt-2 text-[11px] text-white font-bold"><%= rank_text %></div>
             </div>
           <% end %>
-        </div>
+        <% end %>
       </div>
     </div>
 
-    <!-- Section Classement Complet - Responsive -->
-    <div id="complete-ranking-section" class="score-section mb-8">
-      <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-          </svg>
-          <%= t('scores.complete_ranking') %>
-        </h2>
-        
-        <!-- Liste de tous les joueurs - Design équilibré -->
-        <div class="space-y-3">
-          <% if @total_scores.present? %>
-            <% @total_scores.each_with_index do |score, index| %>
-              <% user = @users_by_id[score[:user_id]] %>
-              <% next unless user %>
-              <% points = score[:points].to_i %>
-              <% is_current_user = user_signed_in? && user.id == current_user.id %>
-              <% row_class = is_current_user ? "bg-gradient-to-r from-blue-600/20 to-purple-600/20 border-blue-500" : "bg-gray-800/50 border-gray-700" %>
-              
-              <div class="<%= row_class %> border rounded-lg p-4 hover:bg-gray-700/50 transition-colors">
-                <div class="flex items-center justify-between">
-                  <!-- Côté gauche : Rank + Avatar + Infos -->
-                  <div class="flex items-center space-x-3 min-w-0 flex-1">
-                    <!-- Rank -->
-                    <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                      <%= index + 1 %>
-                    </div>
-                    
-                    <!-- Avatar compact -->
-                    <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                      <% if user.avatar.attached? %>
-                        <%= image_tag user.avatar, class: "w-full h-full object-cover" %>
-                      <% else %>
-                        <img src="/players/<%= user.id %>.jpg"
-                             class="w-full h-full object-cover"
-                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                        <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-sm font-bold" style="display:none;">
-                          <%= user.email.first.upcase %>
-                        </div>
-                      <% end %>
-                    </div>
-                    
-                    <!-- Infos utilisateur -->
-                    <div class="min-w-0 flex-1">
-                      <div class="text-white font-medium truncate">
+    <div class="rounded-3xl overflow-hidden shadow-xl" style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
+      <div class="p-3 sm:p-5 overflow-x-hidden">
+        <% if @total_scores.present? %>
+          <table class="w-full table-fixed text-white text-[11px] sm:text-sm">
+            <colgroup>
+              <col style="width: 14%;">
+              <col style="width: 44%;">
+              <col style="width: 20%;">
+              <col style="width: 22%;">
+            </colgroup>
+            <thead>
+              <tr class="border-b border-white/20 text-[10px] sm:text-xs font-extrabold uppercase tracking-wide">
+                <th class="text-left py-2 pr-2 sm:pr-4 whitespace-nowrap">
+                  <span class="sm:hidden">Rk</span>
+                  <span class="hidden sm:inline"><%= t('scores.columns.ranks', default: 'Ranks') %></span>
+                </th>
+                <th class="text-left py-2 px-1 sm:px-3 whitespace-nowrap"><%= t('scores.columns.player', default: 'Player') %></th>
+                <th class="text-right py-2 px-1 sm:px-3 whitespace-nowrap">
+                  <span class="sm:hidden">Pt</span>
+                  <span class="hidden sm:inline"><%= t('scores.columns.point', default: 'Point') %></span>
+                </th>
+                <th class="text-right py-2 pl-2 sm:pl-4 whitespace-nowrap">
+                  <span class="sm:hidden">Pl</span>
+                  <span class="hidden sm:inline"><%= t('scores.columns.playlist', default: 'Playlist') %></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @total_scores.each_with_index do |score, index| %>
+                <% user = @users_by_id[score[:user_id]] %>
+                <% next unless user %>
+                <% rank = index + 1 %>
+                <% rank_label = rank == 1 ? "1st" : (rank == 2 ? "2nd" : (rank == 3 ? "3rd" : "#{rank}th")) %>
+                <% is_current_user = user_signed_in? && user.id == current_user.id %>
+                <tr class="border-b border-white/15 <%= is_current_user ? 'bg-black/20' : '' %>">
+                  <td class="py-3 pr-2 sm:pr-4 text-[11px] sm:text-sm font-semibold whitespace-nowrap"><%= rank_label %></td>
+                  <td class="py-3 px-1 sm:px-3">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <div class="w-6 h-6 sm:w-8 sm:h-8 rounded-full overflow-hidden bg-black/30 flex-shrink-0">
+                        <% if user.avatar.attached? %>
+                          <%= image_tag user.avatar, class: "w-full h-full object-cover" %>
+                        <% else %>
+                          <div class="w-full h-full flex items-center justify-center text-white text-xs font-bold">
+                            <%= user.email.first.upcase %>
+                          </div>
+                        <% end %>
+                      </div>
+                      <div class="truncate text-[11px] sm:text-sm font-medium">
                         <%= user.email.split('@').first %>
                         <% if is_current_user %>
-                          <span class="ml-2 text-blue-400 text-xs">(<%= t('scores.you_label') %>)</span>
+                          <span class="text-[11px] text-purple-200">(toi)</span>
                         <% end %>
                       </div>
-                      <% if score[:badges].any? %>
-                        <div class="text-xs text-blue-400 truncate"><%= score[:badges].first %></div>
-                      <% end %>
                     </div>
-                  </div>
-                  
-                  <!-- Côté droit : Points -->
-                  <div class="text-right flex-shrink-0 ml-3">
-                    <div class="text-xl font-bold text-yellow-400"><%= points %></div>
-                    <div class="text-xs text-gray-400"><%= t('scores.points_label_short') %></div>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          <% else %>
-            <div class="text-center text-gray-400 py-8">
-              <p><%= t('scores.no_scores_available') %></p>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section Catégories Spéciales - Restaurée et Responsive -->
-    <div id="categories-section" class="score-section mb-8">
-      <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-          </svg>
-          <%= t('scores.special_categories') %>
-        </h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Meilleurs Engagements -->
-          <div class="bg-gray-800 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">⏱️</span>
-              <%= t('scores.best_engagements') %>
-            </h3>
-            <div class="space-y-3">
-              <% if @top_engager_scores.present? %>
-                <% @top_engager_scores.first(5).each_with_index do |score, index| %>
-                  <% user = @users_by_id[score[:user_id]] %>
-                  <% next unless user %>
-                  <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        <%= index + 1 %>
-                      </div>
-                      <!-- Avatar -->
-                      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <% if user.avatar.attached? %>
-                          <%= image_tag user.avatar, class: "w-full h-full object-cover", alt: user.email.split('@').first, onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold" style="display:none;">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% else %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% end %>
-                      </div>
-                      <span class="text-white text-sm"><%= user.email.split('@').first %></span>
-                    </div>
-                    <span class="text-yellow-400 font-bold"><%= score[:points] %></span>
-                  </div>
-                <% end %>
-              <% else %>
-                <p class="text-gray-400 text-sm"><%= t('scores.no_engagements') %></p>
+                  </td>
+                  <td class="py-3 px-1 sm:px-3 text-right text-amber-200 text-[11px] sm:text-sm font-extrabold whitespace-nowrap"><%= score[:points].to_i %></td>
+                  <td class="py-3 pl-2 sm:pl-4 text-right text-[11px] sm:text-sm font-semibold whitespace-nowrap"><%= playlist_count_by_user[user.id] || 0 %></td>
+                </tr>
               <% end %>
-            </div>
-          </div>
-
-          <!-- Meilleurs Régularités -->
-          <div class="bg-gray-800 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">🎮</span>
-              <%= t('scores.best_competitors') %>
-            </h3>
-            <div class="space-y-3">
-              <% if @best_ratio_scores.present? %>
-                <% @best_ratio_scores.first(5).each_with_index do |score, index| %>
-                  <% user = @users_by_id[score[:user_id]] %>
-                  <% next unless user %>
-                  <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        <%= index + 1 %>
-                      </div>
-                      <!-- Avatar -->
-                      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <% if user.avatar.attached? %>
-                          <%= image_tag user.avatar, class: "w-full h-full object-cover", alt: user.email.split('@').first, onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold" style="display:none;">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% else %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% end %>
-                      </div>
-                      <span class="text-white text-sm"><%= user.email.split('@').first %></span>
-                    </div>
-                    <span class="text-yellow-400 font-bold"><%= score[:points] %></span>
-                  </div>
-                <% end %>
-              <% else %>
-                <p class="text-gray-400 text-sm"><%= t('scores.no_competitors') %></p>
-              <% end %>
-            </div>
-          </div>
-
-          <!-- Meilleurs Critiques -->
-          <div class="bg-gray-800 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-              <span class="mr-2">🧠</span>
-              <%= t('scores.best_critics') %>
-            </h3>
-            <div class="space-y-3">
-              <% if @wise_critic_scores.present? %>
-                <% @wise_critic_scores.first(5).each_with_index do |score, index| %>
-                  <% user = @users_by_id[score[:user_id]] %>
-                  <% next unless user %>
-                  <div class="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
-                    <div class="flex items-center space-x-3">
-                      <div class="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
-                        <%= index + 1 %>
-                      </div>
-                      <!-- Avatar -->
-                      <div class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
-                        <% if user.avatar.attached? %>
-                          <%= image_tag user.avatar, class: "w-full h-full object-cover", alt: user.email.split('@').first, onerror: "this.style.display='none';this.nextElementSibling.style.display='flex';" %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold" style="display:none;">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% else %>
-                          <div class="w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                            <%= user.email.first.upcase %>
-                          </div>
-                        <% end %>
-                      </div>
-                      <span class="text-white text-sm"><%= user.email.split('@').first %></span>
-                    </div>
-                    <span class="text-yellow-400 font-bold"><%= score[:points] %></span>
-                  </div>
-                <% end %>
-              <% else %>
-                <p class="text-gray-400 text-sm"><%= t('scores.no_critics') %></p>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Section Scores par Playlist - Restaurée et Responsive -->
-    <div id="playlists-section" class="score-section mb-8">
-      <div class="bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-          </svg>
-          <%= t('scores.playlist_scores') %>
-        </h2>
-        
-        <% if @scores_by_playlist.present? %>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <% @scores_by_playlist.each do |playlist, scores| %>
-              <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-colors">
-                <div class="flex items-center justify-between mb-4">
-                  <div class="flex-1 min-w-0">
-                    <h3 class="text-lg font-semibold text-white truncate"><%= playlist.title %></h3>
-                    <p class="text-gray-400 text-sm"><%= playlist.genre %></p>
-                  </div>
-                  <div class="text-right flex-shrink-0">
-                    <div class="text-2xl font-bold text-cyan-400"><%= scores.map(&:user).uniq.count %></div>
-                    <div class="text-xs text-gray-400"><%= t('scores.players_label') %></div>
-                  </div>
-                </div>
-                
-                <!-- Top 3 de cette playlist (meilleur score par utilisateur) -->
-                <div class="space-y-2">
-                  <% top_scores_by_user = scores.group_by(&:user_id).map { |user_id, user_scores| user_scores.max_by(&:points) }.sort_by { |s| -s.points } %>
-                  <% top_scores_by_user.first(3).each_with_index do |score, index| %>
-                    <% user = score.user %>
-                    <div class="flex items-center justify-between p-2 bg-gray-700 rounded">
-                      <div class="flex items-center space-x-2">
-                        <div class="w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                          <%= index + 1 %>
-                        </div>
-                        <div class="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-gray-600 text-white text-xs font-bold">
-                          <% if user.avatar.attached? %>
-                            <%= image_tag user.avatar, class: "w-6 h-6 object-cover" %>
-                          <% else %>
-                            <span><%= user.email.first.upcase %></span>
-                          <% end %>
-                        </div>
-                        <span class="text-white text-sm truncate"><%= user.email.split('@').first %></span>
-                      </div>
-                      <span class="text-yellow-400 font-bold text-sm"><%= score.points %></span>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
+            </tbody>
+          </table>
         <% else %>
-          <div class="text-center text-gray-400 py-8">
-            <p><%= t('scores.no_playlist_scores') %></p>
+          <div class="px-2 py-6 text-center text-white/80 text-sm">
+            Aucun score disponible pour le moment.
           </div>
         <% end %>
       </div>
     </div>
-
-    <!-- Section Mes Scores - Design épuré et Responsive -->
-    <div id="my-scores-section" class="score-section" style="display: none;">
-      <!-- Avatar du joueur -->
-      <div class="flex justify-center mb-6">
-        <div class="relative">
-          <% if current_user.avatar.attached? %>
-            <%= image_tag current_user.avatar, class: "w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-purple-500 object-cover shadow-xl" %>
-          <% else %>
-            <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-purple-500 bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center shadow-xl">
-              <span class="text-white text-3xl sm:text-4xl font-bold"><%= current_user.username&.first&.upcase || current_user.email.first.upcase %></span>
-            </div>
-          <% end %>
-        </div>
-      </div>
-      
-      <div class="bg-gradient-to-r from-purple-800 to-purple-900 rounded-xl p-6 sm:p-8 shadow-xl">
-        <h2 class="text-xl font-semibold text-white mb-6 flex items-center">
-          <svg class="w-5 h-5 mr-2 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          <%= t('scores.my_scores_section') %>
-        </h2>
-        
-        <!-- Détail du score global -->
-        <div class="bg-gray-800 rounded-lg p-6 mb-8">
-          <h3 class="text-lg font-bold text-white mb-4 text-center"><%= t('scores.global_score_detail') %></h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-400"><%= current_user.regularity_points %></div>
-              <div class="text-sm text-gray-300"><%= t('scores.regularity') %></div>
-              <div class="text-xs text-gray-400">(<%= current_user.playlists_per_day %> <%= t('scores.playlists_per_day_label') %>)</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-400"><%= current_user.listening_points %></div>
-              <div class="text-sm text-gray-300"><%= t('scores.listening_time') %></div>
-              <div class="text-xs text-gray-400">(<%= current_user.swipes.count %> swipes × 1.5)</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-400"><%= current_user.critical_opinions_points %></div>
-              <div class="text-sm text-gray-300"><%= t('scores.constructive_criticism') %></div>
-              <div class="text-xs text-gray-400">(<%= current_user.likes_count + current_user.dislikes_count %> actions + bonus)</div>
-            </div>
-          </div>
-        </div>
-
-        <% if @my_scores.present? %>
-          <!-- Résumé des scores -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-            <div class="bg-gray-800 rounded-lg p-4 text-center">
-              <div class="text-3xl font-bold text-purple-400 mb-2"><%= @my_scores.count %></div>
-              <div class="text-gray-300 text-sm"><%= t('scores.playlists_played') %></div>
-            </div>
-            <div class="bg-gray-800 rounded-lg p-4 text-center">
-              <div class="text-3xl font-bold text-purple-400 mb-2"><%= current_user.game_points %></div>
-              <div class="text-gray-300 text-sm"><%= t('scores.total_points') %></div>
-            </div>
-            <div class="bg-gray-800 rounded-lg p-4 text-center">
-              <div class="text-3xl font-bold text-yellow-400 mb-2"><%= @my_scores.maximum(:points) || 0 %></div>
-              <div class="text-gray-300 text-sm"><%= t('scores.best_score') %></div>
-            </div>
-          </div>
-
-          <!-- Scores par playlist -->
-          <div class="space-y-4">
-            <% @my_scores_by_playlist.each do |playlist, scores| %>
-              <div class="bg-gray-800 rounded-lg p-6 hover:bg-gray-700 transition-colors">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-                  <div class="flex-1 min-w-0 mb-4 sm:mb-0">
-                    <h3 class="text-lg font-semibold text-white"><%= playlist.title %></h3>
-                    <p class="text-gray-400 text-sm"><%= playlist.genre %></p>
-                  </div>
-                  <div class="text-right">
-                  <div class="text-2xl font-bold text-purple-400"><%= scores.first.points %></div>
-                  <div class="text-xs text-gray-400"><%= t('scores.points_label_short') %></div>
-                  </div>
-                </div>
-                
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-300">
-                  <span><%= t('scores.played_on', date: scores.first.updated_at.strftime('%d/%m/%Y')) %></span>
-                  <span><%= t('scores.tracks_count', count: playlist.videos.count) %></span>
-                </div>
-              </div>
-            <% end %>
-          </div>
-        <% else %>
-          <div class="text-center text-gray-400 py-8">
-            <p><%= t('scores.no_my_scores') %></p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <!-- Boutons d'action - Design cohérent avec l'application -->
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
-      <button onclick="window.location.href='<%= playlists_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-blue-600 hover:bg-blue-700 transition-all focus:outline-none transform hover:scale-105">
-        <span>🎵 <%= t('playlists.play') %></span>
-      </button>
-      
-      <button onclick="window.location.href='<%= profile_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-medium rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all focus:outline-none transform hover:scale-105">
-        <span>👤 <%= t('nav.profile') %></span>
-      </button>
-    </div>
-<style>
-  /* Harmonisation des titres principaux */
-  h1.text-2xl.font-bold.text-white {
-    font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    line-height: 1.2 !important;
-  }
-</style>
-
-<style>
-  .score-filter.active {
-    background-color: #9333ea;
-  }
-  
-  .score-section {
-    transition: all 0.3s ease;
-  }
-  
-  /* Responsive improvements */
-  @media (max-width: 640px) {
-    .score-section {
-      margin-bottom: 1.5rem;
-    }
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const scoreFilters = document.querySelectorAll('.score-filter');
-    const scoreSections = document.querySelectorAll('.score-section');
-    const totalSection = document.getElementById('total-section');
-    const completeRankingSection = document.getElementById('complete-ranking-section');
-    const categoriesSection = document.getElementById('categories-section');
-    const playlistsSection = document.getElementById('playlists-section');
-    const myScoresSection = document.getElementById('my-scores-section');
-    
-    // Initialisation - montrer toutes les sections sauf "Mes scores"
-    function showAllSections() {
-      scoreSections.forEach(section => {
-        if (section.id === 'my-scores-section') {
-          section.style.display = 'none';
-        } else {
-          section.style.display = 'block';
-        }
-      });
-    }
-    
-    // Par défaut, montrer toutes les sections sauf "Mes scores"
-    showAllSections();
-    
-    // Gestion des filtres
-    scoreFilters.forEach(filter => {
-      filter.addEventListener('click', function() {
-        // Mettre à jour l'état actif
-        scoreFilters.forEach(f => f.classList.remove('active'));
-        this.classList.add('active');
-        
-        const target = this.getAttribute('data-target');
-        
-        // Afficher les sections appropriées
-        if (target === 'all') {
-          // Afficher toutes les sections sauf "Mes scores"
-          showAllSections();
-        } else if (target === 'my') {
-          // Afficher seulement "Mes scores"
-          scoreSections.forEach(section => {
-            if (section.id === 'my-scores-section') {
-              section.style.display = 'block';
-            } else {
-              section.style.display = 'none';
-            }
-          });
-        }
-        
-        // Scroll en douceur vers le haut de la section
-        window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        });
-      });
-    });
-  });
-</script>
+  </div>
+</div>
