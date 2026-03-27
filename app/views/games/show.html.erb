@@ -259,7 +259,20 @@
       </div>
     </div>
 
-    <%= render 'shared/game_swipe_overlay' %>
+    <div id="game-swipe-feedback" style="display:none; position:fixed; inset:0; z-index:2147483648; pointer-events:none;">
+      <div style="position:absolute; inset:0; background:rgba(0,0,0,0.15); backdrop-filter: blur(2px);"></div>
+      <div style="position:absolute; left:50%; top:35%; transform:translate(-50%,-50%); width:min(86vw,320px);">
+        <div style="border-radius:24px; border:1px solid rgba(168,85,247,0.45); background:rgba(20,20,30,0.72); box-shadow:0 16px 45px rgba(0,0,0,0.45); padding:16px; text-align:center;">
+          <div id="game-feedback-emoji" style="font-size:40px; line-height:1; margin-bottom:8px;">✨</div>
+          <div id="game-feedback-title" style="color:#fff; font-weight:800; font-size:22px; margin-bottom:4px;">Bravo !</div>
+          <div id="game-feedback-points" style="color:rgba(255,255,255,0.82); font-size:14px;">+2 pts</div>
+          <div id="game-feedback-streak" style="color:#f5d0fe; font-size:18px; font-weight:900; margin-top:6px; min-height:24px; letter-spacing:0.4px; text-shadow:0 0 12px rgba(216,180,254,0.45);"></div>
+          <div style="margin-top:10px; height:8px; border-radius:9999px; background:rgba(255,255,255,0.14); overflow:hidden;">
+            <div id="game-feedback-bar" style="height:100%; width:0%; border-radius:9999px; background:linear-gradient(90deg,#7e22ce,#a855f7,#d946ef);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <style>
       @keyframes gameBtnPulse {
@@ -281,6 +294,8 @@
         var isProcessing = false;
         var feedbackTimeout = null;
         var feedbackBarTimeout = null;
+        var lastSwipeType = null;
+        var streakCount = 0;
 
         var feedbackMessages = {
           like: ['Bravo !', 'Tu es le king 👑', 'Wow 🔥', 'Lourd !'],
@@ -293,33 +308,57 @@
         }
 
         function showSwipeFeedback(liked) {
-          var overlay = document.getElementById('game-swipe-overlay');
+          var overlay = document.getElementById('game-swipe-feedback');
           if (!overlay) return;
 
-          var emojiEl = overlay.querySelector('[data-overlay-emoji]');
-          var titleEl = overlay.querySelector('[data-overlay-title]');
-          var pointsEl = overlay.querySelector('[data-overlay-points]');
-          var barEl = overlay.querySelector('[data-overlay-bar]');
+          var emojiEl = document.getElementById('game-feedback-emoji');
+          var titleEl = document.getElementById('game-feedback-title');
+          var pointsEl = document.getElementById('game-feedback-points');
+          var streakEl = document.getElementById('game-feedback-streak');
+          var barEl = document.getElementById('game-feedback-bar');
+
+          var currentType = liked ? 'like' : 'dislike';
+          if (lastSwipeType === currentType) {
+            streakCount += 1;
+          } else {
+            streakCount = 1;
+            lastSwipeType = currentType;
+          }
 
           if (emojiEl) emojiEl.textContent = liked ? '💜' : '⚡';
-          if (titleEl) titleEl.textContent = randomMessage(liked ? 'like' : 'dislike');
+          var baseTitle = randomMessage(liked ? 'like' : 'dislike');
+          if (titleEl) titleEl.textContent = baseTitle;
           if (pointsEl) pointsEl.textContent = liked ? '+2 pts' : '+1 pt';
+          if (streakEl) {
+            if (streakCount >= 2) {
+              var streakLabel = streakCount >= 5 ? 'LEGEND' : 'COMBO';
+              var streakText = 'x' + streakCount + ' ' + streakLabel;
+              streakEl.textContent = streakText;
+              if (titleEl) titleEl.textContent = baseTitle + '  •  ' + streakText;
+            } else {
+              streakEl.textContent = '';
+            }
+          }
 
-          overlay.classList.remove('hidden');
+          overlay.style.display = 'block';
+          overlay.style.opacity = '1';
           if (barEl) {
             barEl.style.transition = 'none';
             barEl.style.width = '0%';
             clearTimeout(feedbackBarTimeout);
             feedbackBarTimeout = setTimeout(function() {
               barEl.style.transition = 'width 520ms ease-out';
-              barEl.style.width = liked ? '100%' : '70%';
+              barEl.style.width = streakCount >= 3 ? '100%' : (liked ? '90%' : '70%');
             }, 20);
           }
 
           clearTimeout(feedbackTimeout);
           feedbackTimeout = setTimeout(function() {
-            overlay.classList.add('hidden');
-          }, 700);
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+              overlay.style.display = 'none';
+            }, 120);
+          }, 1000);
         }
 
         function pulseButton(liked) {

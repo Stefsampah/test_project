@@ -163,7 +163,7 @@
   </div>
 
   <!-- Section Badges avec vrais badges du jeu -->
-  <div class="py-20 pb-32 bg-gradient-to-r from-yellow-600/20 to-orange-600/20">
+  <div class="py-20 pb-32 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 legacy-home-section">
     <div class="max-w-7xl mx-auto px-4" style="margin-bottom: 20px;">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.collect_badges') %></h2>
@@ -225,7 +225,7 @@
   </div>
 
   <!-- Section Récompenses avec vraies récompenses du jeu -->
-  <div class="pt-32 pb-32 bg-gray-900/80">
+  <div class="pt-32 pb-32 bg-gray-900/80 legacy-home-section">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.unlock_rewards') %></h2>
@@ -290,7 +290,7 @@
   </div>
 
   <!-- Section Boutique avec vrais produits -->
-  <div class="pt-32 pb-32 bg-gradient-to-r from-purple-600/20 to-blue-600/20">
+  <div class="pt-32 pb-32 bg-gradient-to-r from-purple-600/20 to-blue-600/20 legacy-home-section">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.shop.title') %></h2>
@@ -398,6 +398,10 @@
 </div>
 
 <style>
+  .legacy-home-section {
+    display: none !important;
+  }
+
   /* Grille home pour 2 colonnes fixes, comme la page playlists */
   .playlists-grid-home {
     display: grid;

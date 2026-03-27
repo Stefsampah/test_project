@@ -47,14 +47,14 @@
       </div>
     </div>
 
-    <!-- Total des points -->
+    <!-- Points parcours (saison) -->
     <div class="stat-card total">
       <div class="stat-icon">🏆</div>
       <div class="stat-content">
-        <h3>Points de jeu</h3>
-        <div class="stat-value"><%= @user.total_points %> points</div>
+        <h3>Points parcours (saison)</h3>
+        <div class="stat-value"><%= @user.season_journey_points || 0 %> points</div>
         <div class="stat-breakdown">
-          <small>Régularité: <%= @user.regularity_points %> | Écoute: <%= @user.listening_points %> | Critique: <%= @user.critical_opinions_points %></small>
+          <small>Progression utilisée pour les paliers concert 3000 / 6000.</small>
         </div>
       </div>
     </div>

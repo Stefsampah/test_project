@@ -1,6 +1,7 @@
 class StoreController < ApplicationController
   before_action :authenticate_user!
   before_action :set_user_points, only: [:index, :buy_playlist]
+  before_action :redirect_to_vip_flow, only: [:index, :buy_playlist, :success, :cancel, :execute_payment, :payment_confirmation, :paypal_instructions]
 
   def index
     @active_tab = params[:tab] || 'store'
@@ -435,6 +436,10 @@ class StoreController < ApplicationController
   end
 
   private
+
+  def redirect_to_vip_flow
+    redirect_to subscriptions_path, notice: "La boutique legacy est masquee. Utilise la page VIP."
+  end
 
   def get_points_for_pack(pack_id)
     packs = {

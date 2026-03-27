@@ -1,0 +1,75 @@
+<% max_daily = GamesController::MAX_DAILY_GAMES_FREE %>
+<% vip_active = @vip_active %>
+
+<div class="min-h-screen bg-black py-6">
+  <div class="max-w-md mx-auto px-4">
+    <div class="rounded-3xl border border-purple-500/30 bg-gradient-to-b from-[#6b21a8]/25 via-black to-black overflow-hidden shadow-2xl">
+      <div class="p-6">
+        <h1 class="text-3xl font-extrabold text-white">VIP</h1>
+        <p class="text-sm text-white/70 mt-2">
+          Toutes les playlists restent jouables. VIP retire la limite quotidienne.
+        </p>
+
+        <% if vip_active %>
+          <div class="mt-4 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4">
+            <div class="text-emerald-200 font-bold">Statut actif</div>
+            <div class="text-sm text-white/80 mt-1">
+              Ton accès VIP est actif
+              <% if @expires_at.present? %>
+                jusqu'au <%= @expires_at.strftime('%d/%m/%Y') %>.
+              <% else %>
+                sans date de fin connue.
+              <% end %>
+            </div>
+          </div>
+        <% else %>
+          <div class="mt-4 rounded-2xl border border-purple-500/35 bg-purple-500/10 p-4">
+            <div class="text-purple-200 font-bold">Version gratuite</div>
+            <div class="text-sm text-white/80 mt-1">
+              Jusqu'à <span class="font-semibold text-purple-200"><%= max_daily %></span> nouvelles playlists par jour.
+            </div>
+          </div>
+        <% end %>
+
+        <div class="mt-5 space-y-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="text-white font-semibold">Gratuit</div>
+            <ul class="text-sm text-white/70 mt-2 space-y-1">
+              <li>• Toutes les playlists jouables</li>
+              <li>• <%= max_daily %> nouvelles playlists / jour</li>
+              <li>• Progression saison concert incluse</li>
+            </ul>
+          </div>
+
+          <div class="rounded-2xl border border-purple-500/35 bg-purple-500/10 p-4">
+            <div class="text-white font-semibold">VIP - 9,99 EUR / mois</div>
+            <ul class="text-sm text-white/80 mt-2 space-y-1">
+              <li>• Toutes les playlists jouables</li>
+              <li>• Nouvelles playlists illimitees / jour</li>
+              <li>• Meme progression saison, sans attente quotidienne</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3">
+          <% if vip_active %>
+            <a href="<%= subscriptions_checkout_path %>"
+               class="inline-flex items-center justify-center w-full rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all shadow-lg">
+              Renouveler VIP
+            </a>
+          <% else %>
+            <a href="<%= subscriptions_checkout_path %>"
+               class="inline-flex items-center justify-center w-full rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all shadow-lg">
+              Devenir VIP
+            </a>
+          <% end %>
+
+          <a href="<%= playlists_path %>"
+             class="inline-flex items-center justify-center w-full rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 font-semibold py-3 transition-all">
+            Retour aux playlists
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

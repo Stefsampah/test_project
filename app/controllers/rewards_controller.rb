@@ -1,6 +1,7 @@
 class RewardsController < ApplicationController
   before_action :authenticate_user!
   helper_method :get_audio_comment_video_id
+  before_action :redirect_to_journey_flow
   
   def index
     redirect_to my_rewards_path
@@ -205,6 +206,10 @@ class RewardsController < ApplicationController
 
 
   private
+
+  def redirect_to_journey_flow
+    redirect_to journey_path, notice: "Cette section a evolue. Suis ton parcours concert ici."
+  end
   
   def get_exclusif_content_details(content_type)
     case content_type

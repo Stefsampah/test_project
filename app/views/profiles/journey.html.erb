@@ -28,6 +28,10 @@
           <%= @season.starts_at.to_date.strftime('%d/%m') %> – <%= @season.ends_at.to_date.strftime('%d/%m') %>
         </p>
       <% end %>
+
+      <p class="text-xs text-purple-300/90 text-center mt-2">
+        Progression calculée avec tes points parcours de la saison en cours.
+      </p>
     </div>
 
     <% progress_3000 = [[(@season_points.to_f / 3_000.0) * 100.0, 100].min, 0].max.round %>
