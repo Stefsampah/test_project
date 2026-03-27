@@ -2,85 +2,28 @@ class PlaylistsController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
 
   def index
-    # Récupérer toutes les playlists (exclure les playlists cachées)
-    @standard_playlists = Playlist.where(premium: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
-    @premium_playlists = Playlist.where(premium: true, exclusive: [false, nil], hidden: [false, nil]).order(:category, :subcategory, :id)
-    @exclusive_playlists = Playlist.where(exclusive: true, hidden: [false, nil]).order(:category, :subcategory, :id)
+    # Scope unique: toutes les playlists jouables (plus de distinction premium/exclusive côté gameplay)
+    playable_scope = Playlist.where(hidden: [false, nil]).order(:category, :subcategory, :id)
+
+    if user_signed_in?
+      played_playlist_ids = current_user.scores.pluck(:playlist_id)
+      unplayed = playable_scope.where.not(id: played_playlist_ids).to_a
+      played = playable_scope.where(id: played_playlist_ids).to_a
+      ordered = unplayed + played
+      @standard_playlists = FeedPlaylistsService.feed_60_40(current_user, ordered)
+    else
+      @standard_playlists = playable_scope.to_a
+    end
+
+    # Variables conservées pour compat de la vue (désormais vides)
+    @premium_playlists = []
+    @exclusive_playlists = []
     @unlocked_playlists = []
     @unlocked_exclusive_playlists = []
-    
-    # Grouper les playlists par catégorie (premium / exclusives)
-    @premium_by_category = @premium_playlists.group_by(&:category)
+    @premium_by_category = {}
     @unlocked_by_category = {}
-    @exclusive_by_category = @exclusive_playlists.group_by(&:category)
-    
-    if user_signed_in?
-      # Vérifier si l'utilisateur a un abonnement VIP actif
-      if current_user.vip?
-        # Si VIP actif, toutes les playlists premium sont débloquées (sauf exclusives)
-        @unlocked_playlists = @premium_playlists
-        @premium_playlists = []
-        @unlocked_by_category = @unlocked_playlists.group_by(&:category)
-      else
-        # Sinon, récupérer les playlists premium débloquées par l'utilisateur
-        unlocked_playlist_ids = UserPlaylistUnlock.where(user: current_user).pluck(:playlist_id)
-        @unlocked_playlists = Playlist.where(id: unlocked_playlist_ids, premium: true, exclusive: [false, nil])
-        @premium_playlists = @premium_playlists.where.not(id: unlocked_playlist_ids)
-        @unlocked_by_category = @unlocked_playlists.group_by(&:category)
-      end
-      
-      # Gérer les playlists exclusives - seulement pour ceux qui ont gagné la récompense
-      # Vérifier quels badges l'utilisateur a et quelles playlists exclusives ils débloquent
-      user_badge_ids = current_user.user_badges.pluck(:badge_id)
-      unlocked_exclusive_playlist_ids = BadgePlaylistUnlock.where(badge_id: user_badge_ids).pluck(:playlist_id)
-      
-      if unlocked_exclusive_playlist_ids.any?
-        @unlocked_exclusive_playlists = @exclusive_playlists.where(id: unlocked_exclusive_playlist_ids)
-        @exclusive_playlists = @exclusive_playlists.where.not(id: unlocked_exclusive_playlist_ids)
-      else
-        @unlocked_exclusive_playlists = []
-      end
-      
-      # Trier les playlists avec les non jouées en premier
-      played_playlist_ids = current_user.scores.pluck(:playlist_id)
-      
-      # Trier les playlists standard : non jouées en premier
-      unplayed_standard = @standard_playlists.where.not(id: played_playlist_ids)
-      played_standard = @standard_playlists.where(id: played_playlist_ids)
-      @standard_playlists = unplayed_standard + played_standard
-      
-      # Trier les playlists premium : non jouées en premier
-      if @premium_playlists.respond_to?(:where)
-        unplayed_premium = @premium_playlists.where.not(id: played_playlist_ids)
-        played_premium = @premium_playlists.where(id: played_playlist_ids)
-        @premium_playlists = unplayed_premium + played_premium
-      end
-      
-      # Trier les playlists débloquées : non jouées en premier
-      if @unlocked_playlists.respond_to?(:where)
-        unplayed_unlocked = @unlocked_playlists.where.not(id: played_playlist_ids)
-        played_unlocked = @unlocked_playlists.where(id: played_playlist_ids)
-        @unlocked_playlists = unplayed_unlocked + played_unlocked
-      end
-      
-      # Trier les playlists exclusives débloquées : non jouées en premier
-      if @unlocked_exclusive_playlists.respond_to?(:where)
-        unplayed_exclusive = @unlocked_exclusive_playlists.where.not(id: played_playlist_ids)
-        played_exclusive = @unlocked_exclusive_playlists.where(id: played_playlist_ids)
-        @unlocked_exclusive_playlists = unplayed_exclusive + played_exclusive
-      end
+    @exclusive_by_category = {}
 
-      # Feed 60/40 sur les playlists standard pour l'utilisateur connecté
-      @standard_playlists = FeedPlaylistsService.standard_feed(current_user, @standard_playlists)
-    end
-    
-    # Récupérer les playlists jouées par l'utilisateur connecté (avec score existant)
-    if user_signed_in?
-      played_playlist_ids = current_user.scores.pluck(:playlist_id)
-      @user_playlists = Playlist.where(id: played_playlist_ids).order(:id)
-    end
-
-    # Grouper les playlists standard par catégorie après réordonnancement du feed
     @standard_by_category = @standard_playlists.group_by(&:category)
   end
 

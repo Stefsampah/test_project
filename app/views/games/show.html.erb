@@ -259,6 +259,19 @@
       </div>
     </div>
 
+    <%= render 'shared/game_swipe_overlay' %>
+
+    <style>
+      @keyframes gameBtnPulse {
+        0% { transform: scale(1); }
+        35% { transform: scale(1.12); }
+        100% { transform: scale(1); }
+      }
+      .game-btn-pulse {
+        animation: gameBtnPulse 260ms ease-out;
+      }
+    </style>
+
     <script>
     (function() {
       function initGameSwipe() {
@@ -266,6 +279,57 @@
         if (!player) { console.warn('[Game] game-swipe-player non trouvé'); return; }
 
         var isProcessing = false;
+        var feedbackTimeout = null;
+        var feedbackBarTimeout = null;
+
+        var feedbackMessages = {
+          like: ['Bravo !', 'Tu es le king 👑', 'Wow 🔥', 'Lourd !'],
+          dislike: ['On continue 💪', 'Bien vu 👀', 'Ça dja 😎', 'Tchié, next !']
+        };
+
+        function randomMessage(type) {
+          var list = feedbackMessages[type] || ['Continue !'];
+          return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function showSwipeFeedback(liked) {
+          var overlay = document.getElementById('game-swipe-overlay');
+          if (!overlay) return;
+
+          var emojiEl = overlay.querySelector('[data-overlay-emoji]');
+          var titleEl = overlay.querySelector('[data-overlay-title]');
+          var pointsEl = overlay.querySelector('[data-overlay-points]');
+          var barEl = overlay.querySelector('[data-overlay-bar]');
+
+          if (emojiEl) emojiEl.textContent = liked ? '💜' : '⚡';
+          if (titleEl) titleEl.textContent = randomMessage(liked ? 'like' : 'dislike');
+          if (pointsEl) pointsEl.textContent = liked ? '+2 pts' : '+1 pt';
+
+          overlay.classList.remove('hidden');
+          if (barEl) {
+            barEl.style.transition = 'none';
+            barEl.style.width = '0%';
+            clearTimeout(feedbackBarTimeout);
+            feedbackBarTimeout = setTimeout(function() {
+              barEl.style.transition = 'width 520ms ease-out';
+              barEl.style.width = liked ? '100%' : '70%';
+            }, 20);
+          }
+
+          clearTimeout(feedbackTimeout);
+          feedbackTimeout = setTimeout(function() {
+            overlay.classList.add('hidden');
+          }, 700);
+        }
+
+        function pulseButton(liked) {
+          var targetBtn = document.getElementById(liked ? 'game-btn-like' : 'game-btn-dislike');
+          if (!targetBtn) return;
+          targetBtn.classList.remove('game-btn-pulse');
+          // force reflow to replay animation
+          void targetBtn.offsetWidth;
+          targetBtn.classList.add('game-btn-pulse');
+        }
 
       function getData() {
         return {
@@ -386,6 +450,8 @@
 
       function handleSwipe(liked) {
         if (isProcessing) return;
+        pulseButton(liked);
+        showSwipeFeedback(liked);
         var d = getData();
         if (!d.videoId || !d.playlistId || !d.gameId) {
           alert('Données manquantes. Rechargez la page.');

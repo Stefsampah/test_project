@@ -330,16 +330,6 @@ class GamesController < ApplicationController
       return
     end
     
-    # Vérifier l'accès premium avant de créer le jeu
-    # Dev-only bypass: pour tester le gameplay même si les playlists sont premium
-    # (sinon on dépend du déblocage/unlock + points et tu ne peux pas itérer).
-    if @playlist.premium? && !(Rails.env.development? || Rails.env.test?)
-      unless UserPlaylistUnlock.exists?(user: current_user, playlist: @playlist) || current_user.total_points >= 500
-        redirect_to playlists_path, alert: "Vous avez besoin d'au moins 500 points pour accéder à cette playlist premium."
-        return
-      end
-    end
-    
     # Vérifier si l'utilisateur a un jeu non terminé pour cette playlist
     existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
     

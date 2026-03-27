@@ -1,31 +1,9 @@
-<% 
-  # Déterminer si la playlist est débloquée
-  is_unlocked = false
-  if user_signed_in?
-    # Vérifier si l'utilisateur a débloqué cette playlist ou s'il a suffisamment de points
-    is_unlocked = UserPlaylistUnlock.exists?(user: current_user, playlist: playlist) || 
-                  current_user.total_points >= playlist.points_required
-  end
-  
-  # Déterminer si l'utilisateur peut accéder à la playlist
-  can_access = !playlist.premium? || is_unlocked
-  
-  # Déterminer si l'overlay doit s'afficher (pour les playlists premium non débloquées)
-  show_overlay = playlist.premium? && !is_unlocked
+<%
+  # Tous les contenus sont jouables : plus d'overlay de verrouillage premium.
 %>
 
 <div class="playlist-card-uniform">
     <div class="playlist-image-uniform">
-      <% if show_overlay %>
-        <div class="playlist-overlay-uniform">
-          <svg fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-          </svg>
-          <div class="overlay-title"><%= t('playlists.overlay.premium_title') %></div>
-          <div class="overlay-subtitle"><%= t('playlists.overlay.premium_subtitle') %></div>
-        </div>
-      <% end %>
-      
       <% thumbnail_id = playlist.valid_thumbnail_id %>
       <% if thumbnail_id %>
         <!-- Système anti-casse : essayer plusieurs formats YouTube -->
@@ -54,13 +32,6 @@
       <div class="playlist-title-uniform"><%= playlist.title %></div>
       
       <div class="playlist-tags-uniform">
-        <% if is_unlocked %>
-          <span class="playlist-tag-uniform" style="background-color: #ff0000; color: white;"><%= t('playlists.badges.unlocked') %></span>
-        <% elsif playlist.premium? %>
-          <span class="playlist-tag-uniform" style="background-color: #ff00ff; color: white;"><%= t('playlists.badges.premium') %></span>
-        <% elsif playlist.exclusive? %>
-          <span class="playlist-tag-uniform" style="background-color: #f59e0b; color: white;"><%= t('playlists.badges.exclusive') %></span>
-        <% end %>
         <% if playlist.category.present? %>
           <span class="playlist-tag-uniform" style="background-color: #374151; color: #9ca3af;"><%= playlist.category.upcase %></span>
         <% end %>
@@ -76,9 +47,7 @@
       </div>
     </div>
     
-    <% if playlist.premium? && !is_unlocked %>
-      <!-- Playlist premium non débloquée - pas de lien -->
-    <% elsif user_signed_in? %>
+    <% if user_signed_in? %>
       <!-- Playlist accessible - bouton vers le jeu -->
       <button class="absolute inset-0 z-30 bg-transparent border-none cursor-pointer" 
               onclick="window.location.href='<%= new_playlist_game_path_with_locale(playlist) %>'">

@@ -5,24 +5,10 @@
       <h1 class="text-2xl font-bold text-white"><%= t('playlists.title') %></h1>
     </div>
 
-    <!-- Boutons de filtrage -->
-    <div class="flex justify-center mb-8">
-      <div class="bg-gray-800 rounded-lg p-1 flex space-x-1">
-        <button id="all-playlists-btn" class="filter-btn active px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="all">
-          <%= t('playlists.all_playlists') %>
-        </button>
-        <% if user_signed_in? %>
-          <button id="my-playlists-btn" class="filter-btn px-6 py-2 rounded-md text-sm font-medium transition-all duration-200" data-filter="my">
-            <%= t('playlists.my_playlists') %>
-          </button>
-        <% end %>
-      </div>
-    </div>
-
     <!-- Tags de catégories -->
     <div id="categories-section" class="mb-6">
       <h2 class="text-2xl font-bold text-white mb-6 text-center">🎵 <%= t('playlists.filters.by_category') %></h2>
-        <% categories = ['Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae', 'Standards', 'Premium', 'Exclusives'] %>
+        <% categories = ['Toutes', 'Pop', 'Rap', 'Hits', 'Afro', 'Electro', 'Rock', 'Reggae'] %>
       <div class="categories-grid mb-8">
         <% categories.each do |category| %>
           <% category_key = category.parameterize(separator: '_').underscore %>
@@ -51,76 +37,16 @@
       <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2"><%= t('playlists.all_playlists') %></h2>
       
       <div class="playlists-grid">
-        <% reward_playlists = Playlist.where(category: 'Exclusives', hidden: [false, nil]).order(:id) %>
-        <% all_playlists = (@standard_playlists + @premium_playlists + @unlocked_playlists + @unlocked_exclusive_playlists + @exclusive_playlists + reward_playlists).uniq { |p| p.id } %>
+        <% all_playlists = @standard_playlists %>
         <% all_playlists.each do |playlist| %>
-          <% 
-            # Déterminer le type de playlist pour les classes CSS
-            if playlist.exclusive
-              playlist_type = 'exclusive'
-            elsif playlist.premium
-              playlist_type = 'premium'
-            else
-              playlist_type = 'standard'
-                end
-              %>
-          <div class="playlist-item <%= playlist_type %>-playlist" 
-               data-category="<%= playlist.category || 'Other' %>" 
-               data-type="<%= playlist_type %>">
+          <div class="playlist-item" 
+               data-category="<%= playlist.category || 'Other' %>">
             <%= render 'playlist_card', playlist: playlist %>
           </div>
         <% end %>
       </div>
     </div>
 
-    <!-- Section mes playlists (si connecté) -->
-    <% if user_signed_in? && @user_playlists&.any? %>
-      <div id="my-playlists-section" class="mb-16 playlist-section" style="display: none;">
-        <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2"><%= t('playlists.my_playlists') %></h2>
-        
-        <!-- Tags de catégories pour Mes Playlists -->
-        <div class="mb-6">
-          <h3 class="text-lg font-bold text-white mb-4 text-center">🎵 <%= t('playlists.filters.filter_my_playlists') %></h3>
-          <div class="categories-grid mb-6">
-            <% categories.each do |category| %>
-              <% category_key = category.parameterize(separator: '_').underscore %>
-              <button class="my-category-filter category-tag px-4 py-4 rounded-xl text-sm font-medium transition-all duration-200 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700 hover:border-gray-600" data-my-category="<%= category %>">
-                <%= t("playlists.categories.#{category_key}", default: category) %>
-              </button>
-            <% end %>
-          </div>
-        </div>
-        
-        <div class="playlists-grid">
-          <% @user_playlists.each do |playlist| %>
-            <% 
-              is_standard = !playlist.premium && !playlist.exclusive
-              is_premium = playlist.premium && !playlist.exclusive
-              is_exclusive = playlist.exclusive
-              
-              if is_exclusive
-                css_class = 'exclusive-playlist'
-                playlist_type = 'exclusive'
-              elsif is_premium
-                css_class = 'premium-playlist'
-                playlist_type = 'premium'
-              elsif is_standard
-                css_class = 'standard-playlist'
-                playlist_type = 'standard'
-              else
-                css_class = 'standard-playlist' # Par défaut
-                playlist_type = 'standard'
-                  end
-                %>
-            <div class="my-playlist-item <%= css_class %>" 
-                 data-category="<%= playlist.category || 'Other' %>" 
-                 data-type="<%= playlist_type %>">
-              <%= render 'playlist_card', playlist: playlist %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
   </div>
 </div>
 
@@ -200,22 +126,6 @@
   
   .clickable-card:hover {
     background: rgba(255, 255, 255, 0.05);
-  }
-  
-  /* Styles pour les boutons de filtrage */
-  .filter-btn {
-    color: #9ca3af;
-    background: transparent;
-  }
-  
-  .filter-btn:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .filter-btn.active {
-    color: #ffffff;
-    background: #9333ea;
   }
   
   /* Styles pour les tags de catégories */
@@ -370,53 +280,8 @@ h3.text-lg.font-bold.text-white,
   color: #6b7280 !important;
 }
 
-/* Overlay premium uniforme */
-.playlist-overlay-uniform {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  background: rgba(0, 0, 0, 0.4) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  z-index: 20 !important;
-  border-radius: 12px !important;
-}
-
-.playlist-overlay-uniform svg {
-  width: 32px !important;
-  height: 32px !important;
-  color: #9ca3af !important;
-  margin-bottom: 8px !important;
-}
-
-.playlist-overlay-uniform .overlay-title {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  color: white !important;
-  margin-bottom: 4px !important;
-}
-
-.playlist-overlay-uniform .overlay-subtitle {
-  font-size: 12px !important;
-  color: #9ca3af !important;
-  }
-  
   .category-section {
     transition: all 0.3s ease-in-out;
-  }
-  
-  /* Styles pour les filtres Mes Playlists */
-  .my-category-filter {
-    transition: all 0.2s ease-in-out;
-  }
-  
-  .my-category-filter:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
   
   /* Amélioration du design des cartes */
@@ -498,80 +363,7 @@ h3.text-lg.font-bold.text-white,
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const playlistSections = document.querySelectorAll('.playlist-section');
     const categoryTags = document.querySelectorAll('.category-tag');
-    const categorySections = document.querySelectorAll('.category-section');
-    const categoriesSection = document.getElementById('categories-section');
-
-  // Initialiser l'affichage par défaut
-  playlistSections.forEach(section => {
-    if (section.id !== 'my-playlists-section') {
-      section.style.display = 'block';
-    }
-  });
-
-  if (categoriesSection) {
-    categoriesSection.style.display = 'block';
-  }
-    
-    // Gestion des boutons de filtrage
-    filterButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const filter = this.getAttribute('data-filter');
-        
-        // Mettre à jour les boutons
-        filterButtons.forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        
-        // Filtrer les sections
-        playlistSections.forEach(section => {
-          if (filter === 'all') {
-            // Afficher toutes les sections sauf "Mes playlists"
-            if (section.id === 'my-playlists-section') {
-              section.style.display = 'none';
-            } else {
-              section.style.display = 'block';
-            }
-            
-            // Réinitialiser l'affichage de toutes les playlists
-            const allPlaylistItems = document.querySelectorAll('#all-playlists-section .playlist-item');
-            allPlaylistItems.forEach(item => {
-              item.style.display = 'block';
-            });
-            
-            // Réinitialiser les tags de catégories
-            categoryTags.forEach(t => t.classList.remove('bg-purple-600', 'text-white'));
-            categoryTags.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
-          } else if (filter === 'my') {
-            // Afficher seulement "Mes playlists"
-            if (section.id === 'my-playlists-section') {
-              section.style.display = 'block';
-            } else {
-              section.style.display = 'none';
-            }
-            
-            // Réinitialiser l'affichage de toutes les playlists dans "Mes playlists"
-            const myPlaylistItems = document.querySelectorAll('#my-playlists-section .my-playlist-item');
-            myPlaylistItems.forEach(item => {
-              item.style.display = 'block';
-            });
-            
-            // Réinitialiser les tags de catégories dans "Mes playlists"
-            const myCategoryFilters = document.querySelectorAll('.my-category-filter');
-            myCategoryFilters.forEach(t => t.classList.remove('bg-purple-600', 'text-white'));
-            myCategoryFilters.forEach(t => t.classList.add('bg-gray-800', 'text-gray-300'));
-          }
-        });
-        
-        // Masquer les catégories quand on est sur "Mes playlists"
-        if (filter === 'my') {
-          categoriesSection.style.display = 'none';
-        } else {
-          categoriesSection.style.display = 'block';
-        }
-      });
-    });
     
     // Gestion des tags de catégories
     categoryTags.forEach(tag => {
@@ -595,69 +387,15 @@ h3.text-lg.font-bold.text-white,
         let visibleCount = 0;
         allPlaylistItems.forEach(item => {
           const itemCategory = item.getAttribute('data-category');
-          const itemType = item.getAttribute('data-type');
           let shouldShow = false;
+          shouldShow = category === 'Toutes' ? true : itemCategory === category;
           
-          if (category === 'Standards') {
-            shouldShow = itemType === 'standard';
-          } else if (category === 'Premium') {
-            shouldShow = itemType === 'premium';
-          } else if (category === 'Exclusives') {
-            shouldShow = itemCategory === 'Exclusives';
-          } else {
-            // Filtrer par catégorie musicale
-            shouldShow = itemCategory === category;
-          }
-          
-          console.log('Playlist:', itemCategory, itemType, 'Should show:', shouldShow);
+          console.log('Playlist:', itemCategory, 'Should show:', shouldShow);
           if (shouldShow) visibleCount++;
           item.style.display = shouldShow ? 'block' : 'none';
         });
         
         console.log('Playlists visibles:', visibleCount);
-        
-        // Masquer les autres sections
-        playlistSections.forEach(section => {
-          if (section.id !== 'all-playlists-section') {
-          section.style.display = 'none';
-          }
-        });
-      });
-    });
-    
-    // Gestion des filtres dans "Mes Playlists"
-    const myCategoryFilters = document.querySelectorAll('.my-category-filter');
-    const myPlaylistItems = document.querySelectorAll('.my-playlist-item');
-    
-    myCategoryFilters.forEach(filter => {
-      filter.addEventListener('click', function() {
-        const category = this.getAttribute('data-my-category');
-        
-        // Mettre à jour les filtres - état actif en violet
-        myCategoryFilters.forEach(f => f.classList.remove('bg-purple-600', 'text-white'));
-        myCategoryFilters.forEach(f => f.classList.add('bg-gray-800', 'text-gray-300'));
-        this.classList.remove('bg-gray-800', 'text-gray-300');
-        this.classList.add('bg-purple-600', 'text-white');
-        
-        // Filtrer les playlists
-        myPlaylistItems.forEach(item => {
-          const itemCategory = item.getAttribute('data-category');
-          const itemType = item.getAttribute('data-type');
-          let shouldShow = false;
-          
-          if (category === 'Standards') {
-            shouldShow = itemType === 'standard';
-          } else if (category === 'Premium') {
-            shouldShow = itemType === 'premium';
-          } else if (category === 'Exclusives') {
-            shouldShow = itemCategory === 'Exclusives';
-          } else {
-            // Filtrer par catégorie musicale
-            shouldShow = itemCategory === category;
-          }
-          
-          item.style.display = shouldShow ? 'block' : 'none';
-        });
       });
     });
   });
@@ -669,12 +407,6 @@ h3.text-lg.font-bold.text-white,
     if (playlistCard) {
       event.preventDefault();
       event.stopPropagation();
-      
-      // Vérifier si c'est une playlist premium non débloquée
-      const overlay = playlistCard.querySelector('.playlist-overlay-uniform');
-      if (overlay) {
-        return;
-      }
       
       // Trouver le bouton dans la carte et exécuter son onclick
       const button = playlistCard.querySelector('button[onclick]');

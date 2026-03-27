@@ -1,5 +1,5 @@
 class FeedPlaylistsService
-  # Construit un feed 60/40 pour les playlists standard d'un utilisateur.
+  # Construit un feed 60/40 pour les playlists jouables d'un utilisateur.
   #
   # Règles simples :
   # - 60 % des playlists viennent de catégories déjà jouées par l'utilisateur
@@ -9,7 +9,7 @@ class FeedPlaylistsService
   # Paramètres :
   # - user: User (doit être connecté)
   # - playlists_scope: ActiveRecord::Relation ou Array<Playlist>
-  def self.standard_feed(user, playlists_scope)
+  def self.feed_60_40(user, playlists_scope)
     return playlists_scope.to_a unless user && playlists_scope
 
     playlists = playlists_scope.respond_to?(:to_a) ? playlists_scope.to_a : Array(playlists_scope)
@@ -34,6 +34,11 @@ class FeedPlaylistsService
     rest = playlists - feed_core
 
     feed_core + rest
+  end
+
+  # Compat ancien appelant
+  def self.standard_feed(user, playlists_scope)
+    feed_60_40(user, playlists_scope)
   end
 end
 
