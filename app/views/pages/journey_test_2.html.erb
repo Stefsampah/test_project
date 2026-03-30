@@ -1,0 +1,106 @@
+<%
+  season_points = current_user&.season_journey_points.to_i
+  live_target = 3_000
+  physique_target = 6_000
+
+  live_percent = [[(season_points.to_f / live_target) * 100, 100].min, 0].max.round
+  physique_percent = [[(season_points.to_f / physique_target) * 100, 100].min, 0].max.round
+
+  live_unlocked = season_points >= live_target
+  physique_unlocked = season_points >= physique_target
+%>
+
+<style>
+  .stamp-pop {
+    animation: stampPop 520ms cubic-bezier(.2,.9,.2,1) both;
+    transform-origin: center;
+  }
+  @keyframes stampPop {
+    0% { transform: scale(1.8) rotate(-10deg); opacity: 0; }
+    60% { transform: scale(0.92) rotate(-7deg); opacity: 1; }
+    100% { transform: scale(1) rotate(-7deg); opacity: 1; }
+  }
+</style>
+
+<section class="min-h-screen bg-black text-white">
+  <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-8 rounded-3xl bg-gradient-to-b from-[#6b21a8]/70 to-[#1d4ed8]/70 p-6 shadow-xl">
+      <p class="text-xs uppercase tracking-[0.28em] text-white/80">Journey Test 2</p>
+      <h1 class="mt-2 text-3xl font-black sm:text-4xl">TON CONCERT TA SAISON</h1>
+      <p class="mt-2 text-sm text-white/90 sm:text-base">
+        Direction retenue: cartes immersives + progression nette + état éligible visuel.
+      </p>
+      <p class="mt-3 text-sm font-bold text-purple-100">
+        Points saison: <span class="text-white"><%= season_points %></span>
+      </p>
+    </div>
+
+    <div class="grid gap-6 lg:grid-cols-2">
+      <article class="relative overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#6b21a8]/85 to-[#1d4ed8]/85 text-white shadow-2xl">
+        <div class="p-4 transition-all duration-300">
+          <div class="relative overflow-hidden rounded-2xl bg-black/25">
+            <iframe
+              class="h-80 w-full"
+              src="https://www.youtube.com/embed/-9yEbmUCgD8?rel=0&modestbranding=1&playsinline=1"
+              title="Concert live"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen>
+            </iframe>
+            <span class="absolute right-3 top-3 rounded-full bg-white px-3 py-1 text-xs font-bold text-black">LIVE</span>
+          </div>
+          <h2 class="mt-4 text-2xl font-black">Concert live</h2>
+          <p class="mt-1 text-sm text-white/90">Objectif 3 000 pts</p>
+
+          <div class="mt-4 flex items-center justify-between text-xs font-semibold text-white/90">
+            <span><%= season_points %> / <%= live_target %> pts</span>
+            <span><%= live_percent %>%</span>
+          </div>
+          <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/25">
+            <div class="h-full rounded-full bg-white transition-all duration-500" style="width: <%= live_percent %>%"></div>
+          </div>
+        </div>
+
+        <% if live_unlocked %>
+          <div class="stamp-pop absolute left-4 top-4 rounded-md border-2 border-white bg-[#22c55e]/90 px-3 py-1 text-xs font-black tracking-wide text-white shadow-lg">
+            ELIGIBLE
+          </div>
+        <% end %>
+      </article>
+
+      <article class="relative overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#6b21a8]/85 to-[#1d4ed8]/85 text-white shadow-2xl">
+        <div class="p-4 transition-all duration-300">
+          <div class="relative overflow-hidden rounded-2xl">
+            <iframe
+              class="h-80 w-full"
+              src="https://www.youtube.com/embed/qdVVtZHjtPg?rel=0&modestbranding=1&playsinline=1"
+              title="Concert physique"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen>
+            </iframe>
+            <span class="absolute right-3 top-3 rounded-full bg-black px-3 py-1 text-xs font-bold text-amber-200">PHYSIQUE</span>
+          </div>
+          <h2 class="mt-4 text-2xl font-black text-amber-100">Concert physique</h2>
+          <p class="mt-1 text-sm text-amber-100/90">Objectif 6 000 pts</p>
+
+          <div class="mt-4 flex items-center justify-between text-xs font-semibold text-white/90">
+            <span><%= season_points %> / <%= physique_target %> pts</span>
+            <span><%= physique_percent %>%</span>
+          </div>
+          <div class="mt-2 h-3 overflow-hidden rounded-full bg-white/25">
+            <div class="h-full rounded-full bg-gradient-to-r from-[#f59e0b] to-[#fde68a] transition-all duration-500" style="width: <%= physique_percent %>%"></div>
+          </div>
+        </div>
+
+        <% if physique_unlocked %>
+          <div class="stamp-pop absolute left-4 top-4 rounded-md border-2 border-white bg-[#22c55e]/90 px-3 py-1 text-xs font-black tracking-wide text-white shadow-lg">
+            ELIGIBLE
+          </div>
+        <% end %>
+      </article>
+    </div>
+  </div>
+</section>

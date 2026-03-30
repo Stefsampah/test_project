@@ -1,168 +1,95 @@
-<div class="results-container min-h-screen bg-gray-900" style="padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8" style="padding-top: max(env(safe-area-inset-top, 0px), 1.5rem); padding-bottom: max(env(safe-area-inset-bottom, 0px), 2rem);">
-    <!-- Score Card - Remontée au maximum -->
-    <div class="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-4 sm:p-8 mb-8 transform hover:scale-[1.02] transition-all duration-300 shadow-xl">
-      <div class="text-center">
-        <h2 class="text-2xl sm:text-3xl font-light text-white mb-2"><%= t('games.what_a_beam') %></h2>
-        <p class="text-base sm:text-xl text-white/80 mb-4 sm:mb-6"><%= t('games.amazing_progress') %></p>
-        
-        <div class="flex items-center justify-center mb-8 flex-col sm:flex-row">
-          <div class="mb-4 sm:mb-0 sm:mr-6 flex-shrink-0">
+<div class="results-container min-h-screen bg-black py-6">
+  <div class="max-w-4xl mx-auto px-4">
+    <% game_points = @score&.points.to_i %>
+    <% season_points = current_user.season_journey_points.to_i %>
+    <% likes_count = @liked_videos&.size.to_i %>
+    <% dislikes_count = @not_liked_videos&.size.to_i %>
+
+    <div class="rounded-3xl overflow-hidden shadow-xl mb-5" style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
+      <div class="p-6 text-center">
+        <p class="text-white/80 text-sm uppercase tracking-wide font-semibold">Fin de partie</p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Bravo</h1>
+        <p class="text-white/90 text-sm mt-2"><%= @playlist.title %></p>
+
+        <div class="mt-4 flex justify-center">
+          <div class="w-20 h-20 rounded-full overflow-hidden bg-black/30 shadow-lg">
             <% if current_user&.avatar&.attached? %>
-              <%= image_tag current_user.avatar, class: "h-20 w-20 sm:h-16 sm:w-16 rounded-full border-2 sm:border-3 border-white object-cover object-center" %>
+              <%= image_tag current_user.avatar, class: "w-full h-full object-cover" %>
             <% else %>
-              <div class="h-20 w-20 sm:h-16 sm:w-16 rounded-full border-2 sm:border-3 border-white bg-purple-800 flex items-center justify-center">
-                <svg class="w-10 h-10 sm:w-8 sm:h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+              <div class="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
+                <%= current_user.email.first.upcase %>
               </div>
             <% end %>
           </div>
-          <div class="text-center sm:text-left">
-            <h2 class="text-2xl sm:text-5xl font-bold text-white mb-2"><%= current_user.game_points %> points</h2>
-            <p class="text-lg sm:text-2xl font-light text-white"><%= t('games.position_place', position: @position) %></p>
+        </div>
+
+        <div class="mt-5 grid grid-cols-3 gap-3">
+          <div class="rounded-2xl bg-black/25 p-3">
+            <div class="text-[11px] text-white/75 uppercase">Score game</div>
+            <div class="text-2xl font-extrabold text-amber-300 mt-1"><%= game_points %></div>
+          </div>
+          <div class="rounded-2xl bg-black/25 p-3">
+            <div class="text-[11px] text-white/75 uppercase">Classement</div>
+            <div class="text-2xl font-extrabold text-white mt-1">#<%= @position || "-" %></div>
+          </div>
+          <div class="rounded-2xl bg-black/25 p-3">
+            <div class="text-[11px] text-white/75 uppercase">Points saison</div>
+            <div class="text-2xl font-extrabold text-amber-200 mt-1"><%= season_points %></div>
           </div>
         </div>
 
-        <!-- Détail du score global -->
-        <div class="bg-white rounded-lg p-6 mb-8 max-w-2xl mx-auto border-2 border-purple-600 shadow-lg">
-          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center"><%= t('scores.detail_global_score') %></h3>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600"><%= current_user.regularity_points %></div>
-              <div class="text-sm text-gray-700"><%= t('scores.regularity') %></div>
-              <div class="text-xs text-gray-500">(<%= current_user.playlists_per_day %> <%= t('scores.playlists_per_day') %> × 20)</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600"><%= current_user.listening_points %></div>
-              <div class="text-sm text-gray-700"><%= t('scores.listening_time') %></div>
-              <div class="text-xs text-gray-500">(<%= current_user.swipes.count %> <%= t('scores.swipes') %> × 1.5)</div>
-            </div>
-            <div class="text-center">
-              <div class="text-2xl font-bold text-purple-600"><%= current_user.critical_opinions_points %></div>
-              <div class="text-sm text-gray-700"><%= t('scores.constructive_criticism') %></div>
-              <div class="text-xs text-gray-500">(<%= current_user.likes_count + current_user.dislikes_count %> <%= t('scores.actions') %> + bonus)</div>
-            </div>
-          </div>
+        <div class="mt-4 text-sm text-white/85">
+          👍 <span class="font-semibold"><%= likes_count %></span> likes · 👎
+          <span class="font-semibold"><%= dislikes_count %></span> dislikes
         </div>
-
-        <!-- Nouvelles métriques alignées avec le système de badges -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto mb-8">
-          <!-- Win Ratio - VIOLET -->
-          <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg p-4 border-2 border-white shadow-lg">
-            <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.win_ratio') %></h3>
-            </div>
-            <div class="text-2xl font-bold text-white">
-              <%= current_user.win_ratio %>%
-            </div>
-            <p class="text-white/90 text-sm"><%= t('scores.victories') %></p>
-          </div>
-
-          <!-- Games Played - NOIR -->
-          <div class="bg-black rounded-lg p-4 border-2 border-white shadow-lg">
-            <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-              </svg>
-              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.games') %></h3>
-            </div>
-            <div class="text-2xl font-bold text-white">
-              <%= current_user.games.count %>
-            </div>
-            <p class="text-white/90 text-sm"><%= t('scores.played') %></p>
-          </div>
-
-          <!-- Top 3 Count - BLANC -->
-          <div class="bg-white rounded-lg p-4 border-2 border-purple-600 shadow-lg">
-            <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
-              </svg>
-              <h3 class="text-lg font-bold text-gray-900 ml-2"><%= t('scores.top_3') %></h3>
-            </div>
-            <div class="text-2xl font-bold text-purple-600">
-              <%= current_user.top_3_finishes_count %>
-            </div>
-            <p class="text-gray-600 text-sm"><%= t('scores.times') %></p>
-          </div>
-
-          <!-- Unique Playlists - NOIR -->
-          <div class="bg-black rounded-lg p-4 border-2 border-white shadow-lg">
-            <div class="flex items-center justify-center mb-2">
-              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-              </svg>
-              <h3 class="text-lg font-bold text-white ml-2"><%= t('scores.unique_playlists') %></h3>
-            </div>
-            <div class="text-2xl font-bold text-white">
-              <%= current_user.unique_playlists_played_count %>
-            </div>
-            <p class="text-white/90 text-sm"><%= t('scores.unique') %></p>
-          </div>
-        </div>
-
       </div>
     </div>
 
-    <!-- Songs Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" style="visibility: visible !important; opacity: 1 !important; display: grid !important;">
-      <!-- SONGS LIKED - VIOLET -->
-      <div class="bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-        <h3 class="text-2xl font-bold text-white mb-6 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">SONGS LIKED</h3>
-        <div class="space-y-4" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+      <div class="rounded-3xl bg-gradient-to-b from-[#7e22ce] to-[#5b21b6] p-4">
+        <div class="text-white font-bold mb-3">Songs likes</div>
+        <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           <% if @liked_videos.present? %>
             <% @liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20" style="visibility: visible !important; opacity: 1 !important; display: flex !important; height: auto !important; min-height: auto !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; word-wrap: break-word !important;">
-                <span class="text-white font-medium flex-1 pr-2" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; word-wrap: break-word !important; overflow-wrap: break-word !important; max-width: 70% !important;"><%= video.title %></span>
-                <span class="text-purple-200 font-semibold flex-shrink-0" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; white-space: nowrap !important;">+2 points</span>
+              <div class="rounded-xl bg-black/25 px-3 py-2 text-sm text-white/95 truncate">
+                <%= video.title %>
               </div>
             <% end %>
           <% else %>
-            <div class="text-white/90 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">No liked songs yet.</div>
+            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70">Aucun like sur cette partie.</div>
           <% end %>
         </div>
       </div>
 
-      <!-- SONGS NO LIKED - NOIR -->
-      <div class="bg-black rounded-xl p-6 transform hover:scale-[1.02] transition-all duration-300 shadow-lg border-2 border-white" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
-        <h3 class="text-2xl font-bold text-white mb-6 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">SONGS NO LIKED</h3>
-        <div class="space-y-4" style="visibility: visible !important; opacity: 1 !important; display: block !important; height: auto !important; min-height: auto !important; max-height: none !important; overflow: visible !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;">
+      <div class="rounded-3xl bg-gradient-to-b from-[#312e81] to-[#1e1b4b] p-4">
+        <div class="text-white font-bold mb-3">Songs dislikes</div>
+        <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           <% if @not_liked_videos.present? %>
             <% @not_liked_videos.each do |video| %>
-              <div class="flex justify-between items-center bg-white/10 rounded-lg p-4 border border-white/20" style="visibility: visible !important; opacity: 1 !important; display: flex !important; height: auto !important; min-height: auto !important; width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; word-wrap: break-word !important;">
-                <span class="text-white font-medium flex-1 pr-2" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; word-wrap: break-word !important; overflow-wrap: break-word !important; max-width: 70% !important;"><%= video.title %></span>
-                <span class="text-purple-300 font-semibold flex-shrink-0" style="visibility: visible !important; opacity: 1 !important; display: inline-block !important; white-space: nowrap !important;">+1 point</span>
+              <div class="rounded-xl bg-black/25 px-3 py-2 text-sm text-white/95 truncate">
+                <%= video.title %>
               </div>
             <% end %>
           <% else %>
-            <div class="text-white/80 text-center" style="visibility: visible !important; opacity: 1 !important; display: block !important;">No disliked songs yet.</div>
+            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70">Aucun dislike sur cette partie.</div>
           <% end %>
         </div>
       </div>
     </div>
 
-    <!-- Boutons -->
-    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 flex-wrap">
-      <button onclick="window.location.href='<%= scores_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white/30">
-        <span><%= t('games.view_leaderboard') %></span>
-      </button>
-
-      <button onclick="window.location.href='<%= playlists_path %>'" 
-          class="inline-flex items-center px-8 py-4 text-lg font-bold rounded-full text-white bg-black hover:bg-gray-900 transition-all focus:outline-none transform hover:scale-105 shadow-lg border-2 border-white">
-        <span><%= t('games.next') %></span>
-        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </button>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <a href="<%= playlists_path %>"
+         class="flex-1 inline-flex items-center justify-center rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all">
+        🎵 Nouvelle playlist
+      </a>
+      <a href="<%= journey_path %>"
+         class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
+        🎯 Voir mon parcours
+      </a>
+      <a href="<%= scores_path %>"
+         class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
+        🏆 Classement
+      </a>
     </div>
-
-    <!-- Padding supplémentaire pour permettre de scroller plus bas -->
-    <div style="height: 40px;"></div>
-
   </div>
 </div>

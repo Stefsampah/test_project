@@ -13,6 +13,18 @@ class PagesController < ApplicationController
     # Accessible à tous pour les tests
   end
 
+  def journey_test_1
+    # Proposition 1: Neon Arena
+  end
+
+  def journey_test_2
+    # Proposition 2: Ticket Collector
+  end
+
+  def journey_test_3
+    # Proposition 3: Cinematic Story
+  end
+
   def test_fullscreen
     # Page de test pour le plein écran
     # Accessible à tous pour les tests
