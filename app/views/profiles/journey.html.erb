@@ -16,21 +16,20 @@
 
 <div class="min-h-screen bg-black py-6">
   <div class="max-w-md mx-auto px-4">
-    <!-- Hero noir uniforme -->
-    <div class="mb-6">
+    <div class="mb-6 rounded-3xl bg-gradient-to-b from-[#6b21a8]/70 to-[#1d4ed8]/70 p-5 shadow-xl">
       <h1 class="text-2xl font-extrabold text-white text-center tracking-wide uppercase">
         Ton concert ta saison
       </h1>
 
       <% if @season %>
-        <p class="text-sm text-white/80 text-center mt-2">
-          Saison 1 • concerts à gagner •
+        <p class="text-sm text-white/85 text-center mt-2 font-semibold">
+          Saison 1 • concerts a gagner •
           <%= @season.starts_at.to_date.strftime('%d/%m') %> – <%= @season.ends_at.to_date.strftime('%d/%m') %>
         </p>
       <% end %>
 
-      <p class="text-xs text-purple-300/90 text-center mt-2">
-        Progression calculée avec tes points parcours de la saison en cours.
+      <p class="text-sm text-white/95 text-center mt-2">
+        Points saison: <span class="font-extrabold"><%= @season_points.to_i %></span>
       </p>
     </div>
 
@@ -62,7 +61,7 @@
     </div>
 
     <!-- Bloc Aujourd'hui -->
-    <div class="bg-black rounded-3xl p-4 shadow-md mt-5">
+    <div class="bg-black rounded-3xl p-4 shadow-md mt-5 border border-purple-500/35">
       <h3 class="text-sm font-semibold text-white mb-2">⚡ Aujourd'hui</h3>
       <p class="text-sm text-gray-300 mb-4">
         <% if @remaining_playlists_today == :unlimited %>

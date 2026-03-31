@@ -21,6 +21,10 @@ class PagesController < ApplicationController
     # Proposition 2: Ticket Collector
   end
 
+  def journey_test_2_old
+    # Snapshot version from previous stopping point
+  end
+
   def journey_test_3
     # Proposition 3: Cinematic Story
   end

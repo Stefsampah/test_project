@@ -133,6 +133,7 @@ Rails.application.routes.draw do
   get 'reward_cards_proposals', to: 'pages#reward_cards_proposals', as: :reward_cards_proposals
   get 'journey-test-1', to: 'pages#journey_test_1', as: :journey_test_1
   get 'journey-test-2', to: 'pages#journey_test_2', as: :journey_test_2
+  get 'journey-test-2-old', to: 'pages#journey_test_2_old', as: :journey_test_2_old
   get 'journey-test-3', to: 'pages#journey_test_3', as: :journey_test_3
   end # Fin du scope locale
   

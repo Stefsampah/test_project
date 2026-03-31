@@ -260,9 +260,9 @@
     </div>
 
     <div id="game-swipe-feedback" style="display:none; position:fixed; inset:0; z-index:2147483648; pointer-events:none;">
-      <div style="position:absolute; inset:0; background:rgba(0,0,0,0.15); backdrop-filter: blur(2px);"></div>
+      <div id="game-feedback-backdrop" style="position:absolute; inset:0; background:rgba(0,0,0,0.15); backdrop-filter: blur(2px); transition: background 160ms ease-out;"></div>
       <div style="position:absolute; left:50%; top:35%; transform:translate(-50%,-50%); width:min(86vw,320px);">
-        <div style="border-radius:24px; border:1px solid rgba(168,85,247,0.45); background:rgba(20,20,30,0.72); box-shadow:0 16px 45px rgba(0,0,0,0.45); padding:16px; text-align:center;">
+        <div id="game-feedback-card" style="border-radius:24px; border:1px solid rgba(168,85,247,0.45); background:rgba(20,20,30,0.72); box-shadow:0 16px 45px rgba(0,0,0,0.45); padding:16px; text-align:center; transform:scale(0.92); opacity:0.9; transition:transform 180ms ease-out, opacity 180ms ease-out, border-color 180ms ease-out;">
           <div id="game-feedback-emoji" style="font-size:40px; line-height:1; margin-bottom:8px;">✨</div>
           <div id="game-feedback-title" style="color:#fff; font-weight:800; font-size:22px; margin-bottom:4px;">Bravo !</div>
           <div id="game-feedback-points" style="color:rgba(255,255,255,0.82); font-size:14px;">+2 pts</div>
@@ -280,8 +280,15 @@
         35% { transform: scale(1.12); }
         100% { transform: scale(1); }
       }
+      @keyframes gameFeedbackPulse {
+        0% { transform: scale(0.92); opacity: 0.9; }
+        100% { transform: scale(1); opacity: 1; }
+      }
       .game-btn-pulse {
         animation: gameBtnPulse 260ms ease-out;
+      }
+      .game-feedback-pop {
+        animation: gameFeedbackPulse 180ms ease-out forwards;
       }
     </style>
 
@@ -297,9 +304,14 @@
         var lastSwipeType = null;
         var streakCount = 0;
 
-        var feedbackMessages = {
-          like: ['Bravo !', 'Tu es le king 👑', 'Wow 🔥', 'Lourd !'],
-          dislike: ['On continue 💪', 'Bien vu 👀', 'Ça dja 😎', 'Tchié, next !']
+        var locale = '<%= I18n.locale.to_s %>';
+        var isEnglish = locale === 'en';
+        var feedbackMessages = isEnglish ? {
+          like: ['Wow!', 'OMG!', 'You got this!'],
+          dislike: ["You're like that huh!", 'OK!', 'Wassup!', 'It sucks!']
+        } : {
+          like: ['Wow !', 'OMG !', 'Tu gere !'],
+          dislike: ["T'es comme ca toi !", 'Ok !', 'Nan !', 'Braaaaa! ', 'C Komen']
         };
 
         function randomMessage(type) {
@@ -316,6 +328,8 @@
           var pointsEl = document.getElementById('game-feedback-points');
           var streakEl = document.getElementById('game-feedback-streak');
           var barEl = document.getElementById('game-feedback-bar');
+          var cardEl = document.getElementById('game-feedback-card');
+          var backdropEl = document.getElementById('game-feedback-backdrop');
 
           var currentType = liked ? 'like' : 'dislike';
           if (lastSwipeType === currentType) {
@@ -329,6 +343,15 @@
           var baseTitle = randomMessage(liked ? 'like' : 'dislike');
           if (titleEl) titleEl.textContent = baseTitle;
           if (pointsEl) pointsEl.textContent = liked ? '+2 pts' : '+1 pt';
+          if (cardEl) {
+            cardEl.style.borderColor = liked ? 'rgba(192,132,252,0.95)' : 'rgba(248,113,113,0.9)';
+            cardEl.classList.remove('game-feedback-pop');
+            void cardEl.offsetWidth;
+            cardEl.classList.add('game-feedback-pop');
+          }
+          if (backdropEl) {
+            backdropEl.style.background = liked ? 'rgba(126,34,206,0.28)' : 'rgba(185,28,28,0.24)';
+          }
           if (streakEl) {
             if (streakCount >= 2) {
               var streakLabel = streakCount >= 5 ? 'LEGEND' : 'COMBO';
@@ -355,6 +378,7 @@
           clearTimeout(feedbackTimeout);
           feedbackTimeout = setTimeout(function() {
             overlay.style.opacity = '0';
+            if (backdropEl) backdropEl.style.background = 'rgba(0,0,0,0.15)';
             setTimeout(function() {
               overlay.style.display = 'none';
             }, 120);
@@ -474,13 +498,19 @@
           iframeEl.style.transition = 'transform 260ms ease-out';
           iframeEl.style.transform = 'translateX(' + targetX + 'px) translateY(-50%) rotate(' + targetRot + 'deg) scale(3)';
 
-          var onEnd = function(ev) {
-            gameCardEl.removeEventListener('transitionend', onEnd);
+          var onEnd = function() {
+            iframeEl.removeEventListener('transitionend', onEnd);
             // lancer l'action une fois l'animation hors écran
             isGestureAnimating = false;
             handleSwipe(liked);
           };
-          gameCardEl.addEventListener('transitionend', onEnd, { once: true });
+          iframeEl.addEventListener('transitionend', onEnd, { once: true });
+          setTimeout(function() {
+            if (!isProcessing && isGestureAnimating) {
+              isGestureAnimating = false;
+              handleSwipe(liked);
+            }
+          }, 320);
         }
 
         gameCardEl.addEventListener('pointerup', onPointerEnd, { passive: true });
@@ -556,7 +586,6 @@
                 return;
               }
             }
-            resetCardTransform();
             resetCardTransform();
             isProcessing = false;
             setButtonsEnabled(true);
