@@ -7,8 +7,8 @@
 
     <div class="rounded-3xl overflow-hidden shadow-xl mb-5" style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
       <div class="p-6 text-center">
-        <p class="text-white/80 text-sm uppercase tracking-wide font-semibold">Fin de partie</p>
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Bravo</h1>
+        <p class="text-white/80 text-sm uppercase tracking-wide font-semibold"><%= t("games.results.end_of_game") %></p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-1"><%= t("games.results.congrats") %></h1>
         <p class="text-white/90 text-sm mt-2"><%= @playlist.title %></p>
 
         <div class="mt-4 flex justify-center">
@@ -25,29 +25,29 @@
 
         <div class="mt-5 grid grid-cols-3 gap-3">
           <div class="rounded-2xl bg-black/25 p-3">
-            <div class="text-[11px] text-white/75 uppercase">Score game</div>
+            <div class="text-[11px] text-white/75 uppercase"><%= t("games.results.game_score") %></div>
             <div class="text-2xl font-extrabold text-amber-300 mt-1"><%= game_points %></div>
           </div>
           <div class="rounded-2xl bg-black/25 p-3">
-            <div class="text-[11px] text-white/75 uppercase">Classement</div>
+            <div class="text-[11px] text-white/75 uppercase"><%= t("games.results.ranking") %></div>
             <div class="text-2xl font-extrabold text-white mt-1">#<%= @position || "-" %></div>
           </div>
           <div class="rounded-2xl bg-black/25 p-3">
-            <div class="text-[11px] text-white/75 uppercase">Points saison</div>
+            <div class="text-[11px] text-white/75 uppercase"><%= t("games.results.season_points") %></div>
             <div class="text-2xl font-extrabold text-amber-200 mt-1"><%= season_points %></div>
           </div>
         </div>
 
         <div class="mt-4 text-sm text-white/85">
-          👍 <span class="font-semibold"><%= likes_count %></span> likes · 👎
-          <span class="font-semibold"><%= dislikes_count %></span> dislikes
+          👍 <span class="font-semibold"><%= likes_count %></span> <%= t("games.results.likes") %> · 👎
+          <span class="font-semibold"><%= dislikes_count %></span> <%= t("games.results.dislikes") %>
         </div>
       </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
       <div class="rounded-3xl bg-gradient-to-b from-[#7e22ce] to-[#5b21b6] p-4">
-        <div class="text-white font-bold mb-3">Songs likes</div>
+        <div class="text-white font-bold mb-3"><%= t("games.results.songs_liked") %></div>
         <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           <% if @liked_videos.present? %>
             <% @liked_videos.each do |video| %>
@@ -56,13 +56,13 @@
               </div>
             <% end %>
           <% else %>
-            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70">Aucun like sur cette partie.</div>
+            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70"><%= t("games.results.no_likes") %></div>
           <% end %>
         </div>
       </div>
 
       <div class="rounded-3xl bg-gradient-to-b from-[#312e81] to-[#1e1b4b] p-4">
-        <div class="text-white font-bold mb-3">Songs dislikes</div>
+        <div class="text-white font-bold mb-3"><%= t("games.results.songs_disliked") %></div>
         <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
           <% if @not_liked_videos.present? %>
             <% @not_liked_videos.each do |video| %>
@@ -71,7 +71,7 @@
               </div>
             <% end %>
           <% else %>
-            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70">Aucun dislike sur cette partie.</div>
+            <div class="rounded-xl bg-black/25 px-3 py-3 text-sm text-white/70"><%= t("games.results.no_dislikes") %></div>
           <% end %>
         </div>
       </div>
@@ -80,15 +80,15 @@
     <div class="flex flex-col sm:flex-row gap-3">
       <a href="<%= playlists_path %>"
          class="flex-1 inline-flex items-center justify-center rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all">
-        🎵 Nouvelle playlist
+        🎵 <%= t("games.results.new_playlist") %>
       </a>
       <a href="<%= journey_path %>"
          class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
-        🎯 Voir mon parcours
+        🎯 <%= t("games.results.view_journey") %>
       </a>
       <a href="<%= scores_path %>"
          class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
-        🏆 Classement
+        🏆 <%= t("games.results.leaderboard") %>
       </a>
     </div>
   </div>

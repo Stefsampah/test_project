@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-black py-6">
   <div class="max-w-4xl mx-auto px-4">
     <div class="text-center mb-6">
-      <h1 class="text-3xl font-extrabold text-white tracking-wide">Classement</h1>
+      <h1 class="text-3xl font-extrabold text-white tracking-wide"><%= t("scores.title") %></h1>
     </div>
 
     <% top_three = @total_scores.first(3) %>
@@ -21,7 +21,7 @@
             <% u = @users_by_id[entry[:user_id]] %>
             <% next unless u %>
             <% size = idx == 1 ? "w-20 h-20" : "w-16 h-16" %>
-            <% rank_text = idx == 1 ? "1st" : (idx == 2 ? "2nd" : "3rd") %>
+            <% rank_text = idx == 1 ? t("scores.rank_suffix.first") : (idx == 2 ? t("scores.rank_suffix.second") : t("scores.rank_suffix.third")) %>
             <div class="text-center">
               <div class="<%= size %> rounded-full overflow-hidden mx-auto bg-black/30 shadow-lg">
                 <% if u.avatar.attached? %>
@@ -71,7 +71,16 @@
                 <% user = @users_by_id[score[:user_id]] %>
                 <% next unless user %>
                 <% rank = index + 1 %>
-                <% rank_label = rank == 1 ? "1st" : (rank == 2 ? "2nd" : (rank == 3 ? "3rd" : "#{rank}th")) %>
+                <% rank_label =
+                     if rank == 1
+                       t("scores.rank_suffix.first")
+                     elsif rank == 2
+                       t("scores.rank_suffix.second")
+                     elsif rank == 3
+                       t("scores.rank_suffix.third")
+                     else
+                       t("scores.rank_suffix.nth", rank: rank)
+                     end %>
                 <% is_current_user = user_signed_in? && user.id == current_user.id %>
                 <tr class="border-b border-white/15 <%= is_current_user ? 'bg-black/20' : '' %>">
                   <td class="py-3 pr-2 sm:pr-4 text-[11px] sm:text-sm font-semibold whitespace-nowrap"><%= rank_label %></td>
@@ -89,7 +98,7 @@
                       <div class="truncate text-[11px] sm:text-sm font-medium">
                         <%= user.email.split('@').first %>
                         <% if is_current_user %>
-                          <span class="text-[11px] text-purple-200">(toi)</span>
+                          <span class="text-[11px] text-purple-200">(<%= t("scores.you_label").downcase %>)</span>
                         <% end %>
                       </div>
                     </div>
@@ -102,7 +111,7 @@
           </table>
         <% else %>
           <div class="px-2 py-6 text-center text-white/80 text-sm">
-            Aucun score disponible pour le moment.
+            <%= t("scores.no_scores_available") %>
           </div>
         <% end %>
       </div>

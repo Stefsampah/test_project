@@ -248,6 +248,11 @@ en:
       player: "Player"
       point: "Point"
       playlist: "Playlist"
+    rank_suffix:
+      first: "1st"
+      second: "2nd"
+      third: "3rd"
+      nth: "%{rank}th"
   
   # Badges
   badges:
@@ -401,6 +406,21 @@ en:
     amazing_progress: "You've made amazing progress in this playlist."
     position_place: "Position: %{position}th Place!"
     th: "th"
+    results:
+      end_of_game: "End of game"
+      congrats: "Bravo"
+      game_score: "Game score"
+      ranking: "Ranking"
+      season_points: "Season points"
+      likes: "likes"
+      dislikes: "dislikes"
+      songs_liked: "Liked songs"
+      songs_disliked: "Disliked songs"
+      no_likes: "No likes in this game."
+      no_dislikes: "No dislikes in this game."
+      new_playlist: "New playlist"
+      view_journey: "View my journey"
+      leaderboard: "Leaderboard"
   
   # Store
   store:
@@ -474,6 +494,15 @@ en:
     view_all_my_badges: "View all my badges"
     view_my_rewards: "View my rewards"
     play: "Play"
+    season_points: "Season points"
+    games_count: "Number of games"
+    playlists_per_day_label: "Playlists / day"
+    recent_sessions: "Recent sessions"
+    history_title: "History"
+    no_sessions_yet: "No sessions yet. Start a playlist to begin your season."
+    status:
+      completed: "Completed"
+      in_progress: "In progress"
     levels:
       bronze: "Bronze"
       silver: "Silver"
@@ -484,6 +513,26 @@ en:
       exclusif: "Exclusive"
       premium: "Premium"
       ultime: "Ultimate"
+  journey:
+    hero_title: "Your concert your season"
+    season_line: "Season %{season_number} • concerts to win"
+    season_points_label: "Season points"
+    eligible_stamp: "ELIGIBLE"
+    today_title: "Today"
+    today_vip_unlimited: "You are VIP: play as much as you want today."
+    today_limit_html: "You can start up to <span class='font-semibold text-purple-300'>%{limit}</span> new playlists per day.<br>You still have <span class='font-semibold text-purple-300'>%{remaining}</span> playlists to play."
+    play_playlist: "Play a playlist"
+    become_vip: "Become VIP"
+    cards:
+      remaining_points: "%{remaining} pts left"
+      live:
+        title: "Live concert"
+        unlocked: "Concert link unlocked"
+        target_hint: "Goal 3,000 pts"
+      physique:
+        title: "Physical concert"
+        unlocked: "Eligible for physical ticket draw"
+        target_hint: "Goal 6,000 pts"
   
   # Common
   common:

@@ -13,9 +13,9 @@
   remaining = [target_points.to_i - season_points.to_i, 0].max
 
   bar_bg = "bg-white"
-  title_text = variant.to_sym == :physique ? "Concert physique" : "Concert live"
-  unlocked_text = variant.to_sym == :physique ? "Eligible au tirage place physique" : "Lien concert debloque"
-  target_hint = variant.to_sym == :physique ? "Objectif 6 000 pts" : "Objectif 3 000 pts"
+  title_text = variant.to_sym == :physique ? t("journey.cards.physique.title") : t("journey.cards.live.title")
+  unlocked_text = variant.to_sym == :physique ? t("journey.cards.physique.unlocked") : t("journey.cards.live.unlocked")
+  target_hint = variant.to_sym == :physique ? t("journey.cards.physique.target_hint") : t("journey.cards.live.target_hint")
   tag_style = variant.to_sym == :physique ? "bg-black text-amber-200" : "bg-white text-black"
   media_overlay_style =
     if variant.to_sym == :physique
@@ -70,7 +70,7 @@
 
       <% if is_unlocked %>
         <div class="absolute left-3 top-3 rounded-md border-2 border-white bg-emerald-500/90 px-2.5 py-1 text-[10px] font-black tracking-wide text-white shadow-lg">
-          ELIGIBLE
+          <%= t("journey.eligible_stamp") %>
         </div>
       <% end %>
     </div>
@@ -94,7 +94,7 @@
       <% if is_unlocked %>
         <%= unlocked_text %>
       <% else %>
-        Encore <span class="text-white"><%= remaining %></span> pts
+        <%= t("journey.cards.remaining_points", remaining: remaining) %>
       <% end %>
     </p>
   </div>

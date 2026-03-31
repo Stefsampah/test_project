@@ -18,18 +18,18 @@
   <div class="max-w-md mx-auto px-4">
     <div class="mb-6 rounded-3xl bg-gradient-to-b from-[#6b21a8]/70 to-[#1d4ed8]/70 p-5 shadow-xl">
       <h1 class="text-2xl font-extrabold text-white text-center tracking-wide uppercase">
-        Ton concert ta saison
+        <%= t("journey.hero_title") %>
       </h1>
 
       <% if @season %>
         <p class="text-sm text-white/85 text-center mt-2 font-semibold">
-          Saison 1 • concerts a gagner •
+          <%= t("journey.season_line", season_number: 1) %> •
           <%= @season.starts_at.to_date.strftime('%d/%m') %> – <%= @season.ends_at.to_date.strftime('%d/%m') %>
         </p>
       <% end %>
 
       <p class="text-sm text-white/95 text-center mt-2">
-        Points saison: <span class="font-extrabold"><%= @season_points.to_i %></span>
+        <%= t("journey.season_points_label") %>: <span class="font-extrabold"><%= @season_points.to_i %></span>
       </p>
     </div>
 
@@ -62,26 +62,25 @@
 
     <!-- Bloc Aujourd'hui -->
     <div class="bg-black rounded-3xl p-4 shadow-md mt-5 border border-purple-500/35">
-      <h3 class="text-sm font-semibold text-white mb-2">⚡ Aujourd'hui</h3>
+      <h3 class="text-sm font-semibold text-white mb-2">⚡ <%= t("journey.today_title") %></h3>
       <p class="text-sm text-gray-300 mb-4">
         <% if @remaining_playlists_today == :unlimited %>
-          Tu es VIP : joue autant que tu veux aujourd'hui.
+          <%= t("journey.today_vip_unlimited") %>
         <% else %>
-          Tu peux lancer jusqu'à <span class="font-semibold text-purple-300">7</span> nouvelles playlists par jour.<br>
-          Il te reste <span class="font-semibold text-purple-300"><%= @remaining_playlists_today %></span> playlists à jouer.
+          <%= t("journey.today_limit_html", limit: 7, remaining: @remaining_playlists_today) %>
         <% end %>
       </p>
 
       <div class="flex flex-col sm:flex-row gap-3">
         <a href="<%= playlists_path %>"
            class="flex-1 inline-flex items-center justify-center px-4 py-3 text-sm font-semibold rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all shadow-lg">
-          🎵 Jouer une playlist
+          🎵 <%= t("journey.play_playlist") %>
         </a>
 
         <% unless @user.vip? %>
           <a href="<%= subscriptions_path %>"
              class="inline-flex items-center justify-center px-4 py-3 text-xs font-semibold rounded-full text-purple-100 bg-transparent hover:bg-purple-900/70 border border-purple-500/70 transition-all">
-            Devenir VIP
+            <%= t("journey.become_vip") %>
           </a>
         <% end %>
       </div>
