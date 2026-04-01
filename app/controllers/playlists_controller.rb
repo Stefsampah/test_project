@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
+  before_action :authenticate_user!, except: [:index, :show, :test_layout, :test_category]
 
   def index
     # Scope unique: toutes les playlists jouables (plus de distinction premium/exclusive côté gameplay)
@@ -46,5 +46,28 @@ class PlaylistsController < ApplicationController
     
     # Utiliser le layout spécial pour les shorts
     render layout: 'shorts'
+  end
+
+  def test_layout
+    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos).order(:id)
+    @playlists_test = base_scope.to_a
+
+    @featured_playlist = @playlists_test.find { |p| p.category.to_s.downcase.include?("decouvrir") } || @playlists_test.first
+    trending_pool = @playlists_test.reject { |p| @featured_playlist && p.id == @featured_playlist.id }
+    @trending_playlists = trending_pool.shuffle.first(6)
+
+    categories = @playlists_test.map { |p| p.category.to_s.strip }.reject(&:blank?).uniq
+    @categories = categories
+  end
+
+  def test_category
+    @category_name = params[:category].to_s
+    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos).order(:id)
+    @category_playlists =
+      if @category_name.casecmp("Toutes").zero?
+        base_scope.to_a
+      else
+        base_scope.where(category: @category_name).to_a
+      end
   end
 end

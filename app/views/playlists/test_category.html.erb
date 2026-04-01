@@ -1,0 +1,45 @@
+<div class="min-h-screen bg-[#f5f5f7] pb-24 text-[#161616]">
+  <div class="mx-auto max-w-md px-4 pt-6">
+    <div class="mb-5 flex items-center gap-3">
+      <a href="<%= playlists_test_path %>"
+         class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl text-[#8b5cf6] shadow-sm ring-1 ring-black/5">
+        ‹
+      </a>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-[#8b5cf6]">Category</p>
+        <h1 class="text-3xl font-extrabold text-[#161616]"><%= @category_name %></h1>
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <% @category_playlists.each do |playlist| %>
+        <% first_video = playlist.videos.first %>
+        <% thumb_id = playlist.valid_thumbnail_id %>
+        <a href="<%= user_signed_in? ? new_playlist_game_path_with_locale(playlist) : new_user_session_path %>"
+           class="block overflow-hidden rounded-2xl bg-white shadow-[0_10px_22px_rgba(0,0,0,0.12)]">
+          <div class="h-40 w-full">
+            <% if thumb_id.present? %>
+              <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg"
+                   alt="<%= playlist.title %>"
+                   class="h-full w-full object-cover"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= thumb_id %>/mqdefault.jpg';">
+            <% else %>
+              <div class="h-full w-full bg-gray-300"></div>
+            <% end %>
+          </div>
+          <div class="px-3 py-3">
+            <p class="truncate text-lg font-semibold text-[#151515]"><%= first_video&.title || playlist.title %></p>
+            <p class="truncate text-sm text-[#3a3a3a]"><%= playlist.title %></p>
+          </div>
+        </a>
+      <% end %>
+    </div>
+
+    <% if @category_playlists.blank? %>
+      <div class="mt-8 rounded-2xl bg-white p-4 text-sm text-[#4b5563] shadow-sm ring-1 ring-black/5">
+        Aucune playlist pour cette categorie pour le moment.
+      </div>
+    <% end %>
+  </div>
+</div>
