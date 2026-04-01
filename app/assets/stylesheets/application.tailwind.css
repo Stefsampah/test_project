@@ -3,6 +3,31 @@
 @tailwind utilities;
 
 @layer components {
+  .app-btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-400/70;
+  }
+
+  .app-btn-primary {
+    @apply app-btn bg-purple-600 text-white hover:bg-purple-700 shadow-lg;
+  }
+
+  .app-btn-secondary {
+    @apply app-btn border border-purple-500/60 bg-black/40 text-white hover:bg-black/60;
+  }
+
+  .app-btn-ghost {
+    @apply app-btn border border-white/15 bg-white/5 text-white/90 hover:bg-white/10;
+  }
+
+  .app-btn-square {
+    @apply rounded-3xl;
+  }
+
+  .app-btn-cta {
+    @apply inline-flex items-center justify-center bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white rounded-full font-bold transition-all transform hover:scale-110 shadow-2xl;
+    @apply px-6 py-3 text-base sm:px-12 sm:py-6 sm:text-2xl;
+  }
+
   .nav {
     @apply bg-white shadow-sm sticky top-0 z-50;
   }

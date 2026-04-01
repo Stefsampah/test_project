@@ -56,20 +56,17 @@
         </div>
       </div>
 
-      <!-- Quick actions -->
-      <div class="px-6 pb-6">
-        <div class="grid grid-cols-2 gap-3">
-          <a href="<%= playlists_path %>"
-             class="rounded-3xl hover:brightness-110 transition-all px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2"
-             style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
-            🎵 <%= t('profile.play') %>
-          </a>
-          <a href="<%= scores_path %>"
-             class="rounded-3xl hover:brightness-110 transition-all shadow-lg px-4 py-3 text-sm font-semibold text-white inline-flex items-center justify-center gap-2"
-             style="background: linear-gradient(180deg, #7e22ce 0%, #2563eb 100%);">
-            🏆 <%= t('nav.scores') %>
-          </a>
-        </div>
+    </div>
+
+    <!-- Actions entre hero et historique -->
+    <div class="mt-6 mb-6 bg-black rounded-3xl p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <a href="<%= playlists_path %>" class="w-full app-btn-cta">
+          <%= t('profile.play') %>
+        </a>
+        <a href="<%= scores_path %>" class="w-full app-btn-cta">
+          <%= t('nav.scores') %>
+        </a>
       </div>
     </div>
 

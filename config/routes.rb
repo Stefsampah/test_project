@@ -135,6 +135,8 @@ Rails.application.routes.draw do
   get 'journey-test-2', to: 'pages#journey_test_2', as: :journey_test_2
   get 'journey-test-2-old', to: 'pages#journey_test_2_old', as: :journey_test_2_old
   get 'journey-test-3', to: 'pages#journey_test_3', as: :journey_test_3
+  get 'home-test-1', to: 'pages#home_test_1', as: :home_test_1
+  get 'home-test-2', to: 'pages#home_test_2', as: :home_test_2
   end # Fin du scope locale
   
   # Route pour changer la langue (hors scope pour éviter les conflits)

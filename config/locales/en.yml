@@ -513,6 +513,9 @@ en:
       exclusif: "Exclusive"
       premium: "Premium"
       ultime: "Ultimate"
+  subscriptions_page:
+    feature_no_limit: "No limit"
+    feature_concert_goal: "Concert goal"
   journey:
     hero_title: "Your concert your season"
     season_line: "Season %{season_number} • concerts to win"

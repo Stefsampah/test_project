@@ -79,15 +79,15 @@
 
     <div class="flex flex-col sm:flex-row gap-3">
       <a href="<%= playlists_path %>"
-         class="flex-1 inline-flex items-center justify-center rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all">
+         class="flex-1 app-btn-primary">
         🎵 <%= t("games.results.new_playlist") %>
       </a>
       <a href="<%= journey_path %>"
-         class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
+         class="flex-1 app-btn-secondary">
         🎯 <%= t("games.results.view_journey") %>
       </a>
       <a href="<%= scores_path %>"
-         class="flex-1 inline-flex items-center justify-center rounded-full bg-black/40 hover:bg-black/60 border border-purple-500/50 text-white font-semibold py-3 transition-all">
+         class="flex-1 app-btn-secondary">
         🏆 <%= t("games.results.leaderboard") %>
       </a>
     </div>

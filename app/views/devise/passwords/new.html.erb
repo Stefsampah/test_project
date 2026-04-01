@@ -1,0 +1,31 @@
+<div style="padding: 20px; max-width: 500px; margin: 0 auto; background-color: #333; color: white; border-radius: 10px;">
+  <h2 style="text-align: center; margin-bottom: 20px;">Mot de passe oublié ?</h2>
+
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, autocomplete: "off" }) do |f| %>
+    <% if resource.errors.any? %>
+      <div style="background-color: #f44336; color: white; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+        <strong>Erreur:</strong>
+        <ul style="margin-top: 8px; padding-left: 18px;">
+          <% resource.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div style="margin-bottom: 15px;">
+      <%= f.label :email, "Email" %><br />
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", style: "width: 100%; padding: 8px; background-color: #444; color: white; border: 1px solid #555; border-radius: 4px; margin-top: 5px;" %>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <button type="submit" style="width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Envoyer les instructions
+      </button>
+    </div>
+  <% end %>
+
+  <div style="text-align: center; margin-top: 15px;">
+    <%= render "devise/shared/links" %>
+  </div>
+</div>

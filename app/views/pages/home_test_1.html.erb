@@ -1,0 +1,48 @@
+<div class="relative min-h-screen overflow-hidden bg-black text-white">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(168,85,247,0.48),transparent_48%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(59,130,246,0.22),transparent_42%)]"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-black/55 to-black"></div>
+  </div>
+
+  <section class="relative z-10 flex min-h-[100svh] items-center">
+    <div class="mx-auto w-full max-w-md px-5 py-10 text-center">
+      <%= image_tag "Logo/Copilot_20251006_162220.png",
+                    alt: "Tube'NPlay",
+                    class: "mx-auto h-48 w-48 object-contain drop-shadow-[0_0_40px_rgba(168,85,247,0.55)]" %>
+
+      <h1 class="text-4xl leading-tight font-extrabold text-white mt-8 text-center">
+        Tente ta chance et remporte une place de concert
+      </h1>
+
+      <p class="mt-3 text-sm text-white/85">
+        Swipe. Gagne des points saison. Deviens eligible pour le live.
+      </p>
+
+      <div class="mt-8 rounded-3xl bg-gradient-to-b from-[#6b21a8]/85 to-[#1d4ed8]/75 p-3 shadow-2xl">
+        <div class="relative h-56 overflow-hidden rounded-2xl">
+          <% begin %>
+            <%= image_tag "concerts/concert_live.png", alt: "", class: "h-full w-full object-cover" %>
+          <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+            <div class="h-full w-full bg-[radial-gradient(circle_at_25%_20%,#c084fc_0%,#6b21a8_38%,#111827_75%)]"></div>
+          <% end %>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+        </div>
+        <div class="mt-3 text-left">
+          <p class="text-sm font-black text-purple-100">CONCERT LIVE</p>
+          <p class="text-xs text-white/80">Objectif 3 000 pts</p>
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-col items-center gap-3">
+        <% if user_signed_in? %>
+          <%= link_to t("home.start"), playlists_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl" %>
+          <%= link_to "Voir mon parcours", journey_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
+        <% else %>
+          <%= link_to t("home.start"), new_user_registration_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl" %>
+          <%= link_to t("nav.sign_in"), new_user_session_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>

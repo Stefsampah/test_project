@@ -71,15 +71,16 @@
         <% end %>
       </p>
 
+    </div>
+
+    <div class="mt-5 mb-5 bg-black rounded-3xl p-4">
       <div class="flex flex-col sm:flex-row gap-3">
-        <a href="<%= playlists_path %>"
-           class="flex-1 inline-flex items-center justify-center px-4 py-3 text-sm font-semibold rounded-full text-white bg-purple-600 hover:bg-purple-700 transition-all shadow-lg">
-          🎵 <%= t("journey.play_playlist") %>
+        <a href="<%= playlists_path %>" class="flex-1 app-btn-cta">
+          <%= t("journey.play_playlist") %>
         </a>
 
         <% unless @user.vip? %>
-          <a href="<%= subscriptions_path %>"
-             class="inline-flex items-center justify-center px-4 py-3 text-xs font-semibold rounded-full text-purple-100 bg-transparent hover:bg-purple-900/70 border border-purple-500/70 transition-all">
+          <a href="<%= subscriptions_path %>" class="flex-1 app-btn-cta">
             <%= t("journey.become_vip") %>
           </a>
         <% end %>

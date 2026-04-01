@@ -29,6 +29,14 @@ class PagesController < ApplicationController
     # Proposition 3: Cinematic Story
   end
 
+  def home_test_1
+    # Proposition home 1: Logo fullscreen
+  end
+
+  def home_test_2
+    # Proposition home 2: Concert fullscreen
+  end
+
   def test_fullscreen
     # Page de test pour le plein écran
     # Accessible à tous pour les tests

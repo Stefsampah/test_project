@@ -1,18 +1,20 @@
 <% max_daily = GamesController::MAX_DAILY_GAMES_FREE %>
 <% vip_active = @vip_active %>
+<% thumb_id = @vip_feature_playlist&.valid_thumbnail_id %>
 
-<div class="min-h-screen bg-black py-6">
+<div class="min-h-screen py-6" style="background: radial-gradient(circle at 20% 10%, #8b5cf6 0%, #6d28d9 35%, #4c1d95 70%, #2e1065 100%);">
   <div class="max-w-md mx-auto px-4">
-    <div class="rounded-3xl border border-purple-500/30 bg-gradient-to-b from-[#6b21a8]/25 via-black to-black overflow-hidden shadow-2xl">
+    <div class="rounded-3xl bg-gradient-to-b from-white/10 to-black/20 overflow-hidden shadow-2xl">
       <div class="p-6">
-        <h1 class="text-3xl font-extrabold text-white">VIP</h1>
-        <p class="text-sm text-white/70 mt-2">
-          Toutes les playlists restent jouables. VIP retire la limite quotidienne.
+        <p class="text-xs uppercase tracking-[0.25em] text-purple-100/90">Tube'NPlay</p>
+        <h1 class="text-4xl leading-tight font-extrabold text-white mt-2 text-center">Ne rate pas ça !</h1>
+        <p class="text-sm text-white/90 mt-2 text-center">
+          Passe VIP pour jouer sans limite quotidienne et accélérer ta progression concert.
         </p>
 
         <% if vip_active %>
-          <div class="mt-4 rounded-2xl border border-emerald-400/40 bg-emerald-500/10 p-4">
-            <div class="text-emerald-200 font-bold">Statut actif</div>
+          <div class="mt-5 rounded-2xl border border-emerald-300/45 bg-emerald-500/15 p-4">
+            <div class="text-emerald-200 font-bold">VIP actif</div>
             <div class="text-sm text-white/80 mt-1">
               Ton accès VIP est actif
               <% if @expires_at.present? %>
@@ -23,7 +25,7 @@
             </div>
           </div>
         <% else %>
-          <div class="mt-4 rounded-2xl border border-purple-500/35 bg-purple-500/10 p-4">
+          <div class="mt-5 rounded-3xl border border-purple-200/35 bg-purple-500/20 p-4">
             <div class="text-purple-200 font-bold">Version gratuite</div>
             <div class="text-sm text-white/80 mt-1">
               Jusqu'à <span class="font-semibold text-purple-200"><%= max_daily %></span> nouvelles playlists par jour.
@@ -31,41 +33,79 @@
           </div>
         <% end %>
 
-        <div class="mt-5 space-y-3">
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <div class="text-white font-semibold">Gratuit</div>
-            <ul class="text-sm text-white/70 mt-2 space-y-1">
-              <li>• Toutes les playlists jouables</li>
-              <li>• <%= max_daily %> nouvelles playlists / jour</li>
-              <li>• Progression saison concert incluse</li>
-            </ul>
-          </div>
+        <div class="mt-8 rounded-3xl p-4 shadow-xl"
+             style="background: linear-gradient(180deg, #ff5f6d 0%, #ff9966 40%, #f97316 100%);">
+          <p class="text-white text-sm font-bold tracking-wide uppercase text-center">Offre VIP</p>
+          <div class="mt-3 rounded-2xl bg-black/15 p-4">
+            <div class="flex items-center justify-between">
+              <div class="text-white font-bold text-lg">VIP</div>
+              <span class="text-xs font-bold px-2 py-1 rounded-full bg-purple-950/75 text-amber-200 ring-1 ring-amber-400/40">PLUS</span>
+            </div>
+            <div class="text-3xl font-extrabold text-white mt-2">9,99 EUR<span class="text-sm font-semibold text-white/80"> / mois</span></div>
+            <ol class="text-sm text-white/95 mt-3 space-y-1 list-decimal list-inside">
+              <li>Playlists illimitées chaque jour</li>
+              <li>Même gameplay, progression plus rapide</li>
+              <li>Plus de chances d’atteindre 3 000 / 6 000 pts</li>
+            </ol>
 
-          <div class="rounded-2xl border border-purple-500/35 bg-purple-500/10 p-4">
-            <div class="text-white font-semibold">VIP - 9,99 EUR / mois</div>
-            <ul class="text-sm text-white/80 mt-2 space-y-1">
-              <li>• Toutes les playlists jouables</li>
-              <li>• Nouvelles playlists illimitees / jour</li>
-              <li>• Meme progression saison, sans attente quotidienne</li>
-            </ul>
+            <div class="mt-4 grid grid-cols-2 gap-3 items-stretch">
+              <!-- Visuel type carte playlist : No limit -->
+              <div class="rounded-2xl overflow-hidden bg-black/30 h-full flex flex-col">
+                <div class="relative bg-gray-800" style="height: 113px;">
+                  <% if thumb_id.present? %>
+                    <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg"
+                         alt=""
+                         class="w-full h-full object-cover"
+                         loading="lazy"
+                         onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= thumb_id %>/mqdefault.jpg';">
+                  <% else %>
+                    <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-900 to-black">
+                      <svg class="w-10 h-10 text-purple-300/80" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 5.14v14l11-7-11-7z"/>
+                      </svg>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="px-2 h-12 flex items-center justify-center text-center">
+                  <span class="text-[11px] font-bold text-white tracking-wide"><%= t("subscriptions_page.feature_no_limit") %></span>
+                </div>
+              </div>
+
+              <!-- Visuel type carte concert (aperçu parcours) -->
+              <div class="rounded-2xl overflow-hidden bg-gradient-to-b from-[#6b21a8]/90 to-[#1d4ed8]/90 h-full flex flex-col">
+                <div class="relative" style="height: 113px;">
+                    <% begin %>
+                      <%= image_tag "concerts/concert_live.png",
+                                    alt: "",
+                                    class: "w-full h-full object-cover" %>
+                    <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+                      <div class="w-full h-full"
+                           style="background: radial-gradient(circle at 25% 20%, #c084fc 0%, #6b21a8 38%, #111827 75%);"></div>
+                    <% end %>
+                </div>
+                <div class="px-2 h-12 flex items-center justify-center text-center">
+                  <span class="text-[11px] font-bold text-white tracking-wide"><%= t("subscriptions_page.feature_concert_goal") %></span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="mt-6 flex flex-col gap-3">
+        <div class="mt-6 flex flex-col items-center gap-3">
           <% if vip_active %>
             <a href="<%= subscriptions_checkout_path %>"
-               class="inline-flex items-center justify-center w-full rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all shadow-lg">
+               class="w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white bg-white px-6 py-3 text-base font-bold text-black transition-all hover:bg-white/90">
               Renouveler VIP
             </a>
           <% else %>
             <a href="<%= subscriptions_checkout_path %>"
-               class="inline-flex items-center justify-center w-full rounded-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 transition-all shadow-lg">
+               class="w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white bg-white px-6 py-3 text-base font-bold text-black transition-all hover:bg-white/90">
               Devenir VIP
             </a>
           <% end %>
 
           <a href="<%= playlists_path %>"
-             class="inline-flex items-center justify-center w-full rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/90 font-semibold py-3 transition-all">
+             class="w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white bg-white px-6 py-3 text-base font-bold text-black transition-all hover:bg-white/90">
             Retour aux playlists
           </a>
         </div>

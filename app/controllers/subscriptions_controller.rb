@@ -6,6 +6,14 @@ class SubscriptionsController < ApplicationController
     @vip_active = current_user.vip_subscription && current_user.vip_expires_at && current_user.vip_expires_at > Time.current
     @expires_at = current_user.vip_expires_at
     @days_remaining = @expires_at ? (@expires_at - Time.current).to_i / 1.day : 0
+    @vip_feature_playlist = Playlist.joins(:videos)
+      .where.not(videos: { youtube_id: [nil, ""] })
+      .where("LENGTH(videos.youtube_id) >= 10")
+      .where("videos.youtube_id NOT LIKE '-%'")
+      .order("playlists.id")
+      .distinct
+      .first
+    @vip_feature_playlist ||= Playlist.order(:id).first
   end
   
   def checkout

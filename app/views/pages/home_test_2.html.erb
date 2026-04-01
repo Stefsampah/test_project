@@ -1,0 +1,32 @@
+<div class="relative min-h-screen overflow-hidden bg-black text-white">
+  <div class="absolute inset-0">
+    <% begin %>
+      <%= image_tag "concerts/concert_live.png", alt: "", class: "h-full w-full object-cover" %>
+    <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+      <div class="h-full w-full bg-[radial-gradient(circle_at_30%_20%,#a855f7_0%,#6b21a8_38%,#111827_75%)]"></div>
+    <% end %>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-black/65 to-black"></div>
+  </div>
+
+  <section class="relative z-10 flex min-h-[100svh] items-center">
+    <div class="mx-auto w-full max-w-md px-5 py-10">
+      <h1 class="text-4xl leading-tight font-extrabold text-white mt-2 text-center">
+        Tente ta chance et remporte une place de concert
+      </h1>
+
+      <p class="mt-3 text-center text-sm text-white/85">
+        Une vibe immersive, une progression claire, un seul objectif : ton concert.
+      </p>
+
+      <div class="mt-7 flex flex-col items-center gap-3">
+        <% if user_signed_in? %>
+          <%= link_to t("home.start"), playlists_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl text-center" %>
+          <%= link_to "Voir mon parcours", journey_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
+        <% else %>
+          <%= link_to t("home.start"), new_user_registration_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl text-center" %>
+          <%= link_to t("nav.sign_in"), new_user_session_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,801 +1,88 @@
-<!-- Landing Page Tube'NPlay - Version Immersive -->
-<div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900">
-  
-  <!-- Hero Section -->
-  <div class="relative overflow-hidden h-screen flex items-center justify-center">
-    <div class="text-center px-4">
-      <!-- Nom de l'app -->
-      <h1 class="text-5xl font-bold text-white mb-8 drop-shadow-2xl">
-        Tube'<span class="animate-pulse" style="color: #9333ea;">N</span>Play
+<%
+  featured_playlist = Playlist.joins(:videos)
+    .where.not(videos: { youtube_id: [nil, ""] })
+    .where("LENGTH(videos.youtube_id) >= 10")
+    .where("videos.youtube_id NOT LIKE '-%'")
+    .distinct
+    .first
+  featured_thumb = featured_playlist&.valid_thumbnail_id
+  is_en = I18n.locale.to_s == "en"
+%>
+
+<div class="relative min-h-screen overflow-hidden bg-black text-white">
+  <div class="pointer-events-none absolute inset-0">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(168,85,247,0.35),transparent_45%)]"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_10%,rgba(99,102,241,0.30),transparent_45%)]"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-black/55 to-black"></div>
+  </div>
+
+  <section class="relative z-10 flex min-h-[100svh] items-center">
+    <div class="mx-auto w-full max-w-md px-4 pb-10 pt-8">
+      <div class="mb-7 flex justify-center">
+        <%= image_tag "Logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "h-24 w-24 object-contain drop-shadow-2xl" %>
+      </div>
+
+      <h1 class="text-4xl leading-tight font-extrabold text-white mt-2 text-center">
+        <%= is_en ? "Try your luck and win a concert ticket" : "Tente ta chance et remporte une place de concert" %>
       </h1>
-      
-      <p class="text-2xl md:text-3xl mb-12 drop-shadow-lg" style="color: #7c3aed;">
-        <%= t('home.subtitle') %>
+
+      <p class="mt-3 text-center text-sm text-white/80">
+        <%= is_en ? "Swipe songs, earn season points, unlock live rewards." : "Swipe les sons, gagne des points saison, debloque des rewards live." %>
       </p>
-      
-      <!-- CTA Buttons -->
-      <div class="flex flex-col sm:flex-row gap-6 justify-center">
+
+      <div class="mt-7 grid grid-cols-2 gap-3">
+        <article class="overflow-hidden rounded-3xl bg-gradient-to-b from-[#6b21a8]/85 to-[#1d4ed8]/80 shadow-2xl ring-1 ring-white/10">
+          <div class="relative h-44">
+            <% if featured_thumb.present? %>
+              <img src="https://img.youtube.com/vi/<%= featured_thumb %>/hqdefault.jpg"
+                   alt=""
+                   class="h-full w-full object-cover"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= featured_thumb %>/mqdefault.jpg';">
+            <% else %>
+              <div class="h-full w-full bg-[radial-gradient(circle_at_25%_20%,#c084fc_0%,#6b21a8_38%,#111827_75%)]"></div>
+            <% end %>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-black tracking-wide text-purple-200"><%= is_en ? "NO LIMIT" : "NO LIMIT" %></p>
+            <p class="mt-1 line-clamp-1 text-xs text-white/80"><%= featured_playlist&.title || (is_en ? "Featured playlist" : "Playlist mise en avant") %></p>
+          </div>
+        </article>
+
+        <article class="overflow-hidden rounded-3xl bg-gradient-to-b from-[#f59e0b]/90 via-[#a855f7]/80 to-[#111827] shadow-2xl ring-1 ring-white/10">
+          <div class="relative h-44">
+            <% begin %>
+              <%= image_tag "concerts/concert_live.png", alt: "", class: "h-full w-full object-cover" %>
+            <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+              <div class="h-full w-full bg-[radial-gradient(circle_at_70%_10%,#fdba74_0%,#f59e0b_32%,#6b21a8_62%,#111827_88%)]"></div>
+            <% end %>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-black tracking-wide text-amber-200"><%= is_en ? "LIVE CONCERT" : "CONCERT LIVE" %></p>
+            <p class="mt-1 text-xs text-white/85"><%= is_en ? "Goal 3,000 pts" : "Objectif 3 000 pts" %></p>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-8 flex flex-col items-center gap-3">
         <% if user_signed_in? %>
-          <%= link_to playlists_path, class: "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-            <%= t('home.start') %>
+          <%= link_to playlists_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold text-center transition-all transform hover:scale-105 shadow-2xl" do %>
+            <%= t("home.start") %>
+          <% end %>
+          <%= link_to journey_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" do %>
+            <%= is_en ? "See my journey" : "Voir mon parcours" %>
           <% end %>
         <% else %>
-          <%= link_to new_user_registration_path, class: "bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-12 py-6 rounded-full text-2xl font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-            <%= t('home.start') %>
+          <%= link_to new_user_registration_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold text-center transition-all transform hover:scale-105 shadow-2xl" do %>
+            <%= t("home.start") %>
+          <% end %>
+          <%= link_to new_user_session_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" do %>
+            <%= t("nav.sign_in") %>
           <% end %>
         <% end %>
       </div>
-      
-      <!-- Logo agrandi en bas -->
-      <div class="mt-16">
-        <%= image_tag "Logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-48 h-48 mx-auto object-contain drop-shadow-2xl" %>
-      </div>
     </div>
-  </div>
-
-  <!-- Section Description de l'app -->
-  <div class="py-16 bg-gray-900/60 backdrop-blur-sm">
-    <div class="max-w-4xl mx-auto px-4">
-      <div class="text-center">
-        <p class="text-lg md:text-xl text-gray-200 leading-relaxed" style="line-height: 1.8; margin-bottom: 20px;">
-          <%= t('home.description') %>
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section Playlists avec vraies playlists du jeu -->
-  <div class="py-20 bg-gray-900/80 backdrop-blur-sm">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.discover_playlists') %></h2>
-      </div>
-      
-      <!-- Vraies playlists du jeu - carte custom home (2 colonnes, vignettes agrandies) -->
-      <div class="playlists-grid-home">
-        <% 
-          begin
-            # Vérifier si la colonne category existe
-            category_column_exists = Playlist.column_names.include?('category')
-            
-            # 4 catégories distinctes sans doublons
-            requested_categories = ["ROCK", "POP", "HITS", "HIP HOP"]
-            selected = []
-            used_ids = []
-            used_categories = []
-            
-            if category_column_exists
-              # D'abord, essayer de prendre une playlist de chaque catégorie demandée
-              requested_categories.each do |cat|
-                pl = Playlist.where("upper(category) = ?", cat).where.not(id: used_ids).first
-                if pl && pl.category.present? && !used_categories.include?(pl.category.upcase)
-                  selected << pl
-                  used_ids << pl.id
-                  used_categories << pl.category.upcase
-                end
-              end
-              
-              # Si on n'a pas 4 playlists, compléter avec d'autres catégories
-              if selected.size < 4
-                remaining = 4 - selected.size
-                fallback_playlists = Playlist.where.not(id: used_ids)
-                                            .where.not("upper(category) IN (?)", used_categories)
-                                            .limit(remaining)
-                
-                fallback_playlists.each do |pl|
-                  selected << pl
-                  used_ids << pl.id
-                  used_categories << (pl.category&.upcase || 'OTHER')
-                end
-              end
-            else
-              # Si category n'existe pas, prendre simplement 4 playlists
-              selected = Playlist.limit(4).to_a
-            end
-            
-            real_playlists = selected
-          rescue => e
-            Rails.logger.error "Erreur lors de la récupération des playlists: #{e.message}"
-            real_playlists = []
-          end
-        %>
-        <% if real_playlists.any? %>
-          <% real_playlists.each do |playlist| %>
-          <div class="playlist-item-home">
-            <div class="text-center mb-2">
-              <div class="playlist-category-title"><%= (playlist.respond_to?(:category) && playlist.category.presence) ? playlist.category.upcase : (playlist.genre.presence || 'HITS').upcase %></div>
-            </div>
-            <% 
-              # Pour Futurs Hits, utiliser la 2ème vidéo valide si disponible
-              if playlist.title&.include?("Futurs Hits")
-                valid_videos = playlist.videos.select { |v| v.youtube_id.present? && v.youtube_id.length >= 10 && !v.youtube_id.start_with?('-') }
-                video_with_id = valid_videos.size > 1 ? valid_videos[1] : valid_videos.first
-                thumbnail_id = video_with_id&.youtube_id
-              else
-                # Pour les autres playlists, utiliser la méthode valid_thumbnail_id
-                thumbnail_id = playlist.valid_thumbnail_id
-              end
-            %>
-            <div class="playlist-image-container">
-              <% if thumbnail_id %>
-                <img src="https://img.youtube.com/vi/<%= thumbnail_id %>/hqdefault.jpg" 
-                     alt="<%= playlist.title %>" 
-                     class="playlist-thumbnail"
-                     onerror="this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/mqdefault.jpg'; this.onerror=function(){this.onerror=null; this.src='https://img.youtube.com/vi/<%= thumbnail_id %>/default.jpg'; this.onerror=function(){this.style.display='none'; this.nextElementSibling.style.display='flex';};};">
-                <div class="playlist-fallback" style="display: none;">
-                  <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
-                  <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                  <p class="text-white/80 text-sm"><%= t('home.tracks', count: playlist.videos.count) %></p>
-                </div>
-              <% else %>
-                <div class="playlist-fallback">
-                  <svg class="w-20 h-20 text-gray-400 mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5.14v14l11-7-11-7z"/></svg>
-                  <h3 class="text-white text-lg font-bold"><%= playlist.title %></h3>
-                  <p class="text-white/80 text-sm"><%= t('home.tracks', count: playlist.videos.count) %></p>
-                </div>
-              <% end %>
-              
-              <!-- Overlay dégradé supprimé pour un rendu uniforme -->
-              
-              <!-- Titre retiré de l'overlay; affiché au-dessus -->
-
-              <!-- Bouton JOUER -->
-              <div class="playlist-button-overlay">
-                <div class="playlist-button-container">
-                  <% if user_signed_in? %>
-                    <%= link_to t('playlists.play'), new_playlist_game_path_with_locale(playlist), class: 'playlist-play-button' %>
-                  <% else %>
-                    <%= link_to t('playlists.play'), new_user_session_path, class: 'playlist-play-button' %>
-                  <% end %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% end %>
-        <% else %>
-          <!-- Message si aucune playlist n'est disponible -->
-          <div class="text-center text-gray-400 py-8 col-span-2">
-            <p>Les playlists seront disponibles prochainement</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section Badges avec vrais badges du jeu -->
-  <div class="py-20 pb-32 bg-gradient-to-r from-yellow-600/20 to-orange-600/20 legacy-home-section">
-    <div class="max-w-7xl mx-auto px-4" style="margin-bottom: 20px;">
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.collect_badges') %></h2>
-      </div>
-      
-      <!-- Vrais badges du jeu avec format identique à la page badges -->
-      <div class="badge-container-home">
-        <% 
-          # Vérifier si la table badges existe
-          badges_table_exists = ActiveRecord::Base.connection.table_exists?('badges')
-          if badges_table_exists
-            real_badges = Badge.limit(4)
-          else
-            real_badges = []
-          end
-        %>
-        <% if real_badges.any? %>
-          <% real_badges.each do |badge| %>
-          <% 
-            badge_class = "badge-card-home #{badge.badge_type}"
-            badge_class += " bronze" if badge.level == "bronze"
-            badge_class += " silver" if badge.level == "silver"
-            badge_class += " gold" if badge.level == "gold"
-          %>
-          <div class="<%= badge_class %>">
-            <div class="badge-icon-home">
-              <% case badge.badge_type %>
-              <% when "competitor" %>
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                </svg>
-              <% when "engager" %>
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd"></path>
-                </svg>
-              <% when "critic" %>
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"></path>
-                </svg>
-              <% when "challenger" %>
-                <svg fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z"></path>
-                </svg>
-              <% end %>
-            </div>
-            <div class="badge-name-home"><%= badge.name %></div>
-            <div class="badge-level-home"><%= badge.level.upcase %></div>
-            <div class="badge-points-home"><%= t('badges.points_label', count: badge.points_required) %></div>
-          </div>
-          <% end %>
-        <% else %>
-          <!-- Message si aucun badge n'est disponible -->
-          <div class="text-center text-gray-400 py-8">
-            <p>Les badges seront disponibles prochainement</p>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section Récompenses avec vraies récompenses du jeu -->
-  <div class="pt-32 pb-32 bg-gray-900/80 legacy-home-section">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.unlock_rewards') %></h2>
-      </div>
-      
-      <!-- Quatre récompenses avec cartes Proposition 3 - une par rangée -->
-      <div class="rewards-grid-home" style="display: flex; flex-direction: column; gap: 2rem; max-width: 500px; margin: 0 auto;">
-        <% 
-          # Utiliser les mêmes données que dans les autres sections
-          reward_types = [
-            { 
-              quantity: 3, 
-              level: 'challenge', 
-              color: 'from-yellow-400 to-yellow-600', 
-              icon: '🥉',
-              content: t('rewards.descriptions.challenge'),
-              visual: 'https://img.youtube.com/vi/qB7kLilZWwg/maxresdefault.jpg'
-            },
-            { 
-              quantity: 6, 
-              level: 'exclusif', 
-              color: 'from-gray-400 to-gray-600', 
-              icon: '🥈',
-              content: t('rewards.descriptions.exclusif'),
-              visual: 'https://img.youtube.com/vi/9ECNWJ1R0fg/maxresdefault.jpg'
-            },
-            { 
-              quantity: 9, 
-              level: 'premium', 
-              color: 'from-orange-400 to-orange-600', 
-              icon: '🥇',
-              content: t('rewards.descriptions.premium'),
-              visual: get_premium_preview_image
-            },
-            { 
-              quantity: 12, 
-              level: 'ultime', 
-              color: 'from-pink-400 to-purple-600', 
-              icon: '🌈',
-              content: t('rewards.descriptions.ultime'),
-              visual: get_ultime_preview_image
-            }
-          ]
-        %>
-        
-        <% reward_types.each do |reward_info| %>
-          <% 
-            # Créer un hash temporaire pour le helper - simuler comme débloqué pour la démo
-            temp_reward = {
-              reward_type: reward_info[:level],
-              unlocked: false, # Verrouillées pour la démo sur la homepage
-              quantity_required: reward_info[:quantity],
-              reward_description: reward_info[:content]
-            }
-          %>
-          <div style="width: 100%;">
-          <%= unified_reward_card(temp_reward, disable_actions: true) %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-  </div>
-
-  <!-- Section Boutique avec vrais produits -->
-  <div class="pt-32 pb-32 bg-gradient-to-r from-purple-600/20 to-blue-600/20 legacy-home-section">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-16">
-        <h2 class="text-5xl font-bold text-white mb-4"><%= t('home.shop.title') %></h2>
-      </div>
-      
-      <!-- Quatre produits boutique avec vrais visuels -->
-      <div class="shop-visual-container">
-        <!-- Pack 1000 Points -->
-        <div class="shop-visual-card">
-          <div class="shop-visual-section" style="background-image: url('/assets/store/lovepik.png');">
-            <div class="shop-visual-content">
-              <h3 class="shop-visual-title"><%= t('home.shop.pack_1000') %></h3>
-              <p class="shop-visual-price">3.99 €</p>
-            </div>
-          </div>
-          <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">💰 <%= t('home.shop.buy_now') %></button>
-          </div>
-        </div>
-
-        <!-- Pack 5000 Points -->
-        <div class="shop-visual-card">
-          <div class="shop-visual-section" style="background-image: url('/assets/store/trove_of_coins.png');">
-            <div class="shop-visual-content">
-              <h3 class="shop-visual-title"><%= t('home.shop.pack_5000') %></h3>
-              <p class="shop-visual-price">4.99 €</p>
-            </div>
-          </div>
-          <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">💰 <%= t('home.shop.buy_now') %></button>
-          </div>
-        </div>
-
-        <!-- Abonnement VIP -->
-        <div class="shop-visual-card">
-          <div class="shop-visual-section" style="background-image: url('/assets/store/6070880.jpg');">
-            <div class="shop-visual-content">
-              <h3 class="shop-visual-title"><%= t('home.shop.vip_subscription') %></h3>
-              <p class="shop-visual-price">9.99 €</p>
-            </div>
-          </div>
-          <div class="shop-bottom-section" style="background-color: #F59E0B;">
-            <button class="shop-buy-btn">👑 <%= t('home.shop.subscribe_now') %></button>
-          </div>
-        </div>
-
-        <!-- Achat Playlist -->
-        <div class="shop-visual-card">
-          <div class="shop-visual-section" style="background-image: url('https://img.youtube.com/vi/0tJz8JjPbHU/hqdefault.jpg');">
-            <div class="shop-visual-content">
-              <h3 class="shop-visual-title"><%= t('home.shop.premium_playlist') %></h3>
-              <p class="shop-visual-price">500 points</p>
-            </div>
-          </div>
-          <div class="shop-bottom-section" style="background-color: #06B6D4;">
-            <button class="shop-buy-btn">🎶 <%= t('home.shop.playlist_buy') %></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CTA Final Immersif -->
-  <div class="py-32 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 relative overflow-hidden">
-    <!-- Background simplifié -->
-    <div class="absolute inset-0 bg-gradient-to-r from-purple-600/80 via-blue-600/80 to-cyan-600/80"></div>
-    
-    <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
-      <h2 class="text-6xl font-bold text-white mb-8 drop-shadow-2xl">
-        <%= t('home.final_cta_title') %>
-      </h2>
-      
-      <% if user_signed_in? %>
-        <%= link_to playlists_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          <%= t('home.final_cta_button') %>
-        <% end %>
-      <% else %>
-        <%= link_to new_user_registration_path, class: "bg-white text-purple-600 hover:bg-gray-100 px-8 py-3 rounded-full text-base font-bold transition-all transform hover:scale-110 shadow-2xl" do %>
-          <%= t('home.final_cta_button') %>
-        <% end %>
-      <% end %>
-    </div>
-  </div>
-
-  <!-- Footer minimaliste - caché sur la homepage -->
-  <div class="bg-gray-900 py-8" style="display: none;">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-      <div class="flex items-center">
-        <%= image_tag "Logo/Copilot_20251006_162220.png", alt: "Tube'NPlay", class: "w-8 h-8 mr-2 object-contain" %>
-        <span class="text-white text-xl font-bold">Tube'<span style="color: #9333ea;">N</span>Play</span>
-      </div>
-      
-      <div class="flex space-x-6 text-gray-400">
-        <% if user_signed_in? %>
-          <%= link_to t('playlists.play'), playlists_path, class: "hover:text-white transition-colors" %>
-          <%= link_to t('scores.title'), scores_path, class: "hover:text-white transition-colors" %>
-          <%= link_to "🎉 #{t('home.animations_demo')}", reward_animations_demo_path, class: "hover:text-white transition-colors" %>
-        <% else %>
-          <%= link_to t('nav.sign_in'), new_user_session_path, class: "hover:text-white transition-colors" %>
-          <%= link_to t('nav.sign_up'), new_user_registration_path, class: "hover:text-white transition-colors" %>
-        <% end %>
-      </div>
-    </div>
-  </div>
+  </section>
 </div>
-
-<style>
-  .legacy-home-section {
-    display: none !important;
-  }
-
-  /* Grille home pour 2 colonnes fixes, comme la page playlists */
-  .playlists-grid-home {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem; /* légèrement plus grand */
-  }
-  .playlist-item-home {
-    display: block;
-    height: 100%;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .playlist-item-home:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  .playlist-category-title {
-    color: #7c3aed; /* violet */
-    font-size: 1.25rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-  }
-  
-  /* Styles pour les cartes playlist home - format uniforme */
-  .playlist-image-container {
-    position: relative;
-    width: 100%;
-    height: 20rem;
-    overflow: hidden;
-    border-radius: 0.5rem;
-    background-color: #000;
-  }
-  
-  .playlist-thumbnail {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-  
-  /* Style spécifique supprimé - on utilise une autre image maintenant */
-  
-  .playlist-fallback {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #4b5563, #1f2937);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  
-  /* Overlay supprimé pour un rendu uniforme des images */
-  
-  /* Overlay de titre supprimé pour la home */
-  
-  .playlist-category-text-simple {
-    color: #7c3aed; /* violet comme le logo jouer */
-    font-size: 1.875rem;
-    font-weight: 900;
-    letter-spacing: 0.1em;
-    text-align: center;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
-  }
-  
-  .playlist-button-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 15;
-  }
-  
-  .playlist-button-container {
-    width: 100%;
-    padding: 1rem 1rem 1rem 1rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.3), transparent);
-    display: flex;
-    justify-content: center;
-  }
-  
-  .playlist-play-button {
-    background: #7c3aed;
-    color: white;
-    padding: 0.75rem 2rem;
-    border-radius: 9999px;
-    font-weight: 900;
-    font-size: 1rem;
-    text-decoration: none;
-    border: 2px solid #a855f7;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
-  }
-  
-  .playlist-play-button:hover {
-    background: #6d28d9;
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-  }
-  /* Styles pour les badges dans la section homepage */
-  .badge-container-home {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .badge-card-home {
-    border-radius: 0.75rem;
-    padding: 1rem;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-align: center;
-    background-position: center;
-    background-size: cover;
-    background-blend-mode: soft-light;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border: 3px solid transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 200px;
-  }
-  
-  .badge-card-home.gold {
-    background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%);
-    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
-    border-color: #ffd700;
-  }
-  
-  .badge-card-home.silver {
-    background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 50%, #c0c0c0 100%);
-    box-shadow: 0 4px 12px rgba(192, 192, 192, 0.6);
-    border-color: #c0c0c0;
-  }
-  
-  .badge-card-home.bronze {
-    background: linear-gradient(135deg, #cd7f32 0%, #e8b27d 50%, #cd7f32 100%);
-    box-shadow: 0 4px 12px rgba(205, 127, 50, 0.6);
-    border-color: #cd7f32;
-  }
-  
-  .badge-icon-home {
-    width: 50px;
-    height: 50px;
-    margin: 0 auto 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    padding: 10px;
-  }
-  
-  .badge-icon-home svg {
-    width: 100%;
-    height: 100%;
-    color: #333;
-  }
-  
-  .badge-name-home {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-  }
-  
-  .badge-level-home {
-    background-color: rgba(255, 255, 255, 0.3);
-    color: #333;
-    font-size: 0.8rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
-    padding: 2px 8px;
-    display: inline-block;
-  }
-  
-  .badge-points-home {
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    font-size: 0.8rem;
-    font-weight: bold;
-    border-radius: 10px;
-    padding: 2px 8px;
-    display: inline-block;
-  }
-  
-  .badge-card-home:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  
-  /* Styles spécifiques par type */
-  .badge-card-home.competitor {
-    border-color: #ff9800;
-  }
-  
-  .badge-card-home.engager {
-    border-color: #2196f3;
-  }
-  
-  .badge-card-home.critic {
-    border-color: #f44336;
-  }
-  
-  .badge-card-home.challenger {
-    border-color: #9c27b0;
-  }
-
-  /* Styles pour les récompenses unifiées - maintenant gérés par le helper unified_reward_card */
-
-  /* Styles pour les vrais visuels de boutique */
-  .shop-visual-container {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .shop-visual-card {
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    height: 280px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .shop-visual-card:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  
-  .shop-visual-section {
-    position: relative;
-    height: 160px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 0.75rem;
-    flex-shrink: 0;
-  }
-  
-  .shop-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-  }
-  
-  .shop-visual-content {
-    position: relative;
-    z-index: 2;
-    color: white;
-  }
-  
-  .shop-visual-title {
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0 0 0.2rem 0;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-  
-  .shop-visual-price {
-    font-size: 0.9rem;
-    margin: 0;
-    opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-    color: #FDE047;
-  }
-  
-  .shop-bottom-section {
-    padding: 0.75rem;
-    color: white;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .shop-buy-btn {
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.4rem;
-    font-size: 0.75rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .shop-buy-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .badge-name {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 0.25rem;
-    text-shadow: 0px 1px 2px rgba(255, 255, 255, 0.8);
-  }
-  
-  .badge-level {
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #555;
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 10px;
-    padding: 2px 8px;
-    display: inline-block;
-    margin-bottom: 0.5rem;
-  }
-  
-  .badge-points {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    padding: 2px 8px;
-    display: inline-block;
-  }
-  
-  .badge-card:hover {
-    transform: translateY(-8px) scale(1.05);
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-  }
-  
-  /* Styles spécifiques par type */
-  .badge-card.competitor {
-    border-color: #ff9800;
-  }
-  
-  .badge-card.engager {
-    border-color: #2196f3;
-  }
-  
-  .badge-card.critic {
-    border-color: #f44336;
-  }
-  
-  .badge-card.challenger {
-    border-color: #9c27b0;
-  }
-</style>
-
-<style>
-  /* Animations avancées */
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-  }
-  
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-    50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.8); }
-  }
-  
-  .animate-float {
-    animation: float 4s ease-in-out infinite;
-  }
-  
-  .animate-glow {
-    animation: glow 2s ease-in-out infinite;
-  }
-</style>
