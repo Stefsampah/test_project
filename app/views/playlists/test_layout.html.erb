@@ -1,97 +1,123 @@
-<div class="min-h-screen bg-[#f5f5f7] text-[#161616] pb-24">
+<div class="min-h-screen bg-[#121214] text-white pb-24">
   <div class="mx-auto max-w-md px-4 pt-6">
-    <header class="mb-6 flex items-center justify-between">
-      <h1 class="text-4xl font-extrabold tracking-tight text-[#8b5cf6]">Discover</h1>
-      <div class="h-11 w-11 rounded-full bg-white shadow-sm ring-1 ring-black/5 flex items-center justify-center text-[#8b5cf6]">
-        <span class="text-xl">◉</span>
-      </div>
+    <header class="mb-8 flex items-center justify-between">
+      <h1 class="text-4xl font-extrabold tracking-tight text-[#a855f7]">Discover</h1>
+      <% if user_signed_in? %>
+        <%= link_to profile_path, class: "block h-[30px] w-[30px] shrink-0 overflow-hidden rounded-full bg-white/10 ring-2 ring-[#a855f7]/40 shadow-md" do %>
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar,
+                          size: "30x30",
+                          class: "block h-[30px] w-[30px] max-w-none rounded-full object-cover object-[center_20%]",
+                          alt: "" %>
+          <% else %>
+            <span class="flex h-[30px] w-[30px] items-center justify-center text-sm font-black text-[#c4b5fd]">
+              <%= current_user.email.to_s.first&.upcase || "?" %>
+            </span>
+          <% end %>
+        <% end %>
+      <% else %>
+        <%= link_to new_user_session_path, class: "flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-full bg-white/10 text-sm text-[#c4b5fd] ring-2 ring-[#a855f7]/30" do %>
+          ◉
+        <% end %>
+      <% end %>
     </header>
 
-    <section class="mb-7">
-      <div class="mb-3 flex items-center justify-between">
-        <a href="<%= playlists_path %>" class="inline-flex items-center gap-1 text-4xl font-black text-[#111111] hover:text-[#6b21a8] transition">
-          <span>Categories</span>
-          <span class="text-3xl font-black">›</span>
-        </a>
+    <section class="mb-12">
+      <div class="mb-5 flex items-end justify-between gap-3">
+        <h2 class="text-2xl font-black tracking-tight text-white">Categories</h2>
+        <%= link_to playlists_test_categories_path, class: "shrink-0 text-sm font-semibold text-white/90 underline decoration-[#a855f7]/80 underline-offset-4 hover:text-[#e9d5ff]" do %>
+          Voir tout
+        <% end %>
       </div>
 
       <div class="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-        <% featured_category = @featured_playlist&.category.presence || @categories.first || "Discover" %>
+        <% featured_category = @featured_playlist&.category.to_s.strip.presence || @categories.first || "—" %>
         <% featured_thumb = @featured_playlist&.valid_thumbnail_id %>
         <a href="<%= playlists_test_category_path(category: featured_category) %>"
-           class="relative block shrink-0 overflow-hidden rounded-2xl bg-black shadow-[0_12px_28px_rgba(0,0,0,0.18)]"
-           style="width: 70%;">
-          <div class="h-[177px] w-full">
+           class="discover-card-category flex shrink-0 flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/5"
+           style="width: 277px; height: 184px; min-width: 277px; min-height: 184px; border-radius: 14px;">
+          <div class="relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
             <% if featured_thumb.present? %>
               <img src="https://img.youtube.com/vi/<%= featured_thumb %>/hqdefault.jpg"
-                   alt="<%= featured_category %>"
-                   class="h-full w-full object-cover"
+                   alt=""
+                   class="playlist-card-media"
                    loading="lazy"
                    onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= featured_thumb %>/mqdefault.jpg';">
             <% else %>
-              <div class="h-full w-full bg-gradient-to-br from-[#334155] to-[#0f172a]"></div>
+              <div class="absolute inset-0 bg-gradient-to-br from-[#334155] to-[#0f172a]"></div>
             <% end %>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent"></div>
-            <div class="absolute left-4 bottom-4 right-4">
-              <p class="text-5xl font-black text-white leading-none truncate drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"><%= featured_category %></p>
-            </div>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
+          </div>
+          <div class="relative z-10 shrink-0 border-t border-white/10 bg-zinc-950/95 px-2 py-2 text-center">
+            <p class="line-clamp-2 text-sm font-bold leading-tight text-white"><%= featured_category %></p>
           </div>
         </a>
 
-        <% next_category = (@categories - [featured_category]).first || featured_category %>
-        <% next_playlist = @playlists_test.find { |p| p.category == next_category } || @playlists_test.first %>
-        <% next_thumb = next_playlist&.valid_thumbnail_id %>
-        <a href="<%= playlists_test_category_path(category: next_category) %>"
-           class="relative block shrink-0 overflow-hidden rounded-2xl bg-black shadow-[0_12px_28px_rgba(0,0,0,0.18)]"
-           style="width: 70%;">
-          <div class="h-[177px] w-full">
-            <% if next_thumb.present? %>
-              <img src="https://img.youtube.com/vi/<%= next_thumb %>/hqdefault.jpg"
-                   alt="<%= next_category %>"
-                   class="h-full w-full object-cover"
-                   loading="lazy"
-                   onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= next_thumb %>/mqdefault.jpg';">
-            <% else %>
-              <div class="h-full w-full bg-gradient-to-br from-[#374151] to-[#111827]"></div>
-            <% end %>
-            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent"></div>
-            <div class="absolute left-4 bottom-4 right-4">
-              <p class="text-4xl font-black text-white leading-none truncate drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"><%= next_category %></p>
+        <% next_category = (@categories - [featured_category]).first %>
+        <% if next_category.present? %>
+          <% next_playlist = @playlists_test.find { |p| p.category.to_s.strip == next_category } %>
+          <% next_thumb = next_playlist&.valid_thumbnail_id %>
+          <a href="<%= playlists_test_category_path(category: next_category) %>"
+             class="discover-card-category flex shrink-0 flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/5"
+             style="width: 277px; height: 184px; min-width: 277px; min-height: 184px; border-radius: 14px;">
+            <div class="relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
+              <% if next_thumb.present? %>
+                <img src="https://img.youtube.com/vi/<%= next_thumb %>/hqdefault.jpg"
+                     alt=""
+                     class="playlist-card-media"
+                     loading="lazy"
+                     onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= next_thumb %>/mqdefault.jpg';">
+              <% else %>
+                <div class="absolute inset-0 bg-gradient-to-br from-[#374151] to-[#111827]"></div>
+              <% end %>
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
             </div>
-          </div>
+            <div class="relative z-10 shrink-0 border-t border-white/10 bg-zinc-950/95 px-2 py-2 text-center">
+              <p class="line-clamp-2 text-sm font-bold leading-tight text-white"><%= next_category %></p>
+            </div>
+          </a>
+        <% end %>
+
+        <a href="<%= playlists_test_categories_path %>"
+           class="relative flex shrink-0 flex-col items-center justify-center gap-2 rounded-[14px] bg-gradient-to-br from-[#6b21a8]/90 to-[#1e1b4b] text-center shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/10"
+           style="width: 277px; height: 184px; min-width: 277px; min-height: 184px; border-radius: 14px;">
+          <span class="text-lg font-black text-white">Voir tout</span>
+          <span class="px-3 text-xs font-semibold text-white/75">Toutes les catégories</span>
         </a>
       </div>
     </section>
 
-    <section class="mb-7">
-      <div class="mb-3 flex items-center justify-between">
-        <a href="<%= playlists_path %>" class="inline-flex items-center gap-1 text-4xl font-black text-[#111111] hover:text-[#6b21a8] transition">
-          <span>Trending Right Now</span>
-          <span class="text-3xl font-black">›</span>
-        </a>
+    <section class="mb-10">
+      <div class="mb-10 flex items-end justify-between gap-3">
+        <h2 class="text-2xl font-black tracking-tight text-white">Trending Right Now</h2>
+        <%= link_to playlists_test_trending_path, class: "shrink-0 text-sm font-semibold text-white/90 underline decoration-[#a855f7]/80 underline-offset-4 hover:text-[#e9d5ff]" do %>
+          Voir tout
+        <% end %>
       </div>
-      <div class="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
-        <% @trending_playlists.first(4).each do |playlist| %>
+
+      <div class="flex gap-3 overflow-x-auto pb-1 pt-1 no-scrollbar">
+        <% @trending_playlists.first(6).each do |playlist| %>
           <% first_video = playlist.videos.first %>
           <% thumb_id = playlist.valid_thumbnail_id %>
-          <% artist_name = first_video&.title.to_s.split("-").first.to_s.strip.presence || playlist.title %>
+          <% raw_title = first_video&.title.to_s.strip %>
+          <% artist_name = (raw_title.present? ? raw_title.split(/ [-–—] /).first.to_s.strip.presence : nil) || playlist.title.to_s.strip.presence || "Playlist" %>
           <a href="<%= user_signed_in? ? new_playlist_game_path_with_locale(playlist) : new_user_session_path %>"
-             class="relative block shrink-0 overflow-hidden rounded-2xl bg-white shadow-[0_10px_22px_rgba(0,0,0,0.12)]"
-             style="width: 70%;">
-            <div class="h-[177px] w-full">
+             class="discover-card-trending flex shrink-0 flex-col overflow-hidden rounded-[14px] bg-zinc-800 shadow-[0_10px_22px_rgba(0,0,0,0.35)] ring-1 ring-white/5"
+             style="width: 210px; height: 188px; min-width: 210px; min-height: 188px; border-radius: 14px;">
+            <div class="relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
               <% if thumb_id.present? %>
                 <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg"
-                     alt="<%= playlist.title %>"
-                     class="h-full w-full object-cover"
+                     alt=""
+                     class="playlist-card-media"
                      loading="lazy"
                      onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= thumb_id %>/mqdefault.jpg';">
               <% else %>
-                <div class="h-full w-full bg-gray-300"></div>
+                <div class="absolute inset-0 bg-zinc-600"></div>
               <% end %>
-              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              <div class="absolute left-4 bottom-3 right-3">
-                <p class="truncate text-3xl font-black text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"><%= artist_name %></p>
-              </div>
+              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"></div>
+            </div>
+            <div class="relative z-10 shrink-0 border-t border-white/10 bg-zinc-950/95 px-2 py-2 text-center">
+              <p class="line-clamp-2 text-xs font-bold leading-tight text-white"><%= artist_name %></p>
             </div>
           </a>
         <% end %>

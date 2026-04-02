@@ -1,5 +1,5 @@
 class PlaylistsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :test_layout, :test_category]
+  before_action :authenticate_user!, except: [:index, :show, :test_layout, :test_category, :test_categories_all, :test_trending_all]
 
   def index
     # Scope unique: toutes les playlists jouables (plus de distinction premium/exclusive côté gameplay)
@@ -49,20 +49,41 @@ class PlaylistsController < ApplicationController
   end
 
   def test_layout
-    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos).order(:id)
-    @playlists_test = base_scope.to_a
+    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos)
+    @playlists_test = base_scope.order(:id).to_a
 
     @featured_playlist = @playlists_test.find { |p| p.category.to_s.downcase.include?("decouvrir") } || @playlists_test.first
-    trending_pool = @playlists_test.reject { |p| @featured_playlist && p.id == @featured_playlist.id }
-    @trending_playlists = trending_pool.shuffle.first(6)
+    trending_scope = base_scope.order(created_at: :desc)
+    exclude_id = @featured_playlist&.id
+    @trending_playlists =
+      if exclude_id.present?
+        trending_scope.where.not(id: exclude_id).limit(8).to_a
+      else
+        trending_scope.limit(8).to_a
+      end
 
     categories = @playlists_test.map { |p| p.category.to_s.strip }.reject(&:blank?).uniq
-    @categories = categories
+    @categories = categories.sort
+  end
+
+  def test_categories_all
+    base = Playlist.where(hidden: [false, nil]).includes(:videos)
+    category_names = base.pluck(:category).map { |c| c.to_s.strip }.reject(&:blank?).uniq.sort
+    @category_rows = category_names.filter_map do |cat|
+      sample = base.where(category: cat).order(created_at: :desc).first
+      next unless sample
+
+      { category: cat, playlist: sample }
+    end
+  end
+
+  def test_trending_all
+    @trending_playlists = Playlist.where(hidden: [false, nil]).includes(:videos).order(created_at: :desc).limit(10).to_a
   end
 
   def test_category
-    @category_name = params[:category].to_s
-    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos).order(:id)
+    @category_name = params[:category].to_s.strip
+    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos).order(created_at: :desc)
     @category_playlists =
       if @category_name.casecmp("Toutes").zero?
         base_scope.to_a

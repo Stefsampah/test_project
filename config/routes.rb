@@ -42,6 +42,8 @@ Rails.application.routes.draw do
 
   get 'playlists', to: 'playlists#index'
   get 'playlists-test', to: 'playlists#test_layout', as: :playlists_test
+  get 'playlists-test/categories', to: 'playlists#test_categories_all', as: :playlists_test_categories
+  get 'playlists-test/trending', to: 'playlists#test_trending_all', as: :playlists_test_trending
   get 'playlists-test/category/:category', to: 'playlists#test_category', as: :playlists_test_category
   resources :playlists, only: [:show] do
     resources :games, only: [:new, :create, :show] do

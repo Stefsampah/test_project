@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-[#121214] pb-24 text-white">
+  <div class="mx-auto max-w-md px-4 pt-6">
+    <div class="mb-6 flex items-center gap-3">
+      <%= link_to playlists_test_path, class: "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl text-[#c4b5fd] ring-1 ring-white/10" do %>
+        ‹
+      <% end %>
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wide text-[#a855f7]">Categories</p>
+        <h1 class="text-2xl font-black">Toutes les catégories</h1>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <% @category_rows.each do |row| %>
+        <% cat = row[:category] %>
+        <% pl = row[:playlist] %>
+        <% thumb_id = pl&.valid_thumbnail_id %>
+        <%= link_to playlists_test_category_path(category: cat),
+                    class: "flex aspect-square flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:ring-[#a855f7]/40" do %>
+          <div class="relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
+            <% if thumb_id.present? %>
+              <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg"
+                   alt=""
+                   class="playlist-card-media"
+                   loading="lazy"
+                   onerror="this.onerror=null;this.src='https://img.youtube.com/vi/<%= thumb_id %>/mqdefault.jpg';">
+            <% else %>
+              <div class="absolute inset-0 bg-zinc-700"></div>
+            <% end %>
+          </div>
+          <div class="flex shrink-0 items-center justify-center px-2 py-2.5 text-center">
+            <p class="line-clamp-2 text-center text-sm font-bold leading-tight text-white"><%= cat %></p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <% if @category_rows.blank? %>
+      <p class="mt-8 rounded-2xl bg-zinc-900 p-4 text-sm text-white/70 ring-1 ring-white/10">Aucune catégorie pour le moment.</p>
+    <% end %>
+  </div>
+</div>
