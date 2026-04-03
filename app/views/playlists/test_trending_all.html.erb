@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-[#121214] pb-24 text-white">
   <div class="mx-auto max-w-md px-4 pt-6">
     <div class="mb-6 flex items-center gap-3">
-      <%= link_to playlists_test_path, class: "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl text-[#c4b5fd] ring-1 ring-white/10" do %>
+      <%= link_to playlists_path, class: "inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl text-[#c4b5fd] ring-1 ring-white/10" do %>
         ‹
       <% end %>
       <div>
@@ -16,7 +16,7 @@
         <% thumb_id = playlist.valid_thumbnail_id %>
         <% artist_name = first_video&.title.to_s.split("-").first.to_s.strip.presence || playlist.title %>
         <%= link_to(user_signed_in? ? new_playlist_game_path_with_locale(playlist) : new_user_session_path,
-                    class: "flex flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_10px_22px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:ring-[#a855f7]/40") do %>
+                    class: "relative flex flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_10px_22px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:ring-[#a855f7]/40") do %>
           <div class="relative aspect-video w-full shrink-0 overflow-hidden">
             <% if thumb_id.present? %>
               <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg" alt="" class="playlist-card-media" loading="lazy"
@@ -28,6 +28,7 @@
           <div class="flex shrink-0 items-center justify-center px-2 py-2 text-center">
             <p class="line-clamp-2 text-center text-sm font-semibold leading-tight text-white"><%= artist_name %></p>
           </div>
+          <%= render "played_badge", playlist: playlist %>
         <% end %>
       <% end %>
     </div>

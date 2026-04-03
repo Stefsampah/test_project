@@ -1,41 +1,22 @@
+require "set"
+
 class PlaylistsController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :test_layout, :test_category, :test_categories_all, :test_trending_all]
+  before_action :authenticate_user!, except: [:index, :show, :test_categories_all, :test_trending_all, :test_category]
+  before_action :set_played_playlist_ids, only: [:test_trending_all, :test_category]
 
   def index
-    # Scope unique: toutes les playlists jouables (plus de distinction premium/exclusive côté gameplay)
-    playable_scope = Playlist.where(hidden: [false, nil]).order(:category, :subcategory, :id)
-
-    if user_signed_in?
-      played_playlist_ids = current_user.scores.pluck(:playlist_id)
-      unplayed = playable_scope.where.not(id: played_playlist_ids).to_a
-      played = playable_scope.where(id: played_playlist_ids).to_a
-      ordered = unplayed + played
-      @standard_playlists = FeedPlaylistsService.feed_60_40(current_user, ordered)
-    else
-      @standard_playlists = playable_scope.to_a
-    end
-
-    # Variables conservées pour compat de la vue (désormais vides)
-    @premium_playlists = []
-    @exclusive_playlists = []
-    @unlocked_playlists = []
-    @unlocked_exclusive_playlists = []
-    @premium_by_category = {}
-    @unlocked_by_category = {}
-    @exclusive_by_category = {}
-
-    @standard_by_category = @standard_playlists.group_by(&:category)
+    load_discover_data
   end
 
   def show
     @playlist = Playlist.find(params[:id])
-    
+
     # Empêcher l'accès aux playlists cachées uniquement
     if @playlist.hidden?
       redirect_to playlists_path, alert: "Cette playlist n'est pas accessible."
       return
     end
-    
+
     # Récupérer les vidéos non encore swipées par l'utilisateur s'il est connecté
     if user_signed_in?
       swiped_video_ids = current_user.swipes.where(playlist: @playlist).pluck(:video_id)
@@ -43,27 +24,25 @@ class PlaylistsController < ApplicationController
     else
       @current_video = @playlist.videos.first
     end
-    
+
     # Utiliser le layout spécial pour les shorts
-    render layout: 'shorts'
+    render layout: "shorts"
   end
 
-  def test_layout
-    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos)
-    @playlists_test = base_scope.order(:id).to_a
+  def redirect_legacy_playlists_test
+    redirect_to playlists_path, status: :moved_permanently
+  end
 
-    @featured_playlist = @playlists_test.find { |p| p.category.to_s.downcase.include?("decouvrir") } || @playlists_test.first
-    trending_scope = base_scope.order(created_at: :desc)
-    exclude_id = @featured_playlist&.id
-    @trending_playlists =
-      if exclude_id.present?
-        trending_scope.where.not(id: exclude_id).limit(8).to_a
-      else
-        trending_scope.limit(8).to_a
-      end
+  def redirect_legacy_playlists_test_categories
+    redirect_to playlists_categories_path, status: :moved_permanently
+  end
 
-    categories = @playlists_test.map { |p| p.category.to_s.strip }.reject(&:blank?).uniq
-    @categories = categories.sort
+  def redirect_legacy_playlists_test_trending
+    redirect_to playlists_trending_path, status: :moved_permanently
+  end
+
+  def redirect_legacy_playlists_test_category
+    redirect_to playlists_category_path(category: params[:category]), status: :moved_permanently
   end
 
   def test_categories_all
@@ -89,6 +68,35 @@ class PlaylistsController < ApplicationController
         base_scope.to_a
       else
         base_scope.where(category: @category_name).to_a
+      end
+  end
+
+  private
+
+  def load_discover_data
+    base_scope = Playlist.where(hidden: [false, nil]).includes(:videos)
+    @playlists_test = base_scope.order(:id).to_a
+
+    @featured_playlist = @playlists_test.find { |p| p.category.to_s.downcase.include?("decouvrir") } || @playlists_test.first
+    trending_scope = base_scope.order(created_at: :desc)
+    exclude_id = @featured_playlist&.id
+    @trending_playlists =
+      if exclude_id.present?
+        trending_scope.where.not(id: exclude_id).limit(8).to_a
+      else
+        trending_scope.limit(8).to_a
+      end
+
+    categories = @playlists_test.map { |p| p.category.to_s.strip }.reject(&:blank?).uniq
+    @categories = categories.sort
+  end
+
+  def set_played_playlist_ids
+    @played_playlist_ids =
+      if user_signed_in?
+        current_user.scores.distinct.pluck(:playlist_id).to_set
+      else
+        Set.new
       end
   end
 end

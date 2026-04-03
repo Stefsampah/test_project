@@ -40,11 +40,16 @@ Rails.application.routes.draw do
   get 'my_badges', to: 'badges#my_badges'
   get 'all_badges', to: 'badges#all_badges'
 
+  get 'playlists/categories', to: 'playlists#test_categories_all', as: :playlists_categories
+  get 'playlists/trending', to: 'playlists#test_trending_all', as: :playlists_trending
+  get 'playlists/category/:category', to: 'playlists#test_category', as: :playlists_category
   get 'playlists', to: 'playlists#index'
-  get 'playlists-test', to: 'playlists#test_layout', as: :playlists_test
-  get 'playlists-test/categories', to: 'playlists#test_categories_all', as: :playlists_test_categories
-  get 'playlists-test/trending', to: 'playlists#test_trending_all', as: :playlists_test_trending
-  get 'playlists-test/category/:category', to: 'playlists#test_category', as: :playlists_test_category
+
+  get 'playlists-test', to: 'playlists#redirect_legacy_playlists_test'
+  get 'playlists-test/categories', to: 'playlists#redirect_legacy_playlists_test_categories'
+  get 'playlists-test/trending', to: 'playlists#redirect_legacy_playlists_test_trending'
+  get 'playlists-test/category/:category', to: 'playlists#redirect_legacy_playlists_test_category'
+
   resources :playlists, only: [:show] do
     resources :games, only: [:new, :create, :show] do
       member do

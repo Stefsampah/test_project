@@ -1,0 +1,15 @@
+<%# locals: playlist — overlay pleine carte pour playlists déjà jouées %>
+<% if user_signed_in? && defined?(@played_playlist_ids) && @played_playlist_ids.include?(playlist.id) %>
+  <div class="pointer-events-none absolute inset-0 z-[25] flex items-center justify-center overflow-hidden rounded-[14px]"
+       style="border-radius: 14px;"
+       aria-hidden="true">
+    <%# Assombrissement + teinte violet lisible sur toutes les vignettes %>
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-[#7c3aed]/65 via-[#6d28d9]/55 to-[#4c1d95]/65"></div>
+    <div class="absolute inset-0 ring-2 ring-inset ring-[#ddd6fe]/45"></div>
+    <span class="relative z-[1] mx-2 max-w-[min(220px,90%)] rounded-2xl bg-[#1e1b4b]/92 px-3 py-2.5 text-center text-xs font-black uppercase leading-tight tracking-wider text-white shadow-[0_8px_24px_rgba(0,0,0,0.5)] ring-2 ring-[#a78bfa]/70 sm:px-4 sm:text-sm sm:tracking-widest"
+          aria-label="<%= t('playlists.badges.played') %>">
+      <%= t("playlists.badges.played") %>
+    </span>
+  </div>
+<% end %>
