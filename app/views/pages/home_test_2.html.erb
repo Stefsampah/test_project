@@ -1,32 +1,43 @@
-<div class="relative min-h-screen overflow-hidden bg-black text-white">
-  <div class="absolute inset-0">
+<div class="relative min-h-[100svh] overflow-hidden bg-zinc-950 text-white">
+  <%# Dézoom léger + cadrage mi/bas pour voir artiste + foule %>
+  <div class="absolute inset-0 overflow-hidden bg-zinc-950">
     <% begin %>
-      <%= image_tag "concerts/concert_live.png", alt: "", class: "h-full w-full object-cover" %>
+      <%= image_tag "concerts/concert_live.png",
+                    alt: "",
+                    class: "h-full w-full origin-center scale-[0.88] object-cover object-[50%_48%] sm:scale-[0.9] sm:object-[50%_52%]" %>
     <% rescue Sprockets::Rails::Helper::AssetNotFound %>
-      <div class="h-full w-full bg-[radial-gradient(circle_at_30%_20%,#a855f7_0%,#6b21a8_38%,#111827_75%)]"></div>
+      <div class="h-full w-full bg-[radial-gradient(ellipse_120%_80%_at_50%_30%,#c084fc_0%,#7c3aed_35%,#312e81_70%,#0f172a_100%)]"></div>
     <% end %>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/35 via-black/65 to-black"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-zinc-950/35 to-zinc-950/85"></div>
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_18%,rgba(168,85,247,0.12),transparent_60%)]"></div>
   </div>
 
-  <section class="relative z-10 flex min-h-[100svh] items-center">
-    <div class="mx-auto w-full max-w-md px-5 py-10">
-      <h1 class="text-4xl leading-tight font-extrabold text-white mt-2 text-center">
-        Tente ta chance et remporte une place de concert
-      </h1>
-
-      <p class="mt-3 text-center text-sm text-white/85">
-        Une vibe immersive, une progression claire, un seul objectif : ton concert.
-      </p>
-
-      <div class="mt-7 flex flex-col items-center gap-3">
-        <% if user_signed_in? %>
-          <%= link_to t("home.start"), playlists_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl text-center" %>
-          <%= link_to "Voir mon parcours", journey_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
-        <% else %>
-          <%= link_to t("home.start"), new_user_registration_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-white hover:to-white hover:text-purple-600 text-white px-8 py-4 rounded-full text-xl font-bold transition-all transform hover:scale-105 shadow-2xl text-center" %>
-          <%= link_to t("nav.sign_in"), new_user_session_path, class: "w-full max-w-xs inline-flex items-center justify-center rounded-full border border-white/35 bg-white/10 px-6 py-3 text-sm font-bold text-white hover:bg-white/15 transition-all" %>
-        <% end %>
-      </div>
+  <div class="relative z-10 flex min-h-[100svh] flex-col">
+    <div class="flex shrink-0 justify-center px-4 pt-0 sm:pt-1">
+      <% begin %>
+        <%= image_tag "Logo/Copilot_20251006_162220.png",
+                      alt: "Tube'NPlay",
+                      size: "150x150",
+                      class: "h-[150px] w-[150px] max-h-[150px] max-w-[150px] shrink-0 object-contain opacity-[0.96] drop-shadow-[0_0_32px_rgba(168,85,247,0.65)] drop-shadow-[0_0_60px_rgba(139,92,246,0.3)]" %>
+      <% rescue Sprockets::Rails::Helper::AssetNotFound %>
+        <span class="text-2xl font-black tracking-tight text-white drop-shadow-[0_0_20px_rgba(168,85,247,0.85)] sm:text-3xl">Tube'NPlay</span>
+      <% end %>
     </div>
-  </section>
+
+    <%# Titre juste sous le logo, un peu plus grand, remonté (peu d’espace sous le logo) %>
+    <h1 class="mx-auto w-full max-w-md shrink-0 px-5 pt-2 text-center text-3xl font-extrabold leading-tight text-white drop-shadow-md sm:pt-3">
+      Transforme tes écoutes en place de concert
+    </h1>
+
+    <div class="min-h-0 flex-1" aria-hidden="true"></div>
+
+    <%# CTA remonté (60 px du bord bas) %>
+    <div class="mb-[60px] flex shrink-0 justify-center px-5">
+      <% if user_signed_in? %>
+        <%= link_to t("home.start"), playlists_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 text-center text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:from-white hover:to-white hover:text-purple-600 rounded-full" %>
+      <% else %>
+        <%= link_to t("home.start"), new_user_registration_path, class: "w-full max-w-xs bg-gradient-to-r from-purple-600 to-purple-700 text-white px-8 py-4 text-center text-xl font-bold shadow-2xl transition-all hover:scale-105 hover:from-white hover:to-white hover:text-purple-600 rounded-full" %>
+      <% end %>
+    </div>
+  </div>
 </div>

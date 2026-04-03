@@ -57,7 +57,7 @@ class PlaylistsController < ApplicationController
   end
 
   def test_trending_all
-    @trending_playlists = Playlist.where(hidden: [false, nil]).includes(:videos).order(created_at: :desc).limit(10).to_a
+    @trending_playlists = Playlist.where(hidden: [false, nil]).includes(:videos).order(created_at: :desc).to_a
   end
 
   def test_category
