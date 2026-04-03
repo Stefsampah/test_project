@@ -1333,8 +1333,8 @@ img.playlist-card-media {
   display: none;
 }
 
-.aspect-square {
-  aspect-ratio: 1 / 1;
+.aspect-video {
+  aspect-ratio: 16 / 9;
 }
 
 .h-1 {
@@ -3394,11 +3394,6 @@ img.playlist-card-media {
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-}
-
-.py-2\.5 {
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
 }
 
 .py-3 {

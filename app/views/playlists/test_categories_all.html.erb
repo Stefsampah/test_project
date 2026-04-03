@@ -16,8 +16,8 @@
         <% pl = row[:playlist] %>
         <% thumb_id = pl&.valid_thumbnail_id %>
         <%= link_to playlists_test_category_path(category: cat),
-                    class: "flex aspect-square flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:ring-[#a855f7]/40" do %>
-          <div class="relative min-h-0 w-full flex-1 basis-0 overflow-hidden">
+                    class: "flex flex-col overflow-hidden rounded-[14px] bg-zinc-900 shadow-[0_12px_28px_rgba(0,0,0,0.35)] ring-1 ring-white/5 transition hover:ring-[#a855f7]/40" do %>
+          <div class="relative aspect-video w-full shrink-0 overflow-hidden">
             <% if thumb_id.present? %>
               <img src="https://img.youtube.com/vi/<%= thumb_id %>/hqdefault.jpg"
                    alt=""
@@ -28,7 +28,7 @@
               <div class="absolute inset-0 bg-zinc-700"></div>
             <% end %>
           </div>
-          <div class="flex shrink-0 items-center justify-center px-2 py-2.5 text-center">
+          <div class="flex shrink-0 items-center justify-center px-2 py-2 text-center">
             <p class="line-clamp-2 text-center text-sm font-bold leading-tight text-white"><%= cat %></p>
           </div>
         <% end %>
