@@ -86,6 +86,7 @@ class SwipesController < ApplicationController
       journey_payload = {
         journey_points_added: journey_result[:total],
         journey_points_breakdown: journey_result[:breakdown],
+        journey_unlocks: journey_result[:unlocks] || [],
         journey_total: current_user.journey_points,
         journey_level: JourneyLevels.current_level(current_user.journey_points),
         journey_level_name: JourneyLevels.level_name(JourneyLevels.current_level(current_user.journey_points)),

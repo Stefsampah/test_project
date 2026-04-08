@@ -5,6 +5,24 @@ class ProfilesController < ApplicationController
     @user = current_user
     @scores = current_user.scores.includes(:playlist)
     @recent_games = current_user.games.includes(:playlist).order(created_at: :desc).limit(6)
+
+    recent_swipes = current_user.swipes.where(created_at: 30.days.ago..Time.current)
+    likes_count = recent_swipes.where(action: "like").count
+    dislikes_count = recent_swipes.where(action: "dislike").count
+    total_actions = likes_count + dislikes_count
+
+    @watch_avg_seconds = recent_swipes.average(:watched_seconds).to_f.round(1)
+    @completion_rate =
+      if current_user.games.count.zero?
+        0.0
+      else
+        ((current_user.games.where.not(completed_at: nil).count.to_f / current_user.games.count) * 100).round(1)
+      end
+    @like_ratio_percent = total_actions.zero? ? 0.0 : ((likes_count.to_f / total_actions) * 100).round(1)
+    @dislike_ratio_percent = total_actions.zero? ? 0.0 : ((dislikes_count.to_f / total_actions) * 100).round(1)
+
+    last_completed_game = current_user.games.where.not(completed_at: nil).order(completed_at: :desc).first
+    @anti_abuse_modifier = last_completed_game.present? ? ScoringService.anti_abuse_multiplier(last_completed_game) : 1.0
   end
 
   # Page test "Mon parcours / Concert"

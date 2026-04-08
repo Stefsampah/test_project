@@ -52,6 +52,26 @@
               <span class="text-sm text-white/85"><%= t("profile.playlists_per_day_label") %></span>
               <span class="text-lg font-extrabold text-white"><%= @user.respond_to?(:playlists_per_day) ? @user.playlists_per_day.to_f.round(1) : 0 %></span>
             </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Watch moyen (30j)</span>
+              <span class="text-lg font-extrabold text-white"><%= @watch_avg_seconds %>s</span>
+            </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Taux de completion</span>
+              <span class="text-lg font-extrabold text-white"><%= @completion_rate %>%</span>
+            </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Ratio Like / Dislike</span>
+              <span class="text-lg font-extrabold text-white"><%= @like_ratio_percent %>% / <%= @dislike_ratio_percent %>%</span>
+            </div>
+            <div class="h-px bg-white/20"></div>
+            <div class="flex items-center justify-between">
+              <span class="text-sm text-white/85">Modificateur anti-abus</span>
+              <span class="text-lg font-extrabold <%= @anti_abuse_modifier < 1.0 ? 'text-amber-300' : 'text-white' %>">x<%= format('%.2f', @anti_abuse_modifier) %></span>
+            </div>
           </div>
         </div>
       </div>
