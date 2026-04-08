@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   def home
-    # Landing page - pas besoin d'authentification
+    # Home retenue produit: on sert la variante test 2 comme landing principale.
+    render :home_test_2
   end
 
   def reward_animations_demo
