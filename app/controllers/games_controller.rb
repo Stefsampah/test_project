@@ -128,11 +128,10 @@ class GamesController < ApplicationController
     
     # Si pas de score, créer un score basé sur le jeu (seulement pour les playlists normales)
     unless @score
-      game_score = @game.score
       @score = Score.create!(
         user: current_user,
         playlist: @playlist,
-        points: game_score
+        points: ScoringService.final_game_score(@game)
       )
     end
     
@@ -190,6 +189,7 @@ class GamesController < ApplicationController
     
     action = params[:direction] == "like" ? "like" : "dislike"
     liked_value = (action == "like")
+    watched_seconds = [params[:watched_seconds].to_i, 0].max
 
     Rails.logger.info "Vidéo actuelle : #{video&.title} | Utilisateur : #{current_user&.id} | Action : #{action}"
 
@@ -226,22 +226,21 @@ class GamesController < ApplicationController
           video: video,
           action: action,
           liked: liked_value,
-          playlist: @playlist
+          playlist: @playlist,
+          watched_seconds: watched_seconds
         )
 
         # Pour les playlists récompenses, pas de système de points
         # Pour les playlists normales, calculer et sauvegarder les points
         unless reward_playlist?(@playlist)
-          # Calcul des points en fonction de l'action (seulement pour les playlists normales)
-          points = action == "like" ? 2 : 1
-
-          # Mettre à jour ou créer le score (seulement pour cette partie)
-          score = Score.find_or_initialize_by(user: current_user, playlist: @playlist)
-          
-          # Calculer le score total de cette partie seulement
-          game_score = @game.swipes.where(action: 'like').count * 2 + @game.swipes.where(action: 'dislike').count
-          score.points = game_score
-          score.save!
+          next_video = @game.next_video
+          game_completed = next_video.nil?
+          ScoringService.register_playlist_score!(
+            user: current_user,
+            playlist: @playlist,
+            game: @game,
+            apply_anti_abuse: game_completed
+          )
         end
 
         @game.reload

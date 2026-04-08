@@ -4,6 +4,7 @@ class JourneyPointsService
   POINTS_LIKE = 5
   POINTS_DISLIKE = 1
   POINTS_WATCH_END = 2
+  WATCH_SECONDS_MIN = 8
   POINTS_NEW_ARTIST = 10
   POINTS_DAILY_BONUS = 20
   DAILY_VIDEOS_FOR_BONUS = 10
@@ -20,9 +21,11 @@ class JourneyPointsService
       total += action_points
       breakdown[:action] = action_points
 
-      # Vidéo regardée (jusqu’au swipe) = +2
-      total += POINTS_WATCH_END
-      breakdown[:watch] = POINTS_WATCH_END
+      # Bonus watch uniquement si un minimum de visionnage est atteint.
+      if swipe.respond_to?(:watched_seconds) && swipe.watched_seconds.to_i >= WATCH_SECONDS_MIN
+        total += POINTS_WATCH_END
+        breakdown[:watch] = POINTS_WATCH_END
+      end
 
       # Nouvel artiste = +10 (première fois que l’user swipe une vidéo de cet artiste)
       artist = video_artist(video)

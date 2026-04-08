@@ -7,5 +7,6 @@ class Swipe < ApplicationRecord
   validates :user_id, uniqueness: { scope: [:video_id, :game_id] }
   validates :liked, inclusion: { in: [true, false] }
   validates :action, presence: true, inclusion: { in: %w[like dislike] }
+  validates :watched_seconds, numericality: { only_integer: true, greater_than_or_equal_to: 0 }, allow_nil: true
 end 
 

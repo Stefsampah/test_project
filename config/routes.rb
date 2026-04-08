@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   # Routes admin pour les animations
   namespace :admin do
     get 'animations', to: 'animations#index'
+    get 'gameplay_stats', to: 'gameplay_stats#index'
     post 'animations/test_reward_animation', to: 'animations#test_reward_animation'
     post 'animations/test_badge_animation', to: 'animations#test_badge_animation'
     post 'animations/cleanup_test_data', to: 'animations#cleanup_test_data'

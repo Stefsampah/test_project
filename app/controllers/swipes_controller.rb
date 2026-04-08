@@ -7,6 +7,7 @@ class SwipesController < ApplicationController
     playlist_id = params[:playlist_id].to_i
     game_id = params[:game_id].to_i
     liked = params[:liked].in?([true, 'true', '1', 1])
+    watched_seconds = [params[:watched_seconds].to_i, 0].max
     
     return head :bad_request if video_id.zero? || playlist_id.zero? || game_id.zero?
     
@@ -54,15 +55,20 @@ class SwipesController < ApplicationController
         video: video,
         playlist: playlist,
         action: action,
-        liked: liked
+        liked: liked,
+        watched_seconds: watched_seconds
       )
 
       # Pour les playlists normales, calculer et sauvegarder les points (leaderboard par playlist)
       unless reward_playlist?(playlist)
-        score = Score.find_or_initialize_by(user: current_user, playlist: playlist)
-        game_score = game.swipes.where(action: 'like').count * 2 + game.swipes.where(action: 'dislike').count
-        score.points = game_score
-        score.save!
+        next_video = game.next_video
+        game_completed = next_video.nil?
+        ScoringService.register_playlist_score!(
+          user: current_user,
+          playlist: playlist,
+          game: game,
+          apply_anti_abuse: game_completed
+        )
       end
 
       # Parcours 5 niveaux (refonte gameplay) : like +5, dislike +1, watch +2, new_artist +10, daily 10 vidéos +20

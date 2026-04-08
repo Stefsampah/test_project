@@ -1,0 +1,55 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <div class="mb-6 flex items-center justify-between">
+      <h1 class="text-3xl font-bold">Admin - Gameplay Stats</h1>
+      <%= link_to "Animations admin", admin_animations_path, class: "rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20" %>
+    </div>
+
+    <div class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div class="rounded-xl bg-gray-800 p-4"><p class="text-xs text-gray-400">Users total</p><p class="text-2xl font-bold"><%= @users_count %></p></div>
+      <div class="rounded-xl bg-gray-800 p-4"><p class="text-xs text-gray-400">Actifs 7j</p><p class="text-2xl font-bold"><%= @active_users_7d %></p></div>
+      <div class="rounded-xl bg-gray-800 p-4"><p class="text-xs text-gray-400">Nouveaux 7j</p><p class="text-2xl font-bold"><%= @new_users_7d %></p></div>
+      <div class="rounded-xl bg-gray-800 p-4"><p class="text-xs text-gray-400">Swipes 7j</p><p class="text-2xl font-bold"><%= @swipes_7d %></p></div>
+    </div>
+
+    <div class="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Qualité de jeu (7 jours)</h2>
+        <p class="text-sm text-gray-300">Likes: <span class="font-semibold text-white"><%= @likes_7d %></span></p>
+        <p class="text-sm text-gray-300">Dislikes: <span class="font-semibold text-white"><%= @dislikes_7d %></span></p>
+        <p class="text-sm text-gray-300">Watch moyen (s): <span class="font-semibold text-white"><%= @average_watch_seconds %></span></p>
+        <p class="text-sm text-gray-300">Completion rate: <span class="font-semibold text-white"><%= @completion_rate_7d %>%</span></p>
+      </div>
+
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Progression saison</h2>
+        <p class="text-sm text-gray-300">>= 3000 pts: <span class="font-semibold text-white"><%= @users_3000 %></span></p>
+        <p class="text-sm text-gray-300">>= 6000 pts: <span class="font-semibold text-white"><%= @users_6000 %></span></p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Top profils spam-like (7j)</h2>
+        <% if @top_spam_like_users.any? %>
+          <% @top_spam_like_users.each do |u| %>
+            <p class="text-sm text-gray-300"><span class="font-semibold text-white"><%= u.email %></span> - <%= (u.ratio.to_f * 100).round(1) %>% like (<%= u.swipes_count %> swipes)</p>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400">Aucune donnée suffisante.</p>
+        <% end %>
+      </div>
+
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Top profils spam-dislike (7j)</h2>
+        <% if @top_spam_dislike_users.any? %>
+          <% @top_spam_dislike_users.each do |u| %>
+            <p class="text-sm text-gray-300"><span class="font-semibold text-white"><%= u.email %></span> - <%= (u.ratio.to_f * 100).round(1) %>% dislike (<%= u.swipes_count %> swipes)</p>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400">Aucune donnée suffisante.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
