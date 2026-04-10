@@ -13,25 +13,21 @@
             ua = request.user_agent.to_s
             is_safari_mobile = Rails.env.production? && ua.match?(/iPhone|iPad|iPod/) && ua.include?("Safari") && !ua.match?(/CriOS|Chrome/)
             
-            # Pour Safari mobile, ne pas charger l'iframe directement (sera chargée après interaction)
-            if is_safari_mobile
-              video_url = "" # Vide pour Safari mobile - sera chargée après clic
-            else
-              base_url = request.base_url
-              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=1&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
-            end
+            # Toujours précharger la 1re vidéo pour éviter les écrans noirs au démarrage.
+            base_url = request.base_url
+            video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=1&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
           %>
           <% if is_safari_mobile %>
           <!-- Safari mobile : iframe chargée via JS au premier geste (pas de bouton Play). -->
           <iframe
             id="youtube-player-<%= @game.current_video.id %>"
-            src=""
+            src="<%= video_url %>"
             title="YouTube"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
             class="game-video-cover"
-            style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
+            style="display: block !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
           </iframe>
           <% else %>
           <iframe
@@ -149,13 +145,13 @@
               showError();
             });
             
-            // Safari option A : 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube
+            // Safari option A : 1 tap = recharge lecture si iOS bloque l'autoplay.
             window.loadVideoOnSafari = function(videoId, youtubeId) {
               var playButton = document.getElementById('video-play-button-' + videoId) || document.querySelector('[id^="video-play-button-"]');
               if (playButton) playButton.style.display = 'none';
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (!iframe) return;
-              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
             };
@@ -184,7 +180,7 @@
               if (isSafariMobile) {
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
-                  '&mute=0' +
+                  '&mute=1' +
                   '&playsinline=1' +
                   '&controls=0' +
                   '&rel=0' +
@@ -202,7 +198,7 @@
                   '&disablekb=1' +
                   '&iv_load_policy=3' +
                   '&cc_load_policy=0' +
-                  '&mute=0' +
+                  '&mute=1' +
                   '&loop=0' +
                   '&showinfo=0' +
                   '&enablejsapi=1' +
@@ -217,20 +213,13 @@
               }, 500);
             };
             
-            // Démarrer la vérification seulement si ce n'est pas Safari mobile (iframe déjà chargée)
-            if (!isSafariMobile) {
-              checkIframeLoad();
-              
-              // Masquer le loader après 3 secondes max (fallback si l'event load ne se déclenche pas)
-              setTimeout(function() {
-                if (loadingDiv && loadingDiv.style.display !== 'none' && !hasLoaded) {
-                  // Si le loader est toujours visible après 3 secondes et l'event load ne s'est pas déclenché
-                  // On masque le loader quand même (la vidéo peut être chargée)
-                  console.log('Fallback: Masquage du loader après timeout');
-                  loadingDiv.style.display = 'none';
-                }
-              }, 3000);
-            }
+            // Vérifier systématiquement le chargement initial, y compris Safari.
+            checkIframeLoad();
+            setTimeout(function() {
+              if (loadingDiv && loadingDiv.style.display !== 'none' && !hasLoaded) {
+                loadingDiv.style.display = 'none';
+              }
+            }, 3000);
           })();
         </script>
       </div>
