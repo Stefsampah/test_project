@@ -18,7 +18,7 @@
               video_url = "" # Vide pour Safari mobile - sera chargée après clic
             else
               base_url = request.base_url
-              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=1&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
             end
           %>
           <% if is_safari_mobile %>
@@ -31,7 +31,7 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
             class="game-video-cover"
-            style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(1.5) !important; transform-origin: center center !important; background: #000;">
+            style="display: none !important; width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: auto !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
           </iframe>
           <% else %>
           <iframe
@@ -42,7 +42,7 @@
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen="true"
-            style="width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: translateY(-50%) scale(1.5) !important; transform-origin: center center !important; background: #000;">
+            style="width: 100vw !important; height: 56.25vw !important; position: fixed !important; top: 50% !important; left: 0 !important; border: none !important; pointer-events: none !important; z-index: 1 !important; transform: translateY(-50%) scale(3) !important; transform-origin: center center !important; background: #000;">
           </iframe>
           <% end %>
           
@@ -149,28 +149,16 @@
               showError();
             });
             
-            // Safari option A : 1 tap = chargement vidéo sur premier geste utilisateur.
+            // Safari option A : 1 tap = chargement avec son (mute=0) ; si autoplay bloqué, l'utilisateur tape sur le Play YouTube
             window.loadVideoOnSafari = function(videoId, youtubeId) {
               var playButton = document.getElementById('video-play-button-' + videoId) || document.querySelector('[id^="video-play-button-"]');
               if (playButton) playButton.style.display = 'none';
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (!iframe) return;
-              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
             };
-            // iOS réel: sécurise le premier lancement même si pointer events sont capricieux.
-            if (isSafariMobile) {
-              var safariBooted = false;
-              function bootSafariPlayback(e) {
-                if (safariBooted) return;
-                safariBooted = true;
-                if (e) { e.preventDefault(); e.stopPropagation(); }
-                window.loadVideoOnSafari(videoId, youtubeId);
-              }
-              document.addEventListener('touchstart', bootSafariPlayback, { once: true, passive: false });
-              document.addEventListener('click', bootSafariPlayback, { once: true });
-            }
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
             if (playBtn && isSafariMobile) {
               function doPlay(e) {
@@ -196,7 +184,7 @@
               if (isSafariMobile) {
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
-                  '&mute=1' +
+                  '&mute=0' +
                   '&playsinline=1' +
                   '&controls=0' +
                   '&rel=0' +
@@ -214,7 +202,7 @@
                   '&disablekb=1' +
                   '&iv_load_policy=3' +
                   '&cc_load_policy=0' +
-                  '&mute=1' +
+                  '&mute=0' +
                   '&loop=0' +
                   '&showinfo=0' +
                   '&enablejsapi=1' +
@@ -427,7 +415,7 @@
         var iframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
         if (!iframe) return;
         iframe.style.transition = 'transform 480ms cubic-bezier(0.22, 1, 0.36, 1)';
-        iframe.style.transform = 'translateX(0px) translateY(-50%) rotate(0deg) scale(1.5)';
+        iframe.style.transform = 'translateX(0px) translateY(-50%) rotate(0deg) scale(3)';
       }
 
       // TikTok/Tinder gesture : la "carte" = la vidéo elle-même.
@@ -484,7 +472,7 @@
           var tx = clamp(dx, -width * 0.6, width * 0.6);
           var rot = clamp((tx / width) * maxRotation, -maxRotation, maxRotation);
 
-          iframeEl.style.transform = 'translateX(' + tx + 'px) translateY(-50%) rotate(' + rot + 'deg) scale(1.5)';
+          iframeEl.style.transform = 'translateX(' + tx + 'px) translateY(-50%) rotate(' + rot + 'deg) scale(3)';
         }, { passive: true });
 
         function onPointerEnd() {
@@ -509,7 +497,7 @@
           var targetRot = dir * 18; // + tilt quand on "throw"
 
           iframeEl.style.transition = 'transform 260ms ease-out';
-          iframeEl.style.transform = 'translateX(' + targetX + 'px) translateY(-50%) rotate(' + targetRot + 'deg) scale(1.5)';
+          iframeEl.style.transform = 'translateX(' + targetX + 'px) translateY(-50%) rotate(' + targetRot + 'deg) scale(3)';
 
           var onEnd = function() {
             iframeEl.removeEventListener('transitionend', onEnd);
@@ -595,7 +583,7 @@
                   var base = window.location.origin;
                   iframe.src = 'https://www.youtube.com/embed/' + data.next_video_youtube_id +
                     '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
-                    '&iv_load_policy=3&cc_load_policy=0&mute=1&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
+                    '&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
                 } else {
                   window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
                   return;
