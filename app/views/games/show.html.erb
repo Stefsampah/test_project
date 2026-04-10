@@ -151,7 +151,8 @@
               if (playButton) playButton.style.display = 'none';
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (!iframe) return;
-              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
+              var muteValue = window.__tnpSoundEnabled ? '0' : '1';
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=' + muteValue + '&playsinline=1&controls=0&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
             };
@@ -178,9 +179,10 @@
               // Pour Safari mobile, URL simplifiée sans origin
               let newUrl;
               if (isSafariMobile) {
+                var safariMute = window.__tnpSoundEnabled ? '0' : '1';
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
-                  '&mute=1' +
+                  '&mute=' + safariMute +
                   '&playsinline=1' +
                   '&controls=0' +
                   '&rel=0' +
@@ -188,6 +190,7 @@
                   '&t=' + Date.now();
               } else {
                 const baseUrl = '<%= request.base_url %>';
+                var defaultMute = window.__tnpSoundEnabled ? '0' : '1';
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
                   '&controls=0' +
@@ -198,7 +201,7 @@
                   '&disablekb=1' +
                   '&iv_load_policy=3' +
                   '&cc_load_policy=0' +
-                  '&mute=1' +
+                  '&mute=' + defaultMute +
                   '&loop=0' +
                   '&showinfo=0' +
                   '&enablejsapi=1' +
@@ -228,6 +231,11 @@
       <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 200px !important; z-index: 999998 !important; pointer-events: none !important;"></div>
       <!-- Contrôles et boutons Like/Dislike : au-dessus de la zone, reçoivent tous les clics/touches -->
       <div class="shorts-controls" style="z-index: 2147483647 !important; pointer-events: auto !important;">
+        <div class="shorts-audio-row">
+          <button type="button" id="game-audio-toggle" class="audio-toggle-btn" aria-pressed="false">
+            Son off
+          </button>
+        </div>
         <div class="shorts-info">
           <h2><%= @game.current_video.title %></h2>
           <p><%= @playlist.title %></p>
@@ -289,6 +297,7 @@
 
         var isProcessing = false;
         var videoStartedAtMs = Date.now();
+        var currentYoutubeId = '<%= @game.current_video.youtube_id %>';
         var feedbackTimeout = null;
         var feedbackBarTimeout = null;
         var lastSwipeType = null;
@@ -383,6 +392,42 @@
           void targetBtn.offsetWidth;
           targetBtn.classList.add('game-btn-pulse');
         }
+
+      var soundEnabled = (function() {
+        try { return sessionStorage.getItem('tnp_sound_enabled') === '1'; } catch (_) { return false; }
+      })();
+      window.__tnpSoundEnabled = soundEnabled;
+
+      function persistSoundPreference(value) {
+        soundEnabled = !!value;
+        window.__tnpSoundEnabled = soundEnabled;
+        try { sessionStorage.setItem('tnp_sound_enabled', soundEnabled ? '1' : '0'); } catch (_) {}
+      }
+
+      function audioButtonLabel() {
+        return soundEnabled ? 'Son on' : 'Son off';
+      }
+
+      function updateAudioButton() {
+        var btn = document.getElementById('game-audio-toggle');
+        if (!btn) return;
+        btn.textContent = audioButtonLabel();
+        btn.setAttribute('aria-pressed', soundEnabled ? 'true' : 'false');
+      }
+
+      function buildEmbedUrl(youtubeId, baseOrigin) {
+        var muteValue = soundEnabled ? '0' : '1';
+        var origin = baseOrigin || window.location.origin;
+        return 'https://www.youtube.com/embed/' + youtubeId +
+          '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
+          '&iv_load_policy=3&cc_load_policy=0&mute=' + muteValue + '&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(origin);
+      }
+
+      function reloadCurrentVideoWithAudioPreference() {
+        var iframe = document.querySelector('iframe[id^="youtube-player-"]');
+        if (!iframe || !currentYoutubeId) return;
+        iframe.src = buildEmbedUrl(currentYoutubeId);
+      }
 
       function getData() {
         return {
@@ -569,15 +614,13 @@
               } else {
                 var iframe = document.querySelector('iframe[id^="youtube-player-"]');
                 if (iframe) {
-                  var base = window.location.origin;
-                  iframe.src = 'https://www.youtube.com/embed/' + data.next_video_youtube_id +
-                    '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
-                    '&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
+                  iframe.src = buildEmbedUrl(data.next_video_youtube_id);
                 } else {
                   window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
                   return;
                 }
               }
+              currentYoutubeId = data.next_video_youtube_id;
               videoStartedAtMs = Date.now();
               resetCardTransform();
               isProcessing = false;
@@ -646,6 +689,24 @@
         }
         bindButton(btnLike, true);
         bindButton(btnDislike, false);
+        updateAudioButton();
+        var audioBtn = document.getElementById('game-audio-toggle');
+        if (audioBtn) {
+          audioBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            persistSoundPreference(!soundEnabled);
+            updateAudioButton();
+            reloadCurrentVideoWithAudioPreference();
+          });
+          audioBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            persistSoundPreference(!soundEnabled);
+            updateAudioButton();
+            reloadCurrentVideoWithAudioPreference();
+          }, { passive: false });
+        }
         console.log('[Game] Like/Dislike initialisés (boutons:', !!btnLike, !!btnDislike, ')');
 
         // Délégation en phase capture : intercepter touchend/click sur la zone des boutons (contourne touch-action: none du layout)
