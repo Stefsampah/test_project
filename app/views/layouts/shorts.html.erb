@@ -411,11 +411,11 @@
       /* Contrôles et overlay - Titres remontés, zone plus haute pour tout afficher */
       .shorts-controls {
         position: fixed !important;
-        bottom: 0 !important;
+        bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
         left: 0 !important;
         right: 0 !important;
         background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
-        padding: 24px 20px 28px 20px !important;
+        padding: 14px 16px calc(env(safe-area-inset-bottom, 0px) + 12px) 16px !important;
         z-index: 999999 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -424,7 +424,7 @@
         opacity: 1 !important;
         pointer-events: auto !important;
         touch-action: manipulation !important;
-        min-height: 200px !important;
+        min-height: 140px !important;
       }
 
       .shorts-info {
@@ -479,7 +479,7 @@
       .shorts-actions {
         display: flex !important;
         gap: 20px !important;
-        margin-top: 8px !important;
+        margin-top: 6px !important;
         justify-content: center !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -488,14 +488,14 @@
         position: relative !important;
         /* Forcer l'affichage des boutons */
         height: auto !important;
-        min-height: 100px !important;
+        min-height: 72px !important;
         max-height: none !important;
         overflow: visible !important;
       }
 
       .action-btn {
-        width: 60px !important;
-        height: 60px !important;
+        width: 54px !important;
+        height: 54px !important;
         border-radius: 50% !important;
         border: 3px solid rgba(255,255,255,0.8) !important;
         display: flex !important;
@@ -561,8 +561,8 @@
       }
 
       .action-icon {
-        width: 50px !important;
-        height: 50px !important;
+        width: 42px !important;
+        height: 42px !important;
         color: white !important;
         filter: drop-shadow(0 5px 10px rgba(0,0,0,1)) !important;
       }
@@ -1074,11 +1074,11 @@
           if (controls) {
             controls.style.cssText = `
               position: fixed !important;
-              bottom: 0 !important;
+              bottom: max(env(safe-area-inset-bottom, 0px), 8px) !important;
               left: 0 !important;
               right: 0 !important;
               background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
-              padding: 24px 20px 28px 20px !important;
+              padding: 14px 16px calc(env(safe-area-inset-bottom, 0px) + 12px) 16px !important;
               z-index: 2147483647 !important;
               display: flex !important;
               flex-direction: column !important;
@@ -1087,7 +1087,7 @@
               opacity: 1 !important;
               pointer-events: auto !important;
               transform: translateZ(0) !important;
-              min-height: 200px !important;
+              min-height: 140px !important;
             `;
           }
           
@@ -1095,13 +1095,13 @@
             actions.style.cssText = `
               display: flex !important;
               gap: 20px !important;
-              margin-top: 8px !important;
+              margin-top: 6px !important;
               justify-content: center !important;
               visibility: visible !important;
               opacity: 1 !important;
               z-index: 10000000 !important;
               position: relative !important;
-              min-height: 100px !important;
+              min-height: 72px !important;
               max-height: none !important;
               overflow: visible !important;
             `;
@@ -1112,8 +1112,8 @@
             const isDislike = btn.classList.contains('dislike');
             
             btn.style.cssText = `
-              width: 60px !important;
-              height: 60px !important;
+              width: 54px !important;
+              height: 54px !important;
               border-radius: 50% !important;
               border: 3px solid rgba(255,255,255,0.8) !important;
               display: flex !important;

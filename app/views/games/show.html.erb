@@ -18,7 +18,7 @@
               video_url = "" # Vide pour Safari mobile - sera chargée après clic
             else
               base_url = request.base_url
-              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=1&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
             end
           %>
           <% if is_safari_mobile %>
@@ -236,7 +236,7 @@
       </div>
 
       <!-- Zone en bas : ne pas intercepter les touches (pointer-events: none) pour que Like/Dislike les reçoivent toujours -->
-      <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 260px !important; z-index: 999998 !important; pointer-events: none !important;"></div>
+      <div class="shorts-controls-zone" id="game-controls-zone" style="position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; height: 200px !important; z-index: 999998 !important; pointer-events: none !important;"></div>
       <!-- Contrôles et boutons Like/Dislike : au-dessus de la zone, reçoivent tous les clics/touches -->
       <div class="shorts-controls" style="z-index: 2147483647 !important; pointer-events: auto !important;">
         <div class="shorts-info">
