@@ -411,11 +411,11 @@
       /* Contrôles et overlay - Titres remontés, zone plus haute pour tout afficher */
       .shorts-controls {
         position: fixed !important;
-        bottom: max(env(safe-area-inset-bottom, 0px), 20px) !important;
+        bottom: max(env(safe-area-inset-bottom, 0px), 68px) !important;
         left: 0 !important;
         right: 0 !important;
         background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
-        padding: 14px 16px calc(env(safe-area-inset-bottom, 0px) + 12px) 16px !important;
+        padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 8px) 12px !important;
         z-index: 999999 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -424,11 +424,11 @@
         opacity: 1 !important;
         pointer-events: auto !important;
         touch-action: manipulation !important;
-        min-height: 120px !important;
+        min-height: 96px !important;
       }
 
       .shorts-info {
-        margin-bottom: 12px !important;
+        margin-bottom: 6px !important;
         display: block !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -442,7 +442,7 @@
       .shorts-audio-row {
         display: flex !important;
         justify-content: flex-end !important;
-        padding: 0 4px 4px 4px !important;
+        padding: 0 2px 2px 2px !important;
       }
 
       .audio-toggle-btn {
@@ -460,9 +460,9 @@
 
       .shorts-info h2 {
         color: white !important;
-        font-size: 1.35rem !important;
+        font-size: clamp(1rem, 4.2vw, 1.2rem) !important;
         font-weight: 800 !important;
-        margin-bottom: 4px !important;
+        margin-bottom: 2px !important;
         visibility: visible !important;
         opacity: 1 !important;
         line-height: 1.25 !important;
@@ -481,7 +481,7 @@
 
       .shorts-info p {
         color: rgba(255,255,255,0.95) !important;
-        font-size: 1rem !important;
+        font-size: clamp(0.82rem, 3.2vw, 0.95rem) !important;
         font-weight: 600 !important;
         display: block !important;
         visibility: visible !important;
@@ -497,8 +497,8 @@
 
       .shorts-actions {
         display: flex !important;
-        gap: 20px !important;
-        margin-top: 6px !important;
+        gap: 14px !important;
+        margin-top: 2px !important;
         justify-content: center !important;
         visibility: visible !important;
         opacity: 1 !important;
@@ -507,14 +507,14 @@
         position: relative !important;
         /* Forcer l'affichage des boutons */
         height: auto !important;
-        min-height: 72px !important;
+        min-height: 56px !important;
         max-height: none !important;
         overflow: visible !important;
       }
 
       .action-btn {
-        width: 54px !important;
-        height: 54px !important;
+        width: 48px !important;
+        height: 48px !important;
         border-radius: 50% !important;
         border: 3px solid rgba(255,255,255,0.8) !important;
         display: flex !important;
@@ -523,7 +523,7 @@
         cursor: pointer !important;
         transition: all 0.3s ease !important;
         padding: 0 !important;
-        margin: 0 8px !important;
+        margin: 0 4px !important;
         position: relative !important;
         z-index: 10000000 !important;
         visibility: visible !important;
@@ -580,8 +580,8 @@
       }
 
       .action-icon {
-        width: 42px !important;
-        height: 42px !important;
+        width: 34px !important;
+        height: 34px !important;
         color: white !important;
         filter: drop-shadow(0 5px 10px rgba(0,0,0,1)) !important;
       }
@@ -1094,11 +1094,11 @@
           if (controls) {
             controls.style.cssText = `
               position: fixed !important;
-              bottom: max(env(safe-area-inset-bottom, 0px), 20px) !important;
+              bottom: max(env(safe-area-inset-bottom, 0px), 68px) !important;
               left: 0 !important;
               right: 0 !important;
               background: linear-gradient(transparent, rgba(0,0,0,0.85)) !important;
-              padding: 14px 16px calc(env(safe-area-inset-bottom, 0px) + 12px) 16px !important;
+              padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 8px) 12px !important;
               z-index: 2147483647 !important;
               display: flex !important;
               flex-direction: column !important;
@@ -1107,21 +1107,21 @@
               opacity: 1 !important;
               pointer-events: auto !important;
               transform: translateZ(0) !important;
-              min-height: 120px !important;
+              min-height: 96px !important;
             `;
           }
           
           if (actions) {
             actions.style.cssText = `
               display: flex !important;
-              gap: 20px !important;
-              margin-top: 6px !important;
+              gap: 14px !important;
+              margin-top: 2px !important;
               justify-content: center !important;
               visibility: visible !important;
               opacity: 1 !important;
               z-index: 10000000 !important;
               position: relative !important;
-              min-height: 72px !important;
+              min-height: 56px !important;
               max-height: none !important;
               overflow: visible !important;
             `;
@@ -1132,8 +1132,8 @@
             const isDislike = btn.classList.contains('dislike');
             
             btn.style.cssText = `
-              width: 54px !important;
-              height: 54px !important;
+              width: 48px !important;
+              height: 48px !important;
               border-radius: 50% !important;
               border: 3px solid rgba(255,255,255,0.8) !important;
               display: flex !important;
@@ -1143,7 +1143,7 @@
               transition: all 0.3s ease !important;
               background: ${isLike ? 'rgba(147,51,234,0.9)' : 'rgba(239,68,68,0.9)'} !important;
               padding: 0 !important;
-              margin: 0 8px !important;
+              margin: 0 4px !important;
               position: relative !important;
               z-index: 10000000 !important;
               visibility: visible !important;
