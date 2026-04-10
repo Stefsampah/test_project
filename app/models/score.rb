@@ -41,11 +41,11 @@ class Score < ApplicationRecord
   end
 
   def self.calculate_total_scores
-    # Utiliser le score total basé sur les swipes (challenger_score)
+    # Classement principal aligné gameplay: basé sur le compteur parcours.
     User.all.map do |user|
       {
         user_id: user.id,
-        points: user.challenger_score,
+        points: user.journey_points.to_i,
         badges: []
       }
     end.sort_by { |score| -score[:points] }
