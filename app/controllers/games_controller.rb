@@ -216,6 +216,8 @@ class GamesController < ApplicationController
       return
     end
 
+    journey_payload = {}
+
     # Utiliser une transaction avec retry pour gérer les verrouillages SQLite
     retries = 3
     begin
@@ -243,6 +245,20 @@ class GamesController < ApplicationController
           )
         end
 
+        # Points parcours/saison: aligner ce flux avec SwipesController#create
+        journey_result = JourneyPointsService.add_swipe_points(current_user, swipe, video)
+        current_user.reload
+        journey_payload = {
+          journey_points_added: journey_result[:total],
+          journey_points_breakdown: journey_result[:breakdown],
+          journey_unlocks: journey_result[:unlocks] || [],
+          journey_total: current_user.journey_points,
+          journey_level: JourneyLevels.current_level(current_user.journey_points),
+          journey_level_name: JourneyLevels.level_name(JourneyLevels.current_level(current_user.journey_points)),
+          journey_progress_percent: JourneyLevels.progress_percentage(current_user.journey_points),
+          journey_points_to_next: JourneyLevels.points_to_next_level(current_user.journey_points)
+        }
+
         @game.reload
 
         next_video = @game.next_video
@@ -255,7 +271,11 @@ class GamesController < ApplicationController
 
         if next_video
           if request.format.json?
-            render json: { success: true, next_video_id: next_video.id, redirect: playlist_game_path(@game.playlist, @game) }, status: :ok
+            render json: {
+              success: true,
+              next_video_id: next_video.id,
+              redirect: playlist_game_path(@game.playlist, @game)
+            }.merge(journey_payload), status: :ok
           else
             redirect_to playlist_game_path(@game.playlist, @game), notice: "Vidéo #{action} enregistrée !"
           end
@@ -266,7 +286,11 @@ class GamesController < ApplicationController
             "Félicitations ! Vous avez terminé la playlist !"
           
           if request.format.json?
-            render json: { success: true, completed: true, redirect: redirect_path }, status: :ok
+            render json: {
+              success: true,
+              completed: true,
+              redirect: redirect_path
+            }.merge(journey_payload), status: :ok
           else
             redirect_to redirect_path, notice: message
           end
