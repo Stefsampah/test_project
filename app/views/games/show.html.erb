@@ -18,7 +18,7 @@
               video_url = "" # Vide pour Safari mobile - sera chargée après clic
             else
               base_url = request.base_url
-              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=0&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
+              video_url = "https://www.youtube.com/embed/#{@game.current_video.youtube_id}?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&mute=1&loop=0&showinfo=0&enablejsapi=1&origin=#{CGI.escape(base_url)}"
             end
           %>
           <% if is_safari_mobile %>
@@ -155,7 +155,7 @@
               if (playButton) playButton.style.display = 'none';
               var iframe = document.querySelector('iframe[id^="youtube-player-"]');
               if (!iframe) return;
-              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=0&playsinline=1&controls=0&rel=0&modestbranding=1';
+              var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
             };
@@ -196,7 +196,7 @@
               if (isSafariMobile) {
                 newUrl = 'https://www.youtube.com/embed/' + youtubeId + 
                   '?autoplay=1' +
-                  '&mute=0' +
+                  '&mute=1' +
                   '&playsinline=1' +
                   '&controls=0' +
                   '&rel=0' +
@@ -214,7 +214,7 @@
                   '&disablekb=1' +
                   '&iv_load_policy=3' +
                   '&cc_load_policy=0' +
-                  '&mute=0' +
+                  '&mute=1' +
                   '&loop=0' +
                   '&showinfo=0' +
                   '&enablejsapi=1' +
@@ -595,7 +595,7 @@
                   var base = window.location.origin;
                   iframe.src = 'https://www.youtube.com/embed/' + data.next_video_youtube_id +
                     '?autoplay=1&controls=0&modestbranding=1&rel=0&playsinline=1&fs=1&disablekb=1' +
-                    '&iv_load_policy=3&cc_load_policy=0&mute=0&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
+                    '&iv_load_policy=3&cc_load_policy=0&mute=1&showinfo=0&enablejsapi=1&origin=' + encodeURIComponent(base);
                 } else {
                   window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
                   return;
