@@ -23,8 +23,8 @@ module Admin
           ((@plays_completed_7d.to_f / @plays_started_7d) * 100).round(1)
         end
 
-      @users_3000 = User.where("season_journey_points >= 3000").count
-      @users_6000 = User.where("season_journey_points >= 6000").count
+      @users_3000 = User.where("journey_points >= 3000").count
+      @users_6000 = User.where("journey_points >= 6000").count
 
       @top_spam_like_users = spam_ratio_users("like")
       @top_spam_dislike_users = spam_ratio_users("dislike")

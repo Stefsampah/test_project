@@ -29,19 +29,19 @@
       <% end %>
 
       <p class="text-sm text-white/95 text-center mt-2">
-        <%= t("journey.season_points_label") %>: <span class="font-extrabold"><%= @season_points.to_i %></span>
+        <%= t("journey.journey_points_label") %>: <span class="font-extrabold"><%= @journey_points.to_i %></span>
       </p>
     </div>
 
-    <% progress_3000 = [[(@season_points.to_f / 3_000.0) * 100.0, 100].min, 0].max.round %>
-    <% progress_6000 = [[(@season_points.to_f / 6_000.0) * 100.0, 100].min, 0].max.round %>
+    <% progress_3000 = [[(@journey_points.to_f / 3_000.0) * 100.0, 100].min, 0].max.round %>
+    <% progress_6000 = [[(@journey_points.to_f / 6_000.0) * 100.0, 100].min, 0].max.round %>
     <% use_live_video = true %>
     <% use_physique_video = true %>
 
     <div class="space-y-4">
       <%= render "shared/card_concert",
                  variant: :live,
-                 season_points: @season_points,
+                 season_points: @journey_points,
                  target_points: 3_000,
                  video_key: "concerts/concert_live.mp4",
                  image_key: "concerts/concert_live.png",
@@ -51,7 +51,7 @@
 
       <%= render "shared/card_concert",
                  variant: :physique,
-                 season_points: @season_points,
+                 season_points: @journey_points,
                  target_points: 6_000,
                  video_key: "concerts/concert_physique.mp4",
                  image_key: "concerts/concert_physique.png",
