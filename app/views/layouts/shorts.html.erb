@@ -1017,7 +1017,8 @@
               iframe.style.setProperty('visibility', 'visible', 'important');
               iframe.style.setProperty('opacity', '1', 'important');
               if (isGamePage) {
-                iframe.style.setProperty('pointer-events', 'none', 'important');
+                var soundEnabled = !!window.__tnpSoundEnabled;
+                iframe.style.setProperty('pointer-events', soundEnabled ? 'auto' : 'none', 'important');
               }
             }
           });
