@@ -1,5 +1,5 @@
 namespace :gameplay do
-  desc "Weekly monitoring: top progression and users near 3000/6000 thresholds"
+  desc "Weekly monitoring: top progression and users near 2000/4500 thresholds"
   task weekly_monitor: :environment do
     window = 7.days.ago..Time.current
 
@@ -7,7 +7,7 @@ namespace :gameplay do
       swipes = user.swipes.where(created_at: window)
       points = swipes.sum do |s|
         case s.action
-        when "like" then 5
+        when "like" then 2
         when "dislike" then 1
         else 0
         end
@@ -17,8 +17,8 @@ namespace :gameplay do
        .sort_by { |r| -r[:points] }
        .first(10)
 
-    near_3000 = User.where(journey_points: 2500...3000).order(journey_points: :desc).limit(10)
-    near_6000 = User.where(journey_points: 5500...6000).order(journey_points: :desc).limit(10)
+    near_2000 = User.where(journey_points: 1500...2000).order(journey_points: :desc).limit(10)
+    near_4500 = User.where(journey_points: 4000...4500).order(journey_points: :desc).limit(10)
 
     puts "=== Weekly monitor (last 7 days) ==="
     puts "Top progression:"
@@ -26,11 +26,11 @@ namespace :gameplay do
       puts "#{idx + 1}. #{r[:email]} | +#{r[:points]} pts | #{r[:swipes]} swipes | journey=#{r[:journey]}"
     end
 
-    puts "\nNear 3000:"
-    near_3000.each { |u| puts "- #{u.email}: #{u.journey_points}" }
+    puts "\nNear 2000:"
+    near_2000.each { |u| puts "- #{u.email}: #{u.journey_points}" }
 
-    puts "\nNear 6000:"
-    near_6000.each { |u| puts "- #{u.email}: #{u.journey_points}" }
+    puts "\nNear 4500:"
+    near_4500.each { |u| puts "- #{u.email}: #{u.journey_points}" }
   end
 
   desc "Fill empty playlist genres with simple keywords (DRY_RUN default, APPLY=1 to persist)"

@@ -23,10 +23,10 @@ module Admin
           ((@plays_completed_7d.to_f / @plays_started_7d) * 100).round(1)
         end
 
-      @users_3000 = User.where("journey_points >= 3000").count
-      @users_6000 = User.where("journey_points >= 6000").count
-      @users_near_3000 = User.where(journey_points: 2500...3000).order(journey_points: :desc).limit(10)
-      @users_near_6000 = User.where(journey_points: 5500...6000).order(journey_points: :desc).limit(10)
+      @users_2000 = User.where("journey_points >= 2000").count
+      @users_4500 = User.where("journey_points >= 4500").count
+      @users_near_2000 = User.where(journey_points: 1500...2000).order(journey_points: :desc).limit(10)
+      @users_near_4500 = User.where(journey_points: 4000...4500).order(journey_points: :desc).limit(10)
       @top_weekly_progress = top_weekly_progress_users
 
       @top_spam_like_users = spam_ratio_users("like")
@@ -55,7 +55,7 @@ module Admin
         swipes = user.swipes.where(created_at: 7.days.ago..Time.current)
         progress = swipes.sum do |s|
           case s.action
-          when "like" then 5
+          when "like" then 2
           when "dislike" then 1
           else 0
           end

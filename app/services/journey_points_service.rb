@@ -1,17 +1,14 @@
 # Attribue les points du parcours (refonte gameplay) à chaque swipe.
-# Règles : Like +5, Dislike +1, Vidéo regardée +2 (>= WATCH_SECONDS_MIN),
-# Nouvel artiste +10, Bonus combo qualité (+1/+2/+3), Bonus 10 vidéos/jour +20.
+# Règles : Like +2, Dislike +1, Vidéo regardée +1 (>= WATCH_SECONDS_MIN),
+# Like sur nouvel artiste +2, bonus combo max +1.
 class JourneyPointsService
-  POINTS_LIKE = 5
+  POINTS_LIKE = 2
   POINTS_DISLIKE = 1
-  POINTS_WATCH_END = 2
+  POINTS_WATCH_END = 1
   WATCH_SECONDS_MIN = 8
-  POINTS_NEW_ARTIST = 10
-  POINTS_DAILY_BONUS = 20
-  DAILY_VIDEOS_FOR_BONUS = 10
+  POINTS_NEW_ARTIST = 2
+  POINTS_DAILY_PLAYLIST_STREAK = 5
   POINTS_COMBO_TIER_1 = 1
-  POINTS_COMBO_TIER_2 = 2
-  POINTS_COMBO_TIER_3 = 3
   MAX_POINTS_PER_SWIPE = 20
   MAX_SWIPES_COUNTED_PER_GAME = 120
   MAX_SWIPES_COUNTED_PER_DAY = 400
@@ -28,7 +25,7 @@ class JourneyPointsService
       breakdown = {}
       unlocks = []
 
-      # Like = +5, Dislike = +1
+      # Like = +2, Dislike = +1
       action_points = swipe.liked? ? POINTS_LIKE : POINTS_DISLIKE
       total += action_points
       breakdown[:action] = action_points
@@ -39,9 +36,9 @@ class JourneyPointsService
         breakdown[:watch] = POINTS_WATCH_END
       end
 
-      # Nouvel artiste = +10 (première fois que l’user swipe une vidéo de cet artiste)
+      # Like sur nouvel artiste = +2 (premier like de l'utilisateur pour cet artiste)
       artist = video_artist(video)
-      if artist.present? && first_swipe_for_artist?(user, artist, video.id)
+      if swipe.liked? && artist.present? && first_like_for_artist?(user, artist, video.id)
         total += POINTS_NEW_ARTIST
         breakdown[:new_artist] = POINTS_NEW_ARTIST
       end
@@ -50,13 +47,6 @@ class JourneyPointsService
       if combo_points.positive?
         total += combo_points
         breakdown[:combo] = combo_points
-      end
-
-      # Bonus quotidien : tous les 10 vidéos dans la journée = +20
-      swipes_today = user_swipes_today_count(user)
-      if (swipes_today % DAILY_VIDEOS_FOR_BONUS) == 0 && swipes_today > 0
-        total += POINTS_DAILY_BONUS
-        breakdown[:daily_bonus] = POINTS_DAILY_BONUS
       end
 
       # Boost VIP: +50% de points parcours
@@ -79,14 +69,14 @@ class JourneyPointsService
       # On garde season_journey_points synchronisé pour compatibilité d'affichage.
       attrs[:season_journey_points] = new_journey_points if user.respond_to?(:season_journey_points)
 
-      # Palier 3 000 points: lien de concert
-      if !user.season_concert_link_eligible && new_journey_points >= 3_000
+      # Palier 2 000 points: lien de concert
+      if !user.season_concert_link_eligible && new_journey_points >= 2_000
         attrs[:season_concert_link_eligible] = true
         unlocks << "concert_link"
       end
 
-      # Palier 6 000 points: éligible tirage place physique
-      if !user.season_concert_ticket_eligible && new_journey_points >= 6_000
+      # Palier 4 500 points: éligible tirage place physique
+      if !user.season_concert_ticket_eligible && new_journey_points >= 4_500
         attrs[:season_concert_ticket_eligible] = true
         unlocks << "concert_ticket"
       end
@@ -102,12 +92,15 @@ class JourneyPointsService
       video.respond_to?(:artist) && video.artist.present? ? video.artist.strip : nil
     end
 
-    # True si c’est le premier swipe de l’user sur une vidéo de cet artiste (le swipe actuel vient d’être créé)
-    def first_swipe_for_artist?(user, artist, _current_video_id)
+    # True si c’est le premier like de l’user sur une vidéo de cet artiste
+    def first_like_for_artist?(user, artist, _current_video_id)
       return false if artist.blank?
       video_ids_with_artist = Video.where("LOWER(TRIM(artist)) = ?", artist.to_s.downcase).pluck(:id)
       return false if video_ids_with_artist.empty?
-      count = Swipe.joins(:game).where(games: { user_id: user.id }).where(video_id: video_ids_with_artist).count
+      count = Swipe.joins(:game)
+                   .where(games: { user_id: user.id })
+                   .where(video_id: video_ids_with_artist, action: "like")
+                   .count
       count == 1
     end
 
@@ -134,13 +127,7 @@ class JourneyPointsService
       return 0 if qualified_streak < 3
       return 0 if extreme_same_action_streak?(sequence)
 
-      if qualified_streak >= 7
-        POINTS_COMBO_TIER_3
-      elsif qualified_streak >= 5
-        POINTS_COMBO_TIER_2
-      else
-        POINTS_COMBO_TIER_1
-      end
+      POINTS_COMBO_TIER_1
     end
 
     def extreme_same_action_streak?(sequence)

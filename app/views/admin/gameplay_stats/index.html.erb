@@ -23,8 +23,8 @@
 
       <div class="rounded-xl bg-gray-800 p-4">
         <h2 class="mb-3 text-lg font-semibold">Progression parcours</h2>
-        <p class="text-sm text-gray-300">>= 3000 pts: <span class="font-semibold text-white"><%= @users_3000 %></span></p>
-        <p class="text-sm text-gray-300">>= 6000 pts: <span class="font-semibold text-white"><%= @users_6000 %></span></p>
+        <p class="text-sm text-gray-300">>= 2000 pts: <span class="font-semibold text-white"><%= @users_2000 %></span></p>
+        <p class="text-sm text-gray-300">>= 4500 pts: <span class="font-semibold text-white"><%= @users_4500 %></span></p>
       </div>
     </div>
 
@@ -68,9 +68,9 @@
       </div>
 
       <div class="rounded-xl bg-gray-800 p-4">
-        <h2 class="mb-3 text-lg font-semibold">Proches palier 3000</h2>
-        <% if @users_near_3000.any? %>
-          <% @users_near_3000.each do |u| %>
+        <h2 class="mb-3 text-lg font-semibold">Proches palier 2000</h2>
+        <% if @users_near_2000.any? %>
+          <% @users_near_2000.each do |u| %>
             <p class="text-sm text-gray-300">
               <span class="font-semibold text-white"><%= u.email %></span> - <%= u.journey_points %> pts
             </p>
@@ -81,9 +81,9 @@
       </div>
 
       <div class="rounded-xl bg-gray-800 p-4">
-        <h2 class="mb-3 text-lg font-semibold">Proches palier 6000</h2>
-        <% if @users_near_6000.any? %>
-          <% @users_near_6000.each do |u| %>
+        <h2 class="mb-3 text-lg font-semibold">Proches palier 4500</h2>
+        <% if @users_near_4500.any? %>
+          <% @users_near_4500.each do |u| %>
             <p class="text-sm text-gray-300">
               <span class="font-semibold text-white"><%= u.email %></span> - <%= u.journey_points %> pts
             </p>

@@ -29,10 +29,10 @@ class GamesController < ApplicationController
       return
     end
 
-    # Si une partie est déjà terminée pour cette playlist, on renvoie vers les résultats
-    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    # Cooldown rejouabilité: pas 2 fois la même playlist le même jour
+    completed_game = current_user.games.where(playlist: @playlist).where(completed_at: Time.current.all_day).last
     if completed_game
-      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist aujourd'hui !"
       return
     end
 
@@ -62,16 +62,16 @@ class GamesController < ApplicationController
       return
     end
     
-    # Pour les playlists normales : on ne permet plus de "rejouer" après une playlist terminée
+    # Pour les playlists normales : rejouable, sauf si déjà terminée aujourd'hui
     existing_game = current_user.games.where(playlist: @playlist).where(completed_at: nil).last
     if existing_game
       redirect_to playlist_game_path(@playlist, existing_game), notice: "Vous avez une partie en cours !"
       return
     end
 
-    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    completed_game = current_user.games.where(playlist: @playlist).where(completed_at: Time.current.all_day).last
     if completed_game
-      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist aujourd'hui !"
       return
     end
 
@@ -267,6 +267,12 @@ class GamesController < ApplicationController
         # Marquer le jeu comme terminé s'il n'y a plus de vidéos
         if !next_video && @game.completed?
           @game.update(completed_at: Time.current)
+          apply_daily_playlists_bonus_if_eligible
+          current_user.reload
+          journey_payload[:journey_total] = current_user.journey_points
+          if current_user.games.where(completed_at: Time.current.all_day).count == 3
+            journey_payload[:daily_connection_bonus] = JourneyPointsService::POINTS_DAILY_PLAYLIST_STREAK
+          end
         end
 
         if next_video
@@ -345,11 +351,11 @@ class GamesController < ApplicationController
       return
     end
     
-    # Pour les playlists normales, vérifier si déjà terminée
-    completed_game = current_user.games.where(playlist: @playlist).where.not(completed_at: nil).last
+    # Pour les playlists normales, cooldown 24h sur la même playlist
+    completed_game = current_user.games.where(playlist: @playlist).where(completed_at: Time.current.all_day).last
     
     if completed_game
-      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist !"
+      redirect_to results_playlist_game_path(@playlist, completed_game), alert: "Vous avez déjà terminé cette playlist aujourd'hui !"
       return
     end
     
@@ -397,5 +403,16 @@ class GamesController < ApplicationController
     # Vérifier si le titre contient "reward", "récompense" ou "challenge"
     title = playlist.title.downcase
     title.include?("reward") || title.include?("récompense") || title.include?("challenge")
+  end
+
+  def apply_daily_playlists_bonus_if_eligible
+    completed_today = current_user.games.where(completed_at: Time.current.all_day).count
+    return unless completed_today == 3
+
+    new_total = current_user.journey_points.to_i + JourneyPointsService::POINTS_DAILY_PLAYLIST_STREAK
+    current_user.update_columns(
+      journey_points: new_total,
+      season_journey_points: new_total
+    )
   end
 end

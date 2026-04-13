@@ -34,8 +34,8 @@ class ProfilesController < ApplicationController
     @link_eligible = @user.season_concert_link_eligible
     @ticket_eligible = @user.season_concert_ticket_eligible
 
-    # Limiter la progression à 6000 pour l'affichage (100%)
-    @progress_percent = [[(@journey_points.to_f / 6000.0) * 100.0, 100].min, 0].max.round
+    # Limiter la progression à 4500 pour l'affichage (100%)
+    @progress_percent = [[(@journey_points.to_f / 4500.0) * 100.0, 100].min, 0].max.round
 
     # Playlists restantes aujourd'hui (free vs VIP)
     if @user.vip?

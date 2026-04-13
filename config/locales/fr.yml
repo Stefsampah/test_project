@@ -548,11 +548,11 @@ fr:
       live:
         title: "Concert live"
         unlocked: "Lien concert débloqué"
-        target_hint: "Objectif 3 000 pts"
+        target_hint: "Objectif 2 000 pts"
       physique:
         title: "Concert physique"
         unlocked: "Éligible au tirage place physique"
-        target_hint: "Objectif 6 000 pts"
+        target_hint: "Objectif 4 500 pts"
   
   # Common
   common:

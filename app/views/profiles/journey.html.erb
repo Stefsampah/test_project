@@ -33,8 +33,8 @@
       </p>
     </div>
 
-    <% progress_3000 = [[(@journey_points.to_f / 3_000.0) * 100.0, 100].min, 0].max.round %>
-    <% progress_6000 = [[(@journey_points.to_f / 6_000.0) * 100.0, 100].min, 0].max.round %>
+    <% progress_2000 = [[(@journey_points.to_f / 2_000.0) * 100.0, 100].min, 0].max.round %>
+    <% progress_4500 = [[(@journey_points.to_f / 4_500.0) * 100.0, 100].min, 0].max.round %>
     <% use_live_video = true %>
     <% use_physique_video = true %>
 
@@ -42,21 +42,21 @@
       <%= render "shared/card_concert",
                  variant: :live,
                  season_points: @journey_points,
-                 target_points: 3_000,
+                 target_points: 2_000,
                  video_key: "concerts/concert_live.mp4",
                  image_key: "concerts/concert_live.png",
                  tag_label: "Live",
-                 percent: progress_3000,
+                 percent: progress_2000,
                  use_video: use_live_video %>
 
       <%= render "shared/card_concert",
                  variant: :physique,
                  season_points: @journey_points,
-                 target_points: 6_000,
+                 target_points: 4_500,
                  video_key: "concerts/concert_physique.mp4",
                  image_key: "concerts/concert_physique.png",
                  tag_label: "Physique",
-                 percent: progress_6000,
+                 percent: progress_4500,
                  use_video: use_physique_video %>
     </div>
 
