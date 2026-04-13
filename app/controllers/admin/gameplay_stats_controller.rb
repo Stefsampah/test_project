@@ -25,6 +25,9 @@ module Admin
 
       @users_3000 = User.where("journey_points >= 3000").count
       @users_6000 = User.where("journey_points >= 6000").count
+      @users_near_3000 = User.where(journey_points: 2500...3000).order(journey_points: :desc).limit(10)
+      @users_near_6000 = User.where(journey_points: 5500...6000).order(journey_points: :desc).limit(10)
+      @top_weekly_progress = top_weekly_progress_users
 
       @top_spam_like_users = spam_ratio_users("like")
       @top_spam_dislike_users = spam_ratio_users("dislike")
@@ -44,6 +47,23 @@ module Admin
           .select("users.id, users.email, #{total_sql} AS swipes_count, #{ratio_sql} AS ratio")
           .order("ratio DESC")
           .limit(10)
+    end
+
+    def top_weekly_progress_users
+      users = User.includes(:swipes).to_a
+      users.map do |user|
+        swipes = user.swipes.where(created_at: 7.days.ago..Time.current)
+        progress = swipes.sum do |s|
+          case s.action
+          when "like" then 5
+          when "dislike" then 1
+          else 0
+          end
+        end
+        { user: user, points: progress, swipes_count: swipes.size }
+      end.select { |row| row[:points].positive? }
+           .sort_by { |row| -row[:points] }
+           .first(10)
     end
 
     def ensure_admin!

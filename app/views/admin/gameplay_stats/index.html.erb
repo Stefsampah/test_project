@@ -51,5 +51,47 @@
         <% end %>
       </div>
     </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Top 10 progression (7j)</h2>
+        <% if @top_weekly_progress.any? %>
+          <% @top_weekly_progress.each do |row| %>
+            <p class="text-sm text-gray-300">
+              <span class="font-semibold text-white"><%= row[:user].email %></span>
+              - +<%= row[:points] %> pts (<%= row[:swipes_count] %> swipes)
+            </p>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400">Aucune progression cette semaine.</p>
+        <% end %>
+      </div>
+
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Proches palier 3000</h2>
+        <% if @users_near_3000.any? %>
+          <% @users_near_3000.each do |u| %>
+            <p class="text-sm text-gray-300">
+              <span class="font-semibold text-white"><%= u.email %></span> - <%= u.journey_points %> pts
+            </p>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400">Aucun utilisateur proche.</p>
+        <% end %>
+      </div>
+
+      <div class="rounded-xl bg-gray-800 p-4">
+        <h2 class="mb-3 text-lg font-semibold">Proches palier 6000</h2>
+        <% if @users_near_6000.any? %>
+          <% @users_near_6000.each do |u| %>
+            <p class="text-sm text-gray-300">
+              <span class="font-semibold text-white"><%= u.email %></span> - <%= u.journey_points %> pts
+            </p>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400">Aucun utilisateur proche.</p>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

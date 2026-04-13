@@ -12,11 +12,18 @@ class JourneyPointsService
   POINTS_COMBO_TIER_1 = 1
   POINTS_COMBO_TIER_2 = 2
   POINTS_COMBO_TIER_3 = 3
+  MAX_POINTS_PER_SWIPE = 20
+  MAX_SWIPES_COUNTED_PER_GAME = 120
+  MAX_SWIPES_COUNTED_PER_DAY = 400
 
   class << self
     # Appelé après création d’un swipe. Calcule et ajoute les points au user.journey_points.
     # Retourne un hash avec les points ajoutés (pour affichage éventuel en front).
     def add_swipe_points(user, swipe, video)
+      # Garde-fous anti-extrême pour limiter les écarts de progression.
+      return { total: 0, breakdown: { capped: "game_limit" } } if game_cap_reached?(swipe)
+      return { total: 0, breakdown: { capped: "day_limit" } } if day_cap_reached?(user)
+
       total = 0
       breakdown = {}
       unlocks = []
@@ -56,6 +63,11 @@ class JourneyPointsService
       if user.respond_to?(:vip?) && user.vip?
         total = (total * 1.5).round
         breakdown[:vip_boost] = "+50%"
+      end
+
+      if total > MAX_POINTS_PER_SWIPE
+        total = MAX_POINTS_PER_SWIPE
+        breakdown[:safety_cap] = MAX_POINTS_PER_SWIPE
       end
 
       return { total: 0, breakdown: {} } if total <= 0
@@ -134,6 +146,16 @@ class JourneyPointsService
     def extreme_same_action_streak?(sequence)
       actions = sequence.first(4).map(&:action)
       actions.length == 4 && actions.uniq.length == 1
+    end
+
+    def game_cap_reached?(swipe)
+      return false unless swipe.respond_to?(:game_id) && swipe.game_id.present?
+
+      Swipe.where(game_id: swipe.game_id).count > MAX_SWIPES_COUNTED_PER_GAME
+    end
+
+    def day_cap_reached?(user)
+      user_swipes_today_count(user) > MAX_SWIPES_COUNTED_PER_DAY
     end
   end
 end
