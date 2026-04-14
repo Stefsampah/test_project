@@ -1,4 +1,4 @@
-<div class="relative min-h-[100svh] overflow-hidden bg-zinc-950 text-white -mt-2 sm:mt-0">
+<div class="relative min-h-[100svh] overflow-hidden bg-zinc-950 text-white -mt-4 sm:mt-0">
   <%# Dézoom léger + cadrage mi/bas pour voir artiste + foule %>
   <div class="absolute inset-0 overflow-hidden bg-zinc-950">
     <% begin %>
@@ -8,29 +8,24 @@
     <% rescue Sprockets::Rails::Helper::AssetNotFound %>
       <div class="h-full w-full bg-[radial-gradient(ellipse_120%_80%_at_50%_30%,#c084fc_0%,#7c3aed_35%,#312e81_70%,#0f172a_100%)]"></div>
     <% end %>
-    <div class="absolute inset-0 bg-gradient-to-b from-zinc-900/20 via-zinc-950/35 to-zinc-950/85"></div>
-    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_18%,rgba(168,85,247,0.12),transparent_60%)]"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-transparent"></div>
   </div>
 
   <div class="relative z-10 flex min-h-[100svh] flex-col">
-    <div class="pointer-events-none absolute inset-x-0 top-0 h-[210px] bg-[radial-gradient(ellipse_62%_46%_at_50%_8%,rgba(0,0,0,0.45),transparent_72%)]"></div>
-    <div class="flex shrink-0 justify-center px-4 pt-0 -mt-2 sm:mt-0">
+    <div class="flex shrink-0 justify-center px-4 pt-0 -mt-6 sm:mt-0">
       <% begin %>
-        <div class="relative rounded-full px-2 py-1">
-          <div class="pointer-events-none absolute inset-0 rounded-full bg-black/30 blur-xl"></div>
-          <div class="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle_at_50%_55%,rgba(168,85,247,0.32),transparent_68%)]"></div>
-          <%= image_tag "Logo/Copilot_20251006_162220.png",
-                        alt: "Tube'NPlay",
-                        size: "150x150",
-                        class: "relative h-[150px] w-[150px] max-h-[150px] max-w-[150px] shrink-0 object-contain opacity-[0.92] mix-blend-screen saturate-90 drop-shadow-[0_0_20px_rgba(168,85,247,0.55)] drop-shadow-[0_0_40px_rgba(139,92,246,0.25)]" %>
-        </div>
+        <%= image_tag "Logo/Copilot_20251006_162220.png",
+                      alt: "Tube'NPlay",
+                      size: "150x150",
+                      class: "h-[150px] w-[150px] max-h-[150px] max-w-[150px] shrink-0 object-contain opacity-[0.94] drop-shadow-[0_8px_18px_rgba(0,0,0,0.45)]" %>
       <% rescue Sprockets::Rails::Helper::AssetNotFound %>
         <span class="text-2xl font-black tracking-tight text-white drop-shadow-[0_0_20px_rgba(168,85,247,0.85)] sm:text-3xl">Tube'NPlay</span>
       <% end %>
     </div>
 
     <%# Titre juste sous le logo, un peu plus grand, remonté (peu d’espace sous le logo) %>
-    <h1 class="mx-auto w-full max-w-md shrink-0 px-5 pt-0 -mt-1 text-center text-3xl font-extrabold leading-tight text-white drop-shadow-md sm:-mt-0.5">
+    <h1 class="mx-auto w-full max-w-md shrink-0 px-5 pt-0 -mt-3 text-center text-3xl font-extrabold leading-tight text-white drop-shadow-md sm:-mt-1">
       Transforme tes écoutes en place de concert
     </h1>
 
