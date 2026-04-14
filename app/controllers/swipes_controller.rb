@@ -71,16 +71,19 @@ class SwipesController < ApplicationController
         )
       end
 
-      # Parcours 5 niveaux (refonte gameplay) : like +5, dislike +1, watch +2, new_artist +10, daily 10 vidéos +20
+      # Points parcours
       journey_result = JourneyPointsService.add_swipe_points(current_user, swipe, video)
       current_user.reload
 
       game.reload
       next_video = game.next_video
+      daily_bonus_awarded = false
 
       # Marquer le jeu comme terminé s'il n'y a plus de vidéos (évite que "Reprendre la partie" reste affiché)
       if next_video.nil?
         game.update_column(:completed_at, Time.current) if game.completed_at.nil?
+        daily_bonus_awarded = apply_daily_playlists_bonus_if_eligible(game)
+        current_user.reload if daily_bonus_awarded
       end
 
       journey_payload = {
@@ -93,6 +96,10 @@ class SwipesController < ApplicationController
         journey_progress_percent: JourneyLevels.progress_percentage(current_user.journey_points),
         journey_points_to_next: JourneyLevels.points_to_next_level(current_user.journey_points)
       }
+      if next_video.nil? && daily_bonus_awarded
+        journey_payload[:daily_connection_bonus] = JourneyPointsService::POINTS_DAILY_PLAYLIST_STREAK
+        journey_payload[:journey_total] = current_user.journey_points
+      end
 
       if next_video
         render json: { 
@@ -126,6 +133,18 @@ class SwipesController < ApplicationController
   def reward_playlist?(playlist)
     title = playlist.title.downcase
     title.include?("reward") || title.include?("récompense") || title.include?("challenge")
+  end
+
+  def apply_daily_playlists_bonus_if_eligible(game)
+    completed_today = game.user.games.where(completed_at: Time.current.all_day).count
+    return false unless completed_today == 3
+
+    new_total = game.user.journey_points.to_i + JourneyPointsService::POINTS_DAILY_PLAYLIST_STREAK
+    game.user.update_columns(
+      journey_points: new_total,
+      season_journey_points: new_total
+    )
+    true
   end
 
   # Actions pour les tests

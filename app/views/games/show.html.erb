@@ -58,7 +58,7 @@
             <p style="margin-bottom: 20px; font-size: 16px;">La vidéo ne se charge pas</p>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 12px;">
               <button onclick="retryVideoLoad('<%= @game.current_video.id %>', '<%= @game.current_video.youtube_id %>')" style="background: #9333ea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Réessayer</button>
-              <button onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();}" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Passer à la suivante</button>
+              <button id="video-error-skip-btn" style="background: #6b7280; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;">Passer à la suivante</button>
               <a href="https://www.youtube.com/watch?v=<%= @game.current_video.youtube_id %>" target="_blank" style="display: inline-block; background: #ff0000; color: white; border: none; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-size: 16px; font-weight: bold;">Ouvrir sur YouTube</a>
             </div>
             <p style="font-size: 12px; opacity: 0.7;">Si la vidéo est indisponible, utilisez « Passer à la suivante »</p>
@@ -156,7 +156,8 @@
               var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=' + muteValue + '&playsinline=1&controls=' + controlsValue + '&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
-              iframe.style.setProperty('pointer-events', window.__tnpSoundEnabled ? 'auto' : 'none', 'important');
+              // En mode gameplay, l'iframe ne doit jamais capturer les interactions utilisateur.
+              iframe.style.setProperty('pointer-events', 'none', 'important');
             };
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
             if (playBtn && isSafariMobile) {
@@ -244,12 +245,12 @@
         </div>
 
         <div class="shorts-actions" style="pointer-events: auto !important;">
-          <button type="button" class="action-btn dislike" id="game-btn-dislike" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.gameSwipeDislike){window.gameSwipeDislike();} return false;" ontouchend="if(window.gameSwipeDislike){event.preventDefault();window.gameSwipeDislike();} return false;">
+          <button type="button" class="action-btn dislike" id="game-btn-dislike" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.__tnpDirectSwipe){window.__tnpDirectSwipe('dislike');return false;}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="action-icon">
               <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <button type="button" class="action-btn like" id="game-btn-like" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.gameSwipeLike){window.gameSwipeLike();} return false;" ontouchend="if(window.gameSwipeLike){event.preventDefault();window.gameSwipeLike();} return false;">
+          <button type="button" class="action-btn like" id="game-btn-like" style="pointer-events: auto !important; cursor: pointer !important;" onclick="if(window.__tnpDirectSwipe){window.__tnpDirectSwipe('like');return false;}">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-icon">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
@@ -279,6 +280,15 @@
         35% { transform: scale(1.12); }
         100% { transform: scale(1); }
       }
+      @keyframes unlockSparkleBurst {
+        0% { transform: translate(-50%, -50%) scale(0.25); opacity: 0; }
+        25% { opacity: 1; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(1.1); opacity: 0; }
+      }
+      @keyframes unlockCardIn {
+        0% { transform: translateY(14px) scale(0.92); opacity: 0; }
+        100% { transform: translateY(0) scale(1); opacity: 1; }
+      }
       @keyframes gameFeedbackPulse {
         0% { transform: scale(0.92); opacity: 0.9; }
         100% { transform: scale(1); opacity: 1; }
@@ -289,19 +299,94 @@
       .game-feedback-pop {
         animation: gameFeedbackPulse 180ms ease-out forwards;
       }
+      .unlock-sparkle {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: radial-gradient(circle, #fff 0%, #fde68a 45%, #f472b6 100%);
+        box-shadow: 0 0 12px rgba(255,255,255,0.85), 0 0 26px rgba(251,191,36,0.65);
+        animation: unlockSparkleBurst 900ms ease-out forwards;
+        pointer-events: none;
+      }
+      .unlock-cinematic-card {
+        animation: unlockCardIn 220ms ease-out forwards;
+      }
     </style>
 
+    <script>
+    (function() {
+      // Fallback robuste : si l'init gameplay ne s'accroche pas,
+      // les boutons déclenchent quand même le swipe côté serveur.
+      window.__tnpDirectSwipe = function(direction) {
+        try {
+          if (window.__tnpDirectSwipeLock) return;
+          window.__tnpDirectSwipeLock = true;
+
+          var csrf = document.querySelector('meta[name="csrf-token"]');
+          var token = csrf ? csrf.getAttribute('content') : '';
+          var watchedSeconds = 10;
+          var swipeUrl = window.location.pathname.replace(/\/$/, '') + '/swipe';
+
+          fetch(swipeUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': token,
+              'Accept': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({ direction: direction, watched_seconds: watchedSeconds })
+          })
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data && data.redirect) {
+              window.location.href = data.redirect;
+              return;
+            }
+            window.location.reload();
+          })
+          .catch(function() {
+            window.location.reload();
+          })
+          .finally(function() {
+            setTimeout(function() { window.__tnpDirectSwipeLock = false; }, 1200);
+          });
+        } catch (_) {
+          window.__tnpDirectSwipeLock = false;
+        }
+      };
+    })();
+    </script>
     <script>
     (function() {
       function initGameSwipe() {
         var player = document.getElementById('game-swipe-player');
         if (!player) { console.warn('[Game] game-swipe-player non trouvé'); return; }
+        var iframeGuardObserver = null;
+
+        function enforceIframeNoPointerEvents() {
+          var iframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
+          if (!iframe) return;
+          iframe.style.setProperty('pointer-events', 'none', 'important');
+          iframe.style.setProperty('user-select', 'none', 'important');
+          iframe.style.setProperty('-webkit-user-select', 'none', 'important');
+          iframe.style.setProperty('-webkit-touch-callout', 'none', 'important');
+        }
+
+        // Appliquer immédiatement et re-appliquer régulièrement (simulateur mobile Chrome).
+        enforceIframeNoPointerEvents();
+        setInterval(enforceIframeNoPointerEvents, 500);
 
         var isProcessing = false;
         var videoStartedAtMs = Date.now();
         var currentYoutubeId = '<%= @game.current_video.youtube_id %>';
         var feedbackTimeout = null;
         var feedbackBarTimeout = null;
+        var processingWatchdog = null;
+        var processingSinceMs = 0;
         var lastSwipeType = null;
         var streakCount = 0;
 
@@ -429,17 +514,39 @@
       function reloadCurrentVideoWithAudioPreference() {
         var iframe = document.querySelector('iframe[id^="youtube-player-"]');
         if (!iframe || !currentYoutubeId) return;
-        iframe.style.pointerEvents = soundEnabled ? 'auto' : 'none';
+        // En mode gameplay, conserver les interactions sur les boutons/gestes du jeu.
+        iframe.style.pointerEvents = 'none';
         iframe.src = buildEmbedUrl(currentYoutubeId);
       }
 
       function getData() {
-        return {
+        var data = {
           videoId: player.getAttribute('data-swipe-video-id'),
           playlistId: player.getAttribute('data-swipe-playlist-id'),
           gameId: player.getAttribute('data-swipe-game-id')
         };
+
+        // Fallback défensif: tenter d'extraire playlist/game depuis l'URL.
+        if ((!data.playlistId || !data.gameId) && window.location.pathname) {
+          var m = window.location.pathname.match(/\/playlists\/(\d+)\/games\/(\d+)/);
+          if (m) {
+            data.playlistId = data.playlistId || m[1];
+            data.gameId = data.gameId || m[2];
+          }
+        }
+        return data;
       }
+
+      function clearProcessingState() {
+        isProcessing = false;
+        processingSinceMs = 0;
+        setButtonsEnabled(true);
+        clearTimeout(processingWatchdog);
+        processingWatchdog = null;
+      }
+
+      // Debug helper in browser console.
+      window.__tnpResetSwipeState = clearProcessingState;
 
       function setButtonsEnabled(enabled) {
         var btns = player.querySelectorAll('.action-btn');
@@ -557,16 +664,29 @@
       }
 
       function handleSwipe(liked) {
-        if (isProcessing) return;
+        if (isProcessing) {
+          if (processingSinceMs && (Date.now() - processingSinceMs) > 1200) {
+            console.warn('[Game] forcing stale processing reset');
+            clearProcessingState();
+          } else {
+            console.warn('[Game] swipe ignored: processing already in progress');
+            return;
+          }
+        }
         pulseButton(liked);
-        showSwipeFeedback(liked);
         var d = getData();
+        console.log('[Game] handleSwipe', liked ? 'like' : 'dislike', d);
         if (!d.videoId || !d.playlistId || !d.gameId) {
           alert('Données manquantes. Rechargez la page.');
           return;
         }
         isProcessing = true;
+        processingSinceMs = Date.now();
         setButtonsEnabled(false);
+        processingWatchdog = setTimeout(function() {
+          console.warn('[Game] swipe watchdog reset (timeout)');
+          clearProcessingState();
+        }, 8000);
 
         var csrf = document.querySelector('meta[name="csrf-token"]');
         var token = csrf ? csrf.getAttribute('content') : '';
@@ -596,7 +716,7 @@
         .then(function(data) {
           if (!data.success) {
             if (data.redirect) window.location.href = data.redirect;
-            else { isProcessing = false; setButtonsEnabled(true); alert(data.error || 'Erreur'); }
+            else { clearProcessingState(); alert(data.error || 'Erreur'); }
             return;
           }
 
@@ -618,7 +738,9 @@
               } else {
                 var iframe = document.querySelector('iframe[id^="youtube-player-"]');
                 if (iframe) {
+                  iframe.style.pointerEvents = 'none';
                   iframe.src = buildEmbedUrl(data.next_video_youtube_id);
+                  enforceIframeNoPointerEvents();
                 } else {
                   window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
                   return;
@@ -627,46 +749,112 @@
               currentYoutubeId = data.next_video_youtube_id;
               videoStartedAtMs = Date.now();
               resetCardTransform();
-              isProcessing = false;
-              setButtonsEnabled(true);
+              clearProcessingState();
             } else {
               window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
             }
           }
 
-          function showConcertUnlockSplash(unlocks, done) {
-            if (!unlocks || !unlocks.length) { done(); return; }
-            var title = unlocks.indexOf('concert_ticket') >= 0 ? 'CONCERT PHYSIQUE DEBLOQUE' : 'CONCERT LIVE DEBLOQUE';
-            var subtitle = unlocks.indexOf('concert_ticket') >= 0 ? 'Palier 6000 points atteint' : 'Palier 3000 points atteint';
+          function showConcertUnlockSplash(unlocks, dailyBonus, done) {
+            try {
+              var title = null;
+              var subtitle = null;
+              var emoji = 'TROPHY';
+              var visual = '';
+              var tagLabel = '';
+              var currentPoints = Number(data.journey_total || 0);
+              var targetPoints = 0;
+              var progressPercent = 0;
+              var sparkles = '';
 
-            var splash = document.createElement('div');
-            splash.style.cssText = 'position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 25%, rgba(168,85,247,0.55), rgba(0,0,0,0.93));backdrop-filter:blur(5px);';
-            splash.innerHTML =
-              '<div style="width:min(92vw,390px);padding:24px;border-radius:26px;background:linear-gradient(180deg,rgba(126,34,206,0.97),rgba(37,99,235,0.95));box-shadow:0 28px 80px rgba(0,0,0,0.5),0 0 55px rgba(168,85,247,0.65);border:1px solid rgba(255,255,255,0.22);text-align:center;color:#fff;transform:scale(0.9);opacity:0;transition:transform 240ms ease,opacity 240ms ease;">' +
-                '<div style="font-size:44px;line-height:1">🏆</div>' +
-                '<div style="margin-top:10px;font-size:11px;font-weight:900;letter-spacing:0.24em;opacity:0.9">LEVEL UP</div>' +
-                '<div style="margin-top:8px;font-size:24px;font-weight:900;line-height:1.2;">' + title + '</div>' +
-                '<div style="margin-top:8px;font-size:13px;opacity:0.92;">' + subtitle + '</div>' +
-              '</div>';
-            document.body.appendChild(splash);
-            var card = splash.firstChild;
-            setTimeout(function() { card.style.transform = 'scale(1)'; card.style.opacity = '1'; }, 20);
-            setTimeout(function() {
-              splash.style.transition = 'opacity 220ms ease';
-              splash.style.opacity = '0';
+              for (var i = 0; i < 20; i += 1) {
+                var angle = (Math.PI * 2 * i) / 20;
+                var radius = 70 + Math.random() * 120;
+                var tx = Math.cos(angle) * radius;
+                var ty = Math.sin(angle) * radius;
+                var delay = Math.floor(Math.random() * 220);
+                sparkles += '<span class="unlock-sparkle" style="--tx:' + tx.toFixed(1) + 'px;--ty:' + ty.toFixed(1) + 'px;animation-delay:' + delay + 'ms;"></span>';
+              }
+
+              if (unlocks && unlocks.indexOf('concert_ticket') >= 0) {
+                title = 'CONCERT PHYSIQUE DEBLOQUE';
+                subtitle = 'Palier 4500 points atteint';
+                tagLabel = 'PHYSIQUE';
+                targetPoints = 4500;
+                progressPercent = Math.min(100, Math.round((currentPoints / targetPoints) * 100));
+                visual =
+                  '<div class="relative overflow-hidden rounded-2xl" style="height: 12rem;">' +
+                    '<video autoplay loop muted playsinline class="w-full h-full object-cover concert-media-pulse" src="<%= asset_path("concerts/concert_physique.mp4") %>"></video>' +
+                    '<div class="pointer-events-none absolute inset-0" style="background: linear-gradient(180deg, #f59e0b 0%, #6b21a8 60%, #111827 100%); opacity: 0.50;"></div>' +
+                    '<div class="absolute top-3 right-3"><span class="rounded-full px-3 py-1 text-xs font-bold bg-black text-amber-200">' + tagLabel + '</span></div>' +
+                  '</div>';
+              } else if (unlocks && unlocks.indexOf('concert_link') >= 0) {
+                title = 'CONCERT LIVE DEBLOQUE';
+                subtitle = 'Palier 2000 points atteint';
+                tagLabel = 'LIVE';
+                targetPoints = 2000;
+                progressPercent = Math.min(100, Math.round((currentPoints / targetPoints) * 100));
+                visual =
+                  '<div class="relative overflow-hidden rounded-2xl" style="height: 12rem;">' +
+                    '<video autoplay loop muted playsinline class="w-full h-full object-cover concert-media-pulse" src="<%= asset_path("concerts/concert_live.mp4") %>"></video>' +
+                    '<div class="pointer-events-none absolute inset-0" style="background: linear-gradient(180deg, #a855f7 0%, #6b21a8 55%, #111827 100%); opacity: 0.50;"></div>' +
+                    '<div class="absolute top-3 right-3"><span class="rounded-full px-3 py-1 text-xs font-bold bg-white text-black">' + tagLabel + '</span></div>' +
+                  '</div>';
+              } else if (dailyBonus && Number(dailyBonus) > 0) {
+                title = 'BONUS QUOTIDIEN';
+                subtitle = '+' + dailyBonus + ' pts (3 playlists jouees)';
+                emoji = 'FIRE';
+                visual = '<div style="width:100%;height:72px;display:flex;align-items:center;justify-content:center;border-radius:14px;background:rgba(255,255,255,0.09);border:1px solid rgba(255,255,255,0.22);margin:10px 0 4px 0;font-size:30px;">🔥</div>';
+              }
+
+              if (!title) { done(); return; }
+
+              var splash = document.createElement('div');
+              splash.style.cssText = 'position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 25%, rgba(168,85,247,0.55), rgba(0,0,0,0.93));backdrop-filter:blur(5px);';
+              splash.innerHTML =
+                '<div style="position:relative;width:min(92vw,410px);">' +
+                  sparkles +
+                  '<div class="unlock-cinematic-card relative overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#6b21a8]/95 to-[#1d4ed8]/95 text-white shadow-2xl" style="padding:18px;border:1px solid rgba(255,255,255,0.22);">' +
+                  '<div style="font-size:38px;line-height:1">' + (emoji === 'FIRE' ? '🔥' : '🏆') + '</div>' +
+                  '<div style="margin-top:10px;font-size:11px;font-weight:900;letter-spacing:0.24em;opacity:0.9">LEVEL UP</div>' +
+                  '<div style="margin-top:8px;font-size:24px;font-weight:900;line-height:1.2;">' + title + '</div>' +
+                  visual +
+                  (targetPoints > 0
+                    ? '<div style="margin-top:10px;display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;opacity:0.95;"><span>' + currentPoints + ' / ' + targetPoints + ' pts</span><span>' + progressPercent + '%</span></div>' +
+                      '<div style="margin-top:6px;height:8px;border-radius:9999px;background:rgba(255,255,255,0.16);overflow:hidden;"><div style="height:100%;width:' + progressPercent + '%;border-radius:9999px;background:#fff;"></div></div>'
+                    : '') +
+                  '<div style="margin-top:8px;font-size:13px;opacity:0.92;">' + subtitle + '</div>' +
+                  '</div>' +
+                '</div>';
+              document.body.appendChild(splash);
+              var card = splash.querySelector('.unlock-cinematic-card');
+              setTimeout(function() { card.style.transform = 'scale(1)'; card.style.opacity = '1'; }, 20);
               setTimeout(function() {
-                if (splash.parentNode) splash.parentNode.removeChild(splash);
-                done();
-              }, 230);
-            }, 1700);
+                splash.style.transition = 'opacity 220ms ease';
+                splash.style.opacity = '0';
+                setTimeout(function() {
+                  if (splash.parentNode) splash.parentNode.removeChild(splash);
+                  done();
+                }, 230);
+              }, 2400);
+            } catch (e) {
+              console.error('unlock splash error', e);
+              done();
+            }
           }
 
-          showConcertUnlockSplash(data.journey_unlocks || [], continueGameFlow);
+          var hasUnlockCinematic = (data.journey_unlocks && data.journey_unlocks.length > 0) || (Number(data.daily_connection_bonus || 0) > 0);
+          if (hasUnlockCinematic) {
+            // Priorité à la cinématique palier/bonus: pas de mini feedback texte avant.
+            showConcertUnlockSplash(data.journey_unlocks || [], data.daily_connection_bonus, continueGameFlow);
+          } else {
+            showSwipeFeedback(liked);
+            setTimeout(continueGameFlow, 260);
+          }
         })
         .catch(function(err) {
           console.error('Swipe error:', err);
-          isProcessing = false;
-          setButtonsEnabled(true);
+          clearProcessingState();
           alert('Erreur de connexion. Réessayez.');
         });
       }
@@ -693,6 +881,20 @@
         }
         bindButton(btnLike, true);
         bindButton(btnDislike, false);
+        clearProcessingState();
+        var skipBtn = document.getElementById('video-error-skip-btn');
+        if (skipBtn) {
+          skipBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSwipe(false);
+          });
+          skipBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            handleSwipe(false);
+          }, { passive: false });
+        }
         updateAudioButton();
         var audioBtn = document.getElementById('game-audio-toggle');
         if (audioBtn) {
@@ -746,6 +948,15 @@
         }
         document.addEventListener('click', onPlayerClick, true);
         document.addEventListener('touchend', onPlayerClick, true);
+
+        // Observe les modifications de style sur l'iframe et restaure pointer-events:none.
+        var guardedIframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
+        if (guardedIframe && window.MutationObserver) {
+          iframeGuardObserver = new MutationObserver(function() {
+            enforceIframeNoPointerEvents();
+          });
+          iframeGuardObserver.observe(guardedIframe, { attributes: true, attributeFilter: ['style'] });
+        }
       }
 
       if (document.readyState === 'loading') {
