@@ -1,0 +1,93 @@
+<div class="min-h-screen bg-gray-900 text-white">
+  <div class="mx-auto max-w-7xl px-4 py-8">
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="text-3xl font-bold">Admin - Stats artistes</h1>
+        <p class="text-sm text-gray-400">
+          Fenêtre d'analyse: 7 derniers jours
+        </p>
+      </div>
+      <div class="flex gap-2">
+        <%= link_to "Gameplay stats", admin_gameplay_stats_path, class: "rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20" %>
+        <%= link_to "Animations admin", admin_animations_path, class: "rounded-lg bg-white/10 px-4 py-2 text-sm hover:bg-white/20" %>
+      </div>
+    </div>
+
+    <div class="mb-6 grid grid-cols-2 gap-4 md:grid-cols-4">
+      <div class="rounded-xl bg-gray-800 p-4">
+        <p class="text-xs text-gray-400">Artistes actifs (7j)</p>
+        <p class="text-2xl font-bold"><%= @artist_rows.size %></p>
+      </div>
+      <div class="rounded-xl bg-gray-800 p-4">
+        <p class="text-xs text-gray-400">Fans decouvreurs total</p>
+        <p class="text-2xl font-bold"><%= @artist_rows.sum { |r| r[:discovered_fans_count] } %></p>
+      </div>
+      <div class="rounded-xl bg-gray-800 p-4">
+        <p class="text-xs text-gray-400">Likes total</p>
+        <p class="text-2xl font-bold"><%= @artist_rows.sum { |r| r[:likes_count] } %></p>
+      </div>
+      <div class="rounded-xl bg-gray-800 p-4">
+        <p class="text-xs text-gray-400">Ecoutes total</p>
+        <p class="text-2xl font-bold"><%= @artist_rows.sum { |r| r[:total_listens] } %></p>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-xl border border-gray-700 bg-gray-800">
+      <table class="min-w-full text-left text-sm">
+        <thead class="bg-gray-700/60 text-gray-200">
+          <tr>
+            <th class="px-4 py-3 font-semibold">Artiste</th>
+            <th class="px-4 py-3 font-semibold">Classement</th>
+            <th class="px-4 py-3 font-semibold">Progression</th>
+            <th class="px-4 py-3 font-semibold">Fans decouvreurs</th>
+            <th class="px-4 py-3 font-semibold">Likes</th>
+            <th class="px-4 py-3 font-semibold">Ecoutes</th>
+            <th class="px-4 py-3 font-semibold">Parties playlist</th>
+            <th class="px-4 py-3 font-semibold">Playlists touchees</th>
+            <th class="px-4 py-3 font-semibold">Playlist top</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if @artist_rows.any? %>
+            <% @artist_rows.each do |row| %>
+              <tr class="border-t border-gray-700 align-top">
+                <td class="px-4 py-3 font-semibold text-white"><%= row[:artist_name] %></td>
+                <td class="px-4 py-3 text-gray-200">#<%= row[:current_rank] || "-" %></td>
+                <td class="px-4 py-3">
+                  <% if row[:rank_delta].nil? %>
+                    <span class="text-gray-400">Nouveau / n.d.</span>
+                  <% elsif row[:rank_delta].positive? %>
+                    <span class="font-semibold text-green-400">+<%= row[:rank_delta] %></span>
+                  <% elsif row[:rank_delta].negative? %>
+                    <span class="font-semibold text-red-400"><%= row[:rank_delta] %></span>
+                  <% else %>
+                    <span class="text-gray-300">0</span>
+                  <% end %>
+                </td>
+                <td class="px-4 py-3 text-gray-200"><%= row[:discovered_fans_count] %></td>
+                <td class="px-4 py-3 text-gray-200"><%= row[:likes_count] %></td>
+                <td class="px-4 py-3 text-gray-200"><%= row[:total_listens] %></td>
+                <td class="px-4 py-3 text-gray-200"><%= row[:playlist_plays_count] %></td>
+                <td class="px-4 py-3 text-gray-200"><%= row[:playlists_count] %></td>
+                <td class="px-4 py-3 text-gray-300">
+                  <% if row[:top_playlist] %>
+                    <span class="font-semibold text-white"><%= row[:top_playlist][:title] %></span>
+                    <span class="block text-xs text-gray-400"><%= row[:top_playlist][:listens_count] %> ecoutes</span>
+                  <% else %>
+                    <span class="text-gray-400">-</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="9" class="px-4 py-8 text-center text-gray-400">
+                Aucune donnee artiste disponible sur les 7 derniers jours.
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
