@@ -156,8 +156,9 @@
               var url = 'https://www.youtube.com/embed/' + youtubeId + '?autoplay=1&mute=' + muteValue + '&playsinline=1&controls=' + controlsValue + '&rel=0&modestbranding=1';
               iframe.src = url;
               iframe.style.setProperty('display', 'block', 'important');
-              // En mode gameplay, l'iframe ne doit jamais capturer les interactions utilisateur.
-              iframe.style.setProperty('pointer-events', 'none', 'important');
+              // Safari iPhone/iPad: si le son est ON, on laisse l'utilisateur cliquer sur Play YouTube.
+              var allowIframeInteraction = !!window.__tnpSoundEnabled;
+              iframe.style.setProperty('pointer-events', allowIframeInteraction ? 'auto' : 'none', 'important');
             };
             var playBtn = document.getElementById('safari-play-btn-' + videoId);
             if (playBtn && isSafariMobile) {
@@ -366,19 +367,28 @@
         var player = document.getElementById('game-swipe-player');
         if (!player) { console.warn('[Game] game-swipe-player non trouvé'); return; }
         var iframeGuardObserver = null;
+        var isMobileSafari = /iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream;
 
-        function enforceIframeNoPointerEvents() {
-          var iframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
-          if (!iframe) return;
-          iframe.style.setProperty('pointer-events', 'none', 'important');
-          iframe.style.setProperty('user-select', 'none', 'important');
-          iframe.style.setProperty('-webkit-user-select', 'none', 'important');
-          iframe.style.setProperty('-webkit-touch-callout', 'none', 'important');
+        function shouldAllowIframeInteraction() {
+          // Sur iOS Safari, le son ON peut nécessiter un tap explicite sur l'iframe YouTube.
+          return isMobileSafari && soundEnabled;
         }
 
-        // Appliquer immédiatement et re-appliquer régulièrement (simulateur mobile Chrome).
-        enforceIframeNoPointerEvents();
-        setInterval(enforceIframeNoPointerEvents, 500);
+        function enforceIframePointerEvents() {
+          var iframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
+          if (!iframe) return;
+          var pointerValue = shouldAllowIframeInteraction() ? 'auto' : 'none';
+          iframe.style.setProperty('pointer-events', pointerValue, 'important');
+          if (pointerValue === 'none') {
+            iframe.style.setProperty('user-select', 'none', 'important');
+            iframe.style.setProperty('-webkit-user-select', 'none', 'important');
+            iframe.style.setProperty('-webkit-touch-callout', 'none', 'important');
+          }
+        }
+
+        // Appliquer immédiatement et re-appliquer régulièrement.
+        enforceIframePointerEvents();
+        setInterval(enforceIframePointerEvents, 500);
 
         var isProcessing = false;
         var videoStartedAtMs = Date.now();
@@ -514,8 +524,7 @@
       function reloadCurrentVideoWithAudioPreference() {
         var iframe = document.querySelector('iframe[id^="youtube-player-"]');
         if (!iframe || !currentYoutubeId) return;
-        // En mode gameplay, conserver les interactions sur les boutons/gestes du jeu.
-        iframe.style.pointerEvents = 'none';
+        iframe.style.pointerEvents = shouldAllowIframeInteraction() ? 'auto' : 'none';
         iframe.src = buildEmbedUrl(currentYoutubeId);
       }
 
@@ -738,9 +747,9 @@
               } else {
                 var iframe = document.querySelector('iframe[id^="youtube-player-"]');
                 if (iframe) {
-                  iframe.style.pointerEvents = 'none';
+                  iframe.style.pointerEvents = shouldAllowIframeInteraction() ? 'auto' : 'none';
                   iframe.src = buildEmbedUrl(data.next_video_youtube_id);
-                  enforceIframeNoPointerEvents();
+                  enforceIframePointerEvents();
                 } else {
                   window.location.href = data.redirect || '/playlists/' + d.playlistId + '/games/' + d.gameId;
                   return;
@@ -953,7 +962,7 @@
         var guardedIframe = document.querySelector('#game-swipe-player iframe.game-video-cover');
         if (guardedIframe && window.MutationObserver) {
           iframeGuardObserver = new MutationObserver(function() {
-            enforceIframeNoPointerEvents();
+            enforceIframePointerEvents();
           });
           iframeGuardObserver.observe(guardedIframe, { attributes: true, attributeFilter: ['style'] });
         }
