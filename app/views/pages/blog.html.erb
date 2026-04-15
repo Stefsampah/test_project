@@ -3,28 +3,122 @@
 <% content_for :seo_keywords, t('seo.blog.keywords') %>
 
 <section class="max-w-5xl mx-auto px-4 py-12">
-  <header class="mb-10">
-    <h1 class="text-3xl md:text-4xl font-bold text-white mb-4"><%= t('blog.title') %></h1>
-    <p class="text-gray-300 text-lg"><%= t('blog.subtitle') %></p>
-  </header>
+  <% if I18n.locale == :fr %>
+    <header class="mb-10">
+      <p class="text-sm uppercase tracking-wide text-purple-300">Blog musical interactif</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3 mb-4">
+        Blog Tube'NPlay: actus musique, gameplay et decouverte d'artistes
+      </h1>
+      <p class="text-gray-300 text-lg">
+        Bienvenue sur le blog de Tube'NPlay. Retrouve ici nos conseils pour progresser dans le jeu, nos analyses des tendances musicales
+        et nos focus sur les artistes emergents.
+      </p>
+    </header>
 
-  <div class="grid gap-6 md:grid-cols-2">
-    <% Array(t('blog.posts')).each do |post| %>
+    <div class="grid gap-6 md:grid-cols-2">
       <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <div class="text-xs uppercase tracking-wide text-purple-300 mb-2"><%= post[:category] || post['category'] %></div>
-        <h2 class="text-xl font-semibold text-white mb-2"><%= post[:title] || post['title'] %></h2>
-        <p class="text-gray-300 mb-4"><%= post[:excerpt] || post['excerpt'] %></p>
-        <span class="text-sm text-gray-400"><%= post[:read_more] || post['read_more'] %></span>
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Gameplay</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Comment gagner plus de points sur Tube'NPlay</h2>
+        <p class="text-gray-300 mb-4">
+          Optimise tes sessions: likes pertinents, regularite quotidienne et progression intelligente vers les paliers concert.
+        </p>
+        <span class="text-sm text-gray-400">Article a venir</span>
       </article>
-    <% end %>
-  </div>
 
-  <div class="mt-12 text-gray-300">
-    <p><%= t('blog.cta') %></p>
-    <div class="mt-4 flex flex-wrap gap-4">
-      <%= link_to t('blog.cta_playlists'), playlists_path, class: "bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 transition-colors" %>
-      <%= link_to t('blog.cta_contact'), contact_path, class: "border border-purple-500 text-purple-300 px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition-colors" %>
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Decouverte musicale</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Artistes emergents: pourquoi le format swipe change la donne</h2>
+        <p class="text-gray-300 mb-4">
+          Le swipe musical favorise une ecoute active et offre une nouvelle visibilite aux talents independants.
+        </p>
+        <span class="text-sm text-gray-400">Article a venir</span>
+      </article>
+
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Tendances</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Playlists 2026: les genres a suivre pour booster tes sessions</h2>
+        <p class="text-gray-300 mb-4">
+          Afro, rap, pop, electro: les genres les plus engages et comment les utiliser pour varier ton experience de jeu.
+        </p>
+        <span class="text-sm text-gray-400">Article a venir</span>
+      </article>
+
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Produit</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Les nouveautes Tube'NPlay: progression journey et recompenses concert</h2>
+        <p class="text-gray-300 mb-4">
+          Toutes les evolutions du jeu: systeme de points simplifie, jalons 2 000 / 4 500 et experience mobile plus fluide.
+        </p>
+        <span class="text-sm text-gray-400">Article a venir</span>
+      </article>
     </div>
-  </div>
-</section>
 
+    <div class="mt-12 text-gray-300">
+      <p>
+        En attendant les prochains articles complets, lance une partie et vis l'experience Tube'NPlay.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-4">
+        <%= link_to "Explorer les playlists", playlists_path, class: "bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 transition-colors" %>
+        <%= link_to "Nous contacter", contact_path, class: "border border-purple-500 text-purple-300 px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition-colors" %>
+      </div>
+    </div>
+  <% else %>
+    <header class="mb-10">
+      <p class="text-sm uppercase tracking-wide text-purple-300">Interactive music blog</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3 mb-4">
+        Tube'NPlay Blog: music trends, gameplay tips and artist discovery
+      </h1>
+      <p class="text-gray-300 text-lg">
+        Welcome to the Tube'NPlay blog. Discover practical tips to progress faster, music trend breakdowns and spotlights on emerging artists.
+      </p>
+    </header>
+
+    <div class="grid gap-6 md:grid-cols-2">
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Gameplay</p>
+        <h2 class="text-xl font-semibold text-white mb-2">How to earn more points on Tube'NPlay</h2>
+        <p class="text-gray-300 mb-4">
+          Improve your sessions with smarter likes, daily consistency and better progress management toward concert rewards.
+        </p>
+        <span class="text-sm text-gray-400">Article coming soon</span>
+      </article>
+
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Music discovery</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Emerging artists: why swipe-based listening changes everything</h2>
+        <p class="text-gray-300 mb-4">
+          Swipe interactions create active listening habits and offer independent artists a stronger path to visibility.
+        </p>
+        <span class="text-sm text-gray-400">Article coming soon</span>
+      </article>
+
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Trends</p>
+        <h2 class="text-xl font-semibold text-white mb-2">2026 playlists: genres to follow for better sessions</h2>
+        <p class="text-gray-300 mb-4">
+          Afro, rap, pop and electro: the genres driving engagement and how to use them to diversify your gameplay.
+        </p>
+        <span class="text-sm text-gray-400">Article coming soon</span>
+      </article>
+
+      <article class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <p class="text-xs uppercase tracking-wide text-purple-300 mb-2">Product updates</p>
+        <h2 class="text-xl font-semibold text-white mb-2">Tube'NPlay updates: journey progression and concert milestones</h2>
+        <p class="text-gray-300 mb-4">
+          Follow the latest product improvements: simplified points, 2,000 / 4,500 milestones and smoother mobile play.
+        </p>
+        <span class="text-sm text-gray-400">Article coming soon</span>
+      </article>
+    </div>
+
+    <div class="mt-12 text-gray-300">
+      <p>
+        New long-form articles are coming soon. In the meantime, start a game and explore Tube'NPlay directly.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-4">
+        <%= link_to "Explore playlists", playlists_path, class: "bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 transition-colors" %>
+        <%= link_to "Contact us", contact_path, class: "border border-purple-500 text-purple-300 px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition-colors" %>
+      </div>
+    </div>
+  <% end %>
+</section>

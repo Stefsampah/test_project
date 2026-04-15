@@ -4,173 +4,101 @@
 
 <section class="max-w-5xl mx-auto px-4 py-12">
   <% if I18n.locale == :fr %>
-    <header class="mb-8">
-      <p class="text-sm uppercase tracking-wide text-purple-300">À propos — Tube'NPlay</p>
-      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3">
-        Tube'NPlay, le jeu musical interactif qui transforme les écoutes en expérience ludique
+    <header class="mb-10">
+      <p class="text-sm uppercase tracking-wide text-purple-300">A propos — Tube'NPlay</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3 mb-4">
+        Tube'NPlay: la decouverte musicale qui devient un jeu
       </h1>
+      <p class="text-gray-300 text-lg">
+        Tube'NPlay transforme la decouverte musicale en experience interactive: tu swipes, tu joues, tu decouvres et tu peux gagner des recompenses reelles.
+      </p>
     </header>
 
     <div class="grid gap-10">
-      <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">Intro</h2>
-        <p class="text-gray-300 leading-relaxed">
-          Tube'NPlay est une plateforme qui transforme vos playlists YouTube en défis musicaux rapides, fun et immersifs.
-          Vous écoutez, vous swippez, vous progressez : chaque session vous rapproche de nouveaux badges, points et récompenses.
-        </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          Mais Tube'NPlay, c'est aussi une vision : rendre la découverte musicale plus vivante, plus humaine, plus authentique,
-          tout en offrant une nouvelle scène aux artistes émergents.
-        </p>
-        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-          <%= video_tag "about/video_tubenplay.mov",
-            controls: true,
-            muted: true,
-            playsinline: true,
-            preload: "metadata",
-            class: "w-full rounded-md border border-gray-700 bg-black" %>
-        </div>
-      </div>
-
       <div>
-        <h2 class="text-2xl font-semibold text-white mb-4">🎵 L'histoire derrière Tube'NPlay</h2>
+        <h2 class="text-2xl font-semibold text-white mb-4">Mon histoire</h2>
         <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p>Je dois être tombé amoureux de la musique dans le ventre de ma mère. Depuis, elle ne m'a plus jamais quitté.</p>
-          <p>À 10 ans, je découvre Thriller de Michael Jackson. Un choc. Une révélation. La musique n'était plus un bruit : c'était un monde.</p>
-          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-            <%= image_tag "about/Michael_Jackson_-_Thriller.png",
-              alt: "Michael Jackson - Thriller",
-              class: "w-full rounded-md border border-gray-700 bg-black" %>
-          </div>
-          <p>À 15 ans, je me prends pour Bobby Brown et MC Hammer. Je danse, je bouge, je respire musique.</p>
-          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-            <div class="w-full overflow-hidden rounded-md border border-gray-700 bg-black" style="aspect-ratio: 9 / 16;">
-              <iframe
-                src="https://www.youtube.com/embed/hzz61qTLEI4"
-                title="Bobby Brown / MC Hammer - Inspiration"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                style="width: 100%; height: 100%; border: 0;">
-              </iframe>
+          <p>Je viens de la culture hip-hop et de la scene. Choregraphies sur Run DMC, energie des battles DJ, cassettes qui tournent, CD chines a la Fnac et chez Virgin: la musique m'a construit.</p>
+          <p>A 20 ans, c'est l'ere Naughty By Nature, N.W.A, 2Pac, Snoop Doggy Dog. Puis le streaming bouleverse tout: plus accessible, mais souvent moins humain dans la decouverte.</p>
+          <p>J'explore jazz, funk, soul, rock, jungle, EDM, reggae avec la meme obsession: vivre la musique, pas seulement la consommer.</p>
+          <p>En 2018, je cree The Jam Quizz. En 2025, apres ma formation web, je lance Tube'NPlay pour reunir jeu, decouverte et visibilite des artistes emergents.</p>
+          <p>Tube'NPlay, c'est la suite logique d'une vie dediee a la musique.</p>
+        </div>
+        <div class="mt-6 max-w-md">
+          <div class="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
+            <div class="w-full overflow-hidden rounded-lg border border-gray-700 bg-black" style="aspect-ratio: 4 / 5;">
+              <%= image_tag "about/photo_moi.jpg",
+                alt: "Photo du fondateur Tube'NPlay",
+                class: "w-full h-full object-cover" %>
             </div>
           </div>
-          <p>Je fais des chorégraphies sur Run DMC à la fête du Lycée Français d'Abidjan. La scène, l'énergie, le partage... tout y est.</p>
-          <p>À 20 ans, c'est l'ère du hip hop pur : Naughty By Nature, N.W.A, 2Pac, Snoop Doggy Dog.</p>
-          <p>Je me rappelle les battles de DJ, les cassettes qui tournent, les débats sans fin sur qui est le meilleur MC.</p>
-          <p>Je dépense mon budget étudiant en CD à la Fnac et chez Virgin. Chaque album est un trésor.</p>
-          <p>Puis arrive le streaming. Un nouveau bouleversement. La musique devient accessible partout, tout le temps.</p>
-          <p>Je traverse des périodes jazz, funk, soul, rock, jungle, EDM, reggae... J'écoute 2 heures de musique par jour, sans exception.</p>
-          <p>En 2018, je crée mon premier projet : The Jam Quizz. Je cherche déjà une manière d'innover dans la découverte musicale.</p>
-          <p>En 2025, après une formation en développement web, je crée Tube'NPlay.</p>
-          <p>
-            Un projet qui rassemble tout ce que je suis : la passion, la tech, la découverte, le jeu, et surtout... l'envie de donner
-            de la visibilité aux artistes émergents.
-          </p>
-          <p>Tube'NPlay n'est pas une idée sortie de nulle part. C'est la suite logique d'une vie entière dédiée à la musique.</p>
-        </div>
-        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-          <%= image_tag "about/photo_moi.jpg",
-            alt: "Photo personnelle",
-            class: "w-full rounded-md border border-gray-700 bg-black" %>
         </div>
       </div>
 
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎯 Notre mission</h2>
+        <h2 class="text-2xl font-semibold text-white mb-3">Le concept</h2>
         <p class="text-gray-300 leading-relaxed">
-          Rendre la découverte musicale plus engageante, plus fun et plus accessible.
+          Tube'NPlay transforme la decouverte musicale en experience interactive.
         </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          Tube'NPlay récompense vos goûts, encourage l'exploration de nouveaux univers sonores et transforme chaque écoute en expérience ludique.
-        </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          Et pour les artistes, notre mission est claire : offrir une nouvelle manière d'être écouté, découvert et soutenu.
-        </p>
-        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-          <%= video_tag "about/video_tubenplay.mov",
-            controls: true,
-            muted: true,
-            playsinline: true,
-            preload: "metadata",
-            class: "w-full rounded-md border border-gray-700 bg-black" %>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-semibold text-white mb-3">⚙️ Comment ça marche</h2>
-        <ul class="space-y-2 text-gray-300">
-          <li>• Choisissez une playlist (Pop, Rap, Afro, Electro, Rock...).</li>
-          <li>• Écoutez les extraits et swipez pour liker ou passer.</li>
-          <li>• Gagnez des points, débloquez des badges et accédez à des récompenses.</li>
-        </ul>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          Chaque swipe compte. Chaque session vous fait progresser. Chaque découverte enrichit votre univers musical.
+        <p class="text-gray-300 leading-relaxed mt-3">
+          Tu swipes, tu joues, tu decouvres... et tu peux meme gagner des recompenses reelles.
         </p>
       </div>
 
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎧 Pour les fans : jouer avec la musique</h2>
-        <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p><strong>Une expérience rapide et intuitive.</strong> Quelques secondes suffisent pour entrer dans le jeu.</p>
-          <p><strong>Des playlists riches et variées.</strong> Pop, Rap, Afro, Electro, Rock... de nouvelles playlists arrivent régulièrement.</p>
-          <p><strong>Une progression motivante.</strong> Badges, scores, récompenses, défis : votre expérience devient un parcours de joueur.</p>
-          <p><strong>Une découverte plus authentique.</strong> Vous ne suivez pas un algorithme : vous suivez vos propres goûts.</p>
-        </div>
-        <div class="mt-6 grid gap-4 md:grid-cols-3">
-          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
-            <%= image_tag "about/vue playlist.png",
-              alt: "Vue playlists Tube'NPlay",
-              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
-          </div>
-          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
-            <%= image_tag "about/vue scores.png",
-              alt: "Vue scores Tube'NPlay",
-              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
-          </div>
-          <div class="bg-gray-900/60 border border-gray-700 rounded-lg p-3">
-            <%= image_tag "about/vue badges.png",
-              alt: "Vue badges Tube'NPlay",
-              class: "w-full rounded-md border border-gray-700 bg-black object-cover" %>
+        <h2 class="text-2xl font-semibold text-white mb-3">Pour les artistes</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">
+          Tube'NPlay offre un nouveau canal de visibilite, simple et equitable.
+        </p>
+        <ul class="space-y-2 text-gray-300">
+          <li>• Mise en avant immediate aupres de vrais fans</li>
+          <li>• Decouverte sans algorithmes qui favorisent les plus gros profils</li>
+          <li>• Playlists dediees a ton univers</li>
+          <li>• Engagement reel: likes, swipes, favoris</li>
+          <li>• Signaux utiles pour mieux comprendre ton audience</li>
+        </ul>
+        <p class="text-gray-300 leading-relaxed mt-4">
+          Une maniere moderne et fun de te faire connaitre.
+        </p>
+        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
+          <div class="w-full overflow-hidden rounded-md border border-gray-700 bg-black" style="aspect-ratio: 16 / 9;">
+            <%= image_tag "about/for_artists.jpg",
+              alt: "Tube'NPlay pour les artistes",
+              class: "w-full h-full object-cover" %>
           </div>
         </div>
       </div>
 
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎤 Pour les artistes : une nouvelle scène pour émerger</h2>
-        <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p><strong>Une visibilité naturelle.</strong> Vos sons apparaissent dans les playlists jouées par les fans.</p>
-          <p><strong>Un public réellement engagé.</strong> Les utilisateurs ne scrollent pas : ils jouent, ils découvrent, ils choisissent.</p>
-          <p><strong>Un espace pour émerger.</strong> Tube'NPlay met en avant les artistes indépendants et les talents cachés.</p>
-          <p><strong>Un pont entre jeu et découverte.</strong> Votre musique devient une expérience et une opportunité d'être remarqué.</p>
-        </div>
+        <h2 class="text-2xl font-semibold text-white mb-3">Pour les fans</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">
+          Tube'NPlay rend la decouverte musicale plus fun que jamais.
+        </p>
+        <ul class="space-y-2 text-gray-300">
+          <li>• Decouvrir des artistes indes avant tout le monde</li>
+          <li>• Jouer avec la musique via le swipe</li>
+          <li>• Gagner des points, badges et recompenses reelles</li>
+          <li>• Participer a des classements et defis</li>
+          <li>• Sortir des recommandations repetitives</li>
+        </ul>
+        <p class="text-gray-300 leading-relaxed mt-4">
+          La musique devient un jeu... avec de vrais gains.
+        </p>
         <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-          <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@tubenplay/video/7600443074111622422" data-video-id="7600443074111622422" style="max-width: 605px; min-width: 325px;">
-            <section>
-              <a target="_blank" title="@tubenplay" href="https://www.tiktok.com/@tubenplay?refer=embed">@tubenplay</a>
-              Quel son aurais-tu like ?
-              <a title="musictok" target="_blank" href="https://www.tiktok.com/tag/musictok?refer=embed">#musictok</a>
-              <a title="soundcheck" target="_blank" href="https://www.tiktok.com/tag/soundcheck?refer=embed">#soundcheck</a>
-              <a title="newsound" target="_blank" href="https://www.tiktok.com/tag/newsound?refer=embed">#newsound</a>
-              <a title="viralsound" target="_blank" href="https://www.tiktok.com/tag/viralsound?refer=embed">#viralsound</a>
-              <a title="musiclover" target="_blank" href="https://www.tiktok.com/tag/musiclover?refer=embed">#musiclover</a>
-              <a target="_blank" title="♬ son original - Tube’NPlay Founder" href="https://www.tiktok.com/music/son-original-7600443078880561942?refer=embed">♬ son original - Tube’NPlay Founder</a>
-            </section>
-          </blockquote>
-          <script async src="https://www.tiktok.com/embed.js"></script>
+          <div class="w-full overflow-hidden rounded-md border border-gray-700 bg-black" style="aspect-ratio: 16 / 9;">
+            <%= image_tag "about/Superfan_Feature.jpg",
+              alt: "Tube'NPlay pour les fans",
+              class: "w-full h-full object-cover" %>
+          </div>
         </div>
       </div>
 
-      <div>
-        <h2 class="text-2xl font-semibold text-white mb-3">💡 Pourquoi Tube'NPlay</h2>
-        <ul class="space-y-2 text-gray-300">
-          <li>• Une expérience rapide et intuitive</li>
-          <li>• Des playlists riches et variées</li>
-          <li>• Une progression motivante (badges, scores, récompenses)</li>
-          <li>• Une mise en avant authentique des artistes</li>
-          <li>• Une plateforme qui réunit fans et créateurs autour de la musique</li>
-          <li>• Une histoire vraie, née d'une vie entière dédiée à la découverte musicale</li>
-        </ul>
+      <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">Notre mission</h2>
+        <div class="space-y-4 text-gray-300 leading-relaxed">
+          <p>Creer un espace ou les artistes emergents gagnent en visibilite.</p>
+          <p>Et ou les fans decouvrent la musique autrement: en jouant, en explorant, en gagnant.</p>
+        </div>
       </div>
     </div>
 
@@ -180,122 +108,101 @@
       <%= link_to "Nous contacter", contact_path, class: "border border-purple-500 text-purple-300 px-6 py-3 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition-colors" %>
     </div>
   <% else %>
-    <header class="mb-8">
+    <header class="mb-10">
       <p class="text-sm uppercase tracking-wide text-purple-300">About — Tube'NPlay</p>
-      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3">
-        Tube'NPlay, the interactive music game that turns listening into a playful experience
+      <h1 class="text-3xl md:text-4xl font-bold text-white mt-3 mb-4">
+        Tube'NPlay: music discovery turned into a game
       </h1>
+      <p class="text-gray-300 text-lg">
+        Tube'NPlay turns music discovery into an interactive experience: swipe, play, discover, and unlock real rewards.
+      </p>
     </header>
 
     <div class="grid gap-10">
+      <div>
+        <h2 class="text-2xl font-semibold text-white mb-4">My story</h2>
+        <div class="space-y-4 text-gray-300 leading-relaxed">
+          <p>I come from hip-hop culture and live energy. Run DMC choreographies, DJ battles, tapes on repeat, and CDs from Fnac and Virgin shaped my relationship with music.</p>
+          <p>At 20, it was Naughty By Nature, N.W.A, 2Pac and Snoop Doggy Dog. Then streaming changed everything: more access, but often less emotional discovery.</p>
+          <p>I moved through jazz, funk, soul, rock, jungle, EDM and reggae with one goal: keep discovery alive and personal.</p>
+          <p>In 2018, I launched The Jam Quizz. In 2025, after web development training, I launched Tube'NPlay to connect gaming, discovery and artist visibility.</p>
+          <p>Tube'NPlay is the natural continuation of a life dedicated to music.</p>
+        </div>
+        <div class="mt-6 max-w-md">
+          <div class="bg-gray-900/60 border border-gray-700 rounded-xl p-4">
+            <div class="w-full overflow-hidden rounded-lg border border-gray-700 bg-black" style="aspect-ratio: 4 / 5;">
+              <%= image_tag "about/photo_moi.jpg",
+                alt: "Tube'NPlay founder photo",
+                class: "w-full h-full object-cover" %>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">Intro</h2>
+        <h2 class="text-2xl font-semibold text-white mb-3">The concept</h2>
         <p class="text-gray-300 leading-relaxed">
-          Tube'NPlay is a platform that turns your YouTube playlists into fast, fun and immersive music challenges.
-          You listen, you swipe, you progress: every session gets you closer to new badges, points and rewards.
+          Tube'NPlay turns music discovery into an interactive experience.
         </p>
+        <p class="text-gray-300 leading-relaxed mt-3">
+          Swipe, play, discover... and unlock real-world rewards.
+        </p>
+      </div>
+
+      <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
+        <h2 class="text-2xl font-semibold text-white mb-3">For artists</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">
+          Tube'NPlay offers a modern and fair visibility channel.
+        </p>
+        <ul class="space-y-2 text-gray-300">
+          <li>• Immediate exposure to real fans</li>
+          <li>• Discovery beyond algorithm-heavy ranking systems</li>
+          <li>• Playlists matched to each artist identity</li>
+          <li>• Real engagement: likes, swipes, favorites</li>
+          <li>• Useful audience signals to improve strategy</li>
+        </ul>
         <p class="text-gray-300 leading-relaxed mt-4">
-          But Tube'NPlay is also a vision: making music discovery more alive, more human, more authentic,
-          while giving emerging artists a new stage.
+          A fun and effective way to get discovered.
         </p>
         <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
-          <%= video_tag "about/video_tubenplay.mov",
-            controls: true,
-            muted: true,
-            playsinline: true,
-            preload: "metadata",
-            class: "w-full rounded-md border border-gray-700 bg-black" %>
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-semibold text-white mb-4">🎵 The story behind Tube'NPlay</h2>
-        <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p>I must have fallen in love with music before I was born. It never left me after that.</p>
-          <p>At 10, I discovered Thriller by Michael Jackson. A shock. A revelation. Music was no longer just sound: it was a world.</p>
-          <p>At 15, I thought I was Bobby Brown and MC Hammer. I danced, I moved, I breathed music.</p>
-          <p>I did choreographies to Run DMC at the Lycée Français d'Abidjan party. The stage, the energy, the sharing... it was all there.</p>
-          <p>At 20, it was pure hip hop: Naughty By Nature, N.W.A, 2Pac, Snoop Doggy Dog.</p>
-          <p>I remember DJ battles, tapes on repeat, endless debates on who the best MC was.</p>
-          <p>I spent my student budget on CDs at Fnac and Virgin. Every album was a treasure.</p>
-          <p>Then streaming arrived. A new revolution. Music became available everywhere, all the time.</p>
-          <p>I went through jazz, funk, soul, rock, jungle, EDM, reggae phases... I listened to music 2 hours a day, without exception.</p>
-          <p>In 2018, I created my first project: The Jam Quizz. I was already looking for new ways to innovate in music discovery.</p>
-          <p>In 2025, after a web development program, I created Tube'NPlay.</p>
-          <p>
-            A project that brings everything together: passion, tech, discovery, gaming, and above all... the desire to give visibility to emerging artists.
-          </p>
-          <p>Tube'NPlay isn't an idea pulled out of nowhere. It's the natural continuation of a life dedicated to music.</p>
-        </div>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Image placeholder: personal photo, music archives, or a "timeline" visual.
+          <div class="w-full overflow-hidden rounded-md border border-gray-700 bg-black" style="aspect-ratio: 16 / 9;">
+            <%= image_tag "about/for_artists.jpg",
+              alt: "Tube'NPlay for artists",
+              class: "w-full h-full object-cover" %>
+          </div>
         </div>
       </div>
 
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎯 Our mission</h2>
-        <p class="text-gray-300 leading-relaxed">
-          Make music discovery more engaging, more fun and more accessible.
+        <h2 class="text-2xl font-semibold text-white mb-3">For fans</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">
+          Tube'NPlay makes discovery more exciting than ever.
         </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          Tube'NPlay rewards your taste, encourages exploration of new sounds and turns every listen into a playful experience.
-        </p>
-        <p class="text-gray-300 leading-relaxed mt-4">
-          And for artists, our mission is clear: offer a new way to be heard, discovered and supported.
-        </p>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Video placeholder: founder message or a short concept demo.
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-semibold text-white mb-3">⚙️ How it works</h2>
         <ul class="space-y-2 text-gray-300">
-          <li>• Choose a playlist (Pop, Rap, Afro, Electro, Rock...).</li>
-          <li>• Listen to excerpts and swipe to like or skip.</li>
-          <li>• Earn points, unlock badges and access rewards.</li>
+          <li>• Discover indie artists before everyone else</li>
+          <li>• Play with music through swipe interactions</li>
+          <li>• Earn points, badges and real rewards</li>
+          <li>• Join rankings and challenges</li>
+          <li>• Escape repetitive recommendations</li>
         </ul>
         <p class="text-gray-300 leading-relaxed mt-4">
-          Every swipe counts. Every session helps you progress. Every discovery expands your musical world.
+          Music becomes a game, with real gains.
         </p>
-      </div>
-
-      <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎧 For fans: play with music</h2>
-        <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p><strong>Fast and intuitive.</strong> It only takes a few seconds to jump in.</p>
-          <p><strong>Rich and varied playlists.</strong> Pop, Rap, Afro, Electro, Rock... new playlists arrive regularly.</p>
-          <p><strong>Motivating progression.</strong> Badges, scores, rewards and challenges: your experience becomes a player journey.</p>
-          <p><strong>More authentic discovery.</strong> You don't follow an algorithm: you follow your own tastes.</p>
-        </div>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Image placeholder: gameplay screenshots, badges, scores, playlists.
+        <div class="mt-6 bg-gray-900/60 border border-gray-700 rounded-lg p-4">
+          <div class="w-full overflow-hidden rounded-md border border-gray-700 bg-black" style="aspect-ratio: 16 / 9;">
+            <%= image_tag "about/Superfan_Feature.jpg",
+              alt: "Tube'NPlay for fans",
+              class: "w-full h-full object-cover" %>
+          </div>
         </div>
       </div>
 
       <div class="bg-gray-800 border border-gray-700 rounded-xl p-6">
-        <h2 class="text-2xl font-semibold text-white mb-3">🎤 For artists: a new stage to emerge</h2>
+        <h2 class="text-2xl font-semibold text-white mb-3">Our mission</h2>
         <div class="space-y-4 text-gray-300 leading-relaxed">
-          <p><strong>Natural visibility.</strong> Your tracks appear in playlists played by fans.</p>
-          <p><strong>A truly engaged audience.</strong> Users don't scroll: they play, discover and choose.</p>
-          <p><strong>Space to emerge.</strong> Tube'NPlay highlights independent artists, hidden talents and new voices.</p>
-          <p><strong>A bridge between game and discovery.</strong> Your music becomes an experience and an opportunity to be noticed.</p>
+          <p>Create a space where emerging artists gain visibility.</p>
+          <p>And where fans discover music differently: by playing, exploring and winning.</p>
         </div>
-        <div class="mt-6 bg-gray-900/60 border border-dashed border-gray-600 rounded-lg p-6 text-gray-400 text-sm">
-          Image placeholder: partner artists, playlist spotlight, live sessions.
-        </div>
-      </div>
-
-      <div>
-        <h2 class="text-2xl font-semibold text-white mb-3">💡 Why Tube'NPlay</h2>
-        <ul class="space-y-2 text-gray-300">
-          <li>• Fast and intuitive experience</li>
-          <li>• Rich and varied playlists</li>
-          <li>• Motivating progression (badges, scores, rewards)</li>
-          <li>• Authentic artist visibility</li>
-          <li>• A platform that unites fans and creators around music</li>
-          <li>• A true story born from a lifetime devoted to music discovery</li>
-        </ul>
       </div>
     </div>
 
@@ -306,4 +213,3 @@
     </div>
   <% end %>
 </section>
-
